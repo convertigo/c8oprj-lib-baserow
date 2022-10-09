@@ -1,3 +1,4 @@
+comment: Lists all applications (databases) in baserow
 ↓GetTokenFromSession [steps.SessionGetStep-1665210481031]: 
   key: token
   output: false

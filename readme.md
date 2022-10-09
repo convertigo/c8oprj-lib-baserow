@@ -12,7 +12,7 @@ For more technical informations : [documentation](./project.md)
 - [Sequences](#sequences)
     - [AdminLogin](#adminlogin)
     - [ApplicationsList](#applicationslist)
-    - [TablesList](#tableslist)
+    - [FieldsList](#fieldslist)
 - [Mobile Library](#mobile-library)
 
 
@@ -60,7 +60,11 @@ Establishes a session with Baserow. Must be called befor any other API
 
 ### ApplicationsList
 
-### TablesList
+Lists all applications (databases) in baserow
+
+### FieldsList
+
+Lists all the fields in a baserow table
 
 **variables**
 

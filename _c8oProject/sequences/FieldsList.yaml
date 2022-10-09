@@ -1,3 +1,4 @@
+comment: Lists all the fields in a baserow table
 ↓GetTokenFromSession [steps.SessionGetStep-1665297256054]: 
   key: token
   output: false

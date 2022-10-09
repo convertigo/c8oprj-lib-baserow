@@ -6457,20 +6457,20 @@ The baserow admin password
 
 </p></blockquote></details>
 
-<details><summary><b>ApplicationsList</b></summary><blockquote><p>
+<details><summary><b>ApplicationsList</b> : Lists all applications (databases) in baserow</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") ApplicationsList
 
-
+Lists all applications (databases) in baserow
 </p></blockquote></details>
 
-<details><summary><b>TablesList</b></summary><blockquote><p>
+<details><summary><b>FieldsList</b> : Lists all the fields in a baserow table</summary><blockquote><p>
 
 
-## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TablesList
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") FieldsList
 
-
+Lists all the fields in a baserow table
 
 <span style="color:DarkGoldenRod">Variables</span>
 
