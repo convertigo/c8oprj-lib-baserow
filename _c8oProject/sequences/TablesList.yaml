@@ -1,0 +1,70 @@
+↓GetTokenFromSession [steps.SessionGetStep-1665297256054]: 
+  key: token
+  output: false
+↓Concat [steps.XMLConcatStep-1665297256057]: 
+  nodeName: Bearer
+  output: false
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: JWT
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1665297256054
+                - java.lang.String: 
+                  - ↑value: ./expression/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓Call_Transaction [steps.TransactionStep-1665297256060]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_fields_table__table_id___GET
+  ↓__header_Authorization [variables.StepVariable-1665297256063]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1665297256057
+          - java.lang.String: 
+            - ↑value: ./text()
+  ↓table_id [variables.StepVariable-1665298009120]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1665297256066]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1665297256060
+        - java.lang.String: 
+          - ↑value: ./document/array
+↓__header_Authorization [variables.RequestableVariable-1665298021011]: 
+↓table_id [variables.RequestableVariable-1665298021013]: 
+  comment: Returns only the fields of the table related to the provided value.
+  description: table_id
+  required: true
+  value: 
+↓TestOK [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1665298068600]: 
+    description: table_id
+    required: true
+    value: 191

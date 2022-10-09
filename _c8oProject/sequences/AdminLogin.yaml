@@ -1,0 +1,124 @@
+↓Object [steps.JsonObjectStep-1664964135915]: 
+  output: false
+  ↓Field [steps.JsonFieldStep-1664964145292]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: username
+    output: false
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: email
+  ↓Field1 [steps.JsonFieldStep-1664964161650]: 
+    isEnabled: false
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: email
+    output: false
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: email
+  ↓Field2 [steps.JsonFieldStep-1664964175495]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: password
+    output: false
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: password
+↓Call_Transaction [steps.TransactionStep-1664964284413]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_Auth
+  ↓__body [variables.StepVariable-1664964300184]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1664964135915
+          - java.lang.String: 
+            - ↑value: ./*
+↓IfExist [steps.IfExistStep-1665210744299]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1664964284413
+        - java.lang.String: 
+          - ↑value: ./document/object/non_field_errors
+  ↓Error_structure [steps.XMLErrorStep-1665210833262]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1664964284413
+            - java.lang.String: 
+              - ↑value: ./document/object/non_field_errors/value/text()
+  ↓Return [steps.ReturnStep-1665210890792]: 
+↓SetTokenInSession [steps.SessionSetStep-1665210357330]: 
+  expression: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: SOURCE
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1664964284413
+          - java.lang.String: 
+            - ↑value: ./document/object/token/text()
+  key: token
+↓user [variables.RequestableVariable-1664963918454]: 
+↓password [variables.RequestableVariable-1664963925973]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xd8e180806a1c1d83a6255212121ab827
+  visibility: '-1'
+↓email [variables.RequestableVariable-1664964117937]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xd8e180806a1c1d83a6255212121ab827
+  visibility: 15
+↓testKO [core.TestCase]: 
+  ↓user [variables.TestCaseVariable-1665210668032]: 
+    value: Olivier Picciotto
+  ↓password [variables.TestCaseVariable-1665210668035]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: x63706445c57af10c2b9b6ba35701ebad
+    visibility: '-1'
+  ↓email [variables.TestCaseVariable-1665210668038]: 
+    value: olivierp@convertigo.com
+↓testOK [core.TestCase]: 
+  ↓user [variables.TestCaseVariable-1664966491345]: 
+    value: Olivier Picciotto
+  ↓password [variables.TestCaseVariable-1664966491347]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xf5254abfffc0d4178afb9f473a13d698
+    visibility: '-1'
+  ↓email [variables.TestCaseVariable-1664966491349]: 
+    value: olivierp@convertigo.com
