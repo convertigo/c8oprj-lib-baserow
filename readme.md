@@ -69,9 +69,6 @@ Establishes a session with Baserow. Must be called befor any other API
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>__header_Authorization</td><td></td>
-</tr>
-<tr>
 <td>table_id</td><td>Returns only the fields of the table related to the provided value.</td>
 </tr>
 </table>

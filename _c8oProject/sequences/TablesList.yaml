@@ -57,7 +57,6 @@
           - ↑value: 1665297256060
         - java.lang.String: 
           - ↑value: ./document/array
-↓__header_Authorization [variables.RequestableVariable-1665298021011]: 
 ↓table_id [variables.RequestableVariable-1665298021013]: 
   comment: Returns only the fields of the table related to the provided value.
   description: table_id
