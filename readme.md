@@ -42,6 +42,8 @@ For more technical informations : [documentation](./project.md)
 
 ### AdminLogin
 
+Establishes a session with Baserow. Must be called befor any other API
+
 **variables**
 
 <table>
@@ -49,13 +51,10 @@ For more technical informations : [documentation](./project.md)
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>email</td><td></td>
+<td>email</td><td>The Base row admin email</td>
 </tr>
 <tr>
-<td>password</td><td></td>
-</tr>
-<tr>
-<td>user</td><td></td>
+<td>password</td><td>The baserow admin password</td>
 </tr>
 </table>
 

@@ -1,3 +1,4 @@
+comment: Establishes a session with Baserow. Must be called befor any other API
 ↓Object [steps.JsonObjectStep-1664964135915]: 
   output: false
   ↓Field [steps.JsonFieldStep-1664964145292]: 
@@ -7,21 +8,6 @@
         - SmartType: 
           - ↑mode: PLAIN
           - →→: username
-    output: false
-    value: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-        - SmartType: 
-          - ↑mode: JS
-          - →→: email
-  ↓Field1 [steps.JsonFieldStep-1664964161650]: 
-    isEnabled: false
-    key: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-        - SmartType: 
-          - ↑mode: PLAIN
-          - →→: email
     output: false
     value: 
       - xmlizable: 
@@ -87,14 +73,15 @@
           - java.lang.String: 
             - ↑value: ./document/object/token/text()
   key: token
-↓user [variables.RequestableVariable-1664963918454]: 
 ↓password [variables.RequestableVariable-1664963925973]: 
+  comment: The baserow admin password
   value: 
     - ↑ciphered: true
     - ↑traceable: false
     - →→: xd8e180806a1c1d83a6255212121ab827
   visibility: '-1'
 ↓email [variables.RequestableVariable-1664964117937]: 
+  comment: The Base row admin email
   value: 
     - ↑ciphered: true
     - ↑traceable: false

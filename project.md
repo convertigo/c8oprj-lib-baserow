@@ -6419,12 +6419,12 @@ does nothing
 <details><summary><span style="color:DarkGoldenRod"><i>Sequences</i></span></summary><blockquote><p>
 
 
-<details><summary><b>AdminLogin</b></summary><blockquote><p>
+<details><summary><b>AdminLogin</b> : Establishes a session with Baserow</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") AdminLogin
 
-
+Establishes a session with Baserow. Must be called befor any other API
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6442,7 +6442,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;email
 </td>
 <td>
-
+The Base row admin email
 </td>
 </tr>
 <tr>
@@ -6450,15 +6450,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;password
 </td>
 <td>
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;user
-</td>
-<td>
-
+The baserow admin password
 </td>
 </tr>
 </table>
