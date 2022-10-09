@@ -1,6 +1,6 @@
 ↑convertigo: 8.0.0.m006
 ↓lib_BaseRow [core.Project]: 
-  comment: Convertigo NGX builder Project
+  comment: This is the Baserow connector for Convertigo
   corsOrigin: =Origin
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓void [connectors.SqlConnector]: 🗏 connectors/void.yaml
