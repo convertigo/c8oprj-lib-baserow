@@ -1,8 +1,8 @@
-comment: Lists all applications (databases) in baserow
-↓GetTokenFromSession [steps.SessionGetStep-1665210481031]: 
+comment: Lists all Groups for the current user
+↓GetTokenFromSession [steps.SessionGetStep-1665320057007]: 
   key: token
   output: false
-↓Concat [steps.XMLConcatStep-1665211330857]: 
+↓Concat [steps.XMLConcatStep-1665320057010]: 
   nodeName: Bearer
   output: false
   sourcesDefinition: 
@@ -28,42 +28,28 @@ comment: Lists all applications (databases) in baserow
               - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
               - com.twinsoft.convertigo.beans.common.XMLVector: 
                 - java.lang.String: 
-                  - ↑value: 1665210481031
+                  - ↑value: 1665320057007
                 - java.lang.String: 
                   - ↑value: ./expression/text()
             - java.lang.String: 
               - ↑value: ''
-↓Call_Transaction [steps.TransactionStep-1665210509901]: 
-  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_applications_group__group_id___GET
-  ↓__header_Authorization [variables.StepVariable-1665211142280]: 
+↓Call_Transaction [steps.TransactionStep-1665320057013]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_groups__GET
+  ↓__header_Authorization [variables.StepVariable-1665320057016]: 
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1665211330857
+            - ↑value: 1665320057010
           - java.lang.String: 
             - ↑value: ./text()
-  ↓group_id [variables.StepVariable-1665300534934]: 
-    comment: Returns only applications that are in the group related to the provided value.
-    description: group_id
-    required: true
-    value: 
-↓Copy [steps.XMLCopyStep-1665295585596]: 
+↓Copy [steps.XMLCopyStep-1665320057022]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1665210509901
+          - ↑value: 1665320057013
         - java.lang.String: 
           - ↑value: ./document/array
-↓group_id [variables.RequestableVariable-1665300550002]: 
-  comment: Returns only applications that are in the group related to the provided value.
-  description: group_id
-  required: true
-↓TestOK [core.TestCase]: 
-  ↓group_id [variables.TestCaseVariable-1665300594051]: 
-    description: group_id
-    required: true
-    value: 37

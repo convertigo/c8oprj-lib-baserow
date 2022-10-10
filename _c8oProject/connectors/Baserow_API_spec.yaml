@@ -887,7 +887,7 @@ server: ${lib_baserow.server}
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
     description: exclude
     httpName: exclude
-  ↓filter__{field}__{filter} [variables.RequestableHttpVariable-1664959340840]: 
+  ↓filter [variables.RequestableHttpVariable-1664959340840]: 
     comment: |
       'The rows can optionally be filtered by the same view filters available for the views. Multiple filters can be provided if they follow the same format. The field and filter variable indicate how to filter and the value indicates where to filter on.
       
