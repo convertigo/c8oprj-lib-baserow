@@ -6524,6 +6524,7 @@ Returns only the fields of the table related to the provided value.
 
 Gets data from a baserow table.
 
+
 <span style="color:DarkGoldenRod">Variables</span>
 
 <table>

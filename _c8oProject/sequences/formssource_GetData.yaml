@@ -1,4 +1,6 @@
-comment: Gets data from a baserow table.
+comment: |
+  Gets data from a baserow table.
+  
 ↓Input_variables [steps.InputVariablesStep-1665402570169]: 
 ↓Call_Sequence [steps.SequenceStep-1665402300413]: 
   sourceSequence: lib_BaseRow.TableGetData
