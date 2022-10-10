@@ -93,9 +93,8 @@ Lists all the fields in a baserow table
 
 ### formssource_GetData
 
-{
-	"en":"Gets data from a baserow table."
-}
+Gets data from a baserow table.
+
 
 **variables**
 
