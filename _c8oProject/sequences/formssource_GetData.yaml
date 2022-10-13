@@ -140,8 +140,8 @@ comment: |
                       - java.lang.String: 
                         - ↑value: 1665403182897
                       - java.lang.String: 
-                        - ↑value: ./object/value
-                ↓jMyEntry [steps.SimpleSourceStep-1665407661276]: 
+                        - ↑value: ./object
+                ↓IfExistThenElse [steps.IfExistThenElseStep-1665684721073]: 
                   sourceDefinition: 
                     - xmlizable: 
                       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
@@ -149,10 +149,59 @@ comment: |
                         - java.lang.String: 
                           - ↑value: 1665407450731
                         - java.lang.String: 
-                          - ↑value: ./text()
-                  variableName: jMyEntry
-                ↓AddHtmlEntry [steps.SimpleStep-1665407618555]: 
-                  expression: jHtml += "<p>" + jMyEntry + "</p>"
+                          - ↑value: ./value
+                  ↓jThen [steps.ThenStep-1665684723422]: 
+                    ↓jMyEntry [steps.SimpleSourceStep-1665407661276]: 
+                      sourceDefinition: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                          - com.twinsoft.convertigo.beans.common.XMLVector: 
+                            - java.lang.String: 
+                              - ↑value: 1665407450731
+                            - java.lang.String: 
+                              - ↑value: ./value/text()
+                      variableName: jMyEntry
+                    ↓AddEntry [steps.SimpleStep-1665407618555]: 
+                      expression: jHtml += "<p>" + jMyEntry + "</p>"
+                  ↓jElse [steps.ElseStep-1665684723424]: 
+                    ↓jSimpleSource [steps.SimpleSourceStep-1665685771320]: 
+                      sourceDefinition: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                          - com.twinsoft.convertigo.beans.common.XMLVector: 
+                            - java.lang.String: 
+                              - ↑value: 1665407450731
+                            - java.lang.String: 
+                              - ↑value: ./url/text()
+                      variableName: jURL
+                    ↓isImage [steps.SimpleSourceStep-1665684886493]: 
+                      sourceDefinition: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                          - com.twinsoft.convertigo.beans.common.XMLVector: 
+                            - java.lang.String: 
+                              - ↑value: 1665407450731
+                            - java.lang.String: 
+                              - ↑value: ./is_image/text()
+                      variableName: bIsImage
+                    ↓jIfThenElse [steps.IfThenElseStep-1665685010861]: 
+                      condition: bIsImage == 'true'
+                      ↓jThen [steps.ThenStep-1665685010863]: 
+                        ↓AddImageEnttry [steps.SimpleStep-1665685016539]: 
+                          expression: jHtml += "<img src=\"" + jURL + "\" ></img>"
+                      ↓jElse [steps.ElseStep-1665685010865]: 
+                        ↓jSimpleSource [steps.SimpleSourceStep-1665685737366]: 
+                          sourceDefinition: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                                - java.lang.String: 
+                                  - ↑value: 1665407450731
+                                - java.lang.String: 
+                                  - ↑value: ./visible_name/text()
+                          variableName: jVisibleName
+                        ↓AddFileEntry [steps.SimpleStep-1665685031623]: 
+                          expression: jHtml += "<a  src=\"" + jURL + "\" >" + jVisibleName + "</a>"
               ↓FinishHtmlEntry [steps.SimpleStep-1665407723661]: 
                 expression: jHtml += "</div>"
               ↓Field [steps.JsonFieldStep-1665407340859]: 
@@ -200,4 +249,4 @@ comment: |
   ↓forms_table_id [variables.TestCaseVariable-1665402530226]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
-    value: 345
+    value: 351
