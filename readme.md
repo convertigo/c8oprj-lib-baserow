@@ -103,7 +103,20 @@ Gets data from a baserow table.
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_table_id</td><td>Returns the rows of the table related to the provided value.</td>
+<td>forms_include</td><td>The comma separated list of fields we want to retrieve
+</td>
+</tr>
+<tr>
+<td>forms_rowFilter</td><td>Filters
+</td>
+</tr>
+<tr>
+<td>forms_table_id</td><td>Returns the rows of the table related to the provided value
+</td>
+</tr>
+<tr>
+<td>forms_view_id</td><td>The optional View ID associated to this table
+</td>
 </tr>
 </table>
 
@@ -138,7 +151,10 @@ The following filters are available: equal, not_equal, filename_contains, has_fi
 This works only if two or more filters are provided.</td>
 </tr>
 <tr>
-<td>include</td><td>All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.</td>
+<td>filterExpression</td><td></td>
+</tr>
+<tr>
+<td>include_fields</td><td>All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.</td>
 </tr>
 <tr>
 <td>order_by</td><td>Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a '-' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.</td>

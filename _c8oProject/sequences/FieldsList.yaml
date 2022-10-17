@@ -68,3 +68,8 @@ comment: Lists all the fields in a baserow table
     description: table_id
     required: true
     value: 191
+↓TestOK1 [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1665917990559]: 
+    description: table_id
+    required: true
+    value: 351

@@ -33,6 +33,60 @@ comment: Gets data from a given table
                   - ↑value: ./expression/text()
             - java.lang.String: 
               - ↑value: ''
+↓HandleDefaultData [steps.SimpleStep-1665909923252]: 
+  comment: Check parameters and null them if needed
+  expression: |
+    // By default as variables defined in the scope from the sequences variables, they can be populated to
+    // empty string. We must make sure that if this is the case the variable must be set to null to prevent 
+    // to be send in the baseRow API. 
+    if (view_id.length == 0 ) view_id = null; 
+    if (include_fields.length == 0 ) include_fields = null; 
+    
+↓Call_Sequence [steps.SequenceStep-1665925387944]: 
+  comment: We need the field list for this table to build the filter
+  sourceSequence: lib_BaseRow.FieldsList
+  ↓table_id [variables.StepVariable-1665925404786]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓JsonSource [steps.JsonSourceStep-1665925437972]: 
+  comment: Our field list is now in aFields
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1665925387944
+        - java.lang.String: 
+          - ↑value: ./document/array
+  variableName: aFields
+↓BuildFilters [steps.SimpleStep-1665925720838]: 
+  comment: Build the filters according to the API specs
+  expression: |
+    '// log.warn(JSON.stringify(aFields));
+    function getFieldId (fieldName) {
+    	fieldId = aFields.find( elt =>  elt.name == fieldName);
+    	return (fieldId ? fieldId.id:''unknown_field'');
+    }
+    
+    if (filterExpression) {
+    	built ='''';
+    	filterExpression +='','';
+    	aExpressions = filterExpression.split('','');
+    	aExpressions.forEach(exp => {
+    		//log.warn(exp);
+    		if (exp.length != 0) {
+    			segments = exp.split(''__'');
+    			fieldId = getFieldId(segments[0]);
+    			built += "filter__field_"  + fieldId + "__" + segments[1] + "&"
+    		}   
+    	})
+    }
+    filterExpression = built;
+    log.warn(filterExpression);
+    
+    '
 ↓Call_Transaction [steps.TransactionStep-1665320785554]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET
   ↓__header_Authorization [variables.StepVariable-1665320785557]: 
@@ -62,7 +116,7 @@ comment: Gets data from a given table
       
       This works only if two or more filters are provided.'
     description: filter_type
-  ↓include [variables.StepVariable-1665321545932]: 
+  ↓include_fields [variables.StepVariable-1665321545932]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
     description: include
   ↓order_by [variables.StepVariable-1665321545934]: 
@@ -89,6 +143,8 @@ comment: Gets data from a given table
   ↓view_id [variables.StepVariable-1665321545946]: 
     comment: Includes all the filters and sorts of the provided view.
     description: view_id
+  ↓filterExpression [variables.StepVariable-1665915588657]: 
+    value: 
 ↓Copy [steps.XMLCopyStep-1665320785560]: 
   sourceDefinition: 
     - xmlizable: 
@@ -116,7 +172,7 @@ comment: Gets data from a given table
     
     This works only if two or more filters are provided.'
   description: filter_type
-↓include [variables.RequestableVariable-1665321650982]: 
+↓include_fields [variables.RequestableVariable-1665321650982]: 
   comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
   description: include
 ↓order_by [variables.RequestableVariable-1665321650984]: 
@@ -139,6 +195,8 @@ comment: Gets data from a given table
 ↓view_id [variables.RequestableVariable-1665321650996]: 
   comment: Includes all the filters and sorts of the provided view.
   description: view_id
+↓filterExpression [variables.RequestableVariable-1665915646568]: 
+  value: 
 ↓TestAllShows [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1665393522746]: 
     description: table_id
