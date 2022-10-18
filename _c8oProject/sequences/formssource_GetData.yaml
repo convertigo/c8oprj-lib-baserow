@@ -400,7 +400,7 @@ comment: |
   ↓forms_rowFilter [variables.TestCaseVariable-1665911720678]: 
     description: 
     required: true
-    value: filter__field_3097__contains=Little
+    value: Name__contains=Little
 ↓TestWithInlcude [core.TestCase]: 
   ↓forms_table_id [variables.TestCaseVariable-1665910837250]: 
     comment: The Table ID you want to get data from
