@@ -64,7 +64,7 @@ comment: Gets data from a given table
 ↓BuildFilters [steps.SimpleStep-1665925720838]: 
   comment: Build the filters according to the API specs
   expression: |
-    '// log.warn(JSON.stringify(aFields));
+    'log.warn(JSON.stringify(aFields));
     function getFieldId (fieldName) {
     	fieldId = aFields.find( elt =>  elt.name == fieldName);
     	return (fieldId ? fieldId.id:''unknown_field'');
@@ -74,8 +74,9 @@ comment: Gets data from a given table
     	built ='''';
     	filterExpression +='','';
     	aExpressions = filterExpression.split('','');
+    	log.warn(JSON.stringify(aExpressions));
     	aExpressions.forEach(exp => {
-    		//log.warn(exp);
+    		log.warn(exp);
     		if (exp.length != 0) {
     			segments = exp.split(''__'');
     			fieldId = getFieldId(segments[0]);

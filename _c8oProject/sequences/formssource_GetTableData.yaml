@@ -115,6 +115,7 @@ comment: |
       comment: The data object
       ↓Field1 [steps.JsonFieldStep-1665403149132]: 
         comment: Set the value of the row to be the baserow ID
+        isEnabled: false
         key: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -262,6 +263,19 @@ comment: |
                       ↓jThen [steps.ThenStep-1665685010863]: 
                         ↓AddImageEnttry [steps.SimpleStep-1665685016539]: 
                           expression: jHtml += "<img class='c8obaserow_image' src=\"" + jURL + "\" ></img>"
+                        ↓Field3 [steps.JsonFieldStep-1666282347183]: 
+                          key: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                              - SmartType: 
+                                - ↑mode: PLAIN
+                                - →→: value
+                          value: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                              - SmartType: 
+                                - ↑mode: JS
+                                - →→: jHtml
                       ↓jElse [steps.ElseStep-1665685010865]: 
                         ↓jSimpleSource [steps.SimpleSourceStep-1665685737366]: 
                           sourceDefinition: 
@@ -275,23 +289,23 @@ comment: |
                           variableName: jVisibleName
                         ↓AddFileEntry [steps.SimpleStep-1665685031623]: 
                           expression: jHtml += "<p class='c8obaserow_file' ><a  src=\"" + jURL + "\" >" + jVisibleName + "</a></p>"
-              ↓Field3 [steps.JsonFieldStep-1665692604504]: 
-                key: 
-                  - xmlizable: 
-                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                    - SmartType: 
-                      - ↑mode: PLAIN
-                      - →→: value
-                value: 
-                  - xmlizable: 
-                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                    - SmartType: 
-                      - ↑mode: SOURCE
-                      - com.twinsoft.convertigo.beans.common.XMLVector: 
-                        - java.lang.String: 
-                          - ↑value: 1665403182897
-                        - java.lang.String: 
-                          - ↑value: name(.)
+                        ↓Field3 [steps.JsonFieldStep-1666282359295]: 
+                          key: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                              - SmartType: 
+                                - ↑mode: PLAIN
+                                - →→: value
+                          value: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                              - SmartType: 
+                                - ↑mode: SOURCE
+                                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                                  - java.lang.String: 
+                                    - ↑value: 1665403182897
+                                  - java.lang.String: 
+                                    - ↑value: name(.)
             ↓jElse [steps.ElseStep-1665406759520]: 
               ↓jSimpleSource [steps.SimpleSourceStep-1665857073228]: 
                 sourceDefinition: 
@@ -361,9 +375,13 @@ comment: |
           expression: jHtml += "</div>"
 ↓forms_table_id [variables.RequestableVariable-1665402317348]: 
   comment: |
-    Returns the rows of the table related to the provided value
-    
-  description: Returns the rows of the table related to the provided value
+    '{
+    	"en": {
+    		"comment":"Returns the rows of the table related to the provided value",
+    		"displayName":"Table ID"
+    	}
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
   required: true
   value: 
 ↓forms_view_id [variables.RequestableVariable-1665907012542]: 

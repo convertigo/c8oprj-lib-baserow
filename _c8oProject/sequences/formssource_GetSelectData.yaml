@@ -1,0 +1,209 @@
+comment: |
+  Gets data from a baserow table.
+  
+↓Call_Sequence1 [steps.SequenceStep-1666100090906]: 
+  sourceSequence: lib_BaseRow.AdminLogin
+  ↓password [variables.StepVariable-1666100090909]: 
+    comment: The baserow admin password
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xf5254abfffc0d4178afb9f473a13d698
+    visibility: '-1'
+  ↓email [variables.StepVariable-1666100090912]: 
+    comment: The Base row admin email
+    value: olivierp@convertigo.com
+↓Input_variables [steps.InputVariablesStep-1666100090915]: 
+↓Call_Sequence [steps.SequenceStep-1666100090918]: 
+  sourceSequence: lib_BaseRow.TableGetData
+  ↓exclude [variables.StepVariable-1666100090921]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+    description: exclude
+  ↓filter_type [variables.StepVariable-1666100090924]: 
+    comment: |
+      '`AND`: Indicates that the rows must match all the provided filters.
+      `OR`: Indicates that the rows only have to match one of the filters.
+      
+      This works only if two or more filters are provided.'
+    description: filter_type
+    value: AND
+  ↓include_fields [variables.StepVariable-1666100090927]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+    description: include
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1666100090915
+          - java.lang.String: 
+            - ↑value: ./forms_columns/text()
+  ↓order_by [variables.StepVariable-1666100090930]: 
+    comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+    description: order_by
+  ↓page [variables.StepVariable-1666100090933]: 
+    comment: Defines which page of rows should be returned.
+    description: page
+  ↓search [variables.StepVariable-1666100090936]: 
+    comment: If provided only rows with data that matches the search query are going to be returned.
+    description: search
+  ↓size [variables.StepVariable-1666100090939]: 
+    comment: Defines how many rows should be returned per page.
+    description: size
+  ↓table_id [variables.StepVariable-1666100090942]: 
+    comment: Returns the rows of the table related to the provided value.
+    description: table_id
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1666100090915
+          - java.lang.String: 
+            - ↑value: ./forms_table_id/text()
+    value: 
+  ↓view_id [variables.StepVariable-1666100090945]: 
+    comment: Includes all the filters and sorts of the provided view.
+    description: view_id
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1666100090915
+          - java.lang.String: 
+            - ↑value: ./forms_view_id/text()
+  ↓filterExpression [variables.StepVariable-1666100090948]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1666100090915
+          - java.lang.String: 
+            - ↑value: ./forms_rowFilter/text()
+    value: 
+↓IfExist [steps.IfExistStep-1666100090951]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1666100090918
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Error_structure [steps.XMLErrorStep-1666100090954]: 
+  ↓Return [steps.ReturnStep-1666100090957]: 
+↓Array [steps.JsonArrayStep-1666100090960]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: value
+  ↓Iterator [steps.IteratorStep-1666100090963]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1666100090918
+          - java.lang.String: 
+            - ↑value: ./document/results/object
+    ↓Object [steps.JsonObjectStep-1666100090966]: 
+      comment: The data object
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: item
+      ↓Field [steps.JsonFieldStep-1666100497109]: 
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: displayValue
+        value: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1666100090963
+                - java.lang.String: 
+                  - ↑value: ./*[3]
+      ↓Field1 [steps.JsonFieldStep-1666100514159]: 
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: value
+        value: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1666100090963
+                - java.lang.String: 
+                  - ↑value: ./*[4]
+↓forms_table_id [variables.RequestableVariable-1666100091062]: 
+  comment: |
+    Fills the select from the data coming from this table id
+    
+  description: Returns the rows of the table related to the provided value
+  required: true
+  value: 
+↓forms_view_id [variables.RequestableVariable-1666100091065]: 
+  comment: |
+    The optional View ID associated to this table
+    
+  description: |
+    The optional View ID associated to this table
+    
+  required: true
+  value: 
+↓forms_columns [variables.RequestableVariable-1666100091068]: 
+  comment: |
+    The comma separated list of columns. The first on represents the select display , the second the select value
+    
+  description: |
+    The comma separated list of fields we want to retrieve
+    
+  required: true
+  value: 
+↓forms_filter [variables.RequestableVariable-1666100091071]: 
+  comment: |
+    Filters
+    
+  description: 
+  required: true
+  value: 
+↓TestWithColumns [core.TestCase]: 
+  ↓forms_table_id [variables.TestCaseVariable-1666166961536]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: 345
+  ↓forms_filter [variables.TestCaseVariable-1666166982801]: 
+    description: 
+    required: true
+    value: 
+  ↓forms_columns [variables.TestCaseVariable-1666167017313]: 
+    description: |
+      The comma separated list of fields we want to retrieve
+      
+    required: true
+    value: Description,Test
+↓TestWithNoView [core.TestCase]: 
+  ↓forms_table_id [variables.TestCaseVariable-1666100091089]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: 345

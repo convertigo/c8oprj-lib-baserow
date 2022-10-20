@@ -1,4 +1,4 @@
-↑convertigo: 8.1.0.m006
+↑convertigo: 8.0.0.m006
 ↓lib_BaseRow [core.Project]: 
   comment: This is the Baserow connector for Convertigo
   corsOrigin: =Origin
@@ -7,7 +7,8 @@
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
   ↓ApplicationsList [sequences.GenericSequence]: 🗏 sequences/ApplicationsList.yaml
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
-  ↓formssource_GetData [sequences.GenericSequence]: 🗏 sequences/formssource_GetData.yaml
+  ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
+  ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓GroupsList [sequences.GenericSequence]: 🗏 sequences/GroupsList.yaml
   ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml
   ↓Project_reference [references.ProjectSchemaReference]: 

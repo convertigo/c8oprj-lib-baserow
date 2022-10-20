@@ -13,7 +13,8 @@ For more technical informations : [documentation](./project.md)
     - [AdminLogin](#adminlogin)
     - [ApplicationsList](#applicationslist)
     - [FieldsList](#fieldslist)
-    - [formssource_GetData](#formssource_getdata)
+    - [formssource_GetSelectData](#formssource_getselectdata)
+    - [formssource_GetTableData](#formssource_gettabledata)
     - [GroupsList](#groupslist)
     - [TableGetData](#tablegetdata)
 - [Mobile Library](#mobile-library)
@@ -91,7 +92,36 @@ Lists all the fields in a baserow table
 </tr>
 </table>
 
-### formssource_GetData
+### formssource_GetSelectData
+
+Gets data from a baserow table.
+
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_columns</td><td>The comma separated list of columns. The first on represents the select display , the second the select value
+</td>
+</tr>
+<tr>
+<td>forms_filter</td><td>Filters
+</td>
+</tr>
+<tr>
+<td>forms_table_id</td><td>Fills the select from the data coming from this table id
+</td>
+</tr>
+<tr>
+<td>forms_view_id</td><td>The optional View ID associated to this table
+</td>
+</tr>
+</table>
+
+### formssource_GetTableData
 
 Gets data from a baserow table.
 
@@ -111,8 +141,7 @@ Gets data from a baserow table.
 </td>
 </tr>
 <tr>
-<td>forms_table_id</td><td>Returns the rows of the table related to the provided value
-</td>
+<td>forms_table_id</td><td>Returns the rows of the table related to the provided value</td>
 </tr>
 <tr>
 <td>forms_view_id</td><td>The optional View ID associated to this table
