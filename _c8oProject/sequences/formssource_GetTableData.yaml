@@ -141,7 +141,7 @@ comment: |
               - java.lang.String: 
                 - ↑value: 1665402736681
               - java.lang.String: 
-                - ↑value: ./*[name() != 'id' and name() != 'order' ]
+                - ↑value: ./*
         ↓InitHtmEntry [steps.SimpleStep-1665407550205]: 
           comment: Start a DIV HTML with styling
           expression: |
@@ -371,6 +371,27 @@ comment: |
                 - SmartType: 
                   - ↑mode: JS
                   - →→: 'jOriginalKeyName ? jOriginalKeyName : jKeyName'
+          ↓Log [steps.LogStep-1666371057521]: 
+            expression: |
+              '"***" + jKeyName + " : " + (jKeyName == ''id'' || jKeyName == ''order'')
+              '
+            level: WARN
+          ↓jIf [steps.IfStep-1666370491964]: 
+            condition: jKeyName == 'id' || jKeyName == 'order'
+            ↓Field [steps.JsonFieldStep-1666370538855]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: hidden
+              type: bool
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: true
         ↓FinishHtmlEntry [steps.SimpleStep-1665833852150]: 
           expression: jHtml += "</div>"
 ↓forms_table_id [variables.RequestableVariable-1665402317348]: 
