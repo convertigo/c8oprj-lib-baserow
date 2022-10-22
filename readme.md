@@ -133,7 +133,7 @@ Gets data from a baserow table.
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Returns the rows of the table related to the provided value</td>
+<td>forms_config</td><td>Returns the rows of the table with a given configuration</td>
 </tr>
 <tr>
 <td>forms_filter</td><td>Filters

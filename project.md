@@ -6596,7 +6596,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Returns the rows of the table related to the provided value
+Returns the rows of the table with a given configuration
 </td>
 </tr>
 <tr>

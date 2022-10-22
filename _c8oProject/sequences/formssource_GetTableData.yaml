@@ -352,8 +352,8 @@ comment: |
   comment: |
     '{
     	"en": {
-    		"comment":"Returns the rows of the table related to the provided value",
-    		"displayName":"Table ID"
+    		"comment":"Returns the rows of the table with a given configuration",
+    		"displayName":"Configuration"
     	}
     }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
