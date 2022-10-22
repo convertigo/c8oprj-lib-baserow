@@ -133,18 +133,10 @@ Gets data from a baserow table.
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_include</td><td>The comma separated list of fields we want to retrieve
-</td>
+<td>forms_config</td><td>Returns the rows of the table related to the provided value</td>
 </tr>
 <tr>
-<td>forms_rowFilter</td><td>Filters
-</td>
-</tr>
-<tr>
-<td>forms_table_id</td><td>Returns the rows of the table related to the provided value</td>
-</tr>
-<tr>
-<td>forms_view_id</td><td>The optional View ID associated to this table
+<td>forms_filter</td><td>Filters
 </td>
 </tr>
 </table>
@@ -180,7 +172,65 @@ The following filters are available: equal, not_equal, filename_contains, has_fi
 This works only if two or more filters are provided.</td>
 </tr>
 <tr>
-<td>filterExpression</td><td></td>
+<td>filterExpression</td><td>A JSON Structure representing the filters in the form :
+
+```
+{
+	"mode": "AND",  // Can be AND or OR
+	"filters": [
+		{
+			"field": "Name",  	// The name of the column to filter on
+			"op": "contains",	// the operation, can be any of the operations described below
+			"value": "Little"	// The value of the filter operation
+		},
+		{
+			"field": "Description",
+			"op": "contains",
+			"value": "1954"
+		}
+	]
+}
+```
+
+### operations
+
+|Filter	|Example value	| Full example |
+|-------|---------------|--------------|
+|equal	|string	|field is 'string'|
+|not_equal	|string	|field is not 'string'|
+|date_equal	|2020-01-01	|field is date '2020-01-01'|
+|date_not_equal	|2020-01-01	|field is not date '2020-01-01'|
+|date_equals_today	|	|field is today|
+|date_before_today	|	|field is before today|
+|date_after_today	|	|field is after today|
+|date_equals_days_ago	|Europe/Paris?1	|field is days ago 'Europe/Paris?1'|
+|date_equals_months_ago	|Europe/Paris?1	|field is months ago 'Europe/Paris?1'|
+|date_equals_years_ago	|Europe/Paris?1	|field is years ago 'Europe/Paris?1'|
+|date_equals_week	|	|field in this week|
+|date_equals_month	|	|field in this month|
+|date_equals_year	|	|field in this year|
+|date_equals_day_of_month|	1	|field day of month is '1'|
+|date_before	|2020-01-01	|field is before date '2020-01-01'|
+|date_after	|2020-01-01	|field is after date '2020-01-01'|
+|contains	|string	|field contains 'string'|
+|filename_contains|	string|	field filename contains 'string'|
+|has_file_type|	image / document	|field has file type 'image / document'|
+|contains_not 	string	|field contains not 'string'|
+|length_is_lower_than	|5	|field length is lower than '5'|
+|higher_than	|100|	field higher than '100'|
+|lower_than	|100|	field lower than '100'|
+|single_select_equal|	1	|field is '1'|
+|single_select_not_equal|	1	|field is not '1'|
+|boolean|	true|	field is 'true'|
+|link_row_has|	1|	field has '1'|
+|link_row_has_not|	1	|field has not '1'|
+|link_row_contains|	string	|field contains 'string'|
+|link_row_not_contains|	string|	field contains not 'string'|
+|multiple_select_has|	1|	field has '1'|
+|multiple_select_has_not|	1|	field has not '1'|
+|empty|		|field is empty|
+|not_empty|		|field is not empty|
+</td>
 </tr>
 <tr>
 <td>include_fields</td><td>All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.</td>
