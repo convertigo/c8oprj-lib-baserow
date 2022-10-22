@@ -6660,17 +6660,6 @@ The following filters are available: equal, not_equal, filename_contains, has_fi
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;filter_type
-</td>
-<td>
-`AND`: Indicates that the rows must match all the provided filters.
-`OR`: Indicates that the rows only have to match one of the filters.
-
-This works only if two or more filters are provided.
-</td>
-</tr>
-<tr>
-<td>
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;filterExpression
 </td>
 <td>

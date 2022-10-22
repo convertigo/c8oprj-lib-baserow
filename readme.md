@@ -166,12 +166,6 @@ For example if you provide the following GET parameter `filter__field_1__equal=t
 The following filters are available: equal, not_equal, filename_contains, has_file_type, contains, contains_not, length_is_lower_than, higher_than, lower_than, date_equal, date_before, date_after, date_not_equal, date_equals_today, date_before_today, date_after_today, date_equals_days_ago, date_equals_months_ago, date_equals_years_ago, date_equals_week, date_equals_month, date_equals_day_of_month, date_equals_year, single_select_equal, single_select_not_equal, link_row_has, link_row_has_not, link_row_contains, link_row_not_contains, boolean, empty, not_empty, multiple_select_has, multiple_select_has_not.</td>
 </tr>
 <tr>
-<td>filter_type</td><td>`AND`: Indicates that the rows must match all the provided filters.
-`OR`: Indicates that the rows only have to match one of the filters.
-
-This works only if two or more filters are provided.</td>
-</tr>
-<tr>
 <td>filterExpression</td><td>A JSON Structure representing the filters in the form :
 
 ```

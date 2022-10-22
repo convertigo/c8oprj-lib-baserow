@@ -24,6 +24,8 @@ comment: |
     	jConfig.columns.forEach(col => include_fields += col +",")
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
+    
+    filterExpression = forms_filter;
     '
 ↓Input_variables [steps.InputVariablesStep-1665402570169]: 
 ↓Call_Sequence [steps.SequenceStep-1665402300413]: 
@@ -31,14 +33,6 @@ comment: |
   ↓exclude [variables.StepVariable-1665402300415]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
     description: exclude
-  ↓filter_type [variables.StepVariable-1665402300419]: 
-    comment: |
-      '`AND`: Indicates that the rows must match all the provided filters.
-      `OR`: Indicates that the rows only have to match one of the filters.
-      
-      This works only if two or more filters are provided.'
-    description: filter_type
-    value: AND
   ↓include_fields [variables.StepVariable-1665402300421]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
     description: include
@@ -370,8 +364,6 @@ comment: |
     Filters
     
   description: 
-  required: true
-  value: 
 ↓TestWithFilters [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666432854743]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
@@ -396,7 +388,7 @@ comment: |
       		{
       			"field": "Description",
       			"op": "contains",
-      			"value": "1954"
+      			"value": "1950"
       		}
       	]
       }

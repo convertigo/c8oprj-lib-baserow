@@ -66,11 +66,11 @@ comment: Gets data from a given table
     	filter_type = filterExpression.mode;
     	built ='''';
     	filterExpression.filters.forEach(filter => {
-    		build += "filter__field_" + getFieldId(filter.field) + "__" + filter.op + "=" + filter.value + "&";
+    		built += "filter__field_" + getFieldId(filter.field) + "__" + filter.op + "=" + filter.value + "&";
     	});
+    	filterExpression = built;
+    	log.warn(filterExpression);
     }
-    filterExpression = built;
-    log.warn(filterExpression);
     
     '
 ↓Call_Transaction [steps.TransactionStep-1665320785554]: 
@@ -151,13 +151,6 @@ comment: Gets data from a given table
     
     The following filters are available: equal, not_equal, filename_contains, has_file_type, contains, contains_not, length_is_lower_than, higher_than, lower_than, date_equal, date_before, date_after, date_not_equal, date_equals_today, date_before_today, date_after_today, date_equals_days_ago, date_equals_months_ago, date_equals_years_ago, date_equals_week, date_equals_month, date_equals_day_of_month, date_equals_year, single_select_equal, single_select_not_equal, link_row_has, link_row_has_not, link_row_contains, link_row_not_contains, boolean, empty, not_empty, multiple_select_has, multiple_select_has_not.'
   description: filter__{field}__{filter}
-↓filter_type [variables.RequestableVariable-1665321650980]: 
-  comment: |
-    '`AND`: Indicates that the rows must match all the provided filters.
-    `OR`: Indicates that the rows only have to match one of the filters.
-    
-    This works only if two or more filters are provided.'
-  description: filter_type
 ↓include_fields [variables.RequestableVariable-1665321650982]: 
   comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
   description: include
@@ -242,7 +235,6 @@ comment: Gets data from a given table
     |empty|		|field is empty|
     |not_empty|		|field is not empty|
     '
-  value: 
 ↓TestAllShows [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1665393522746]: 
     description: table_id
