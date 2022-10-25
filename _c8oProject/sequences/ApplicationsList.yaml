@@ -1,38 +1,6 @@
 comment: Lists all applications (databases) in baserow
-↓GetTokenFromSession [steps.SessionGetStep-1665210481031]: 
-  key: token
-  output: false
-↓Concat [steps.XMLConcatStep-1665211330857]: 
-  nodeName: Bearer
-  output: false
-  sourcesDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: JWT
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - java.lang.String: 
-                  - ↑value: 1665210481031
-                - java.lang.String: 
-                  - ↑value: ./expression/text()
-            - java.lang.String: 
-              - ↑value: ''
+↓Call_Sequence [steps.SequenceStep-1666716889015]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Call_Transaction [steps.TransactionStep-1665210509901]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_applications_group__group_id___GET
   ↓__header_Authorization [variables.StepVariable-1665211142280]: 
@@ -41,9 +9,9 @@ comment: Lists all applications (databases) in baserow
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1665211330857
+            - ↑value: 1666716889015
           - java.lang.String: 
-            - ↑value: ./text()
+            - ↑value: ./document/Bearer/text()
   ↓group_id [variables.StepVariable-1665300534934]: 
     comment: Returns only applications that are in the group related to the provided value.
     description: group_id
@@ -66,4 +34,4 @@ comment: Lists all applications (databases) in baserow
   ↓group_id [variables.TestCaseVariable-1665300594051]: 
     description: group_id
     required: true
-    value: 37
+    value: 27872
