@@ -41,7 +41,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-caches-v1-
     - name: Convertigo generate application code
       env:
-        C8O_SERVER: ${{ secrets.C8O_SERVER_BETA }}
+        C8O_SERVER: ${{ secrets.C8O_SERVER_PEDRO }}
       run: |
         echo "Generate Mobile Builder App" && \
         sh gradlew --stacktrace --info generateMobileBuilder export -x compileMobileBuilder \
@@ -57,9 +57,9 @@ jobs:
           restore-keys: ${{ runner.os }}-build-node-
     - name: Convertigo build, deploy to server and export the application
       env:
-        C8O_SERVER: ${{ secrets.C8O_SERVER_BETA }}
-        C8O_USER: ${{ secrets.C8O_USER_BETA }}
-        C8O_PASSWORD: ${{ secrets.C8O_PASSWORD_BETA }}
+        C8O_SERVER: ${{ secrets.C8O_SERVER_PEDRO }}
+        C8O_USER: ${{ secrets.C8O_USER_PEDRO }}
+        C8O_PASSWORD: ${{ secrets.C8O_PASSWORD_PEDRO }}
       run: |
         echo "Build, deploy to $C8O_SERVER and export to project.zip the application" && \
         sh gradlew --stacktrace --info car deploy -x generateMobileBuilder \
