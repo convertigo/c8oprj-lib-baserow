@@ -6547,11 +6547,10 @@ comment
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_columns
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-The comma separated list of columns. The first on represents the select display , the second the select value
-
+Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
 </td>
 </tr>
 <tr>
@@ -6560,24 +6559,6 @@ The comma separated list of columns. The first on represents the select display 
 </td>
 <td>
 Filters
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_table_id
-</td>
-<td>
-Fills the select from the data coming from this table id
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_view_id
-</td>
-<td>
-The optional View ID associated to this table
 
 </td>
 </tr>

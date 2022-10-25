@@ -118,19 +118,10 @@ Gets data from a baserow table.
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_columns</td><td>The comma separated list of columns. The first on represents the select display , the second the select value
-</td>
+<td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
 </tr>
 <tr>
 <td>forms_filter</td><td>Filters
-</td>
-</tr>
-<tr>
-<td>forms_table_id</td><td>Fills the select from the data coming from this table id
-</td>
-</tr>
-<tr>
-<td>forms_view_id</td><td>The optional View ID associated to this table
 </td>
 </tr>
 </table>
