@@ -1,4 +1,5 @@
 comment: Lists all the fields in a baserow table
+responseExpiryDate: absolute,60
 ↓GetTokenFromSession [steps.SessionGetStep-1665297256054]: 
   key: token
   output: false
