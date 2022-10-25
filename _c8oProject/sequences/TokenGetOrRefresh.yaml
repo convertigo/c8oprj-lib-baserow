@@ -1,0 +1,88 @@
+↓GetTokenFromSession [steps.SessionGetStep-1666701028415]: 
+  key: token
+  output: false
+↓IfExist [steps.IfExistThenElseStep-1666701028418]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1666701028415
+        - java.lang.String: 
+          - ↑value: ./expression/text()
+  ↓jThen [steps.ThenStep-1666701028421]: 
+    ↓Log [steps.LogStep-1666701028424]: 
+      expression: '"Token exists in session"'
+      level: WARN
+    ↓Get_from_session [steps.SessionGetStep-1666701188304]: 
+      key: token_timestamp
+      output: false
+    ↓jSimpleSource [steps.SimpleSourceStep-1666701220195]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1666701188304
+            - java.lang.String: 
+              - ↑value: ./expression/text()
+      variableName: jTimeStamp
+    ↓jIf [steps.IfStep-1666701277255]: 
+      condition: new Date().getTime() - jTimeStamp * 1 > 58000 * 60
+      ↓Log [steps.LogStep-1666701356793]: 
+        expression: '"Token Must be refreshed"'
+        level: WARN
+      ↓Call_Sequence1 [steps.SequenceStep-1666701356796]: 
+        sourceSequence: lib_BaseRow.AdminLogin
+      ↓Set_in_session [steps.SessionSetStep-1666701356799]: 
+        expression: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: new Date().getTime()
+        key: token_timestamp
+  ↓jElse [steps.ElseStep-1666701028427]: 
+    ↓Log [steps.LogStep-1666701028430]: 
+      expression: '"Token doese not exist in session"'
+      level: WARN
+    ↓Call_Sequence1 [steps.SequenceStep-1666701028433]: 
+      sourceSequence: lib_BaseRow.AdminLogin
+    ↓Set_in_session [steps.SessionSetStep-1666701070175]: 
+      expression: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: new Date().getTime()
+      key: token_timestamp
+↓Concat [steps.XMLConcatStep-1666701028436]: 
+  nodeName: Bearer
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: JWT
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1666701028415
+                - java.lang.String: 
+                  - ↑value: ./expression/text()
+            - java.lang.String: 
+              - ↑value: ''

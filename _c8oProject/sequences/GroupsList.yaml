@@ -1,38 +1,6 @@
 comment: Lists all Groups for the current user
-↓GetTokenFromSession [steps.SessionGetStep-1665320057007]: 
-  key: token
-  output: false
-↓Concat [steps.XMLConcatStep-1665320057010]: 
-  nodeName: Bearer
-  output: false
-  sourcesDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: JWT
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - java.lang.String: 
-                  - ↑value: 1665320057007
-                - java.lang.String: 
-                  - ↑value: ./expression/text()
-            - java.lang.String: 
-              - ↑value: ''
+↓Call_Sequence [steps.SequenceStep-1666705555028]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Call_Transaction [steps.TransactionStep-1665320057013]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_groups__GET
   ↓__header_Authorization [variables.StepVariable-1665320057016]: 
@@ -41,9 +9,9 @@ comment: Lists all Groups for the current user
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1665320057010
+            - ↑value: 1666705555028
           - java.lang.String: 
-            - ↑value: ./text()
+            - ↑value: ./document/Bearer/text()
 ↓Copy [steps.XMLCopyStep-1665320057022]: 
   sourceDefinition: 
     - xmlizable: 

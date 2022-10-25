@@ -1,38 +1,6 @@
 comment: Gets data from a given table
-↓GetTokenFromSession [steps.SessionGetStep-1665320785548]: 
-  key: token
-  output: false
-↓Concat [steps.XMLConcatStep-1665320785551]: 
-  nodeName: Bearer
-  output: false
-  sourcesDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: JWT
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - java.lang.String: 
-                  - ↑value: 1665320785548
-                - java.lang.String: 
-                  - ↑value: ./expression/text()
-            - java.lang.String: 
-              - ↑value: ''
+↓Call_Sequence [steps.SequenceStep-1666705450278]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓jIf [steps.IfStep-1666632106805]: 
   condition: 'filterExpression ? filterExpression.length != 0: false'
   ↓Call_Sequence [steps.SequenceStep-1665925387944]: 
@@ -83,9 +51,9 @@ comment: Gets data from a given table
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1665320785551
+            - ↑value: 1666705450278
           - java.lang.String: 
-            - ↑value: ./text()
+            - ↑value: ./document/Bearer/text()
   ↓exclude [variables.StepVariable-1665320948434]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
     description: exclude

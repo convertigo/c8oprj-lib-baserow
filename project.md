@@ -6784,6 +6784,14 @@ Includes all the filters and sorts of the provided view.
 </table>
 
 </p></blockquote></details>
+
+<details><summary><b>TokenGetOrRefresh</b></summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TokenGetOrRefresh
+
+
+</p></blockquote></details>
 </p></blockquote></details>
 
 <details><summary><span style="color:DarkGoldenRod"><i>Mobile Application</i></span></summary><blockquote><p>

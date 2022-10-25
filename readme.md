@@ -30,6 +30,7 @@ For more technical informations : [documentation](./project.md)
     - [formssource_GetTableData](#formssource_gettabledata)
     - [GroupsList](#groupslist)
     - [TableGetData](#tablegetdata)
+    - [TokenGetOrRefresh](#tokengetorrefresh)
 - [Mobile Library](#mobile-library)
 
 
@@ -254,6 +255,8 @@ Gets data from a given table
 <td>view_id</td><td>Includes all the filters and sorts of the provided view.</td>
 </tr>
 </table>
+
+### TokenGetOrRefresh
 
 ## Mobile Library
 

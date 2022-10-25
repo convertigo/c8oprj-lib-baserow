@@ -1,8 +1,6 @@
 comment: |
   Gets data from a baserow table.
   
-↓Call_Sequence1 [steps.SequenceStep-1665688594574]: 
-  sourceSequence: lib_BaseRow.AdminLogin
 ↓ParseConfig [steps.SimpleStep-1666429506760]: 
   expression: |
     'jConfig = JSON.parse(forms_config);
@@ -361,7 +359,7 @@ comment: |
     required: true
     value: |
       '{
-      	"table_id": "351"
+      	"table_id": "109863"
       }
       '
   ↓forms_tableFilter [variables.TestCaseVariable-1666432865700]: 

@@ -1,18 +1,6 @@
 comment: |
   Gets data from a baserow table.
   
-↓Call_Sequence1 [steps.SequenceStep-1666100090906]: 
-  sourceSequence: lib_BaseRow.AdminLogin
-  ↓password [variables.StepVariable-1666100090909]: 
-    comment: The baserow admin password
-    value: 
-      - ↑ciphered: true
-      - ↑traceable: false
-      - →→: xf5254abfffc0d4178afb9f473a13d698
-    visibility: '-1'
-  ↓email [variables.StepVariable-1666100090912]: 
-    comment: The Base row admin email
-    value: olivierp@convertigo.com
 ↓Input_variables [steps.InputVariablesStep-1666100090915]: 
 ↓Call_Sequence [steps.SequenceStep-1666100090918]: 
   sourceSequence: lib_BaseRow.TableGetData
