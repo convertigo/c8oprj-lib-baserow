@@ -3,16 +3,6 @@ comment: |
   
 ↓Call_Sequence1 [steps.SequenceStep-1665688594574]: 
   sourceSequence: lib_BaseRow.AdminLogin
-  ↓password [variables.StepVariable-1665688594576]: 
-    comment: The baserow admin password
-    value: 
-      - ↑ciphered: true
-      - ↑traceable: false
-      - →→: xf5254abfffc0d4178afb9f473a13d698
-    visibility: '-1'
-  ↓email [variables.StepVariable-1665688594578]: 
-    comment: The Base row admin email
-    value: olivierp@convertigo.com
 ↓ParseConfig [steps.SimpleStep-1666429506760]: 
   expression: |
     'jConfig = JSON.parse(forms_config);
@@ -400,9 +390,9 @@ comment: |
     required: true
     value: |
       '{
-      	"table_id": "351",
-      	"columns": ["Photo", "Description", "Name"],
-      	"hidden": ["Description"]
+      	"table_id": "109863",
+      	"columns": ["Picture", "Position", "Phone number", "Email"],
+      	"hidden": ["Email"]
       }
       '
 ↓TestWithView [core.TestCase]: 
