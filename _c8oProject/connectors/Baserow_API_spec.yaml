@@ -1,4 +1,5 @@
 baseDir: 
+https: ${lib_baserow.https}
 port: ${lib_baserow.port}
 server: ${lib_baserow.server}
 ↓_api_admin_dashboard__GET [transactions.JsonHttpTransaction]: 

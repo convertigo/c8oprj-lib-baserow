@@ -3,7 +3,20 @@
 
 # lib_BaseRow
 
-This is the Baserow connector for Convertigo
+This is the Baserow connector for Convertigo. Use this connector to exchange data with Baserow databases.
+
+## Symbols
+This library uses the following symbols
+
+| Symbol    | Usage |
+|-----------|-------------------|
+|lib_baserow.server  | the host name of the baserow server |
+|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for https |
+|lib_baserow.https   | set to true for https, to false otherwise |
+|lib_baserow.password.secret| The baserow admin password |
+|lib_baserow.adminuser| The baserow admin user email. |
+
+
 
 
 For more technical informations : [documentation](./project.md)
@@ -136,7 +149,7 @@ Gets data from a baserow table.
 <td>forms_config</td><td>Returns the rows of the table with a given configuration</td>
 </tr>
 <tr>
-<td>forms_filter</td><td>Filters
+<td>forms_tableFilter</td><td>Filters
 </td>
 </tr>
 </table>

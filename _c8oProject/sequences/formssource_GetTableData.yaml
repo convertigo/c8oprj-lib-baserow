@@ -25,7 +25,8 @@ comment: |
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
     
-    filterExpression = forms_filter;
+    filterExpression = forms_tableFilter;
+    
     '
 ↓Input_variables [steps.InputVariablesStep-1665402570169]: 
 ↓Call_Sequence [steps.SequenceStep-1665402300413]: 
@@ -359,7 +360,7 @@ comment: |
   description: XXconfigure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
   required: true
   value: 
-↓forms_filter [variables.RequestableVariable-1665911494442]: 
+↓forms_tableFilter [variables.RequestableVariable-1665911494442]: 
   comment: |
     Filters
     
@@ -373,7 +374,7 @@ comment: |
       	"table_id": "351"
       }
       '
-  ↓forms_filter [variables.TestCaseVariable-1666432865700]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1666432865700]: 
     description: 
     required: true
     value: |

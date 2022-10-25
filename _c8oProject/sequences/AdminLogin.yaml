@@ -78,15 +78,11 @@ comment: Establishes a session with Baserow. Must be called befor any other API
   value: 
     - ↑ciphered: true
     - ↑traceable: false
-    - →→: xd8e180806a1c1d83a6255212121ab827
+    - →→: x368839f57e89ac82b41bd8e5877bda5fde23a53416c5c10a78cbe7cbbf486cca
   visibility: '-1'
 ↓email [variables.RequestableVariable-1664964117937]: 
   comment: The Base row admin email
-  value: 
-    - ↑ciphered: true
-    - ↑traceable: false
-    - →→: xd8e180806a1c1d83a6255212121ab827
-  visibility: 15
+  value: ${lib_baserow.adminuser}
 ↓testKO [core.TestCase]: 
   ↓user [variables.TestCaseVariable-1665210668032]: 
     value: Olivier Picciotto

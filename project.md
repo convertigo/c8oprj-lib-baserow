@@ -1,7 +1,20 @@
 
 # ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/core/images/project_color_16x16.png?raw=true "Project") lib_BaseRow
 
-This is the Baserow connector for Convertigo
+This is the Baserow connector for Convertigo. Use this connector to exchange data with Baserow databases.
+
+## Symbols
+This library uses the following symbols
+
+| Symbol    | Usage |
+|-----------|-------------------|
+|lib_baserow.server  | the host name of the baserow server |
+|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for https |
+|lib_baserow.https   | set to true for https, to false otherwise |
+|lib_baserow.password.secret| The baserow admin password |
+|lib_baserow.adminuser| The baserow admin user email. |
+
+
 
 <details><summary><span style="color:DarkGoldenRod"><i>Connectors</i></span></summary><blockquote><p>
 
@@ -6601,7 +6614,7 @@ Returns the rows of the table with a given configuration
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_filter
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableFilter
 </td>
 <td>
 Filters
