@@ -9,7 +9,7 @@ This library uses the following symbols
 | Symbol    | Usage |
 |-----------|-------------------|
 |lib_baserow.server  | the host name of the baserow server |
-|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for https |
+|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for http |
 |lib_baserow.https   | set to true for https, to false otherwise |
 |lib_baserow.password.secret| The baserow admin password |
 |lib_baserow.adminuser| The baserow admin user email. |
@@ -6766,12 +6766,12 @@ Includes all the filters and sorts of the provided view.
 
 </p></blockquote></details>
 
-<details><summary><b>TokenGetOrRefresh</b></summary><blockquote><p>
+<details><summary><b>TokenGetOrRefresh</b> : Gets a token or refresh it if the token is expired the Token will be placed in the current user session</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TokenGetOrRefresh
 
-
+Gets a token or refresh it if the token is expired the Token will be placed in the current user session
 </p></blockquote></details>
 </p></blockquote></details>
 

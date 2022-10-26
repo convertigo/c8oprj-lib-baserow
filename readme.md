@@ -11,7 +11,7 @@ This library uses the following symbols
 | Symbol    | Usage |
 |-----------|-------------------|
 |lib_baserow.server  | the host name of the baserow server |
-|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for https |
+|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for http |
 |lib_baserow.https   | set to true for https, to false otherwise |
 |lib_baserow.password.secret| The baserow admin password |
 |lib_baserow.adminuser| The baserow admin user email. |
@@ -248,6 +248,8 @@ Gets data from a given table
 </table>
 
 ### TokenGetOrRefresh
+
+Gets a token or refresh it if the token is expired the Token will be placed in the current user session
 
 ## Mobile Library
 
