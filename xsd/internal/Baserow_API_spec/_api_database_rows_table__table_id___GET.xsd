@@ -336,14 +336,6 @@ This works only if two or more filters are provided.
         <xsd:sequence>
             <xsd:element minOccurs="0" name="id" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_idType"/>
             <xsd:element minOccurs="0" name="order" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_orderType"/>
-            <xsd:element minOccurs="0" name="Name" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_NameType"/>
-            <xsd:element minOccurs="0" name="Description" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_DescriptionType"/>
-            <xsd:element minOccurs="0" name="Preferred_donations" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_Preferred_donationsType"/>
-            <xsd:element minOccurs="0" name="Related_shows" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_Related_showsType"/>
-            <xsd:element minOccurs="0" name="Contacts" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_ContactsType"/>
-            <xsd:element minOccurs="0" name="Is_tax_accredited" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_Is_tax_accreditedType"/>
-            <xsd:element minOccurs="0" name="Phone" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_PhoneType"/>
-            <xsd:element minOccurs="0" name="Fommula" type="lib_BaseRow_ns:Baserow_API_spec__api_database_rows_table__table_id___GET_document_object_results_object_FommulaType"/>
         </xsd:sequence>
         <xsd:attribute default="object" name="type" type="xsd:string"/>
     </xsd:complexType>
