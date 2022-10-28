@@ -382,6 +382,15 @@ comment: |
       	]
       }
       '
+↓TestWithFilters1 [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1666806571769]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: '{"table_id":"110211", "columns":["Last name", "First name", "Photo", "Department"]}'
+  ↓forms_tableFilter [variables.TestCaseVariable-1666806571772]: 
+    description: 
+    required: true
+    value: '{ "mode": "AND", "filters": [ { "field": "Last name", "op": "contains", "value":"" }, { "field": "Department", "op": "contains", "value":"" }]}'
 ↓TestWithInlcude [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666430403998]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
