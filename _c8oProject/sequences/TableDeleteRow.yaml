@@ -1,0 +1,52 @@
+comment: deletes a row from a  from a given table
+↓Call_Sequence [steps.SequenceStep-1667047744614]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1667047744632]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___DELETE
+  ↓__header_Authorization [variables.StepVariable-1667047744635]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1667047744614
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓row_id [variables.StepVariable-1667048608085]: 
+    comment: Deletes the row related to the value.
+    description: row_id
+    required: true
+    value: 
+  ↓table_id [variables.StepVariable-1667048718468]: 
+    comment: Deletes the row in the table related to the value.
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1667047744674]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1667047744632
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓table_id [variables.RequestableVariable-1667047744695]: 
+  comment: Returns the rows of the table related to the provided value.
+  description: table_id
+  required: true
+  value: 
+↓row_id [variables.RequestableVariable-1667048749068]: 
+  comment: Deletes the row related to the value.
+  description: row_id
+  required: true
+  value: 
+↓TestTeamMembers [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1667047744709]: 
+    description: table_id
+    required: true
+    value: 109863
+  ↓row_id [variables.TestCaseVariable-1667048761738]: 
+    description: row_id
+    required: true
+    value: 15

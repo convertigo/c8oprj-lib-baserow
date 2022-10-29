@@ -24,6 +24,8 @@
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓GroupsList [sequences.GenericSequence]: 🗏 sequences/GroupsList.yaml
+  ↓TableCreateRow [sequences.GenericSequence]: 🗏 sequences/TableCreateRow.yaml
+  ↓TableDeleteRow [sequences.GenericSequence]: 🗏 sequences/TableDeleteRow.yaml
   ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
   ↓Project_reference [references.ProjectSchemaReference]: 

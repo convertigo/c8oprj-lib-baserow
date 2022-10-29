@@ -1,0 +1,78 @@
+comment: Creates a row  in a table
+↓Input_variables [steps.InputVariablesStep-1667054558009]: 
+↓Call_Sequence [steps.SequenceStep-1667054179674]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1667054179677]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___POST
+  ↓__header_Authorization [variables.StepVariable-1667054179680]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1667054179674
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓__body [variables.StepVariable-1667054323327]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1667054558009
+          - java.lang.String: 
+            - ↑value: ./data/text()
+  ↓before [variables.StepVariable-1667054323333]: 
+    comment: If provided then the newly created row will be positioned before the row with the provided id.
+    description: before
+  ↓user_field_names [variables.StepVariable-1667054323335]: 
+    comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+    description: user_field_names
+    value: true
+  ↓table_id [variables.StepVariable-1667054406580]: 
+    comment: Creates a row in the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1667054179689]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1667054179677
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓table_id [variables.RequestableVariable-1667054179692]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓before [variables.RequestableVariable-1667054425418]: 
+  comment: If provided then the newly created row will be positioned before the row with the provided id.
+  description: before
+↓data [variables.RequestableVariable-1667054425416]: 
+  comment: A JSON object with each field name and value
+  required: true
+↓TestAddInFinanCialTable [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1667054179699]: 
+    description: table_id
+    required: true
+    value: 109868
+  ↓data [variables.TestCaseVariable-1667054609799]: 
+    required: true
+    value: |
+      '{
+          "ID": "GLC 2022Q3",
+          "Show": [
+              1
+          ],
+          "Goal": 0,
+          "Ticket sales": "0.00",
+          "Grants": [
+              1,2,3
+          ],
+          "Expenses": [
+              1
+          ]
+      }'

@@ -29,6 +29,8 @@ For more technical informations : [documentation](./project.md)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
     - [GroupsList](#groupslist)
+    - [TableCreateRow](#tablecreaterow)
+    - [TableDeleteRow](#tabledeleterow)
     - [TableGetData](#tablegetdata)
     - [TokenGetOrRefresh](#tokengetorrefresh)
 - [Mobile Library](#mobile-library)
@@ -149,6 +151,45 @@ Gets data from a baserow table.
 ### GroupsList
 
 Lists all Groups for the current user
+
+### TableCreateRow
+
+Creates a row  in a table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>before</td><td>If provided then the newly created row will be positioned before the row with the provided id.</td>
+</tr>
+<tr>
+<td>data</td><td>A JSON object with each field name and value</td>
+</tr>
+<tr>
+<td>table_id</td><td>Insert row in this table_id</td>
+</tr>
+</table>
+
+### TableDeleteRow
+
+deletes a row from a  from a given table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>row_id</td><td>Deletes the row related to the value.</td>
+</tr>
+<tr>
+<td>table_id</td><td>Returns the rows of the table related to the provided value.</td>
+</tr>
+</table>
 
 ### TableGetData
 
