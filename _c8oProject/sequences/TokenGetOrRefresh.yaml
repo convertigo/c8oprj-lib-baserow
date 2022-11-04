@@ -28,8 +28,11 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
             - java.lang.String: 
               - ↑value: ./expression/text()
       variableName: jTimeStamp
+    ↓Log1 [steps.LogStep-1667559305817]: 
+      expression: new Date().getTime() - jTimeStamp * 1
+      level: WARN
     ↓jIfThenElse [steps.IfThenElseStep-1666973283508]: 
-      condition: new Date().getTime() - jTimeStamp * 1 > 58000 * 60
+      condition: new Date().getTime() - jTimeStamp * 1 > 58000
       ↓jThen [steps.ThenStep-1666973283510]: 
         ↓Log [steps.LogStep-1666701356793]: 
           expression: '"Token Must be refreshed"'
