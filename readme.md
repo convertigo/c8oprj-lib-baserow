@@ -32,6 +32,7 @@ For more technical informations : [documentation](./project.md)
     - [TableCreateRow](#tablecreaterow)
     - [TableDeleteRow](#tabledeleterow)
     - [TableGetData](#tablegetdata)
+    - [TableReadRow](#tablereadrow)
     - [TokenGetOrRefresh](#tokengetorrefresh)
 - [Mobile Library](#mobile-library)
 
@@ -285,6 +286,24 @@ Gets data from a given table
 </tr>
 <tr>
 <td>view_id</td><td>Includes all the filters and sorts of the provided view.</td>
+</tr>
+</table>
+
+### TableReadRow
+
+Reads a row from a  from a given table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>row_id</td><td>Deletes the row related to the value.</td>
+</tr>
+<tr>
+<td>table_id</td><td>Returns the rows of the table related to the provided value.</td>
 </tr>
 </table>
 

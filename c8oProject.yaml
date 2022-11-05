@@ -27,6 +27,7 @@
   ↓TableCreateRow [sequences.GenericSequence]: 🗏 sequences/TableCreateRow.yaml
   ↓TableDeleteRow [sequences.GenericSequence]: 🗏 sequences/TableDeleteRow.yaml
   ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml
+  ↓TableReadRow [sequences.GenericSequence]: 🗏 sequences/TableReadRow.yaml
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
   ↓Project_reference [references.ProjectSchemaReference]: 
     comment: ngx builder template
