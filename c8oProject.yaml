@@ -1,4 +1,4 @@
-↑convertigo: 8.0.0.m006
+↑convertigo: 8.1.0.m006
 ↓lib_BaseRow [core.Project]: 
   comment: |
     'This is the Baserow connector for Convertigo. Use this connector to exchange data with Baserow databases.

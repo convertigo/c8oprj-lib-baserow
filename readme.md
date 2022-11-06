@@ -83,17 +83,6 @@ Establishes a session with Baserow. Must be called befor any other API
 
 Lists all applications (databases) in baserow
 
-**variables**
-
-<table>
-<tr>
-<th>name</th><th>comment</th>
-</tr>
-<tr>
-<td>group_id</td><td>Returns only applications that are in the group related to the provided value.</td>
-</tr>
-</table>
-
 ### FieldsList
 
 Lists all the fields in a baserow table

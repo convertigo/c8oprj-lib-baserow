@@ -168,7 +168,7 @@
     </xsd:complexType>
     <xsd:complexType name="Baserow_API_spec__api_applications__GET_document_arrayType">
         <xsd:sequence>
-            <xsd:element minOccurs="0" name="object" type="lib_BaseRow_ns:Baserow_API_spec__api_applications__GET_document_array_objectType"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="object" type="lib_BaseRow_ns:Baserow_API_spec__api_applications__GET_document_array_objectType"/>
         </xsd:sequence>
         <xsd:attribute name="length" type="xsd:byte"/>
         <xsd:attribute default="array" name="type" type="xsd:string"/>
