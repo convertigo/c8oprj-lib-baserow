@@ -618,7 +618,8 @@ title: First page
                             '{
                              "ionBean": "CheckBox",
                              "ControlName": "plain:name1667636420064",
-                             "DoubleBinding": "script:local.selectedColumns[column.name].hidden"
+                             "DoubleBinding": "script:local.selectedColumns[column.name].hidden",
+                             "Disabled": "script:! local?.selectedColumns[column.name]?.selected"
                             }'
                           tagName: ion-checkbox
                           ↓Style [ngx.components.UIStyle-1667808006243]: 
