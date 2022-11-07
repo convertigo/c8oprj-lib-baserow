@@ -231,6 +231,9 @@ title: First page
                       				conf.hidden.push(item)
                       			}			
                       		})
+                      		if (window.parent) {
+                      			window.parent["setConfigurationData"](JSON.stringify(conf))
+                      		}
                       		resolve(conf);
                       '
               ↓Log [ngx.components.UIDynamicAction-1667754905373]: 

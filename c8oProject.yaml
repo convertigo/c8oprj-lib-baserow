@@ -16,6 +16,7 @@
     
     '
   corsOrigin: =Origin
+  version: 1.0
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓void [connectors.SqlConnector]: 🗏 connectors/void.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
