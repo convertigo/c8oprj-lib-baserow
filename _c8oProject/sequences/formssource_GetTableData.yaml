@@ -217,7 +217,7 @@ comment: |
                               - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
                               - SmartType: 
                                 - ↑mode: JS
-                                - →→: jHtml
+                                - →→: jURL
                       ↓jElse [steps.ElseStep-1665685010865]: 
                         ↓jSimpleSource [steps.SimpleSourceStep-1665685737366]: 
                           sourceDefinition: 
