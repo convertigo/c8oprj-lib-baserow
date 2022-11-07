@@ -1,39 +1,7 @@
 comment: Lists all the fields in a baserow table
 responseExpiryDate: absolute,60
-↓GetTokenFromSession [steps.SessionGetStep-1665297256054]: 
-  key: token
-  output: false
-↓Concat [steps.XMLConcatStep-1665297256057]: 
-  nodeName: Bearer
-  output: false
-  sourcesDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: JWT
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - java.lang.String: 
-                  - ↑value: 1665297256054
-                - java.lang.String: 
-                  - ↑value: ./expression/text()
-            - java.lang.String: 
-              - ↑value: ''
+↓Call_Sequence [steps.SequenceStep-1667802514338]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Call_Transaction [steps.TransactionStep-1665297256060]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_fields_table__table_id___GET
   ↓__header_Authorization [variables.StepVariable-1665297256063]: 
@@ -42,9 +10,9 @@ responseExpiryDate: absolute,60
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1665297256057
+            - ↑value: 1667802514338
           - java.lang.String: 
-            - ↑value: ./text()
+            - ↑value: ./document/Bearer/text()
   ↓table_id [variables.StepVariable-1665298009120]: 
     comment: Returns only the fields of the table related to the provided value.
     description: table_id

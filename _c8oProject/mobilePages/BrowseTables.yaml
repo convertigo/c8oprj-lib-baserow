@@ -558,10 +558,10 @@ title: First page
                           - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                           - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1667636016496}],"path":"?.type","prefix":"","suffix":"","custom":"","useCustom":false}}
                   ↓Grid [ngx.components.UIDynamicElement-1667763124847]: 
-                    beanData: '{"ionBean":"Grid"}'
+                    beanData: '{"ionBean":"Grid","Height":"plain"}'
                     tagName: ion-grid
                     ↓GridRow [ngx.components.UIDynamicElement-1667763124849]: 
-                      beanData: '{"ionBean":"GridRow"}'
+                      beanData: '{"ionBean":"GridRow","Height":"plain"}'
                       tagName: ion-row
                       ↓GridCol [ngx.components.UIDynamicElement-1667763124851]: 
                         beanData: '{"ionBean":"GridCol"}'
