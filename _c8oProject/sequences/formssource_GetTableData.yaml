@@ -231,19 +231,19 @@ comment: |
                             jHtml += "<p class='c8obaserow_file' ><a  src=\"" + jURL + "\" >" + jVisibleName + "</a></p>"
                             jValues.push(jURL);
                             
-              ↓Field3 [steps.JsonFieldStep-1667889922772]: 
+              ↓JSON_to_XML [steps.JsonToXmlStep-1667927327885]: 
+                jsonObject: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: JS
+                      - →→: jValues
                 key: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
                     - SmartType: 
                       - ↑mode: PLAIN
                       - →→: value
-                value: 
-                  - xmlizable: 
-                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                    - SmartType: 
-                      - ↑mode: JS
-                      - →→: JSON.stringify(jValues)
             ↓jElse [steps.ElseStep-1665406759520]: 
               ↓jSimpleSource [steps.SimpleSourceStep-1665857073228]: 
                 sourceDefinition: 
@@ -257,19 +257,19 @@ comment: |
                 variableName: jData
               ↓AddData [steps.SimpleStep-1665857204666]: 
                 expression: jHtml += jData;
-              ↓Field3 [steps.JsonFieldStep-1665857970174]: 
+              ↓JSON_to_XML [steps.JsonToXmlStep-1667927358648]: 
+                jsonObject: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: JS
+                      - →→: jData
                 key: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
                     - SmartType: 
                       - ↑mode: PLAIN
                       - →→: value
-                value: 
-                  - xmlizable: 
-                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                    - SmartType: 
-                      - ↑mode: JS
-                      - →→: jData
           ↓Field [steps.JsonFieldStep-1665407340859]: 
             key: 
               - xmlizable: 
