@@ -1,6 +1,13 @@
 {
  "My_Menu": "Mon menu",
  "First_page": "Première page",
+ "Select_the_Baserow_database_and_table_yo": "Sélectionnez la base de données et la table Baserow à partir desquelles vous souhaitez obtenir des données",
+ "Select_a_database_and_table": "Sélectionnez une base de données et une table",
+ "Select": "Sélectionner",
+ "Confirm": "Confirmer",
+ "Select_columns_you_would_like_to_retriev": "Sélectionnez les colonnes que vous souhaitez récupérer à partir de la table sélectionnée dans la grille de données. Vous pouvez également masquer de la grille les colonnes sélectionnées. Ils ne seront pas visibles mais vous pourrez utiliser les données de ces colonnes dans vos applications. Cochez pour sélectionner toutes les colonnes",
+ "Include": "Inclure",
+ "Hide": "Cacher",
  "Page": "Page",
  "Action_1": "Action 1",
  "Action_2": "Action 2"

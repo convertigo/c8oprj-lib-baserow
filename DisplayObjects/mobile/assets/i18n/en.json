@@ -1,6 +1,13 @@
 {
  "My_Menu": "My Menu",
  "First_page": "First page",
+ "Select_the_Baserow_database_and_table_yo": "Select the Baserow database and table you want to get data from",
+ "Select_a_database_and_table": "Select a database and table",
+ "Select": "Select",
+ "Confirm": "Confirm",
+ "Select_columns_you_would_like_to_retriev": "Select columns you would like to retrieve from the selected table in the data grid. You can also hide from the grid selected columns. They will not be visible but you will be able to use this columns data in you apps.  Check to select all columns",
+ "Include": "Include",
+ "Hide": "Hide",
  "Page": "Page",
  "Action_1": "Action 1",
  "Action_2": "Action 2"

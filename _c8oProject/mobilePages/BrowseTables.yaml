@@ -52,6 +52,7 @@ title: First page
             beanData: '{"ionBean":"GridCol","FlexAlignement":"plain:ion-align-self-center"}'
             tagName: ion-col
             ↓Text [ngx.components.UIText-1491634275121]: 
+              i18n: true
               textValue: 
                 - xmlizable: 
                   - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
@@ -88,6 +89,7 @@ title: First page
                 beanData: '{"ionBean":"TextItem"}'
                 tagName: ion-text
                 ↓Text [ngx.components.UIText-1667636488226]: 
+                  i18n: true
                   textValue: 
                     - xmlizable: 
                       - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
@@ -205,6 +207,7 @@ title: First page
             beanData: '{"ionBean":"Label"}'
             tagName: ion-label
             ↓Text [ngx.components.UIText-1667747631237]: 
+              i18n: true
               textValue: 
                 - xmlizable: 
                   - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
@@ -268,6 +271,7 @@ title: First page
                       beanData: '{"ionBean":"Heading"}'
                       tagName: h6
                       ↓Text [ngx.components.UIText-1667636569602]: 
+                        i18n: true
                         textValue: 
                           - xmlizable: 
                             - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
@@ -366,6 +370,7 @@ title: First page
                     beanData: '{"ionBean":"GridCol","Size":"plain:3"}'
                     tagName: ion-col
                     ↓Include [ngx.components.UIText-1667763315172]: 
+                      i18n: true
                       textValue: 
                         - xmlizable: 
                           - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
@@ -374,6 +379,7 @@ title: First page
                     beanData: '{"ionBean":"GridCol"}'
                     tagName: ion-col
                     ↓Text [ngx.components.UIText-1667763637961]: 
+                      i18n: true
                       textValue: 
                         - xmlizable: 
                           - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
