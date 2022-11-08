@@ -148,6 +148,10 @@ comment: |
                   - java.lang.String: 
                     - ↑value: .[@type = 'array']
             ↓jThen [steps.ThenStep-1665406759518]: 
+              ↓InitValueArray [steps.SimpleStep-1667889960531]: 
+                expression: |
+                  jValues = [];
+                  
               ↓Iterator [steps.IteratorStep-1665407450731]: 
                 sourceDefinition: 
                   - xmlizable: 
@@ -178,7 +182,10 @@ comment: |
                               - ↑value: ./value/text()
                       variableName: jMyEntry
                     ↓AddEntry [steps.SimpleStep-1665407618555]: 
-                      expression: jHtml += "<p class='c8obaserow_item' >" + jMyEntry + "</p>"
+                      expression: |
+                        jHtml += "<p class='c8obaserow_item' >" + jMyEntry + "</p>"
+                        jValues.push(jMyEntry);
+                        
                   ↓jElse [steps.ElseStep-1665684723424]: 
                     ↓jSimpleSource [steps.SimpleSourceStep-1665685771320]: 
                       sourceDefinition: 
@@ -204,20 +211,10 @@ comment: |
                       condition: bIsImage == 'true'
                       ↓jThen [steps.ThenStep-1665685010863]: 
                         ↓AddImageEnttry [steps.SimpleStep-1665685016539]: 
-                          expression: jHtml += "<img class='c8obaserow_image' src=\"" + jURL + "\" ></img>"
-                        ↓Field3 [steps.JsonFieldStep-1666282347183]: 
-                          key: 
-                            - xmlizable: 
-                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                              - SmartType: 
-                                - ↑mode: PLAIN
-                                - →→: value
-                          value: 
-                            - xmlizable: 
-                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                              - SmartType: 
-                                - ↑mode: JS
-                                - →→: jURL
+                          expression: |
+                            jHtml += "<img class='c8obaserow_image' src=\"" + jURL + "\" ></img>"
+                            jValues.push(jURL);
+                            
                       ↓jElse [steps.ElseStep-1665685010865]: 
                         ↓jSimpleSource [steps.SimpleSourceStep-1665685737366]: 
                           sourceDefinition: 
@@ -230,24 +227,23 @@ comment: |
                                   - ↑value: ./visible_name/text()
                           variableName: jVisibleName
                         ↓AddFileEntry [steps.SimpleStep-1665685031623]: 
-                          expression: jHtml += "<p class='c8obaserow_file' ><a  src=\"" + jURL + "\" >" + jVisibleName + "</a></p>"
-                        ↓Field3 [steps.JsonFieldStep-1666282359295]: 
-                          key: 
-                            - xmlizable: 
-                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                              - SmartType: 
-                                - ↑mode: PLAIN
-                                - →→: value
-                          value: 
-                            - xmlizable: 
-                              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                              - SmartType: 
-                                - ↑mode: SOURCE
-                                - com.twinsoft.convertigo.beans.common.XMLVector: 
-                                  - java.lang.String: 
-                                    - ↑value: 1665403182897
-                                  - java.lang.String: 
-                                    - ↑value: name(.)
+                          expression: |
+                            jHtml += "<p class='c8obaserow_file' ><a  src=\"" + jURL + "\" >" + jVisibleName + "</a></p>"
+                            jValues.push(jURL);
+                            
+              ↓Field3 [steps.JsonFieldStep-1667889922772]: 
+                key: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: PLAIN
+                      - →→: value
+                value: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: JS
+                      - →→: JSON.stringify(jValues)
             ↓jElse [steps.ElseStep-1665406759520]: 
               ↓jSimpleSource [steps.SimpleSourceStep-1665857073228]: 
                 sourceDefinition: 
@@ -402,6 +398,11 @@ comment: |
       	"hidden": ["Email"]
       }
       '
+↓TestWithLinks [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1667890317848]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: '{"table_id":"109861", "columns":["Last name", "First name", "Photo", "Department"]}'
 ↓TestWithView [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666431067846]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
