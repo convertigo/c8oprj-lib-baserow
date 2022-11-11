@@ -371,12 +371,19 @@ comment: |
                   - →→: 'jOriginalKeyName ? jOriginalKeyName : jKeyName'
           ↓Log [steps.LogStep-1666371057521]: 
             expression: |
-              '"***" + jKeyName + " : " + (jKeyName == ''id'' || jKeyName == ''order'')
+              '"***" + jKeyName + " : " + (jKeyName == ''id'' || jKeyName == ''order'') + "**" + jOriginalKeyName
+              
               '
             isEnabled: false
             level: WARN
           ↓jIf [steps.IfStep-1666370491964]: 
-            condition: 'jKeyName == ''id'' || jKeyName == ''order'' || (jConfig.hidden ? jConfig.hidden.includes(jKeyName): false)'
+            condition: |
+              jKeyName == 'id'||
+              jKeyName == 'order' ||
+              (jConfig.hidden ? 
+              	jConfig.hidden.includes(jOriginalKeyName ?jOriginalKeyName:	jKeyName):false
+              )
+              
             ↓Field [steps.JsonFieldStep-1666370538855]: 
               key: 
                 - xmlizable: 
@@ -454,8 +461,8 @@ comment: |
     value: |
       '{
       	"table_id": "109863",
-      	"columns": ["Picture", "Position", "SingleSelect", "Phone number", "Email"],
-      	"hidden": ["Email"]
+      	"columns": ["Name", "Picture", "Position", "SingleSelect", "Phone number", "Email"],
+      	"hidden": ["Name", "Picture", "Position", "SingleSelect", "Phone number", "Email"]
       }
       '
 ↓TestWithLinks [core.TestCase]: 
