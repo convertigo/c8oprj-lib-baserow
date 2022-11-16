@@ -330,7 +330,8 @@ title: First page
                                   			 page.local.selectedColumns[item.name] = {
                                   				selected : ! event.target.checked,
                                   				order: i++,
-                                  				id: item.id
+                                  				id: item.id,
+                                  				table_id: item.table_id
                                   			}
                                   		})
                                   		resolve();
