@@ -31,18 +31,41 @@ comment: Gets data from a given table
       	return (fieldId ? fieldId.id:''unknown_field'');
       }
       
+      bFieldError = false;
       if (filterExpression) {
+      
       	filterExpression = JSON.parse(filterExpression);
       	filter_type = filterExpression.mode;
       	built ='''';
       	filterExpression.filters.forEach(filter => {
       		built += "filter__field_" + getFieldId(filter.field) + "__" + filter.op + "=" + filter.value + "&";
       	});
+      	
       	filterExpression = built;
+      	if (built.indexOf("unknown_field") != -1)
+      		bFieldError = true;
+      		
       	log.warn(filterExpression);
       }
       
       '
+  ↓jIf [steps.IfStep-1669878598760]: 
+    condition: bFieldError
+    ↓Error_structure [steps.XMLErrorStep-1669878613440]: 
+      code: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: 100
+      comment: A filter field was not found in the list of table columns
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: A filter field was not found in the list of table columns
+    ↓Return [steps.ReturnStep-1669878671624]: 
 ↓Call_Transaction [steps.TransactionStep-1665320785554]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET
   ↓__header_Authorization [variables.StepVariable-1665320785557]: 

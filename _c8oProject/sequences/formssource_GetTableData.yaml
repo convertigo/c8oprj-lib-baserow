@@ -55,6 +55,16 @@ comment: |
         - java.lang.String: 
           - ↑value: ./document/error
   ↓Error_structure [steps.XMLErrorStep-1665402703369]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1665402300413
+            - java.lang.String: 
+              - ↑value: ./document/error/message/text()
   ↓Return [steps.ReturnStep-1665402714329]: 
 ↓Array [steps.JsonArrayStep-1665402723840]: 
   key: 
@@ -436,11 +446,6 @@ comment: |
       			"field": "Name",
       			"op": "contains",
       			"value": "Little"
-      		},
-      		{
-      			"field": "Description",
-      			"op": "contains",
-      			"value": "1950"
       		}
       	]
       }
@@ -454,6 +459,21 @@ comment: |
     description: 
     required: true
     value: '{ "mode": "AND", "filters": [ { "field": "Last name", "op": "contains", "value":"" }, { "field": "Department", "op": "contains", "value":"" }]}'
+↓TestWithFilters2 [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1669786915409]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "118056"
+      }
+      '
+  ↓forms_tableFilter [variables.TestCaseVariable-1669786915412]: 
+    description: 
+    required: true
+    value: |
+      '{"mode":"AND","filters":[{"field":"Name","op":"equal","value":"Epps Airpark"}]}
+      '
 ↓TestWithInlcude [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666430403998]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
