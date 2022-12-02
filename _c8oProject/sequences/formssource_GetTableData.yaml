@@ -472,7 +472,8 @@ comment: |
     description: 
     required: true
     value: |
-      '{"mode":"AND","filters":[{"field":"Name","op":"equal","value":"Epps Airpark"}]}
+      '{"mode":"AND","filters":[{"field":"name","op":"equal","value":"Fulton Airport"}]}
+      
       '
 ↓TestWithInlcude [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666430403998]: 
