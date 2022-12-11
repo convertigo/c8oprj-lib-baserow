@@ -38,6 +38,9 @@ comment: Gets data from a given table
       	filter_type = filterExpression.mode;
       	built ='''';
       	filterExpression.filters.forEach(filter => {
+      		if (filter.op == "equal" && filter.value.length == 0)
+      			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
+      			
       		built += "filter__field_" + getFieldId(filter.field) + "__" + filter.op + "=" + filter.value + "&";
       	});
       	
@@ -229,7 +232,7 @@ comment: Gets data from a given table
   ↓table_id [variables.TestCaseVariable-1665393910409]: 
     description: table_id
     required: true
-    value: 345
+    value: 110211
 ↓TestMaries [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1665396727286]: 
     description: table_id
