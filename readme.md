@@ -28,7 +28,10 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
+    - [FSPullAndPushTable](#fspullandpushtable)
     - [GroupsList](#groupslist)
+    - [TableBulkExportToCSV](#tablebulkexporttocsv)
+    - [TableBulkExportWaitFInished](#tablebulkexportwaitfinished)
     - [TableCreateRow](#tablecreaterow)
     - [TableDeleteRow](#tabledeleterow)
     - [TableGetData](#tablegetdata)
@@ -140,9 +143,52 @@ Gets data from a baserow table.
 </tr>
 </table>
 
+### FSPullAndPushTable
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>table_id</td><td>The table id to create and start an export job for</td>
+</tr>
+</table>
+
 ### GroupsList
 
 Lists all Groups for the current user
+
+### TableBulkExportToCSV
+
+Exports a Table to CSV.. Export status must me monitored with the TableBulkExportWaitFinished sequence
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>table_id</td><td>The table id to create and start an export job for</td>
+</tr>
+</table>
+
+### TableBulkExportWaitFInished
+
+Wait for an export job to be finihed. Will return the URL to the exported data
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>job_id</td><td>The job id to lookup information about.</td>
+</tr>
+</table>
 
 ### TableCreateRow
 

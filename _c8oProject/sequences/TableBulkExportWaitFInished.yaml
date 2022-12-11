@@ -1,0 +1,96 @@
+comment: Wait for an export job to be finihed. Will return the URL to the exported data
+↓Call_Sequence [steps.SequenceStep-1670749238200]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Init [steps.SimpleStep-1670750018663]: 
+  expression: |
+    status = "in progress"
+    
+↓jWhile [steps.WhileStep-1670750061029]: 
+  condition: status != "complete"
+  ↓Call_Transaction [steps.TransactionStep-1670749238218]: 
+    sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_export__job_id___GET
+    ↓__header_Authorization [variables.StepVariable-1670749238221]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670749238200
+            - java.lang.String: 
+              - ↑value: ./document/Bearer/text()
+    ↓job_id [variables.StepVariable-1670749291526]: 
+      comment: The job id to lookup information about.
+      description: job_id
+      required: true
+      value: 
+  ↓jSimpleSource [steps.SimpleSourceStep-1670750108113]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670749238218
+          - java.lang.String: 
+            - ↑value: ./document/object/status/text()
+    variableName: status
+  ↓jSimpleSource1 [steps.SimpleSourceStep-1670751843673]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670749238218
+          - java.lang.String: 
+            - ↑value: ./document/object/progress_percentage/text()
+    variableName: percent
+  ↓IfExist [steps.IfExistStep-1670750736153]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670749238218
+          - java.lang.String: 
+            - ↑value: ./document/object/error
+    ↓Copy [steps.XMLCopyStep-1670750802489]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670749238218
+            - java.lang.String: 
+              - ↑value: ./document/object/*
+    ↓Return [steps.ReturnStep-1670750802492]: 
+  ↓jIf [steps.IfStep-1670750559002]: 
+    condition: status == "complete"
+    ↓Copy [steps.XMLCopyStep-1670749238230]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670749238218
+            - java.lang.String: 
+              - ↑value: ./document/object/*
+    ↓Return [steps.ReturnStep-1670750595793]: 
+  ↓Wait [steps.SimpleStep-1670750222709]: 
+    expression: |
+      'log.warn("Status : " + status + " Percent export : " + percent)
+      java.lang.Thread.sleep(1000);
+      '
+↓job_id [variables.RequestableVariable-1670749356400]: 
+  comment: The job id to lookup information about.
+  description: job_id
+  required: true
+  value: 
+↓TestKO [core.TestCase]: 
+  ↓job_id [variables.TestCaseVariable-1670750667702]: 
+    description: job_id
+    required: true
+    value: 5456464654
+↓TestOK [core.TestCase]: 
+  ↓job_id [variables.TestCaseVariable-1670749387301]: 
+    description: job_id
+    required: true
+    value: 6495
