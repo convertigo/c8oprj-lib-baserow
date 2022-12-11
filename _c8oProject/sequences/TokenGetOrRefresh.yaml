@@ -29,7 +29,7 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
               - ↑value: ./expression/text()
       variableName: jTimeStamp
     ↓Log1 [steps.LogStep-1667559305817]: 
-      expression: new Date().getTime() - jTimeStamp * 1
+      expression: '"Token age (ms): " + (new Date().getTime() - jTimeStamp * 1)'
       level: WARN
     ↓jIfThenElse [steps.IfThenElseStep-1666973283508]: 
       condition: new Date().getTime() - jTimeStamp * 1 > 58000
