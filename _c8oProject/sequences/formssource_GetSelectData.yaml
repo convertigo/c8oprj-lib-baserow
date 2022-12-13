@@ -15,10 +15,15 @@ comment: |
     
     if (forms_filter) { 
     	filterExpression = JSON.stringify({
-    		"mode": "AND",
+    		"mode": "OR",
     		"filters": [
     			{
     				"field": jConfig.columns[0],
+    				"op": "contains",
+    				"value": forms_filter
+    			},
+    			{
+    				"field": jConfig.columns[1],
     				"op": "contains",
     				"value": forms_filter
     			}
