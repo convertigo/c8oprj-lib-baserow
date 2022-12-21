@@ -1,0 +1,300 @@
+responseTimeout: 60000000000000000
+↓Input_variables [steps.InputVariablesStep-1671630075836]: 
+↓Iterator [steps.IteratorStep-1671630075839]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1671630075836
+        - java.lang.String: 
+          - ↑value: ./files
+  ↓Call_Sequence [steps.SequenceStep-1671630075842]: 
+    sourceSequence: lib_BaseRow.TokenGetOrRefresh
+  ↓jSimpleSource [steps.SimpleSourceStep-1671630075845]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1671630075839
+          - java.lang.String: 
+            - ↑value: ./text()
+    variableName: file
+  ↓CreateCSVReader [steps.SimpleStep-1671630075848]: 
+    expression: |
+      '// Java Imports
+      var Paths = java.nio.file.Paths;
+      var Files = java.nio.file.Files;
+      var CSVReaderBuilder = com.opencsv.CSVReaderBuilder;
+      var CSVParserBuilder = com.opencsv.CSVParserBuilder;
+      var RFC4180ParserBuilder = com.opencsv.RFC4180ParserBuilder;
+      // Log params
+      log.debug("fileSeparator used will be: " + fileSeparator);
+      log.debug("quoteChar used will be: " + quoteChar);
+      
+      // Declare global variables
+      var br = null;
+      var line = "";
+      var path;
+      try{
+      	// Get file path
+      	path = Paths.get(file);
+      	// Create a buffer reader
+      	br = Files.newBufferedReader(path);
+      	// Instanciate CSVReaderBuilder, with RFC4180ParserBuilder (helping for special chars as \) 
+      	var reader = new CSVReaderBuilder(br)
+                      .withCSVParser(new RFC4180ParserBuilder()
+                              .withQuoteChar(""+quoteChar)
+                              .withSeparator(""+fileSeparator)
+                              .build())
+                      .build();
+          // If firstLine are columns name ignore them
+      	if(firstLineColumn == true || firstLineColumn == "true"){
+      		line = reader.readNext();
+      		log.debug("Skipped first line since its column name");
+      	}
+      }
+      catch(e){
+      	log.warn("An error occured " + JSON.stringify(e))
+      }
+      
+      // Declare body var
+      var body = {data: []};
+      var cpt = 0;
+      if(cptTotal == undefined){
+      	var cptTotal = 0;
+      }
+      var last = false;'
+  ↓jWhile [steps.WhileStep-1671630075851]: 
+    condition: try{(line = reader.readNext())}catch(e){log.warn("error reading" + JSON.stringify(e)); reader.skip(1); line = line = reader.readNext();} line != null || last != true
+    ↓ComputeData [steps.SimpleStep-1671630075854]: 
+      expression: |
+        'if(line != null){
+        	body.data.push(line);
+        	cpt++;
+        }
+        else{
+        	last = true;
+        }
+        '
+    ↓jIf [steps.IfStep-1671630075857]: 
+      condition: cpt >= (+chunkSize) || last == true
+      ↓stringifyBody [steps.SimpleStep-1671630075860]: 
+        expression: |
+          '// Copy and stringify body into a new var to be send to al subsequence
+          var __body = "" + JSON.stringify(body);
+          log.debug("Stringifying this line " +__body);
+          cptTotal = cptTotal + (+(""+ cpt));
+          log.debug("Actual total count is: " +cptTotal);
+          // // Re init vars
+          body ={data: []};
+          cpt = 0;
+          '
+      ↓Call_Transaction [steps.TransactionStep-1671630075863]: 
+        sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tables__table_id__import_async__POST
+        ↓__header_Authorization [variables.StepVariable-1671630075866]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671630075842
+                - java.lang.String: 
+                  - ↑value: ./document/Bearer/text()
+        ↓__body [variables.StepVariable-1671630075869]: 
+          required: true
+        ↓table_id [variables.StepVariable-1671630075872]: 
+          comment: Import data into the table related to the provided value.
+          description: table_id
+          required: true
+      ↓Element [steps.XMLElementStep-1671630075875]: 
+        nodeName: job_id
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1671630075863
+              - java.lang.String: 
+                - ↑value: ./document/object/id/text()
+      ↓jSimpleSource [steps.SimpleSourceStep-1671630075878]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1671630075863
+              - java.lang.String: 
+                - ↑value: ./document/object/state/text()
+        variableName: state
+      ↓jWhile [steps.WhileStep-1671630075881]: 
+        condition: state != "finished" && state != "null"
+        ↓Sleep15Sec [steps.SimpleStep-1671630075884]: 
+          expression: |
+            log.warn('sleeping for 1 second ' + 'state is ' + state);
+            java.lang.Thread.sleep(1000);
+            log.warn('finished sleeping for 1 second');
+        ↓Call_Transaction [steps.TransactionStep-1671630075887]: 
+          sourceTransaction: lib_BaseRow.Baserow_API_spec._api_jobs__job_id___GET
+          ↓job_id [variables.StepVariable-1671630075890]: 
+            comment: The job id to lookup information about.
+            description: job_id
+            required: true
+            sourceDefinition: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: 1671630075875
+                  - java.lang.String: 
+                    - ↑value: ./text()
+          ↓__header_Authorization [variables.StepVariable-1671630075893]: 
+            sourceDefinition: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: 1671630075842
+                  - java.lang.String: 
+                    - ↑value: ./document/Bearer/text()
+        ↓jSimpleSource [steps.SimpleSourceStep-1671630075896]: 
+          output: true
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671630075887
+                - java.lang.String: 
+                  - ↑value: ./document/object/state/text()
+          variableName: state
+        ↓JsonSource [steps.JsonSourceStep-1671630075899]: 
+          isEnabled: false
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671630075887
+                - java.lang.String: 
+                  - ↑value: ./document/object/report/failing_rows
+        ↓Copy [steps.XMLCopyStep-1671630075902]: 
+          isEnabled: false
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671630075887
+                - java.lang.String: 
+                  - ↑value: ./document/object/report/failing_rows
+        ↓Sequence_JS [steps.SimpleStep-1671630075905]: 
+          expression: log.warn("state then is " + state);
+  ↓jIf [steps.IfStep-1671630075908]: 
+    condition: body.data.length > 0
+    isEnabled: false
+    ↓stringifyBody [steps.SimpleStep-1671630075911]: 
+      expression: |
+        '//copy and stringidy body into a new var to be send to al subsequence
+        var __body = "" + JSON.stringify(body);
+        log.debug("Stringifying this line " +__body);
+        //re init vars
+        cptTotal = cptTotal + (+(""+ cpt));
+        log.debug("Actual total count is: " +cptTotal);
+        
+        '
+    ↓Call_Transaction [steps.TransactionStep-1671630075914]: 
+      sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tables__table_id__import_async__POST
+      ↓__header_Authorization [variables.StepVariable-1671630075917]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1671630075842
+              - java.lang.String: 
+                - ↑value: ./document/Bearer/text()
+      ↓__body [variables.StepVariable-1671630075920]: 
+        required: true
+      ↓table_id [variables.StepVariable-1671630075923]: 
+        comment: Import data into the table related to the provided value.
+        description: table_id
+        required: true
+    ↓Element [steps.XMLElementStep-1671630075926]: 
+      nodeName: job_id
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1671630075914
+            - java.lang.String: 
+              - ↑value: ./document/object/id/text()
+    ↓jSimpleSource [steps.SimpleSourceStep-1671630075929]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1671630075914
+            - java.lang.String: 
+              - ↑value: ./document/object/state/text()
+      variableName: state
+    ↓jWhile [steps.WhileStep-1671630075932]: 
+      condition: state == "pending"
+      ↓Sleep1Sec [steps.SimpleStep-1671630075935]: 
+        expression: |
+          log.warn('sleeping for 1 second ' + 'state is ' + state);
+          java.lang.Thread.sleep(1000);
+          log.warn('finished sleeping for 1 second');
+      ↓Call_Transaction [steps.TransactionStep-1671630075938]: 
+        output: true
+        sourceTransaction: lib_BaseRow.Baserow_API_spec._api_jobs__job_id___GET
+        ↓job_id [variables.StepVariable-1671630075941]: 
+          comment: The job id to lookup information about.
+          description: job_id
+          required: true
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671630075926
+                - java.lang.String: 
+                  - ↑value: ./text()
+        ↓__header_Authorization [variables.StepVariable-1671630075944]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671630075842
+                - java.lang.String: 
+                  - ↑value: ./document/Bearer/text()
+      ↓jSimpleSource [steps.SimpleSourceStep-1671630075947]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1671630075938
+              - java.lang.String: 
+                - ↑value: ./document/object/state/text()
+        variableName: state
+      ↓log [steps.SimpleStep-1671630075950]: 
+        expression: log.warn("state then is " + state);
+↓jElement [steps.ElementStep-1671630075953]: 
+  expression: cptTotal + " elements have been inserted"
+  nodeName: result
+↓files [variables.RequestableMultiValuedVariable-1671630075956]: 
+  isFileUpload: true
+↓table_id [variables.RequestableVariable-1671630075959]: 
+↓fileSeparator [variables.RequestableVariable-1671630075962]: 
+  value: ;
+↓quoteChar [variables.RequestableVariable-1671630075965]: 
+  value: '"'
+↓firstLineColumn [variables.RequestableVariable-1671630075968]: 
+  value: true
+↓chunkSize [variables.RequestableVariable-1671630075971]: 
+  value: 10000

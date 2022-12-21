@@ -1,0 +1,104 @@
+comment: Creates a row  in a table ising apikey instead of credentials
+↓Input_variables [steps.InputVariablesStep-1671630682456]: 
+↓Concat [steps.XMLConcatStep-1671631218082]: 
+  nodeName: tokenValue
+  output: false
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: Token
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671630682456
+                - java.lang.String: 
+                  - ↑value: ./apikey/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓Call_Transaction [steps.TransactionStep-1671630682462]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___POST
+  ↓__header_Authorization [variables.StepVariable-1671630682465]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1671631218082
+          - java.lang.String: 
+            - ↑value: ./text()
+  ↓__body [variables.StepVariable-1671630682468]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1671630682456
+          - java.lang.String: 
+            - ↑value: ./data/text()
+  ↓before [variables.StepVariable-1671630682471]: 
+    comment: If provided then the newly created row will be positioned before the row with the provided id.
+    description: before
+  ↓user_field_names [variables.StepVariable-1671630682474]: 
+    comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+    description: user_field_names
+    value: true
+  ↓table_id [variables.StepVariable-1671630682477]: 
+    comment: Creates a row in the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1671630682480]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1671630682462
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓table_id [variables.RequestableVariable-1671630682483]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓before [variables.RequestableVariable-1671630682486]: 
+  comment: If provided then the newly created row will be positioned before the row with the provided id.
+  description: before
+↓data [variables.RequestableVariable-1671630682489]: 
+  comment: A JSON object with each field name and value
+  required: true
+↓apikey [variables.RequestableVariable-1671631042552]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓Test_Case [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1671631328740]: 
+    description: table_id
+    required: true
+    value: 413
+  ↓data [variables.TestCaseVariable-1671631328744]: 
+    required: true
+    value: |
+      '{
+      	"Nom": "Mon nom 00",
+          "Notes": "ma super note",
+          "Actif": true
+      }'
