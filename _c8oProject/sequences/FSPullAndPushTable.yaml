@@ -1,0 +1,148 @@
+↓Call_Sequence [steps.SequenceStep-1670750961352]: 
+  sourceSequence: lib_BaseRow.TableBulkExportToCSV
+  ↓table_id [variables.StepVariable-1670750961354]: 
+    comment: The table id to create and start an export job for
+    description: table_id
+    required: true
+    value: 
+↓Call_Sequence1 [steps.SequenceStep-1670750973184]: 
+  sourceSequence: lib_BaseRow.TableBulkExportWaitFInished
+  ↓job_id [variables.StepVariable-1670750973186]: 
+    comment: The job id to lookup information about.
+    description: job_id
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670750961352
+          - java.lang.String: 
+            - ↑value: ./document/id/text()
+    value: 
+↓Call_Transaction [steps.TransactionStep-1670751375718]: 
+  sourceTransaction: lib_BaseRow.MediaConnector.Download_HTTP_transaction
+  ↓__uri [variables.StepVariable-1670751375720]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670750973184
+          - java.lang.String: 
+            - ↑value: ./document/url/text()
+↓jSimpleSource [steps.SimpleSourceStep-1670751629546]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1670751375718
+        - java.lang.String: 
+          - ↑value: ./document/filepath/text()
+  variableName: CSVPath
+↓Read_CSV [steps.ReadCSVStep-1670751577714]: 
+  dataFile: CSVPath
+↓JsonSource [steps.JsonSourceStep-1670752888629]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1670751577714
+        - java.lang.String: 
+          - ↑value: ./line[1]
+  variableName: CSVHeaders
+↓Log [steps.LogStep-1670756109565]: 
+  expression: JSON.stringify(CSVHeaders)
+  level: WARN
+↓Array [steps.JsonArrayStep-1670755908126]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: data
+  ↓Iterator [steps.IteratorStep-1670755622054]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670751577714
+          - java.lang.String: 
+            - ↑value: ./line[position() > 1]
+    ↓JsonSource1 [steps.JsonSourceStep-1670755789960]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670755622054
+            - java.lang.String: 
+              - ↑value: .
+      variableName: jLine
+    ↓Log [steps.LogStep-1670756233147]: 
+      expression: JSON.stringify(jLine)
+      isEnabled: false
+      level: WARN
+    ↓Object [steps.JsonObjectStep-1670756850086]: 
+      ↓Field [steps.JsonFieldStep-1670758282074]: 
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: fsId
+        value: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: '''table'' + ''_'' + table_id + ''_'' + jLine.line.col[0]'
+      ↓jIterator [steps.SimpleIteratorStep-1670755676505]: 
+        expression: CSVHeaders.line.col
+        ↓Field [steps.JsonFieldStep-1670755698142]: 
+          key: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: JS
+                - →→: CSVHeaders.line.col[index]
+          value: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: JS
+                - →→: jLine.line.col[index]
+↓Call_Transaction_1 [steps.TransactionStep-1670758479150]: 
+  sourceTransaction: lib_BaseRow.lib_baserow_fullsync.PostBulkDocuments
+  ↓data [variables.StepMultiValuedVariable-1670758489437]: 
+    description: Documents contents
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670755908126
+          - java.lang.String: 
+            - ↑value: ./Object
+  ↓_id [variables.StepMultiValuedVariable-1670758489439]: 
+    description: Document ids
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670755908126
+          - java.lang.String: 
+            - ↑value: ./Object/Field[@originalKeyName = 'fsId']/text()
+↓table_id [variables.RequestableVariable-1670750989287]: 
+  comment: The table id to create and start an export job for
+  description: table_id
+  required: true
+↓TestOK [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1670751187399]: 
+    description: table_id
+    required: true
+    value: 118056

@@ -1,0 +1,103 @@
+comment: Exports a Table to CSV.. Export status must me monitored with the TableBulkExportWaitFinished sequence
+↓Call_Sequence [steps.SequenceStep-1670748395048]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Object [steps.JsonObjectStep-1670748542593]: 
+  output: false
+  ↓Field [steps.JsonFieldStep-1670748561102]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: exporter_type
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: csv
+  ↓Field1 [steps.JsonFieldStep-1670748565168]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: export_charset
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: utf-8
+  ↓Field2 [steps.JsonFieldStep-1670748921104]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: csv_column_separator
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: ','
+  ↓Field3 [steps.JsonFieldStep-1670748951561]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: csv_include_header
+    type: bool
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: true
+↓Call_Transaction [steps.TransactionStep-1670748395051]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_export_table__table_id___POST
+  ↓__header_Authorization [variables.StepVariable-1670748395054]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670748395048
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓__body [variables.StepVariable-1670748475835]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670748542593
+          - java.lang.String: 
+            - ↑value: ./*
+  ↓table_id [variables.StepVariable-1670748499703]: 
+    comment: The table id to create and start an export job for
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1670748395063]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1670748395051
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓table_id [variables.RequestableVariable-1670748724797]: 
+  comment: The table id to create and start an export job for
+  description: table_id
+  required: true
+  value: 
+↓TestOK [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1670748748649]: 
+    description: table_id
+    required: true
+    value: 118056

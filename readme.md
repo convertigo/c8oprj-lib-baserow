@@ -28,12 +28,17 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
+    - [FSPullAndPushTable](#fspullandpushtable)
     - [GroupsList](#groupslist)
+    - [TableBulkExportToCSV](#tablebulkexporttocsv)
+    - [TableBulkExportWaitFInished](#tablebulkexportwaitfinished)
     - [TableCreateRow](#tablecreaterow)
     - [TableDeleteRow](#tabledeleterow)
     - [TableGetData](#tablegetdata)
     - [TableReadRow](#tablereadrow)
     - [TokenGetOrRefresh](#tokengetorrefresh)
+    - [UserCreate](#usercreate)
+    - [UserDelete](#userdelete)
 - [Mobile Library](#mobile-library)
 
 
@@ -138,9 +143,52 @@ Gets data from a baserow table.
 </tr>
 </table>
 
+### FSPullAndPushTable
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>table_id</td><td>The table id to create and start an export job for</td>
+</tr>
+</table>
+
 ### GroupsList
 
 Lists all Groups for the current user
+
+### TableBulkExportToCSV
+
+Exports a Table to CSV.. Export status must me monitored with the TableBulkExportWaitFinished sequence
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>table_id</td><td>The table id to create and start an export job for</td>
+</tr>
+</table>
+
+### TableBulkExportWaitFInished
+
+Wait for an export job to be finihed. Will return the URL to the exported data
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>job_id</td><td>The job id to lookup information about.</td>
+</tr>
+</table>
 
 ### TableCreateRow
 
@@ -299,6 +347,45 @@ Reads a row from a  from a given table
 ### TokenGetOrRefresh
 
 Gets a token or refresh it if the token is expired the Token will be placed in the current user session
+
+### UserCreate
+
+Create a user
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>email</td><td></td>
+</tr>
+<tr>
+<td>language</td><td></td>
+</tr>
+<tr>
+<td>name</td><td></td>
+</tr>
+<tr>
+<td>password</td><td></td>
+</tr>
+</table>
+
+### UserDelete
+
+Delete a User
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>user_id</td><td>The id of the user to delete</td>
+</tr>
+</table>
 
 ## Mobile Library
 

@@ -1,0 +1,8 @@
+databaseName: lib_baserow_fullsync
+↓GetServerInfo [transactions.couchdb.GetServerInfoTransaction]: 
+  ↑default: true
+↓PostBulkDocuments [transactions.couchdb.PostBulkDocumentsTransaction]: 
+  ↓data [variables.RequestableMultiValuedVariable-1670758251925]: 
+    description: Documents contents
+  ↓_id [variables.RequestableMultiValuedVariable-1670758251927]: 
+    description: Document ids
