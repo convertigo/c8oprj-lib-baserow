@@ -22,6 +22,7 @@
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
   ↓ApplicationsList [sequences.GenericSequence]: 🗏 sequences/ApplicationsList.yaml
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
+  ↓FillTableWithCSV [sequences.GenericSequence]: 🗏 sequences/FillTableWithCSV.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓GroupsList [sequences.GenericSequence]: 🗏 sequences/GroupsList.yaml
