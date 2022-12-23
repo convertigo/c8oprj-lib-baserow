@@ -977,6 +977,7 @@ server: ${lib_baserow.server}
     comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
     description: user_field_names
     httpName: user_field_names
+  ↓__header_Authorization [variables.RequestableHttpVariable-1669138856799]: 
 ↓_api_database_rows_table__table_id___row_id___DELETE [transactions.JsonHttpTransaction]: 
   comment: Deletes an existing row in the table if the user has access to the table's group.
   httpInfo: true
@@ -1492,6 +1493,7 @@ server: ${lib_baserow.server}
     description: table_id
     required: true
     value: 
+  ↓__header_Authorization [variables.RequestableHttpVariable-1669198085189]: 
 ↓_api_database_tables_database__database_id___GET [transactions.JsonHttpTransaction]: 
   comment: Lists all the tables that are in the database related to the `database_id` parameter if the user has access to the database's group. A table is exactly as the name suggests. It can hold multiple fields, each having their own type and multiple rows. They can be added via the **create_database_table_field** and **create_database_table_row** endpoints.
   httpInfo: true

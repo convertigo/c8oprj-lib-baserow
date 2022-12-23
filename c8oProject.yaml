@@ -24,6 +24,8 @@
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
   ↓ApplicationsList [sequences.GenericSequence]: 🗏 sequences/ApplicationsList.yaml
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
+  ↓FillTableWithCSV [sequences.GenericSequence]: 🗏 sequences/FillTableWithCSV.yaml
+  ↓FillTableWithCSVWithToken [sequences.GenericSequence]: 🗏 sequences/FillTableWithCSVWithToken.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓FSPullAndPushTable [sequences.GenericSequence]: 🗏 sequences/FSPullAndPushTable.yaml
@@ -31,6 +33,7 @@
   ↓TableBulkExportToCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkExportToCSV.yaml
   ↓TableBulkExportWaitFInished [sequences.GenericSequence]: 🗏 sequences/TableBulkExportWaitFInished.yaml
   ↓TableCreateRow [sequences.GenericSequence]: 🗏 sequences/TableCreateRow.yaml
+  ↓TableCreateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableCreateRowApiKey.yaml
   ↓TableDeleteRow [sequences.GenericSequence]: 🗏 sequences/TableDeleteRow.yaml
   ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml
   ↓TableReadRow [sequences.GenericSequence]: 🗏 sequences/TableReadRow.yaml
