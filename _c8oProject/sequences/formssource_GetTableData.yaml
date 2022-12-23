@@ -19,11 +19,11 @@ comment: |
     filterExpression = forms_tableFilter;
     
     // If Forms asks us for a model, just return the 5 First lines, ignoring all filters
-    if (model = "true") {
+    if (model == "true") {
     	size = "1";
     	filterExpression = null;;
     }
-    	
+    
     '
 ↓Input_variables [steps.InputVariablesStep-1665402570169]: 
 ↓Call_Sequence [steps.SequenceStep-1665402300413]: 
