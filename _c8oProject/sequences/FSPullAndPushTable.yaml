@@ -84,7 +84,6 @@
       variableName: jLine
     ↓Log [steps.LogStep-1670756233147]: 
       expression: JSON.stringify(jLine)
-      isEnabled: false
       level: WARN
     ↓Object [steps.JsonObjectStep-1670756850086]: 
       ↓Field [steps.JsonFieldStep-1670758282074]: 
@@ -145,4 +144,4 @@
   ↓table_id [variables.TestCaseVariable-1670751187399]: 
     description: table_id
     required: true
-    value: 118056
+    value: 771
