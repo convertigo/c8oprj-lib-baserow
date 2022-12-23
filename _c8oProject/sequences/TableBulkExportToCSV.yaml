@@ -101,3 +101,8 @@ comment: Exports a Table to CSV.. Export status must me monitored with the Table
     description: table_id
     required: true
     value: 118056
+↓TestOK1 [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1671012571331]: 
+    description: table_id
+    required: true
+    value: 771
