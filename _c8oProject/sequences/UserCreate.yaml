@@ -129,7 +129,7 @@ comment: Create a user
   ↓name [variables.TestCaseVariable-1670746479700]: 
     value: Test USER
   ↓email [variables.TestCaseVariable-1670746479702]: 
-    value: test@test.com
+    value: test2@test.com
   ↓password [variables.TestCaseVariable-1670746479704]: 
     value: 
       - ↑ciphered: true
