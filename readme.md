@@ -26,6 +26,8 @@ For more technical informations : [documentation](./project.md)
     - [AdminLogin](#adminlogin)
     - [ApplicationsList](#applicationslist)
     - [FieldsList](#fieldslist)
+    - [FillTableWithCSV](#filltablewithcsv)
+    - [FillTableWithCSVWithToken](#filltablewithcsvwithtoken)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
     - [FSPullAndPushTable](#fspullandpushtable)
@@ -33,6 +35,7 @@ For more technical informations : [documentation](./project.md)
     - [TableBulkExportToCSV](#tablebulkexporttocsv)
     - [TableBulkExportWaitFInished](#tablebulkexportwaitfinished)
     - [TableCreateRow](#tablecreaterow)
+    - [TableCreateRowApiKey](#tablecreaterowapikey)
     - [TableDeleteRow](#tabledeleterow)
     - [TableGetData](#tablegetdata)
     - [TableReadRow](#tablereadrow)
@@ -103,6 +106,62 @@ Lists all the fields in a baserow table
 </tr>
 </table>
 
+### FillTableWithCSV
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>chunkSize</td><td></td>
+</tr>
+<tr>
+<td>files</td><td></td>
+</tr>
+<tr>
+<td>fileSeparator</td><td></td>
+</tr>
+<tr>
+<td>firstLineColumn</td><td></td>
+</tr>
+<tr>
+<td>quoteChar</td><td></td>
+</tr>
+<tr>
+<td>table_id</td><td></td>
+</tr>
+</table>
+
+### FillTableWithCSVWithToken
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>chunkSize</td><td></td>
+</tr>
+<tr>
+<td>files</td><td></td>
+</tr>
+<tr>
+<td>fileSeparator</td><td></td>
+</tr>
+<tr>
+<td>firstLineColumn</td><td></td>
+</tr>
+<tr>
+<td>quoteChar</td><td></td>
+</tr>
+<tr>
+<td>table_id</td><td></td>
+</tr>
+</table>
+
 ### formssource_GetSelectData
 
 Gets data from a baserow table.
@@ -140,6 +199,9 @@ Gets data from a baserow table.
 <tr>
 <td>forms_tableFilter</td><td>Filters
 </td>
+</tr>
+<tr>
+<td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
 </tr>
 </table>
 
@@ -199,6 +261,30 @@ Creates a row  in a table
 <table>
 <tr>
 <th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>before</td><td>If provided then the newly created row will be positioned before the row with the provided id.</td>
+</tr>
+<tr>
+<td>data</td><td>A JSON object with each field name and value</td>
+</tr>
+<tr>
+<td>table_id</td><td>Insert row in this table_id</td>
+</tr>
+</table>
+
+### TableCreateRowApiKey
+
+Creates a row  in a table ising apikey instead of credentials
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>apikey</td><td></td>
 </tr>
 <tr>
 <td>before</td><td>If provided then the newly created row will be positioned before the row with the provided id.</td>
