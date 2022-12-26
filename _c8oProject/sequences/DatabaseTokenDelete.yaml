@@ -1,0 +1,38 @@
+comment: Delete a previously created Token by providing its id
+↓Call_Sequence [steps.SequenceStep-1672066170523]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1672066170535]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tokens__token_id___DELETE
+  ↓__header_Authorization [variables.StepVariable-1672066170538]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1672066170523
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓token_id [variables.StepVariable-1672066215291]: 
+    comment: Deletes the token related to the provided value.
+    description: token_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1672066170544]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1672066170535
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓token_id [variables.RequestableVariable-1672066237647]: 
+  comment: Deletes the token related to the provided value.
+  description: token_id
+  required: true
+  value: 
+↓TestOK [core.TestCase]: 
+  ↓token_id [variables.TestCaseVariable-1672066268925]: 
+    description: token_id
+    required: true
+    value: 3

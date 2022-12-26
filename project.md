@@ -6595,6 +6595,74 @@ The baserow admin password
 Lists all applications (databases) in baserow
 </p></blockquote></details>
 
+<details><summary><b>DatabaseTokenCreate</b> : Create a Token to acess databases within a group</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") DatabaseTokenCreate
+
+Create a Token to acess databases within a group. This token will hold permissions to specific databases in the group
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;group_id
+</td>
+<td>
+The ID of the group holding the databases to get a token to (Unique)
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;name
+</td>
+<td>
+Token Name
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>DatabaseTokenDelete</b> : Delete a previously created Token by providing its id</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") DatabaseTokenDelete
+
+Delete a previously created Token by providing its id
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;token_id
+</td>
+<td>
+Deletes the token related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
 <details><summary><b>FieldsList</b> : Lists all the fields in a baserow table</summary><blockquote><p>
 
 

@@ -1,0 +1,72 @@
+comment: Create a Token to acess databases within a group. This token will hold permissions to specific databases in the group
+↓Call_Sequence [steps.SequenceStep-1672064966282]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Object [steps.JsonObjectStep-1672064966285]: 
+  output: false
+  ↓Field [steps.JsonFieldStep-1672064966290]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: group
+    output: false
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: group_id
+  ↓Field1 [steps.JsonFieldStep-1672064966293]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: name
+    output: false
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: name
+↓Call_Transaction [steps.TransactionStep-1672064966305]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tokens__POST
+  ↓__header_Authorization [variables.StepVariable-1672064966308]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1672064966282
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓__body [variables.StepVariable-1672064966311]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1672064966285
+          - java.lang.String: 
+            - ↑value: ./*
+↓Copy [steps.XMLCopyStep-1672064966314]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1672064966305
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓group_id [variables.RequestableVariable-1672064966317]: 
+  comment: The ID of the group holding the databases to get a token to (Unique)
+↓name [variables.RequestableVariable-1672065221844]: 
+  comment: Token Name
+↓TestOK [core.TestCase]: 
+  ↓name [variables.TestCaseVariable-1672064966330]: 
+    value: TestTOKEN
+  ↓group_id [variables.TestCaseVariable-1672065233094]: 
+    value: 80

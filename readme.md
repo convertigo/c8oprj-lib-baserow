@@ -25,6 +25,8 @@ For more technical informations : [documentation](./project.md)
 - [Sequences](#sequences)
     - [AdminLogin](#adminlogin)
     - [ApplicationsList](#applicationslist)
+    - [DatabaseTokenCreate](#databasetokencreate)
+    - [DatabaseTokenDelete](#databasetokendelete)
     - [FieldsList](#fieldslist)
     - [FillTableWithCSV](#filltablewithcsv)
     - [FillTableWithCSVWithToken](#filltablewithcsvwithtoken)
@@ -90,6 +92,39 @@ Establishes a session with Baserow. Must be called befor any other API
 ### ApplicationsList
 
 Lists all applications (databases) in baserow
+
+### DatabaseTokenCreate
+
+Create a Token to acess databases within a group. This token will hold permissions to specific databases in the group
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>group_id</td><td>The ID of the group holding the databases to get a token to (Unique)</td>
+</tr>
+<tr>
+<td>name</td><td>Token Name</td>
+</tr>
+</table>
+
+### DatabaseTokenDelete
+
+Delete a previously created Token by providing its id
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>token_id</td><td>Deletes the token related to the provided value.</td>
+</tr>
+</table>
 
 ### FieldsList
 
