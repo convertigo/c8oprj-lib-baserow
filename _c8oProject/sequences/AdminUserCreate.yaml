@@ -1,0 +1,140 @@
+comment: Create a user
+↓Input_variables [steps.InputVariablesStep-1670746423200]: 
+↓Call_Sequence [steps.SequenceStep-1670597822711]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Object [steps.JsonObjectStep-1670598309195]: 
+  output: false
+  ↓Field [steps.JsonFieldStep-1670598334984]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: name
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670746423200
+            - java.lang.String: 
+              - ↑value: ./name/text()
+  ↓Field1 [steps.JsonFieldStep-1670598339705]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: email
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670746423200
+            - java.lang.String: 
+              - ↑value: ./email/text()
+  ↓Field2 [steps.JsonFieldStep-1670598341746]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: password
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670746423200
+            - java.lang.String: 
+              - ↑value: ./password/text()
+  ↓Field3 [steps.JsonFieldStep-1670598343138]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: language
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1670746423200
+            - java.lang.String: 
+              - ↑value: ./language/text()
+  ↓Field4 [steps.JsonFieldStep-1670598343997]: 
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: authenticate
+    type: bool
+    value: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: false
+↓Call_Transaction [steps.TransactionStep-1670597822738]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user__POST
+  ↓__header_Authorization [variables.StepVariable-1670597822741]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670597822711
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓__body [variables.StepVariable-1670598524679]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670598309195
+          - java.lang.String: 
+            - ↑value: ./*
+↓Copy [steps.XMLCopyStep-1670597822780]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1670597822738
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓name [variables.RequestableVariable-1670746361405]: 
+↓email [variables.RequestableVariable-1670746368083]: 
+↓password [variables.RequestableVariable-1670746377955]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xd8e180806a1c1d83a6255212121ab827
+  visibility: '-1'
+↓language [variables.RequestableVariable-1670746389347]: 
+↓TestOK [core.TestCase]: 
+  ↓name [variables.TestCaseVariable-1670746479700]: 
+    value: Test USER
+  ↓email [variables.TestCaseVariable-1670746479702]: 
+    value: test2@test.com
+  ↓password [variables.TestCaseVariable-1670746479704]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xa06652c7e64787520ba5f2db5c1edd9cb64b00ac376c568953d6f6991ccbedaa
+    visibility: '-1'
+  ↓language [variables.TestCaseVariable-1670746479706]: 
+    value: en

@@ -24,6 +24,8 @@ For more technical informations : [documentation](./project.md)
 - [Installation](#installation)
 - [Sequences](#sequences)
     - [AdminLogin](#adminlogin)
+    - [AdminUserCreate](#adminusercreate)
+    - [AdminUserDelete](#adminuserdelete)
     - [ApplicationsList](#applicationslist)
     - [AssetFileUpload](#assetfileupload)
     - [DatabaseTokenCreate](#databasetokencreate)
@@ -42,8 +44,6 @@ For more technical informations : [documentation](./project.md)
     - [TableGetData](#tablegetdata)
     - [TableReadRow](#tablereadrow)
     - [TokenGetOrRefresh](#tokengetorrefresh)
-    - [UserCreate](#usercreate)
-    - [UserDelete](#userdelete)
 - [Mobile Library](#mobile-library)
 
 
@@ -86,6 +86,45 @@ Establishes a session with Baserow. Must be called before any other API
 </tr>
 <tr>
 <td>password</td><td>The baserow admin password</td>
+</tr>
+</table>
+
+### AdminUserCreate
+
+Create a user
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>email</td><td></td>
+</tr>
+<tr>
+<td>language</td><td></td>
+</tr>
+<tr>
+<td>name</td><td></td>
+</tr>
+<tr>
+<td>password</td><td></td>
+</tr>
+</table>
+
+### AdminUserDelete
+
+Delete a User
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>user_id</td><td>The id of the user to delete</td>
 </tr>
 </table>
 
@@ -462,45 +501,6 @@ Reads a row from a  from a given table
 ### TokenGetOrRefresh
 
 Gets a token or refresh it if the token is expired the Token will be placed in the current user session
-
-### UserCreate
-
-Create a user
-
-**variables**
-
-<table>
-<tr>
-<th>name</th><th>comment</th>
-</tr>
-<tr>
-<td>email</td><td></td>
-</tr>
-<tr>
-<td>language</td><td></td>
-</tr>
-<tr>
-<td>name</td><td></td>
-</tr>
-<tr>
-<td>password</td><td></td>
-</tr>
-</table>
-
-### UserDelete
-
-Delete a User
-
-**variables**
-
-<table>
-<tr>
-<th>name</th><th>comment</th>
-</tr>
-<tr>
-<td>user_id</td><td>The id of the user to delete</td>
-</tr>
-</table>
 
 ## Mobile Library
 
