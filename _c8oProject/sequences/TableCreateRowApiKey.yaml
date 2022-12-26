@@ -100,5 +100,6 @@ comment: Creates a row  in a table ising apikey instead of credentials
       '{
       	"Nom": "Mon nom 00",
           "Notes": "ma super note",
-          "Actif": true
+          "Actif": true,
+          "Date": "20230104"
       }'
