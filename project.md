@@ -6909,6 +6909,14 @@ Filters
 
 </td>
 </tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;model
+</td>
+<td>
+If true, just return one line of data so that No Code studio can compte the table model
+</td>
+</tr>
 </table>
 
 </p></blockquote></details>

@@ -35,4 +35,4 @@ comment: Delete a User
   ↓user_id [variables.TestCaseVariable-1670746915286]: 
     description: 15465478
     required: true
-    value: 
+    value: 3
