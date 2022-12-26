@@ -7003,12 +7003,12 @@ If true, just return one line of data so that No Code studio can compte the tabl
 
 </p></blockquote></details>
 
-<details><summary><b>FSPullAndPushTable</b> : Push a BaserowTable to FullSync ofr offline access</summary><blockquote><p>
+<details><summary><b>FSPullAndPushTable</b> : Push a BaserowTable to FullSync for offline access</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") FSPullAndPushTable
 
-Push a BaserowTable to FullSync ofr offline access
+Push a BaserowTable to FullSync for offline access
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -7071,12 +7071,12 @@ The table id to create and start an export job for
 
 </p></blockquote></details>
 
-<details><summary><b>TableBulkExportWaitFInished</b> : Wait for an export job to be finihed</summary><blockquote><p>
+<details><summary><b>TableBulkExportWaitFInished</b> : Wait for an export job to be finished</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableBulkExportWaitFInished
 
-Wait for an export job to be finihed. Will return the URL to the exported data
+Wait for an export job to be finished. Will return the URL to the exported data
 
 <span style="color:DarkGoldenRod">Variables</span>
 

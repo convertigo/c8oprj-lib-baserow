@@ -273,7 +273,7 @@ Get data from a baserow table for a Grid
 
 ### FSPullAndPushTable
 
-Push a BaserowTable to FullSync ofr offline access
+Push a BaserowTable to FullSync for offline access
 
 **variables**
 
@@ -307,7 +307,7 @@ Exports a Table to CSV.. Export status must me monitored with the TableBulkExpor
 
 ### TableBulkExportWaitFInished
 
-Wait for an export job to be finihed. Will return the URL to the exported data
+Wait for an export job to be finished. Will return the URL to the exported data
 
 **variables**
 

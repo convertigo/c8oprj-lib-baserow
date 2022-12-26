@@ -1,4 +1,4 @@
-comment: Wait for an export job to be finihed. Will return the URL to the exported data
+comment: Wait for an export job to be finished. Will return the URL to the exported data
 ↓Call_Sequence [steps.SequenceStep-1670749238200]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Init [steps.SimpleStep-1670750018663]: 
