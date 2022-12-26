@@ -31,13 +31,13 @@ For more technical informations : [documentation](./project.md)
     - [DatabaseTokenCreate](#databasetokencreate)
     - [DatabaseTokenDelete](#databasetokendelete)
     - [FieldsList](#fieldslist)
-    - [FillTableWithCSV](#filltablewithcsv)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
     - [FSPullAndPushTable](#fspullandpushtable)
     - [GroupsList](#groupslist)
     - [TableBulkExportToCSV](#tablebulkexporttocsv)
     - [TableBulkExportWaitFInished](#tablebulkexportwaitfinished)
+    - [TableBulkImportFromCSV](#tablebulkimportfromcsv)
     - [TableCreateRow](#tablecreaterow)
     - [TableCreateRowApiKey](#tablecreaterowapikey)
     - [TableDeleteRow](#tabledeleterow)
@@ -198,36 +198,6 @@ Lists all the fields in a baserow table
 </tr>
 </table>
 
-### FillTableWithCSV
-
-Uploads a CSV to a table. 
-
-**variables**
-
-<table>
-<tr>
-<th>name</th><th>comment</th>
-</tr>
-<tr>
-<td>chunkSize</td><td></td>
-</tr>
-<tr>
-<td>files</td><td></td>
-</tr>
-<tr>
-<td>fileSeparator</td><td></td>
-</tr>
-<tr>
-<td>firstLineColumn</td><td></td>
-</tr>
-<tr>
-<td>quoteChar</td><td></td>
-</tr>
-<tr>
-<td>table_id</td><td></td>
-</tr>
-</table>
-
 ### formssource_GetSelectData
 
 Get data from a baserow table for a Select
@@ -317,6 +287,36 @@ Wait for an export job to be finished. Will return the URL to the exported data
 </tr>
 <tr>
 <td>job_id</td><td>The job id to lookup information about.</td>
+</tr>
+</table>
+
+### TableBulkImportFromCSV
+
+Uploads a CSV to a table. 
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>chunkSize</td><td></td>
+</tr>
+<tr>
+<td>files</td><td></td>
+</tr>
+<tr>
+<td>fileSeparator</td><td></td>
+</tr>
+<tr>
+<td>firstLineColumn</td><td></td>
+</tr>
+<tr>
+<td>quoteChar</td><td></td>
+</tr>
+<tr>
+<td>table_id</td><td></td>
 </tr>
 </table>
 
