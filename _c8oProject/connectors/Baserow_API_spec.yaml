@@ -4931,6 +4931,12 @@ server: ${lib_baserow.server}
               - ↑value: application/x-www-form-urlencoded
   httpVerb: POST
   subDir: /api/user-files/upload-file/
+  ↓file [variables.RequestableHttpVariable-1671639242828]: 
+    doFileUploadMode: multipartFormData
+    httpMethod: POST
+    httpName: file
+    isFileUpload: true
+  ↓__header_Authorization [variables.RequestableHttpVariable-1671642039268]: 
 ↓_api_user_files_upload_via_url__POST [transactions.JsonHttpTransaction]: 
   comment: Uploads a file to Baserow by downloading it from the provided URL.
   httpInfo: true

@@ -26,6 +26,7 @@
   ↓DatabaseTokenCreate [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenCreate.yaml
   ↓DatabaseTokenDelete [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenDelete.yaml
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
+  ↓FileUploadMultipart [sequences.GenericSequence]: 🗏 sequences/FileUploadMultipart.yaml
   ↓FillTableWithCSV [sequences.GenericSequence]: 🗏 sequences/FillTableWithCSV.yaml
   ↓FillTableWithCSVWithToken [sequences.GenericSequence]: 🗏 sequences/FillTableWithCSVWithToken.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
