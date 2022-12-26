@@ -1,5 +1,5 @@
 comment: |
-  Gets data from a baserow table.
+  Get data from a baserow table for a Select
   
 ↓ParseConfig [steps.SimpleStep-1666717197201]: 
   expression: |

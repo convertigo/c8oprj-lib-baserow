@@ -23,12 +23,11 @@
   ↓void [connectors.SqlConnector]: 🗏 connectors/void.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
   ↓ApplicationsList [sequences.GenericSequence]: 🗏 sequences/ApplicationsList.yaml
+  ↓AssetFileUpload [sequences.GenericSequence]: 🗏 sequences/AssetFileUpload.yaml
   ↓DatabaseTokenCreate [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenCreate.yaml
   ↓DatabaseTokenDelete [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenDelete.yaml
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
-  ↓FileUploadMultipart [sequences.GenericSequence]: 🗏 sequences/FileUploadMultipart.yaml
   ↓FillTableWithCSV [sequences.GenericSequence]: 🗏 sequences/FillTableWithCSV.yaml
-  ↓FillTableWithCSVWithToken [sequences.GenericSequence]: 🗏 sequences/FillTableWithCSVWithToken.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓FSPullAndPushTable [sequences.GenericSequence]: 🗏 sequences/FSPullAndPushTable.yaml

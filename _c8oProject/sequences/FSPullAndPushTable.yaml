@@ -1,10 +1,31 @@
+comment: Push a BaserowTable to FullSync ofr offline access
 ↓Call_Sequence [steps.SequenceStep-1670750961352]: 
+  comment: Export table as CSV
   sourceSequence: lib_BaseRow.TableBulkExportToCSV
   ↓table_id [variables.StepVariable-1670750961354]: 
     comment: The table id to create and start an export job for
     description: table_id
     required: true
     value: 
+↓IfExist [steps.IfExistStep-1672070253851]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1670750961352
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1672070430752]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1670750961352
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1672070381257]: 
 ↓Call_Sequence1 [steps.SequenceStep-1670750973184]: 
   sourceSequence: lib_BaseRow.TableBulkExportWaitFInished
   ↓job_id [variables.StepVariable-1670750973186]: 
@@ -20,7 +41,26 @@
           - java.lang.String: 
             - ↑value: ./document/id/text()
     value: 
+↓jSimpleSource_1 [steps.SimpleSourceStep-1672070659482]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1670750973184
+        - java.lang.String: 
+          - ↑value: ./document/url
+  variableName: assetURL
+↓BuildAssetURL [steps.SimpleStep-1672070620012]: 
+  comment: Compute URL with AWS extra  query parameters
+  expression: |
+    assetURL = assetURL.substring(0, assetURL.indexOf('?'));
+    
+↓jElement [steps.ElementStep-1672070801295]: 
+  expression: assetURL
+  nodeName: assetURL
 ↓Call_Transaction [steps.TransactionStep-1670751375718]: 
+  comment: Download the exported data from Baserow
   sourceTransaction: lib_BaseRow.MediaConnector.Download_HTTP_transaction
   ↓__uri [variables.StepVariable-1670751375720]: 
     sourceDefinition: 
@@ -28,9 +68,9 @@
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1670750973184
+            - ↑value: 1672070801295
           - java.lang.String: 
-            - ↑value: ./document/url/text()
+            - ↑value: ./text()
 ↓jSimpleSource [steps.SimpleSourceStep-1670751629546]: 
   sourceDefinition: 
     - xmlizable: 
@@ -42,8 +82,10 @@
           - ↑value: ./document/filepath/text()
   variableName: CSVPath
 ↓Read_CSV [steps.ReadCSVStep-1670751577714]: 
+  comment: Read the Exported CSV
   dataFile: CSVPath
 ↓JsonSource [steps.JsonSourceStep-1670752888629]: 
+  comment: Get CSV headers in a JSON Object
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
@@ -57,6 +99,7 @@
   expression: JSON.stringify(CSVHeaders)
   level: WARN
 ↓Array [steps.JsonArrayStep-1670755908126]: 
+  comment: Build  Data array for post bulk
   key: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -144,4 +187,4 @@
   ↓table_id [variables.TestCaseVariable-1670751187399]: 
     description: table_id
     required: true
-    value: 771
+    value: 418

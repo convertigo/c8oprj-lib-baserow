@@ -25,11 +25,11 @@ For more technical informations : [documentation](./project.md)
 - [Sequences](#sequences)
     - [AdminLogin](#adminlogin)
     - [ApplicationsList](#applicationslist)
+    - [AssetFileUpload](#assetfileupload)
     - [DatabaseTokenCreate](#databasetokencreate)
     - [DatabaseTokenDelete](#databasetokendelete)
     - [FieldsList](#fieldslist)
     - [FillTableWithCSV](#filltablewithcsv)
-    - [FillTableWithCSVWithToken](#filltablewithcsvwithtoken)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
     - [FSPullAndPushTable](#fspullandpushtable)
@@ -73,7 +73,7 @@ For more technical informations : [documentation](./project.md)
 
 ### AdminLogin
 
-Establishes a session with Baserow. Must be called befor any other API
+Establishes a session with Baserow. Must be called before any other API
 
 **variables**
 
@@ -92,6 +92,24 @@ Establishes a session with Baserow. Must be called befor any other API
 ### ApplicationsList
 
 Lists all applications (databases) in baserow
+
+### AssetFileUpload
+
+Uploads a file asset, the returned link can be used to be set as a value of a 'file' Type cell
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>apikey</td><td>The API Key</td>
+</tr>
+<tr>
+<td>file</td><td>A File variable holding the path to the file to be uploaded</td>
+</tr>
+</table>
 
 ### DatabaseTokenCreate
 
@@ -143,33 +161,7 @@ Lists all the fields in a baserow table
 
 ### FillTableWithCSV
 
-**variables**
-
-<table>
-<tr>
-<th>name</th><th>comment</th>
-</tr>
-<tr>
-<td>chunkSize</td><td></td>
-</tr>
-<tr>
-<td>files</td><td></td>
-</tr>
-<tr>
-<td>fileSeparator</td><td></td>
-</tr>
-<tr>
-<td>firstLineColumn</td><td></td>
-</tr>
-<tr>
-<td>quoteChar</td><td></td>
-</tr>
-<tr>
-<td>table_id</td><td></td>
-</tr>
-</table>
-
-### FillTableWithCSVWithToken
+Uploads a CSV to a table. 
 
 **variables**
 
@@ -199,7 +191,7 @@ Lists all the fields in a baserow table
 
 ### formssource_GetSelectData
 
-Gets data from a baserow table.
+Get data from a baserow table for a Select
 
 
 **variables**
@@ -219,7 +211,7 @@ Gets data from a baserow table.
 
 ### formssource_GetTableData
 
-Gets data from a baserow table.
+Get data from a baserow table for a Grid
 
 
 **variables**
@@ -241,6 +233,8 @@ Gets data from a baserow table.
 </table>
 
 ### FSPullAndPushTable
+
+Push a BaserowTable to FullSync ofr offline access
 
 **variables**
 

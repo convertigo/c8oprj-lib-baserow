@@ -1,0 +1,77 @@
+comment: Uploads a file asset, the returned link can be used to be set as a value of a 'file' Type cell
+↓Input_variables [steps.InputVariablesStep-1671641965857]: 
+  output: true
+↓Concat [steps.XMLConcatStep-1671641965860]: 
+  nodeName: tokenValue
+  output: false
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: Token
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1671641965857
+                - java.lang.String: 
+                  - ↑value: ./apikey/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓Call_Transaction [steps.TransactionStep-1671641881980]: 
+  output: true
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
+  ↓__header_Authorization [variables.StepVariable-1671642043017]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1671641965860
+          - java.lang.String: 
+            - ↑value: ./text()
+  ↓file [variables.StepVariable-1671643737551]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1671641965857
+          - java.lang.String: 
+            - ↑value: ./file/text()
+↓file [variables.RequestableVariable-1671641828445]: 
+  comment: A File variable holding the path to the file to be uploaded
+  isFileUpload: true
+  required: true
+  value: 
+↓apikey [variables.RequestableVariable-1671641828448]: 
+  comment: The API Key
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓Test_Case [core.TestCase]: 
+  ↓file [variables.TestCaseVariable-1671642065765]: 
+    required: true
+    value: .//DisplayObjects/mobile/assets/icon_512x512.png
+  ↓apikey [variables.TestCaseVariable-1671642065767]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: x4cd7f747de4144b7948e73582d7272d9b6bba2197942d2511d78518e449155f55126ec3426ba2904f91257d9bf8a1b09
+    visibility: '-1'

@@ -6584,7 +6584,7 @@ does nothing
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") AdminLogin
 
-Establishes a session with Baserow. Must be called befor any other API
+Establishes a session with Baserow. Must be called before any other API
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6623,6 +6623,44 @@ The baserow admin password
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") ApplicationsList
 
 Lists all applications (databases) in baserow
+</p></blockquote></details>
+
+<details><summary><b>AssetFileUpload</b> : Uploads a file asset, the returned link can be used to be set as a value of a 'file' Type cell</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") AssetFileUpload
+
+Uploads a file asset, the returned link can be used to be set as a value of a 'file' Type cell
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+The API Key
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;file
+</td>
+<td>
+A File variable holding the path to the file to be uploaded
+</td>
+</tr>
+</table>
+
 </p></blockquote></details>
 
 <details><summary><b>DatabaseTokenCreate</b> : Create a Token to acess databases within a group</summary><blockquote><p>
@@ -6723,120 +6761,12 @@ Returns only the fields of the table related to the provided value.
 
 </p></blockquote></details>
 
-<details><summary><b>FileUploadMultipart</b></summary><blockquote><p>
-
-
-## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") FileUploadMultipart
-
-
-
-<span style="color:DarkGoldenRod">Variables</span>
-
-<table>
-<tr>
-<th>
-name
-</th>
-<th>
-comment
-</th>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
-</td>
-<td>
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;file
-</td>
-<td>
-A JSON object with each field name and value
-</td>
-</tr>
-</table>
-
-</p></blockquote></details>
-
-<details><summary><b>FillTableWithCSV</b></summary><blockquote><p>
+<details><summary><b>FillTableWithCSV</b> : Uploads a CSV to a table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") FillTableWithCSV
 
-
-
-<span style="color:DarkGoldenRod">Variables</span>
-
-<table>
-<tr>
-<th>
-name
-</th>
-<th>
-comment
-</th>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;chunkSize
-</td>
-<td>
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/multivaluedvariable_color_16x16.png?raw=true "  alt="RequestableMultiValuedVariable" >&nbsp;files
-</td>
-<td>
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;fileSeparator
-</td>
-<td>
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;firstLineColumn
-</td>
-<td>
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;quoteChar
-</td>
-<td>
-
-</td>
-</tr>
-<tr>
-<td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
-</td>
-<td>
-
-</td>
-</tr>
-</table>
-
-</p></blockquote></details>
-
-<details><summary><b>FillTableWithCSVWithToken</b></summary><blockquote><p>
-
-
-## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") FillTableWithCSVWithToken
-
-
+Uploads a CSV to a table. 
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6901,12 +6831,12 @@ comment
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetSelectData</b> : Gets data from a baserow table</summary><blockquote><p>
+<details><summary><b>formssource_GetSelectData</b> : Get data from a baserow table for a Select</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetSelectData
 
-Gets data from a baserow table.
+Get data from a baserow table for a Select
 
 
 <span style="color:DarkGoldenRod">Variables</span>
@@ -6941,12 +6871,12 @@ Filters
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetTableData</b> : Gets data from a baserow table</summary><blockquote><p>
+<details><summary><b>formssource_GetTableData</b> : Get data from a baserow table for a Grid</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetTableData
 
-Gets data from a baserow table.
+Get data from a baserow table for a Grid
 
 
 <span style="color:DarkGoldenRod">Variables</span>
@@ -6989,12 +6919,12 @@ If true, just return one line of data so that No Code studio can compte the tabl
 
 </p></blockquote></details>
 
-<details><summary><b>FSPullAndPushTable</b></summary><blockquote><p>
+<details><summary><b>FSPullAndPushTable</b> : Push a BaserowTable to FullSync ofr offline access</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") FSPullAndPushTable
 
-
+Push a BaserowTable to FullSync ofr offline access
 
 <span style="color:DarkGoldenRod">Variables</span>
 

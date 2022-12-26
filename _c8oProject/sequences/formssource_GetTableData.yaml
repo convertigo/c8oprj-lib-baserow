@@ -1,5 +1,5 @@
 comment: |
-  Gets data from a baserow table.
+  Get data from a baserow table for a Grid
   
 ↓ParseConfig [steps.SimpleStep-1666429506760]: 
   expression: |
