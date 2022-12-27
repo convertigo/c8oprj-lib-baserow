@@ -183,6 +183,9 @@ comment: Push a BaserowTable to FullSync for offline access
       sourceTransaction: lib_BaseRow.lib_baserow_fullsync.PostBulkDocuments
       ↓_use_json_base [variables.StepVariable-1672138076377]: 
         description: (string) – JSON use as a base for the array of documents (js array), or for individual documents (js object). Optional
+↓Delete_file [steps.DeleteStep-1672139989084]: 
+  comment: delete the Downloaded CSV
+  sourcePath: CSVPath
 ↓table_id [variables.RequestableVariable-1670750989287]: 
   comment: The table id to create and start an export job for
   description: table_id
