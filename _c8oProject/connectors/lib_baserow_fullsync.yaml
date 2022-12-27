@@ -2,7 +2,11 @@ databaseName: lib_baserow_fullsync
 ↓GetServerInfo [transactions.couchdb.GetServerInfoTransaction]: 
   ↑default: true
 ↓PostBulkDocuments [transactions.couchdb.PostBulkDocumentsTransaction]: 
+  policy: override
+  useHash: true
   ↓data [variables.RequestableMultiValuedVariable-1670758251925]: 
     description: Documents contents
   ↓_id [variables.RequestableMultiValuedVariable-1670758251927]: 
     description: Document ids
+  ↓_use_json_base [variables.RequestableVariable-1672138062511]: 
+    description: (string) – JSON use as a base for the array of documents (js array), or for individual documents (js object). Optional
