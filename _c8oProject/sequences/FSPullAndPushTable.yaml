@@ -187,12 +187,10 @@ comment: Push a BaserowTable to FullSync for offline access
   comment: The table id to create and start an export job for
   description: table_id
   required: true
+↓chunkSize [variables.RequestableVariable-1672139109655]: 
+  value: 10240
 ↓TestOK [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1670751187399]: 
     description: table_id
     required: true
     value: 418
-  ↓chunkSize [variables.TestCaseVariable-1672134408819]: 
-    description: table_id
-    required: true
-    value: 1024
