@@ -1,0 +1,283 @@
+comment: Gets data from a given table
+↓Input_variables [steps.InputVariablesStep-1672089041333]: 
+↓Concat [steps.XMLConcatStep-1672089041336]: 
+  nodeName: tokenValue
+  output: false
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: Token
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1672089041333
+                - java.lang.String: 
+                  - ↑value: ./apikey/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓Call_Sequence [steps.SequenceStep-1672088989205]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓jIf [steps.IfStep-1672088989208]: 
+  condition: 'filterExpression ? filterExpression.length != 0: false'
+  ↓Call_Sequence [steps.SequenceStep-1672088989211]: 
+    comment: We need the field list for this table to build the filter
+    sourceSequence: lib_BaseRow.FieldsListApiKey
+    ↓table_id [variables.StepVariable-1672088989214]: 
+      comment: Returns only the fields of the table related to the provided value.
+      description: table_id
+      required: true
+      value: 
+  ↓JsonSource [steps.JsonSourceStep-1672088989217]: 
+    comment: Our field list is now in aFields
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1672088989211
+          - java.lang.String: 
+            - ↑value: ./document/array
+    variableName: aFields
+  ↓BuildFilters [steps.SimpleStep-1672088989220]: 
+    comment: Build the filters according to the API specs
+    expression: |
+      'log.warn(JSON.stringify(aFields));
+      function getFieldId (fieldName) {
+      	fieldId = aFields.find( elt =>  elt.name == fieldName);
+      	return (fieldId ? fieldId.id:''unknown_field'');
+      }
+      
+      bFieldError = false;
+      if (filterExpression) {
+      
+      	filterExpression = JSON.parse(filterExpression);
+      	filter_type = filterExpression.mode;
+      	built ='''';
+      	filterExpression.filters.forEach(filter => {
+      		if (filter.op == "equal" && filter.value.length == 0)
+      			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
+      			
+      		built += "filter__field_" + getFieldId(filter.field) + "__" + filter.op + "=" + filter.value + "&";
+      	});
+      	
+      	filterExpression = built;
+      	if (built.indexOf("unknown_field") != -1)
+      		bFieldError = true;
+      		
+      	log.warn(filterExpression);
+      }
+      
+      '
+  ↓jIf [steps.IfStep-1672088989223]: 
+    condition: bFieldError
+    ↓Error_structure [steps.XMLErrorStep-1672088989226]: 
+      code: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: 100
+      comment: A filter field was not found in the list of table columns
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: A filter field was not found in the list of table columns
+    ↓Return [steps.ReturnStep-1672088989229]: 
+↓Call_Transaction [steps.TransactionStep-1672088989232]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET
+  ↓__header_Authorization [variables.StepVariable-1672088989235]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1672089041336
+          - java.lang.String: 
+            - ↑value: ./text()
+  ↓exclude [variables.StepVariable-1672088989238]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+    description: exclude
+  ↓filter [variables.StepVariable-1672088989241]: 
+    comment: |
+      'The rows can optionally be filtered by the same view filters available for the views. Multiple filters can be provided if they follow the same format. The field and filter variable indicate how to filter and the value indicates where to filter on.
+      
+      For example if you provide the following GET parameter `filter__field_1__equal=test` then only rows where the value of field_1 is equal to test are going to be returned.
+      
+      The following filters are available: equal, not_equal, filename_contains, has_file_type, contains, contains_not, length_is_lower_than, higher_than, lower_than, date_equal, date_before, date_after, date_not_equal, date_equals_today, date_before_today, date_after_today, date_equals_days_ago, date_equals_months_ago, date_equals_years_ago, date_equals_week, date_equals_month, date_equals_day_of_month, date_equals_year, single_select_equal, single_select_not_equal, link_row_has, link_row_has_not, link_row_contains, link_row_not_contains, boolean, empty, not_empty, multiple_select_has, multiple_select_has_not.'
+    description: filter__{field}__{filter}
+  ↓filter_type [variables.StepVariable-1672088989244]: 
+    comment: |
+      '`AND`: Indicates that the rows must match all the provided filters.
+      `OR`: Indicates that the rows only have to match one of the filters.
+      
+      This works only if two or more filters are provided.'
+    description: filter_type
+  ↓include_fields [variables.StepVariable-1672088989247]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+    description: include
+  ↓order_by [variables.StepVariable-1672088989250]: 
+    comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+    description: order_by
+  ↓page [variables.StepVariable-1672088989253]: 
+    comment: Defines which page of rows should be returned.
+    description: page
+  ↓search [variables.StepVariable-1672088989256]: 
+    comment: If provided only rows with data that matches the search query are going to be returned.
+    description: search
+  ↓size [variables.StepVariable-1672088989259]: 
+    comment: Defines how many rows should be returned per page.
+    description: size
+  ↓table_id [variables.StepVariable-1672088989262]: 
+    comment: Returns the rows of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+  ↓user_field_names [variables.StepVariable-1672088989265]: 
+    comment: A flag query parameter which if provided the returned json will use the user specified field names instead of internal Baserow field names (field_123 etc). 
+    description: user_field_names
+    value: true
+  ↓view_id [variables.StepVariable-1672088989268]: 
+    comment: Includes all the filters and sorts of the provided view.
+    description: view_id
+  ↓filterExpression [variables.StepVariable-1672088989271]: 
+    value: 
+↓Copy [steps.XMLCopyStep-1672088989274]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1672088989232
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓exclude [variables.RequestableVariable-1672088989277]: 
+  comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+  description: exclude
+↓include_fields [variables.RequestableVariable-1672088989280]: 
+  comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+  description: include
+↓order_by [variables.RequestableVariable-1672088989283]: 
+  comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+  description: order_by
+↓page [variables.RequestableVariable-1672088989286]: 
+  comment: Defines which page of rows should be returned.
+  description: page
+↓search [variables.RequestableVariable-1672088989289]: 
+  comment: If provided only rows with data that matches the search query are going to be returned.
+  description: search
+↓size [variables.RequestableVariable-1672088989292]: 
+  comment: Defines how many rows should be returned per page.
+  description: size
+↓table_id [variables.RequestableVariable-1672088989295]: 
+  comment: Returns the rows of the table related to the provided value.
+  description: table_id
+  required: true
+  value: 
+↓view_id [variables.RequestableVariable-1672088989298]: 
+  comment: Includes all the filters and sorts of the provided view.
+  description: view_id
+↓filterExpression [variables.RequestableVariable-1672088989301]: 
+  comment: |
+    'A JSON Structure representing the filters in the form :
+    
+    ```
+    {
+    	"mode": "AND",  // Can be AND or OR
+    	"filters": [
+    		{
+    			"field": "Name",  	// The name of the column to filter on
+    			"op": "contains",	// the operation, can be any of the operations described below
+    			"value": "Little"	// The value of the filter operation
+    		},
+    		{
+    			"field": "Description",
+    			"op": "contains",
+    			"value": "1954"
+    		}
+    	]
+    }
+    ```
+    
+    ### operations
+    
+    |Filter	|Example value	| Full example |
+    |-------|---------------|--------------|
+    |equal	|string	|field is ''string''|
+    |not_equal	|string	|field is not ''string''|
+    |date_equal	|2020-01-01	|field is date ''2020-01-01''|
+    |date_not_equal	|2020-01-01	|field is not date ''2020-01-01''|
+    |date_equals_today	|	|field is today|
+    |date_before_today	|	|field is before today|
+    |date_after_today	|	|field is after today|
+    |date_equals_days_ago	|Europe/Paris?1	|field is days ago ''Europe/Paris?1''|
+    |date_equals_months_ago	|Europe/Paris?1	|field is months ago ''Europe/Paris?1''|
+    |date_equals_years_ago	|Europe/Paris?1	|field is years ago ''Europe/Paris?1''|
+    |date_equals_week	|	|field in this week|
+    |date_equals_month	|	|field in this month|
+    |date_equals_year	|	|field in this year|
+    |date_equals_day_of_month|	1	|field day of month is ''1''|
+    |date_before	|2020-01-01	|field is before date ''2020-01-01''|
+    |date_after	|2020-01-01	|field is after date ''2020-01-01''|
+    |contains	|string	|field contains ''string''|
+    |filename_contains|	string|	field filename contains ''string''|
+    |has_file_type|	image / document	|field has file type ''image / document''|
+    |contains_not 	string	|field contains not ''string''|
+    |length_is_lower_than	|5	|field length is lower than ''5''|
+    |higher_than	|100|	field higher than ''100''|
+    |lower_than	|100|	field lower than ''100''|
+    |single_select_equal|	1	|field is ''1''|
+    |single_select_not_equal|	1	|field is not ''1''|
+    |boolean|	true|	field is ''true''|
+    |link_row_has|	1|	field has ''1''|
+    |link_row_has_not|	1	|field has not ''1''|
+    |link_row_contains|	string	|field contains ''string''|
+    |link_row_not_contains|	string|	field contains not ''string''|
+    |multiple_select_has|	1|	field has ''1''|
+    |multiple_select_has_not|	1|	field has not ''1''|
+    |empty|		|field is empty|
+    |not_empty|		|field is not empty|
+    '
+↓apikey [variables.RequestableVariable-1672089022871]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓TestAllShows [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1672088989305]: 
+    description: table_id
+    required: true
+    value: 344
+↓TestBeneficiaries [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1672088989309]: 
+    description: table_id
+    required: true
+    value: 110211
+↓TestMaries [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1672088989313]: 
+    description: table_id
+    required: true
+    value: 354
+↓TestOK [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1672088989317]: 
+    description: table_id
+    required: true
+    value: 191
