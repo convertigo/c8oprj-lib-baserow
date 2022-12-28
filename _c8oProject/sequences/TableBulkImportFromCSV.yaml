@@ -10,8 +10,6 @@ responseTimeout: 60000000000000000
           - ↑value: 1669198830917
         - java.lang.String: 
           - ↑value: ./files
-  ↓Call_Sequence [steps.SequenceStep-1669198830920]: 
-    sourceSequence: lib_BaseRow.TokenGetOrRefresh
   ↓jSimpleSource [steps.SimpleSourceStep-1669295533831]: 
     sourceDefinition: 
       - xmlizable: 
@@ -69,6 +67,8 @@ responseTimeout: 60000000000000000
       var last = false;'
   ↓jWhile [steps.WhileStep-1669198830938]: 
     condition: try{(line = reader.readNext())}catch(e){log.warn("error reading" + JSON.stringify(e)); reader.skip(1); line = line = reader.readNext();} line != null || last != true
+    ↓Call_Sequence [steps.SequenceStep-1669198830920]: 
+      sourceSequence: lib_BaseRow.TokenGetOrRefresh
     ↓ComputeData [steps.SimpleStep-1669198830941]: 
       expression: |
         'if(line != null){
