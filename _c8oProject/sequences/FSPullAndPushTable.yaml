@@ -81,108 +81,117 @@ comment: Push a BaserowTable to FullSync for offline access
         - java.lang.String: 
           - ↑value: ./document/filepath/text()
   variableName: CSVPath
-↓Read_CSV [steps.ReadCSVStep-1670751577714]: 
-  comment: Read the Exported CSV
-  dataFile: CSVPath
-↓JsonSource [steps.JsonSourceStep-1670752888629]: 
-  comment: Get CSV headers in a JSON Object
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1670751577714
-        - java.lang.String: 
-          - ↑value: ./line[1]
-  variableName: CSVHeaders
-↓Log [steps.LogStep-1670756109565]: 
-  expression: JSON.stringify(CSVHeaders)
-  level: WARN
-↓Array [steps.JsonArrayStep-1670755908126]: 
-  comment: Build  Data array for post bulk
-  key: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-      - SmartType: 
-        - ↑mode: PLAIN
-        - →→: data
-  ↓Iterator [steps.IteratorStep-1670755622054]: 
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1670751577714
-          - java.lang.String: 
-            - ↑value: ./line[position() > 1]
-    ↓JsonSource1 [steps.JsonSourceStep-1670755789960]: 
-      sourceDefinition: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: 1670755622054
-            - java.lang.String: 
-              - ↑value: .
-      variableName: jLine
-    ↓Log [steps.LogStep-1670756233147]: 
-      expression: JSON.stringify(jLine)
-      level: WARN
-    ↓Object [steps.JsonObjectStep-1670756850086]: 
-      ↓Field [steps.JsonFieldStep-1670758282074]: 
-        key: 
-          - xmlizable: 
-            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-            - SmartType: 
-              - ↑mode: PLAIN
-              - →→: fsId
-        value: 
-          - xmlizable: 
-            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-            - SmartType: 
-              - ↑mode: JS
-              - →→: '''table'' + ''_'' + table_id + ''_'' + jLine.line.col[0]'
-      ↓jIterator [steps.SimpleIteratorStep-1670755676505]: 
-        expression: CSVHeaders.line.col
-        ↓Field [steps.JsonFieldStep-1670755698142]: 
-          key: 
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-              - SmartType: 
-                - ↑mode: JS
-                - →→: CSVHeaders.line.col[index]
-          value: 
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-              - SmartType: 
-                - ↑mode: JS
-                - →→: jLine.line.col[index]
-↓Call_Transaction_1 [steps.TransactionStep-1670758479150]: 
-  sourceTransaction: lib_BaseRow.lib_baserow_fullsync.PostBulkDocuments
-  ↓data [variables.StepMultiValuedVariable-1670758489437]: 
-    description: Documents contents
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1670755908126
-          - java.lang.String: 
-            - ↑value: ./Object
-  ↓_id [variables.StepMultiValuedVariable-1670758489439]: 
-    description: Document ids
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1670755908126
-          - java.lang.String: 
-            - ↑value: ./Object/Field[@originalKeyName = 'fsId']/text()
+↓CreateCSVReader [steps.SimpleStep-1672073751160]: 
+  expression: |
+    '// Java Imports
+    var Paths = java.nio.file.Paths;
+    var Files = java.nio.file.Files;
+    var CSVReaderBuilder = com.opencsv.CSVReaderBuilder;
+    var CSVParserBuilder = com.opencsv.CSVParserBuilder;
+    var RFC4180ParserBuilder = com.opencsv.RFC4180ParserBuilder;
+    
+    // init Params
+    fileSeparator = ",";
+    quoteChar = ''"'';
+    
+    // Log params
+    log.debug("fileSeparator used will be: " + fileSeparator);
+    log.debug("quoteChar used will be: " + quoteChar);
+    
+    // Declare global variables
+    var br = null;
+    var line = "";
+    
+    try{
+    	// Get file path
+    	var file = CSVPath;
+    	
+    	// Get file path
+    	path = Paths.get(file);
+    	log.debug("Path used will be: " + path);
+    	
+    	// Create a buffer reader
+    	br = Files.newBufferedReader(path);
+    	log.debug("Buffered reader created");
+    	
+    	// Instanciate CSVReaderBuilder, with RFC4180ParserBuilder (helping for special chars as \) 
+    	var reader = new CSVReaderBuilder(br)
+                    .withCSVParser(new RFC4180ParserBuilder()
+                            .withQuoteChar(""+quoteChar)
+                            .withSeparator(""+fileSeparator)
+                            .build())
+                    .build();
+    	
+    	log.debug("Builder is created");
+    	
+    	// read the first laine to get the column names...
+    	firstLine = reader.readNext();
+    }
+    catch(e){
+    	log.warn("An error occured " + JSON.stringify(e))
+    }
+    
+    // Declare body var
+    var body = {data: []};
+    var cpt = 0;
+    if(cptTotal == undefined){
+    	var cptTotal = 0;
+    }
+    var last = false;'
+↓jWhile [steps.WhileStep-1672074070887]: 
+  condition: |
+    'try {
+        (line = reader.readNext())
+    } catch (e) {
+        log.warn("error reading" + JSON.stringify(e));
+        reader.skip(1);
+        line = line = reader.readNext();
+    } line != null || last != true'
+  ↓ComputeData [steps.SimpleStep-1672074070890]: 
+    expression: |
+      'if(line != null){
+      	obj = {
+      		"_id": "baserow_table_" + table_id + "_" + line[0]
+      	};
+      	firstLine.forEach((item, index) => {
+      		if (index > 0)
+      			obj[item] = line[index]
+      	})
+      	body.data.push(obj);
+      	cpt++;
+      }
+      else{
+      	last = true;
+      }
+      '
+  ↓jIf [steps.IfStep-1672074070893]: 
+    condition: cpt >= (+chunkSize) || last == true
+    ↓stringifyBody [steps.SimpleStep-1672074070896]: 
+      expression: |
+        '// Copy and stringify body into a new var to be send to al subsequence
+        var _use_json_base = "" + JSON.stringify(body.data);
+        log.debug("Stringifying this line " + _use_json_base);
+        
+        cptTotal = cptTotal + (+(""+ cpt));
+        log.warn("Actual total count is: " +cptTotal);
+        
+        // // Re init vars
+        body ={data: []};
+        cpt = 0;
+        '
+    ↓Call_Transaction_1 [steps.TransactionStep-1670758479150]: 
+      sourceTransaction: lib_BaseRow.lib_baserow_fullsync.PostBulkDocuments
+      ↓_use_json_base [variables.StepVariable-1672138076377]: 
+        description: (string) – JSON use as a base for the array of documents (js array), or for individual documents (js object). Optional
+↓Delete_file [steps.DeleteStep-1672139989084]: 
+  comment: delete the Downloaded CSV
+  sourcePath: CSVPath
 ↓table_id [variables.RequestableVariable-1670750989287]: 
   comment: The table id to create and start an export job for
   description: table_id
   required: true
+↓chunkSize [variables.RequestableVariable-1672139109655]: 
+  value: 10240
 ↓TestOK [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1670751187399]: 
     description: table_id

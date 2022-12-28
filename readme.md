@@ -252,6 +252,9 @@ Push a BaserowTable to FullSync for offline access
 <th>name</th><th>comment</th>
 </tr>
 <tr>
+<td>chunkSize</td><td></td>
+</tr>
+<tr>
 <td>table_id</td><td>The table id to create and start an export job for</td>
 </tr>
 </table>
