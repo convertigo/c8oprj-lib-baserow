@@ -1,0 +1,104 @@
+comment: Updates a row in a table ising apikey instead of credentials
+↓Input_variables [steps.InputVariablesStep-1673475302604]: 
+↓Concat [steps.XMLConcatStep-1673475302607]: 
+  nodeName: tokenValue
+  output: false
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: Token
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1673475302604
+                - java.lang.String: 
+                  - ↑value: ./apikey/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓Call_Transaction [steps.TransactionStep-1673476667410]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___PATCH
+  ↓__body [variables.StepVariable-1673476699787]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673475302604
+          - java.lang.String: 
+            - ↑value: ./data/text()
+  ↓row_id [variables.StepVariable-1673476699793]: 
+    comment: Updates the row related to the value.
+    description: row_id
+    required: true
+  ↓table_id [variables.StepVariable-1673476699795]: 
+    comment: Updates the row in the table related to the value.
+    description: table_id
+    required: true
+  ↓user_field_names [variables.StepVariable-1673476699797]: 
+    comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+    description: user_field_names
+    value: true
+  ↓__header_Authorization [variables.StepVariable-1673477177885]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673475302607
+          - java.lang.String: 
+            - ↑value: ./text()
+↓Copy [steps.XMLCopyStep-1673475302628]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1673476667410
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓table_id [variables.RequestableVariable-1673475302631]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓apikey [variables.RequestableVariable-1673475302640]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓row_id [variables.RequestableVariable-1673475424296]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓data [variables.RequestableVariable-1673476949614]: 
+↓Test_Case [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1673475302644]: 
+    description: table_id
+    required: true
+    value: 413
+  ↓data [variables.TestCaseVariable-1673475302647]: 
+    required: true
+    value: |
+      '{
+      	"Nom": "Mon nom 00",
+          "Notes": "ma super note",
+          "Actif": true,
+          "Date": "20230104"
+      }'

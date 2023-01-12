@@ -31,8 +31,6 @@ comment: Gets data from a given table
                   - ↑value: ./apikey/text()
             - java.lang.String: 
               - ↑value: ''
-↓Call_Sequence [steps.SequenceStep-1672088989205]: 
-  sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓jIf [steps.IfStep-1672088989208]: 
   condition: 'filterExpression ? filterExpression.length != 0: false'
   ↓Call_Sequence [steps.SequenceStep-1672088989211]: 

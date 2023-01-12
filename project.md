@@ -7643,6 +7643,60 @@ Returns the rows of the table related to the provided value.
 
 </p></blockquote></details>
 
+<details><summary><b>TableUpdateRowApiKey</b> : Updates a row in a table ising apikey instead of credentials</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableUpdateRowApiKey
+
+Updates a row in a table ising apikey instead of credentials
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;data
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;row_id
+</td>
+<td>
+Insert row in this table_id
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Insert row in this table_id
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
 <details><summary><b>TokenGetOrRefresh</b> : Gets a token or refresh it if the token is expired the Token will be placed in the current user session</summary><blockquote><p>
 
 
