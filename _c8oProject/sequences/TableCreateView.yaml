@@ -1,0 +1,68 @@
+comment: Creates a new view for the table related
+↓Input_variables [steps.InputVariablesStep-1673520531661]: 
+↓Call_Sequence [steps.SequenceStep-1673521276868]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1673520531667]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_views_table__table_id___POST
+  ↓__body [variables.StepVariable-1673520970517]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673520531661
+          - java.lang.String: 
+            - ↑value: ./data/text()
+  ↓include [variables.StepVariable-1673520970523]: 
+    comment: A comma separated list of extra attributes to include on each view in the response. The supported attributes are `filters`, `sortings` and `decorations`. For example `include=filters,sortings` will add the attributes `filters` and `sortings` to every returned view, containing a list of the views filters and sortings respectively.
+    description: include
+  ↓table_id [variables.StepVariable-1673520970525]: 
+    comment: Creates a view for the table related to the provided value.
+    description: table_id
+    required: true
+  ↓__header_Authorization [variables.StepVariable-1673521221692]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673521276868
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+↓Copy [steps.XMLCopyStep-1673520531685]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1673520531667
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓table_id [variables.RequestableVariable-1673520531688]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓apikey [variables.RequestableVariable-1673520531691]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓data [variables.RequestableVariable-1673520531697]: 
+↓Test_Case [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1673520531701]: 
+    description: table_id
+    required: true
+    value: 441
+  ↓data [variables.TestCaseVariable-1673520531704]: 
+    required: true
+    value: |
+      '{
+      	"name": "ma vue 2",
+      	"type": "grid",
+      	"filter_type": "AND",
+      	"filters_disabled": false,
+      	"row_identifier_type": "id",
+      	"public": true
+      }'

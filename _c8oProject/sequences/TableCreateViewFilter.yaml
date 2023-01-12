@@ -1,0 +1,114 @@
+comment: Updates the existing filter if the authorized user has access to the related database's group.
+↓Input_variables [steps.InputVariablesStep-1673522493215]: 
+↓Call_Sequence [steps.SequenceStep-1673522493218]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Sequence1 [steps.SequenceStep-1673523741606]: 
+  comment: We need the field list for this table to build the filter
+  sourceSequence: lib_BaseRow.FieldsList
+  ↓table_id [variables.StepVariable-1673523741609]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+↓JsonSource [steps.JsonSourceStep-1673523741612]: 
+  comment: Our field list is now in aFields
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1673523741606
+        - java.lang.String: 
+          - ↑value: ./document/array
+  variableName: aFields
+↓BuildFilters [steps.SimpleStep-1673523741615]: 
+  comment: Build the filters according to the API specs
+  expression: |
+    'log.warn("aFields : " + JSON.stringify(aFields));
+    log.warn("data before : " + JSON.stringify(data));
+    function getFieldId (fieldName) {
+    	fieldId = aFields.find( elt =>  elt.name == fieldName);
+    	return (fieldId ? fieldId.id:''unknown_field'');
+    }
+    
+    data = JSON.parse(data);
+    data.field = getFieldId(data.field);
+    data = JSON.stringify(data);
+    log.warn("data after : " + JSON.stringify(data));
+    
+    
+    '
+↓jElement [steps.ElementStep-1673524477473]: 
+  expression: data
+  nodeName: body
+↓Call_Transaction [steps.TransactionStep-1673522493221]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_views__view_id__filters__POST
+  ↓__header_Authorization [variables.StepVariable-1673522493233]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673522493218
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓__body [variables.StepVariable-1673522657706]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673524477473
+          - java.lang.String: 
+            - ↑value: ./text()
+  ↓view_id [variables.StepVariable-1673522881024]: 
+    comment: Creates a filter for the view related to the provided value.
+    description: view_id
+    required: true
+↓Copy [steps.XMLCopyStep-1673522493236]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1673522493221
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓apikey [variables.RequestableVariable-1673522493242]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓data [variables.RequestableVariable-1673522493245]: 
+  value: 
+↓view_id [variables.RequestableVariable-1673522888749]: 
+  comment: Creates a filter for the view related to the provided value.
+  description: view_id
+  required: true
+↓table_id [variables.RequestableVariable-1673524377293]: 
+  comment: Returns only the fields of the table related to the provided value.
+  description: table_id
+  required: true
+↓Test_Case [core.TestCase]: 
+  ↓apikey [variables.TestCaseVariable-1673522743193]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: x4cd7f747de4144b7948e73582d7272d9b6bba2197942d2511d78518e449155f55126ec3426ba2904f91257d9bf8a1b09
+    visibility: '-1'
+  ↓data [variables.TestCaseVariable-1673522743195]: 
+    value: |
+      '{
+      	"field": "Nom",
+      	"type": "equal",
+      	"value": "aaaa"
+      }'
+  ↓view_id [variables.TestCaseVariable-1673522917509]: 
+    description: view_id
+    required: true
+    value: 1728
+  ↓table_id [variables.TestCaseVariable-1673524381924]: 
+    description: table_id
+    required: true
+    value: 441
