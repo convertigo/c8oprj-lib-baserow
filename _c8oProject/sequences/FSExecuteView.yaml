@@ -1,0 +1,47 @@
+comment: Execute a FullSync View
+↓Call_Transaction [steps.TransactionStep-1672151981464]: 
+  sourceTransaction: lib_BaseRow.lib_baserow_fullsync.GetView
+  ↓_use_ddoc [variables.StepVariable-1672151981467]: 
+    description: Design document name
+  ↓_use_view [variables.StepVariable-1672151981470]: 
+    description: View function name
+  ↓_use_startkey [variables.StepVariable-1672151981473]: 
+    description: (string) – Return records starting with the specified key. Optional
+  ↓_use_endkey [variables.StepVariable-1672151981476]: 
+    description: (string) – Stop returning records when the specified key is reached. Optional
+  ↓_use_group [variables.StepVariable-1672151981479]: 
+    description: (boolean) – Group the results using the reduce function to a group or single row. Default is false
+  ↓_use_group_level [variables.StepVariable-1672151981482]: 
+    description: (number) – Specify the group level to be used. Optional
+  ↓_use_reduce [variables.StepVariable-1672151981485]: 
+    description: (boolean) – Use the reduction function. Default is true
+  ↓_use_descending [variables.StepVariable-1672151981488]: 
+    description: (boolean) – Return the documents in descending by key order. Default is false
+  ↓_use_key [variables.StepVariable-1672151981491]: 
+    description: (string) – Return only documents that match the specified key. Optional
+  ↓_use_limit [variables.StepVariable-1672159513492]: 
+    description: (number) – Limit the number of the returned documents to the specified number. Optional
+↓Copy [steps.XMLCopyStep-1672151981494]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1672151981464
+        - java.lang.String: 
+          - ↑value: ./document/couchdb_output/*
+↓_use_ddoc [variables.RequestableVariable-1672151981497]: 
+↓_use_view [variables.RequestableVariable-1672151981500]: 
+↓_use_startkey [variables.RequestableVariable-1672151981503]: 
+↓_use_endkey [variables.RequestableVariable-1672151981506]: 
+↓_use_group [variables.RequestableVariable-1672151981509]: 
+  value: false
+↓_use_group_level [variables.RequestableVariable-1672151981512]: 
+↓_use_reduce [variables.RequestableVariable-1672151981515]: 
+  value: false
+↓_use_descending [variables.RequestableVariable-1672151981518]: 
+  value: false
+↓_use_key [variables.RequestableVariable-1672151981521]: 
+↓_use_limit [variables.RequestableVariable-1672159549389]: 
+  description: (number) – Limit the number of the returned documents to the specified number. Optional
+  value: 1000
