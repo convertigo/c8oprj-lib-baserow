@@ -1,0 +1,68 @@
+comment: List all views for the table related
+↓Input_variables [steps.InputVariablesStep-1673521540291]: 
+↓Call_Sequence [steps.SequenceStep-1673521540294]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1673521540297]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_views_table__table_id___GET
+  ↓__header_Authorization [variables.StepVariable-1673521540309]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673521540294
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓include [variables.StepVariable-1673521592998]: 
+    comment: A comma separated list of extra attributes to include on each view in the response. The supported attributes are `filters`, `sortings` and `decorations`. For example `include=filters,sortings` will add the attributes `filters` and `sortings` to every returned view, containing a list of the views filters and sortings respectively.
+    description: include
+  ↓limit [variables.StepVariable-1673521593000]: 
+    comment: The maximum amount of views that must be returned. This endpoint doesn't support pagination, but if you for example just need to fetch the first view, you can do that by setting a limit. There isn't a limit by default.
+    description: limit
+  ↓table_id [variables.StepVariable-1673521593002]: 
+    comment: Returns only views of the table related to the provided value.
+    description: table_id
+    required: true
+  ↓type [variables.StepVariable-1673521593004]: 
+    comment: Optionally filter on the view type. If provided, only views of that type will be returned.
+    description: type
+↓Copy [steps.XMLCopyStep-1673521540312]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1673521540297
+        - java.lang.String: 
+          - ↑value: ./document/array/*
+↓table_id [variables.RequestableVariable-1673521540315]: 
+  comment: Returns only views of the table related to the provided value.
+  description: table_id
+  required: true
+↓apikey [variables.RequestableVariable-1673521540318]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓include [variables.RequestableVariable-1673521540321]: 
+  comment: A comma separated list of extra attributes to include on each view in the response. The supported attributes are filters, sortings and decorations. For example include=filters,sortings will add the attributes filters and sortings to every returned view, containing a list of the views filters and sortings respectively.
+↓limit [variables.RequestableVariable-1673521718610]: 
+  comment: The maximum amount of views that must be returned. This endpoint doesn't support pagination, but if you for example just need to fetch the first view, you can do that by setting a limit. There isn't a limit by default.
+↓type [variables.RequestableVariable-1673521774495]: 
+  comment: Optionally filter on the view type. If provided, only views of that type will be returned.
+↓Test_Case [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1673521838322]: 
+    description: table_id
+    required: true
+    value: 441
+  ↓apikey [variables.TestCaseVariable-1673521838324]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: x4cd7f747de4144b7948e73582d7272d9b6bba2197942d2511d78518e449155f55126ec3426ba2904f91257d9bf8a1b09
+    visibility: '-1'
+  ↓include [variables.TestCaseVariable-1673521838326]: 
+    value: filters,sortings
+  ↓limit [variables.TestCaseVariable-1673521838328]: 
+  ↓type [variables.TestCaseVariable-1673521838330]: 

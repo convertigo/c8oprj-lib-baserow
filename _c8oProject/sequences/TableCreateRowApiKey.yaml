@@ -1,4 +1,4 @@
-comment: Creates a row  in a table ising apikey instead of credentials
+comment: Creates a row  in a table using an apikey instead of credentials
 ↓Input_variables [steps.InputVariablesStep-1671630682456]: 
 ↓Concat [steps.XMLConcatStep-1671631218082]: 
   nodeName: tokenValue

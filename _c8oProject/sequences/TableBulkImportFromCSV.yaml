@@ -10,8 +10,6 @@ responseTimeout: 60000000000000000
           - ↑value: 1669198830917
         - java.lang.String: 
           - ↑value: ./files
-  ↓Call_Sequence [steps.SequenceStep-1669198830920]: 
-    sourceSequence: lib_BaseRow.TokenGetOrRefresh
   ↓jSimpleSource [steps.SimpleSourceStep-1669295533831]: 
     sourceDefinition: 
       - xmlizable: 
@@ -81,6 +79,8 @@ responseTimeout: 60000000000000000
         '
     ↓jIf [steps.IfStep-1669199578744]: 
       condition: cpt >= (+chunkSize) || last == true
+      ↓Call_Sequence [steps.SequenceStep-1669198830920]: 
+        sourceSequence: lib_BaseRow.TokenGetOrRefresh
       ↓stringifyBody [steps.SimpleStep-1669199369671]: 
         expression: |
           '// Copy and stringify body into a new var to be send to al subsequence

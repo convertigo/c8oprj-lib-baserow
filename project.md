@@ -6853,6 +6853,44 @@ Returns only the fields of the table related to the provided value.
 
 </p></blockquote></details>
 
+<details><summary><b>FieldsListApiKey</b> : Lists all the fields in a baserow table</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") FieldsListApiKey
+
+Lists all the fields in a baserow table
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Returns only the fields of the table related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
 <details><summary><b>formssource_GetSelectData</b> : Get data from a baserow table for a Select</summary><blockquote><p>
 
 
@@ -7163,12 +7201,12 @@ Insert row in this table_id
 
 </p></blockquote></details>
 
-<details><summary><b>TableCreateRowApiKey</b> : Creates a row  in a table ising apikey instead of credentials</summary><blockquote><p>
+<details><summary><b>TableCreateRowApiKey</b> : Creates a row  in a table using an apikey instead of credentials</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableCreateRowApiKey
 
-Creates a row  in a table ising apikey instead of credentials
+Creates a row  in a table using an apikey instead of credentials
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -7217,6 +7255,106 @@ Insert row in this table_id
 
 </p></blockquote></details>
 
+<details><summary><b>TableCreateView</b> : Creates a new view for the table related</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableCreateView
+
+Creates a new view for the table related
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;data
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Insert row in this table_id
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>TableCreateViewFilter</b> : Updates the existing filter if the authorized user has access to the related database's group</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableCreateViewFilter
+
+Updates the existing filter if the authorized user has access to the related database's group.
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;data
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Returns only the fields of the table related to the provided value.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;view_id
+</td>
+<td>
+Creates a filter for the view related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
 <details><summary><b>TableDeleteRow</b> : deletes a row from a  from a given table</summary><blockquote><p>
 
 
@@ -7249,6 +7387,44 @@ Deletes the row related to the value.
 </td>
 <td>
 Returns the rows of the table related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>TableDeleteView</b> : Deletes the existing view if the authorized user has access to the related database's group</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableDeleteView
+
+Deletes the existing view if the authorized user has access to the related database's group. Note that all the related settings of the view are going to be deleted also. The data stays intact after deleting the view because this is related to the table and not the view.
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;view_id
+</td>
+<td>
+Deletes the view related to the provided value.
 </td>
 </tr>
 </table>
@@ -7407,6 +7583,228 @@ Includes all the filters and sorts of the provided view.
 
 </p></blockquote></details>
 
+<details><summary><b>TableGetDataApiKey</b> : Gets data from a given table</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableGetDataApiKey
+
+Gets data from a given table
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;exclude
+</td>
+<td>
+All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;filterExpression
+</td>
+<td>
+A JSON Structure representing the filters in the form :
+
+```
+{
+	"mode": "AND",  // Can be AND or OR
+	"filters": [
+		{
+			"field": "Name",  	// The name of the column to filter on
+			"op": "contains",	// the operation, can be any of the operations described below
+			"value": "Little"	// The value of the filter operation
+		},
+		{
+			"field": "Description",
+			"op": "contains",
+			"value": "1954"
+		}
+	]
+}
+```
+
+### operations
+
+|Filter	|Example value	| Full example |
+|-------|---------------|--------------|
+|equal	|string	|field is 'string'|
+|not_equal	|string	|field is not 'string'|
+|date_equal	|2020-01-01	|field is date '2020-01-01'|
+|date_not_equal	|2020-01-01	|field is not date '2020-01-01'|
+|date_equals_today	|	|field is today|
+|date_before_today	|	|field is before today|
+|date_after_today	|	|field is after today|
+|date_equals_days_ago	|Europe/Paris?1	|field is days ago 'Europe/Paris?1'|
+|date_equals_months_ago	|Europe/Paris?1	|field is months ago 'Europe/Paris?1'|
+|date_equals_years_ago	|Europe/Paris?1	|field is years ago 'Europe/Paris?1'|
+|date_equals_week	|	|field in this week|
+|date_equals_month	|	|field in this month|
+|date_equals_year	|	|field in this year|
+|date_equals_day_of_month|	1	|field day of month is '1'|
+|date_before	|2020-01-01	|field is before date '2020-01-01'|
+|date_after	|2020-01-01	|field is after date '2020-01-01'|
+|contains	|string	|field contains 'string'|
+|filename_contains|	string|	field filename contains 'string'|
+|has_file_type|	image / document	|field has file type 'image / document'|
+|contains_not 	string	|field contains not 'string'|
+|length_is_lower_than	|5	|field length is lower than '5'|
+|higher_than	|100|	field higher than '100'|
+|lower_than	|100|	field lower than '100'|
+|single_select_equal|	1	|field is '1'|
+|single_select_not_equal|	1	|field is not '1'|
+|boolean|	true|	field is 'true'|
+|link_row_has|	1|	field has '1'|
+|link_row_has_not|	1	|field has not '1'|
+|link_row_contains|	string	|field contains 'string'|
+|link_row_not_contains|	string|	field contains not 'string'|
+|multiple_select_has|	1|	field has '1'|
+|multiple_select_has_not|	1|	field has not '1'|
+|empty|		|field is empty|
+|not_empty|		|field is not empty|
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;include_fields
+</td>
+<td>
+All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;order_by
+</td>
+<td>
+Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a '-' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;page
+</td>
+<td>
+Defines which page of rows should be returned.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;search
+</td>
+<td>
+If provided only rows with data that matches the search query are going to be returned.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;size
+</td>
+<td>
+Defines how many rows should be returned per page.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Returns the rows of the table related to the provided value.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;view_id
+</td>
+<td>
+Includes all the filters and sorts of the provided view.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>TableGetViews</b> : List all views for the table related</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableGetViews
+
+List all views for the table related
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;include
+</td>
+<td>
+A comma separated list of extra attributes to include on each view in the response. The supported attributes are filters, sortings and decorations. For example include=filters,sortings will add the attributes filters and sortings to every returned view, containing a list of the views filters and sortings respectively.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;limit
+</td>
+<td>
+The maximum amount of views that must be returned. This endpoint doesn't support pagination, but if you for example just need to fetch the first view, you can do that by setting a limit. There isn't a limit by default.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Returns only views of the table related to the provided value.
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;type
+</td>
+<td>
+Optionally filter on the view type. If provided, only views of that type will be returned.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
 <details><summary><b>TableReadRow</b> : Reads a row from a  from a given table</summary><blockquote><p>
 
 
@@ -7439,6 +7837,60 @@ Deletes the row related to the value.
 </td>
 <td>
 Returns the rows of the table related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>TableUpdateRowApiKey</b> : Updates a row in a table ising apikey instead of credentials</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableUpdateRowApiKey
+
+Updates a row in a table ising apikey instead of credentials
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;data
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;row_id
+</td>
+<td>
+Insert row in this table_id
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Insert row in this table_id
 </td>
 </tr>
 </table>

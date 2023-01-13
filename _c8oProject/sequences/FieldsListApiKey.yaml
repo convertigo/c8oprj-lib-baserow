@@ -1,0 +1,80 @@
+comment: Lists all the fields in a baserow table
+responseExpiryDate: absolute,60
+↓Input_variables [steps.InputVariablesStep-1672092062343]: 
+↓Concat [steps.XMLConcatStep-1672092079922]: 
+  nodeName: tokenValue
+  output: false
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: Token
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1672092062343
+                - java.lang.String: 
+                  - ↑value: ./apikey/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓Call_Transaction [steps.TransactionStep-1672092006726]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_fields_table__table_id___GET
+  ↓__header_Authorization [variables.StepVariable-1672092006729]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1672092079922
+          - java.lang.String: 
+            - ↑value: ./text()
+  ↓table_id [variables.StepVariable-1672092006732]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1672092006735]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1672092006726
+        - java.lang.String: 
+          - ↑value: ./document/array
+↓table_id [variables.RequestableVariable-1672092006738]: 
+  comment: Returns only the fields of the table related to the provided value.
+  description: table_id
+  required: true
+  value: 
+↓apikey [variables.RequestableVariable-1672092052363]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓TestOK [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1672092006742]: 
+    description: table_id
+    required: true
+    value: 191
+↓TestOK1 [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1672092006746]: 
+    description: table_id
+    required: true
+    value: 351
