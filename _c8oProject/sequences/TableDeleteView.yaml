@@ -1,0 +1,50 @@
+comment: Deletes the existing view if the authorized user has access to the related database's group. Note that all the related settings of the view are going to be deleted also. The data stays intact after deleting the view because this is related to the table and not the view.
+↓Input_variables [steps.InputVariablesStep-1673545912127]: 
+↓Call_Sequence [steps.SequenceStep-1673545912130]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1673545912133]: 
+  output: true
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_views__view_id___DELETE
+  ↓__header_Authorization [variables.StepVariable-1673545912145]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673545912130
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓view_id [variables.StepVariable-1673546292552]: 
+    comment: Deletes the view related to the provided value.
+    description: view_id
+    required: true
+↓Copy [steps.XMLCopyStep-1673545912148]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1673545912133
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓apikey [variables.RequestableVariable-1673545912154]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓view_id [variables.RequestableVariable-1673546322861]: 
+  comment: Deletes the view related to the provided value.
+  description: view_id
+  required: true
+↓Test_Case [core.TestCase]: 
+  ↓apikey [variables.TestCaseVariable-1673546649712]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: x4cd7f747de4144b7948e73582d7272d9b6bba2197942d2511d78518e449155f55126ec3426ba2904f91257d9bf8a1b09
+    visibility: '-1'
+  ↓view_id [variables.TestCaseVariable-1673546649714]: 
+    description: view_id
+    required: true
+    value: 1734

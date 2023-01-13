@@ -7393,6 +7393,44 @@ Returns the rows of the table related to the provided value.
 
 </p></blockquote></details>
 
+<details><summary><b>TableDeleteView</b> : Deletes the existing view if the authorized user has access to the related database's group</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableDeleteView
+
+Deletes the existing view if the authorized user has access to the related database's group. Note that all the related settings of the view are going to be deleted also. The data stays intact after deleting the view because this is related to the table and not the view.
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;apikey
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;view_id
+</td>
+<td>
+Deletes the view related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
 <details><summary><b>TableGetData</b> : Gets data from a given table</summary><blockquote><p>
 
 

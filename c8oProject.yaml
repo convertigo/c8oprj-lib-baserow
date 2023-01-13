@@ -16,7 +16,7 @@
     
     '
   corsOrigin: =Origin
-  version: 1.0.7
+  version: 1.0.8
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓lib_baserow_fullsync [connectors.FullSyncConnector]: 🗏 connectors/lib_baserow_fullsync.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
@@ -42,6 +42,7 @@
   ↓TableCreateView [sequences.GenericSequence]: 🗏 sequences/TableCreateView.yaml
   ↓TableCreateViewFilter [sequences.GenericSequence]: 🗏 sequences/TableCreateViewFilter.yaml
   ↓TableDeleteRow [sequences.GenericSequence]: 🗏 sequences/TableDeleteRow.yaml
+  ↓TableDeleteView [sequences.GenericSequence]: 🗏 sequences/TableDeleteView.yaml
   ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml
   ↓TableGetDataApiKey [sequences.GenericSequence]: 🗏 sequences/TableGetDataApiKey.yaml
   ↓TableGetViews [sequences.GenericSequence]: 🗏 sequences/TableGetViews.yaml
