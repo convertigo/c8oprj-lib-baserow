@@ -3,6 +3,12 @@ comment: Create a user
 ↓Call_Sequence [steps.SequenceStep-1670597822711]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Object [steps.JsonObjectStep-1670598309195]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: Object
   output: false
   ↓Field [steps.JsonFieldStep-1670598334984]: 
     key: 

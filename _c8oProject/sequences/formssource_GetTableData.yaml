@@ -93,6 +93,12 @@ comment: |
             - ↑value: ./document/results/object
     ↓Object [steps.JsonObjectStep-1665406203249]: 
       comment: The data object
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: Object
       ↓Iterator [steps.IteratorStep-1665403182897]: 
         comment: Ignore id as this is a technical id not to be displayed
         sourceDefinition: 

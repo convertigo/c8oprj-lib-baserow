@@ -2,6 +2,12 @@ comment: Create a Token to acess databases within a group. This token will hold 
 ↓Call_Sequence [steps.SequenceStep-1672064966282]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Object [steps.JsonObjectStep-1672064966285]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: Object
   output: false
   ↓Field [steps.JsonFieldStep-1672064966290]: 
     key: 

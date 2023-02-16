@@ -1,5 +1,11 @@
 comment: Establishes a session with Baserow. Must be called before any other API
 ↓Object [steps.JsonObjectStep-1664964135915]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: Object
   output: false
   ↓Field [steps.JsonFieldStep-1664964145292]: 
     key: 

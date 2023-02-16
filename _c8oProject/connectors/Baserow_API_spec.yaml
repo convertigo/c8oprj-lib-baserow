@@ -859,7 +859,7 @@ server: ${lib_baserow.server}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/database/rows/names/
-  ↓table__{id} [variables.RequestableHttpVariable-1664959340834]: 
+  ↓table___id_ [variables.RequestableHttpVariable-1664959340834]: 
     comment: A list of comma separated row ids to query from the table with id {id}. For example, if you want the name of row `42` and `43` from table `28` this parameter will be `table__28=42,43`. You can specify multiple rows for different tables but every tables must be in the same database. You need at least read permission on all specified tables.
     description: table__{id}
     httpName: table__{id}
@@ -2663,7 +2663,7 @@ server: ${lib_baserow.server}
     comment: All the fields are included in the response by default. You can select a subset of fields by providing the exclude_fields query parameter. If you for example provide the following GET parameter `exclude_fields=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. 
     description: exclude_fields
     httpName: exclude_fields
-  ↓filter__{field}__{filter} [variables.RequestableHttpVariable-1664959341244]: 
+  ↓filter___field____filter_ [variables.RequestableHttpVariable-1664959341244]: 
     comment: |
       'The rows can optionally be filtered by the same view filters available for the views. Multiple filters can be provided if they follow the same format. The field and filter variable indicate how to filter and the value indicates where to filter on.
       
@@ -2797,7 +2797,7 @@ server: ${lib_baserow.server}
     comment: All the fields are included in the response by default. You can select a subset of fields by providing the exclude_fields query parameter. If you for example provide the following GET parameter `exclude_fields=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. 
     description: exclude_fields
     httpName: exclude_fields
-  ↓filter__{field}__{filter} [variables.RequestableHttpVariable-1664959341286]: 
+  ↓filter___field____filter_ [variables.RequestableHttpVariable-1664959341286]: 
     comment: |
       'The rows can optionally be filtered by the same view filters available for the views. Multiple filters can be provided if they follow the same format. The field and filter variable indicate how to filter and the value indicates where to filter on.
       

@@ -78,11 +78,7 @@ comment: Updates a row in a table ising apikey instead of credentials
   description: table_id
   required: true
 ↓apikey [variables.RequestableVariable-1673475302640]: 
-  value: 
-    - ↑ciphered: true
-    - ↑traceable: false
-    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
-  visibility: '-1'
+  value: ${lib_baserow.apikey.secret}
 ↓row_id [variables.RequestableVariable-1673475424296]: 
   comment: Insert row in this table_id
   description: table_id

@@ -2,6 +2,12 @@ comment: Exports a Table to CSV.. Export status must me monitored with the Table
 ↓Call_Sequence [steps.SequenceStep-1670748395048]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Object [steps.JsonObjectStep-1670748542593]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: Object
   output: false
   ↓Field [steps.JsonFieldStep-1670748561102]: 
     key: 
