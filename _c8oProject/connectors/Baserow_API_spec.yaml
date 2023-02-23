@@ -1,3 +1,4 @@
+↑default: true
 baseDir: 
 https: ${lib_baserow.https}
 port: ${lib_baserow.port}

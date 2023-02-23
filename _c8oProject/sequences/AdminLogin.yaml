@@ -79,6 +79,14 @@ comment: Establishes a session with Baserow. Must be called before any other API
           - java.lang.String: 
             - ↑value: ./document/object/token/text()
   key: token
+↓SetTimeStampInSession [steps.SessionSetStep-1677077657468]: 
+  expression: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: new Date().getTime()
+  key: token_timestamp
 ↓password [variables.RequestableVariable-1664963925973]: 
   comment: The baserow admin password
   value: 

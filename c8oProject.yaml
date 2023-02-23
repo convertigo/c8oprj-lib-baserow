@@ -16,11 +16,10 @@
     
     '
   corsOrigin: =Origin
-  version: 1.0.9
+  version: 1.0.10
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓lib_baserow_fullsync [connectors.FullSyncConnector]: 🗏 connectors/lib_baserow_fullsync.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
-  ↓void [connectors.SqlConnector]: 🗏 connectors/void.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
   ↓AdminUserCreate [sequences.GenericSequence]: 🗏 sequences/AdminUserCreate.yaml
   ↓AdminUserDelete [sequences.GenericSequence]: 🗏 sequences/AdminUserDelete.yaml
@@ -28,6 +27,7 @@
   ↓AssetFileUpload [sequences.GenericSequence]: 🗏 sequences/AssetFileUpload.yaml
   ↓DatabaseTokenCreate [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenCreate.yaml
   ↓DatabaseTokenDelete [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenDelete.yaml
+  ↓DatabaseTokenList [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenList.yaml
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
   ↓FieldsListApiKey [sequences.GenericSequence]: 🗏 sequences/FieldsListApiKey.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml

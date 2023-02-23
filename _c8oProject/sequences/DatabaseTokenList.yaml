@@ -1,0 +1,23 @@
+comment: Create a Token to acess databases within a group. This token will hold permissions to specific databases in the group
+↓Call_Sequence [steps.SequenceStep-1677078151939]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1677078151951]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tokens__GET
+  ↓__header_Authorization [variables.StepVariable-1677078151954]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677078151939
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+↓Copy [steps.XMLCopyStep-1677078151960]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1677078151951
+        - java.lang.String: 
+          - ↑value: ./document/array

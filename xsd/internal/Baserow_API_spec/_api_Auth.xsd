@@ -23,23 +23,100 @@
             </xsd:element>
         </xsd:sequence>
     </xsd:complexType>
-    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_non_field_errors_valueType">
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_tokenType">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
                 <xsd:attribute default="string" name="type" type="xsd:string"/>
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_non_field_errorsType">
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_access_tokenType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_refresh_tokenType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_user_first_nameType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_user_usernameType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_user_is_staffType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_user_idType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_user_languageType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_userType">
         <xsd:sequence>
-            <xsd:element minOccurs="0" name="value" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_non_field_errors_valueType"/>
+            <xsd:element minOccurs="0" name="first_name" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_user_first_nameType"/>
+            <xsd:element minOccurs="0" name="username" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_user_usernameType"/>
+            <xsd:element minOccurs="0" name="is_staff" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_user_is_staffType"/>
+            <xsd:element minOccurs="0" name="id" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_user_idType"/>
+            <xsd:element minOccurs="0" name="language" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_user_languageType"/>
         </xsd:sequence>
-        <xsd:attribute name="length" type="xsd:byte"/>
-        <xsd:attribute default="array" name="type" type="xsd:string"/>
+        <xsd:attribute default="object" name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_active_licenses_instance_wideType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="object" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_active_licenses_per_groupType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="object" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_Auth_document_object_active_licensesType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="instance_wide" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_active_licenses_instance_wideType"/>
+            <xsd:element minOccurs="0" name="per_group" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_active_licenses_per_groupType"/>
+        </xsd:sequence>
+        <xsd:attribute default="object" name="type" type="xsd:string"/>
     </xsd:complexType>
     <xsd:complexType name="Baserow_API_spec__api_Auth_document_objectType">
         <xsd:sequence>
-            <xsd:element minOccurs="0" name="non_field_errors" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_non_field_errorsType"/>
+            <xsd:element minOccurs="0" name="token" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_tokenType"/>
+            <xsd:element minOccurs="0" name="access_token" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_access_tokenType"/>
+            <xsd:element minOccurs="0" name="refresh_token" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_refresh_tokenType"/>
+            <xsd:element minOccurs="0" name="user" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_userType"/>
+            <xsd:element minOccurs="0" name="active_licenses" type="lib_BaseRow_ns:Baserow_API_spec__api_Auth_document_object_active_licensesType"/>
         </xsd:sequence>
         <xsd:attribute default="object" name="type" type="xsd:string"/>
     </xsd:complexType>
