@@ -6628,22 +6628,6 @@ comment
 
 </p></blockquote></details>
 </p></blockquote></details>
-
-<details><summary><b>void</b> : void connector, replace or don't use it</summary><blockquote><p>
-
-
-## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/connectors/images/sqlconnector_color_16x16.png?raw=true "SqlConnector") void
-
-void connector, replace or don't use it
-
-<details><summary><span style="color:DarkGoldenRod"><i>Transactions</i></span></summary><blockquote><p>
-
-
-### ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/transactions/images/sqltransaction_color_16x16.png?raw=true "SqlTransaction") void
-
-does nothing
-</p></blockquote></details>
-</p></blockquote></details>
 </p></blockquote></details>
 
 <details><summary><span style="color:DarkGoldenRod"><i>Sequences</i></span></summary><blockquote><p>
@@ -6883,6 +6867,14 @@ Deletes the token related to the provided value.
 </tr>
 </table>
 
+</p></blockquote></details>
+
+<details><summary><b>DatabaseTokenList</b> : Create a Token to acess databases within a group</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") DatabaseTokenList
+
+Create a Token to acess databases within a group. This token will hold permissions to specific databases in the group
 </p></blockquote></details>
 
 <details><summary><b>FieldsList</b> : Lists all the fields in a baserow table</summary><blockquote><p>

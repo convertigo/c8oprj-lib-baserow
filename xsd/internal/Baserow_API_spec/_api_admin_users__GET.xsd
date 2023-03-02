@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:lib_BaseRow_ns="http://www.convertigo.com/convertigo/projects/lib_BaseRow" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://www.convertigo.com/convertigo/projects/lib_BaseRow">
+    <xsd:element name="Baserow_API_spec___api_admin_users__GET" type="lib_BaseRow_ns:Baserow_API_spec___api_admin_users__GETRequestData">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Returns all users with detailed information on each user, if the requesting user is staff. 
+
+
+
+This is a **premium** feature.
+]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="Baserow_API_spec___api_admin_users__GETResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="response" type="lib_BaseRow_ns:Baserow_API_spec___api_admin_users__GETResponseData"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="Baserow_API_spec___api_admin_users__GETResponseType">
+        <xsd:sequence>
+            <xsd:element name="document" type="lib_BaseRow_ns:Baserow_API_spec___api_admin_users__GETResponseData"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec___api_admin_users__GETRequestData">
+        <xsd:sequence>
+            <xsd:element name="page" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:appinfo>page</xsd:appinfo>
+                    <xsd:documentation><![CDATA[Defines which page should be returned.
+]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="search" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:appinfo>search</xsd:appinfo>
+                    <xsd:documentation><![CDATA[If provided only users that match the query will be returned.
+]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="size" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:appinfo>size</xsd:appinfo>
+                    <xsd:documentation><![CDATA[Defines how many users should be returned per page.
+]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="sorts" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:appinfo>sorts</xsd:appinfo>
+                    <xsd:documentation><![CDATA[A comma separated string of attributes to sort by, each attribute must be prefixed with `+` for a descending sort or a `-` for an ascending sort. The accepted attribute names are: id, is_active, name, username, date_joined, last_login. For example `sorts=-id,-is_active` will sort the users first by descending id and then ascending is_active. A sortparameter with multiple instances of the same sort attribute will respond with the ERROR_ADMIN_LISTING_INVALID_SORT_ATTRIBUTE error.
+]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_HttpInfo_statusType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="code" type="xsd:short"/>
+                <xsd:attribute name="text" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_HttpInfo_headers_headerType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="name" type="xsd:string"/>
+                <xsd:attribute name="value" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_HttpInfo_headersType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="header" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_HttpInfo_headers_headerType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_HttpInfo_responseHeaders_headerType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="name" type="xsd:string"/>
+                <xsd:attribute name="value" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_HttpInfo_responseHeadersType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="header" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_HttpInfo_responseHeaders_headerType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_HttpInfoType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="url" type="xsd:anyURI"/>
+            <xsd:element minOccurs="0" name="status" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_HttpInfo_statusType"/>
+            <xsd:element minOccurs="0" name="headers" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_HttpInfo_headersType"/>
+            <xsd:element minOccurs="0" name="responseHeaders" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_HttpInfo_responseHeadersType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_countType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_nextType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_previousType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_idType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_usernameType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_nameType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_object_idType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_object_nameType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_object_permissionsType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_objectType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="id" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_object_idType"/>
+            <xsd:element minOccurs="0" name="name" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_object_nameType"/>
+            <xsd:element minOccurs="0" name="permissions" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_object_permissionsType"/>
+        </xsd:sequence>
+        <xsd:attribute default="object" name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_groupsType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="object" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_groups_objectType"/>
+        </xsd:sequence>
+        <xsd:attribute name="length" type="xsd:byte"/>
+        <xsd:attribute default="array" name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_last_loginType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_date_joinedType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_is_activeType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_object_is_staffType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_results_objectType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="id" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_idType"/>
+            <xsd:element minOccurs="0" name="username" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_usernameType"/>
+            <xsd:element minOccurs="0" name="name" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_nameType"/>
+            <xsd:element minOccurs="0" name="groups" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_groupsType"/>
+            <xsd:element minOccurs="0" name="last_login" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_last_loginType"/>
+            <xsd:element minOccurs="0" name="date_joined" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_date_joinedType"/>
+            <xsd:element minOccurs="0" name="is_active" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_is_activeType"/>
+            <xsd:element minOccurs="0" name="is_staff" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_object_is_staffType"/>
+        </xsd:sequence>
+        <xsd:attribute default="object" name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_object_resultsType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="object" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_results_objectType"/>
+        </xsd:sequence>
+        <xsd:attribute name="length" type="xsd:byte"/>
+        <xsd:attribute default="array" name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_admin_users__GET_document_objectType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="count" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_countType"/>
+            <xsd:element minOccurs="0" name="next" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_nextType"/>
+            <xsd:element minOccurs="0" name="previous" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_previousType"/>
+            <xsd:element minOccurs="0" name="results" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_object_resultsType"/>
+        </xsd:sequence>
+        <xsd:attribute default="object" name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec___api_admin_users__GETResponseData">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="HttpInfo" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_HttpInfoType"/>
+            <xsd:element minOccurs="0" name="object" type="lib_BaseRow_ns:Baserow_API_spec__api_admin_users__GET_document_objectType"/>
+            <xsd:element minOccurs="0" name="error" type="lib_BaseRow_ns:ConvertigoError"/>
+        </xsd:sequence>
+        <xsd:attribute name="connector" type="xsd:string"/>
+        <xsd:attribute name="context" type="xsd:string"/>
+        <xsd:attribute name="contextId" type="xsd:string"/>
+        <xsd:attribute name="fromStub" type="xsd:boolean"/>
+        <xsd:attribute name="fromcache" type="xsd:boolean"/>
+        <xsd:attribute name="generated" type="xsd:string"/>
+        <xsd:attribute name="project" type="xsd:string"/>
+        <xsd:attribute name="sequence" type="xsd:string"/>
+        <xsd:attribute name="signature" type="xsd:long"/>
+        <xsd:attribute name="transaction" type="xsd:string"/>
+        <xsd:attribute name="version" type="xsd:string"/>
+        <xsd:attribute name="screenclass" type="xsd:string"/>
+        <xsd:attribute name="userReference" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="ConvertigoErrorContextVariable">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="value" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="ConvertigoErrorContext">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="variable" type="lib_BaseRow_ns:ConvertigoErrorContextVariable"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ConvertigoError">
+        <xsd:sequence minOccurs="0">
+            <xsd:element name="code" type="xsd:integer"/>
+            <xsd:element name="message" type="xsd:string"/>
+            <xsd:element name="details" type="xsd:string"/>
+            <xsd:element name="context" type="lib_BaseRow_ns:ConvertigoErrorContext"/>
+            <xsd:element name="exception" type="xsd:string"/>
+            <xsd:element name="stacktrace" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="project" type="xsd:string"/>
+        <xsd:attribute name="connector" type="xsd:string"/>
+        <xsd:attribute name="transaction" type="xsd:string"/>
+        <xsd:attribute name="sequence" type="xsd:string"/>
+        <xsd:attribute name="type">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="c8o"/>
+                    <xsd:enumeration value="project"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+</xsd:schema>
