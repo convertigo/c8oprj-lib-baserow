@@ -1,5 +1,6 @@
+clientCachable: true
 comment: Lists all the fields in a baserow table
-responseExpiryDate: absolute,60
+responseExpiryDate: absolute,60000000
 ↓Input_variables [steps.InputVariablesStep-1672092062343]: 
 ↓Concat [steps.XMLConcatStep-1672092079922]: 
   nodeName: tokenValue

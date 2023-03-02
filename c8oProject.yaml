@@ -40,12 +40,14 @@
   ↓TableBulkImportFromCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkImportFromCSV.yaml
   ↓TableCreateRow [sequences.GenericSequence]: 🗏 sequences/TableCreateRow.yaml
   ↓TableCreateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableCreateRowApiKey.yaml
+  ↓TableCreateRows [sequences.GenericSequence]: 🗏 sequences/TableCreateRows.yaml
   ↓TableCreateView [sequences.GenericSequence]: 🗏 sequences/TableCreateView.yaml
   ↓TableCreateViewFilter [sequences.GenericSequence]: 🗏 sequences/TableCreateViewFilter.yaml
   ↓TableDeleteRow [sequences.GenericSequence]: 🗏 sequences/TableDeleteRow.yaml
   ↓TableDeleteView [sequences.GenericSequence]: 🗏 sequences/TableDeleteView.yaml
   ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml
   ↓TableGetDataApiKey [sequences.GenericSequence]: 🗏 sequences/TableGetDataApiKey.yaml
+  ↓TableGetRowByIdApiKey [sequences.GenericSequence]: 🗏 sequences/TableGetRowByIdApiKey.yaml
   ↓TableGetViews [sequences.GenericSequence]: 🗏 sequences/TableGetViews.yaml
   ↓TableReadRow [sequences.GenericSequence]: 🗏 sequences/TableReadRow.yaml
   ↓TableUpdateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableUpdateRowApiKey.yaml

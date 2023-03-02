@@ -1,0 +1,196 @@
+comment: Creates a row  in a table
+↓Input_variables [steps.InputVariablesStep-1677070764851]: 
+↓Call_Sequence [steps.SequenceStep-1677070764854]: 
+  isEnabled: false
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1677070764857]: 
+  isEnabled: false
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___POST
+  ↓__header_Authorization [variables.StepVariable-1677070764860]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070764854
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓__body [variables.StepVariable-1677070764863]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070764851
+          - java.lang.String: 
+            - ↑value: ./data/text()
+  ↓before [variables.StepVariable-1677070764866]: 
+    comment: If provided then the newly created row will be positioned before the row with the provided id.
+    description: before
+  ↓user_field_names [variables.StepVariable-1677070764869]: 
+    comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+    description: user_field_names
+    value: true
+  ↓table_id [variables.StepVariable-1677070764872]: 
+    comment: Creates a row in the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1677070764875]: 
+  isEnabled: false
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1677070764857
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓Call_Sequence1 [steps.SequenceStep-1677070810578]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction1 [steps.TransactionStep-1677070810584]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tables__table_id__import_async__POST
+  ↓__header_Authorization [variables.StepVariable-1677070810587]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070810578
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+  ↓__body [variables.StepVariable-1677070810590]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070764851
+          - java.lang.String: 
+            - ↑value: ./data/text()
+  ↓table_id [variables.StepVariable-1677070810593]: 
+    comment: Import data into the table related to the provided value.
+    description: table_id
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070764851
+          - java.lang.String: 
+            - ↑value: ./table_id/text()
+↓Element [steps.XMLElementStep-1677070810596]: 
+  nodeName: job_id
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1677070810584
+        - java.lang.String: 
+          - ↑value: ./document/object/id/text()
+↓jSimpleSource [steps.SimpleSourceStep-1677070810599]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1677070810584
+        - java.lang.String: 
+          - ↑value: ./document/object/state/text()
+  variableName: state
+↓jWhile [steps.WhileStep-1677070810602]: 
+  condition: state != "finished" && state != "null" && state != null
+  ↓Sleep15Sec [steps.SimpleStep-1677070810605]: 
+    expression: |
+      log.warn('sleeping for 1 second ' + 'state is ' + state);
+      java.lang.Thread.sleep(1000);
+      log.warn('finished sleeping for 1 second');
+  ↓Call_Transaction [steps.TransactionStep-1677070810608]: 
+    sourceTransaction: lib_BaseRow.Baserow_API_spec._api_jobs__job_id___GET
+    ↓job_id [variables.StepVariable-1677070810611]: 
+      comment: The job id to lookup information about.
+      description: job_id
+      required: true
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1677070810596
+            - java.lang.String: 
+              - ↑value: ./text()
+    ↓__header_Authorization [variables.StepVariable-1677070810614]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1677070810578
+            - java.lang.String: 
+              - ↑value: ./document/Bearer/text()
+  ↓jSimpleSource [steps.SimpleSourceStep-1677070810617]: 
+    output: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070810608
+          - java.lang.String: 
+            - ↑value: ./document/object/state/text()
+    variableName: state
+  ↓JsonSource [steps.JsonSourceStep-1677070810620]: 
+    isEnabled: false
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070810608
+          - java.lang.String: 
+            - ↑value: ./document/object/report/failing_rows
+  ↓Copy [steps.XMLCopyStep-1677070810623]: 
+    isEnabled: false
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1677070810608
+          - java.lang.String: 
+            - ↑value: ./document/object/report/failing_rows
+  ↓Sequence_JS [steps.SimpleStep-1677070810626]: 
+    expression: log.warn("state then is " + state);
+↓table_id [variables.RequestableVariable-1677070764878]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓data [variables.RequestableVariable-1677070764884]: 
+  comment: A JSON object with each field name and value
+  required: true
+↓TestAddInFinanCialTable [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1677070764888]: 
+    description: table_id
+    required: true
+    value: 109868
+  ↓data [variables.TestCaseVariable-1677070764891]: 
+    required: true
+    value: |
+      '{
+          "ID": "GLC 2022Q3",
+          "Show": [
+              1
+          ],
+          "Goal": 0,
+          "Ticket sales": "0.00",
+          "Grants": [
+              1,2,3
+          ],
+          "Expenses": [
+              1
+          ]
+      }'
