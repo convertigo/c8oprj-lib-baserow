@@ -886,6 +886,26 @@ server: ${lib_baserow.server}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/database/rows/table/{table_id}/?{filterExpression}
+  handlers: 
+    →: |
+      '
+      // Handles the XML generated event.
+      function onXmlGenerated() {
+      	var m;
+          var xpath = context.getXpathApi();
+          var re = new RegExp("page=(\\d+)");
+          var next = xpath.selectNode(dom, "/document/object/next[@type=''string'']");
+          if (next) {
+      		m = re.exec(next.getTextContent())
+      		next.setTextContent(m ? m[1] : "1");
+      	}
+      	var previous = xpath.selectNode(dom, "/document/object/previous[@type=''string'']");
+          if (previous) {
+      		m = re.exec(previous.getTextContent())
+      		previous.setTextContent(m ? m[1] : "1");
+      	}
+      }
+      '
   ↓exclude [variables.RequestableHttpVariable-1664959340838]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
     description: exclude
