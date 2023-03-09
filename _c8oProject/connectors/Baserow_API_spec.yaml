@@ -1,8 +1,8 @@
 ↑default: true
 baseDir: 
-https: ${lib_baserow.https}
-port: ${lib_baserow.port}
-server: ${lib_baserow.server}
+https: ${lib_baserow.https=true}
+port: ${lib_baserow.port=443}
+server: ${lib_baserow.server=baserow-backend.convertigo.net}
 ↓_api_admin_dashboard__GET [transactions.JsonHttpTransaction]: 
   ↑default: true
   comment: |

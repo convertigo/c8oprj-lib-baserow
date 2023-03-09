@@ -92,30 +92,8 @@ comment: Establishes a session with Baserow. Must be called before any other API
   value: 
     - ↑ciphered: true
     - ↑traceable: false
-    - →→: x368839f57e89ac82b41bd8e5877bda5fde23a53416c5c10a78cbe7cbbf486cca
+    - →→: x368839f57e89ac82b41bd8e5877bda5fba889085a0c402cd3815bc1bfc88a3033135a4827c866ae99991418fcda0cd8d
   visibility: '-1'
 ↓email [variables.RequestableVariable-1664964117937]: 
   comment: The Base row admin email
-  value: ${lib_baserow.adminuser}
-↓testKO [core.TestCase]: 
-  ↓user [variables.TestCaseVariable-1665210668032]: 
-    value: Olivier Picciotto
-  ↓password [variables.TestCaseVariable-1665210668035]: 
-    value: 
-      - ↑ciphered: true
-      - ↑traceable: false
-      - →→: x63706445c57af10c2b9b6ba35701ebad
-    visibility: '-1'
-  ↓email [variables.TestCaseVariable-1665210668038]: 
-    value: olivierp@convertigo.com
-↓testOK [core.TestCase]: 
-  ↓user [variables.TestCaseVariable-1664966491345]: 
-    value: Olivier Picciotto
-  ↓password [variables.TestCaseVariable-1664966491347]: 
-    value: 
-      - ↑ciphered: true
-      - ↑traceable: false
-      - →→: xf5254abfffc0d4178afb9f473a13d698
-    visibility: '-1'
-  ↓email [variables.TestCaseVariable-1664966491349]: 
-    value: olivierp@convertigo.com
+  value: ${lib_baserow.adminuser=fake}
