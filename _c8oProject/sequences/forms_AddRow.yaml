@@ -1,0 +1,155 @@
+comment: |
+  Add a row to a basrerow table
+  
+↓ParseConfig [steps.SimpleStep-1680078354199]: 
+  expression: |
+    jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+    
+    
+↓Input_variables [steps.InputVariablesStep-1680078354202]: 
+↓PrepareData [steps.SimpleStep-1680084166698]: 
+  expression: |
+    '// convert XML to JSON doc
+    var jDoc = JSON.parse('''' + com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson(doc, true, true));
+    
+    data = {}
+    for (var key in jDoc.variable.resp) {
+    	log.warn("** Key is : " + key + " value is : " + jDoc.variable.resp[key].value)
+    	data[key] = jDoc.variable.resp[key].value;
+    }
+    data = JSON.stringify(data);
+    '
+↓Call_Sequence [steps.SequenceStep-1680078354205]: 
+  sourceSequence: lib_BaseRow.TableCreateRow
+  ↓data [variables.StepVariable-1680078576091]: 
+    comment: A JSON object with each field name and value
+    required: true
+    value: 
+  ↓table_id [variables.StepVariable-1680078591586]: 
+    comment: Insert row in this table_id
+    description: table_id
+    required: true
+  ↓before [variables.StepVariable-1680078591588]: 
+    comment: If provided then the newly created row will be positioned before the row with the provided id.
+    description: before
+↓IfExist [steps.IfExistStep-1680078354235]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1680078354205
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Error_structure [steps.XMLErrorStep-1680078354238]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1680078354205
+            - java.lang.String: 
+              - ↑value: ./document/error/message/text()
+  ↓Return [steps.ReturnStep-1680078354241]: 
+↓forms_config [variables.RequestableVariable-1680078354355]: 
+  comment: |
+    '{
+    	"en": {
+    		"comment":"Creates a row in a table with a given configuration",
+    		"displayName":"Configuration"
+    	}
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  required: true
+  value: 
+↓doc [variables.RequestableVariable-1680085008489]: 
+↓originalDoc [variables.RequestableVariable-1680078875207]: 
+↓TestWithFilters [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680078354365]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "109863"
+      }
+      '
+  ↓forms_tableFilter [variables.TestCaseVariable-1680078354368]: 
+    description: 
+    required: true
+    value: |
+      '{
+      	"mode": "AND",
+      	"filters": [
+      		{
+      			"field": "Name",
+      			"op": "contains",
+      			"value": "Little"
+      		}
+      	]
+      }
+      '
+↓TestWithFilters1 [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680078354372]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: '{"table_id":"110211", "columns":["Last name", "First name", "Photo", "Department"]}'
+  ↓forms_tableFilter [variables.TestCaseVariable-1680078354375]: 
+    description: 
+    required: true
+    value: '{ "mode": "AND", "filters": [ { "field": "Last name", "op": "contains", "value":"" }, { "field": "Department", "op": "contains", "value":"" }]}'
+↓TestWithFilters2 [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680078354379]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "118056"
+      }
+      '
+  ↓forms_tableFilter [variables.TestCaseVariable-1680078354382]: 
+    description: 
+    required: true
+    value: |
+      '{"mode":"AND","filters":[{"field":"name","op":"equal","value":"Fulton Airport"}]}
+      
+      '
+↓TestWithInlcude [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680078354386]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "109863",
+      	"columns": ["Name", "Picture", "Position", "SingleSelect", "Phone number", "Email"],
+      	"hidden": ["Name", "Picture", "Position", "SingleSelect", "Phone number", "Email"]
+      }
+      '
+↓TestWithLinks [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680078354390]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: '{"table_id":"109861", "columns":["Last name", "First name", "Photo", "Department"]}'
+↓TestWithModel [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680078354394]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '
+      {"table_id":416,"columns":["No de Code à barre","Notes","Actif","Transporteur","No Récépissé","No de colis","Date/Heure Saisie","Utilisateur","Dépot","Activité"],"hidden":["Notes","Actif","Utilisateur","Dépot","Activité"]}'
+  ↓forms_tableFilter [variables.TestCaseVariable-1680078354397]: 
+    description: 
+  ↓model [variables.TestCaseVariable-1680078354400]: 
+    value: true
+↓TestWithView [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680078354404]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "351",
+      	"view_id": "1424"
+      }
+      '

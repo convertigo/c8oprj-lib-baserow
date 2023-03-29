@@ -1,4 +1,4 @@
-↑convertigo: 8.1.0.m006
+↑convertigo: 8.2.0.m006
 ↓lib_BaseRow [core.Project]: 
   comment: |
     'This is the Baserow connector for Convertigo. Use this connector to exchange data with Baserow databases.
@@ -16,7 +16,7 @@
     
     '
   corsOrigin: =Origin
-  version: 1.0.11
+  version: 1.0.12
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓lib_baserow_fullsync [connectors.FullSyncConnector]: 🗏 connectors/lib_baserow_fullsync.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
@@ -30,6 +30,7 @@
   ↓DatabaseTokenList [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenList.yaml
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
   ↓FieldsListApiKey [sequences.GenericSequence]: 🗏 sequences/FieldsListApiKey.yaml
+  ↓forms_AddRow [sequences.GenericSequence]: 🗏 sequences/forms_AddRow.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓FSExecuteView [sequences.GenericSequence]: 🗏 sequences/FSExecuteView.yaml
