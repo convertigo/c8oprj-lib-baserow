@@ -34,6 +34,7 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [FieldsListApiKey](#fieldslistapikey)
     - [forms_AddRow](#forms_addrow)
+    - [formssource_GetFieldValues](#formssource_getfieldvalues)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
     - [FSExecuteView](#fsexecuteview)
@@ -251,6 +252,22 @@ Add a row to a basrerow table
 </tr>
 <tr>
 <td>originalDoc</td><td></td>
+</tr>
+</table>
+
+### formssource_GetFieldValues
+
+Get all possible values for a given field to feed a Select 
+
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
 </tr>
 </table>
 

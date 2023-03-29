@@ -1,0 +1,132 @@
+comment: |
+  Get all possible values for a given field to feed a Select 
+  
+↓ParseConfig [steps.SimpleStep-1680099603300]: 
+  expression: |
+    jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+    columns = jConfig.columns;
+    
+    
+↓Input_variables [steps.InputVariablesStep-1680099603303]: 
+↓Call_Sequence1 [steps.SequenceStep-1680099603306]: 
+  sourceSequence: lib_BaseRow.FieldsList
+  ↓table_id [variables.StepVariable-1680099778951]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓IfExist [steps.IfExistStep-1680099603336]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1680099603306
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Error_structure [steps.XMLErrorStep-1680099603339]: 
+  ↓Return [steps.ReturnStep-1680099603342]: 
+↓Array [steps.JsonArrayStep-1680099603345]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: value
+  ↓Iterator [steps.IteratorStep-1680099603348]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1680099603306
+          - java.lang.String: 
+            - ↑value: ./document/array/object
+    ↓myVariable [steps.SimpleSourceStep-1680108689027]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1680099603348
+            - java.lang.String: 
+              - ↑value: ./name/text()
+      variableName: jFieldName
+    ↓jIf [steps.IfStep-1680108824972]: 
+      condition: jFieldName == columns[0]
+      ↓Iterator [steps.IteratorStep-1680108958192]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1680099603348
+              - java.lang.String: 
+                - ↑value: ./select_options/object
+        ↓Object [steps.JsonObjectStep-1680099603351]: 
+          comment: The data object
+          key: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: PLAIN
+                - →→: item
+          ↓Field [steps.JsonFieldStep-1680099603354]: 
+            key: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: PLAIN
+                  - →→: displayValue
+            value: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: SOURCE
+                  - com.twinsoft.convertigo.beans.common.XMLVector: 
+                    - java.lang.String: 
+                      - ↑value: 1680108958192
+                    - java.lang.String: 
+                      - ↑value: ./value/text()
+          ↓Field1 [steps.JsonFieldStep-1680099603357]: 
+            key: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: PLAIN
+                  - →→: value
+            value: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: SOURCE
+                  - com.twinsoft.convertigo.beans.common.XMLVector: 
+                    - java.lang.String: 
+                      - ↑value: 1680108958192
+                    - java.lang.String: 
+                      - ↑value: ./id/text()
+↓forms_config [variables.RequestableVariable-1680099603360]: 
+  comment: |
+    '{
+    	"en": {
+    		"comment":"Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item",
+    		"displayName":"Configuration"
+    	}
+    }
+    
+    '
+  description: Returns the rows of the table related to the provided value
+  required: true
+  value: 
+↓TestBedType [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680099603367]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Bed type"]
+      }
+      '
