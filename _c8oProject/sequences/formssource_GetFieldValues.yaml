@@ -116,7 +116,7 @@ comment: |
     }
     
     '
-  description: Returns the rows of the table related to the provided value
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
   required: true
   value: 
 ↓TestBedType [core.TestCase]: 
