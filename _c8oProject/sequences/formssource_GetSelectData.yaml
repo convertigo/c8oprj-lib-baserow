@@ -13,6 +13,9 @@ comment: |
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
     
+    filterExpression = forms_CustomFilter;
+    
+    
     '
 ↓Input_variables [steps.InputVariablesStep-1666100090915]: 
 ↓Call_Sequence1 [steps.SequenceStep-1666717386561]: 
@@ -207,5 +210,35 @@ comment: |
       '{
       	"table_id": "660",
       	"columns": ["Number", "Accommodates"]
+      }
+      '
+↓TestWithNoFilterWithCustomFilter [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680174266714]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Number", "Accommodates"]
+      }
+      '
+  ↓forms_filter [variables.TestCaseVariable-1680174292982]: 
+    description: 
+    required: true
+    value: 
+  ↓forms_CustomFilter [variables.TestCaseVariable-1680174292984]: 
+    description: 
+    required: true
+    value: |
+      '{
+      	"mode": "AND",  
+      	"filters": [
+      		{
+      			"field": "Number",  
+      			"op": "contains",	
+      			"value": "100"	
+      		}
+      	]
       }
       '
