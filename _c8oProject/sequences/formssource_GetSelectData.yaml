@@ -140,7 +140,7 @@ comment: |
     }
     
     '
-  description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
   required: true
   value: 
 ↓forms_filter [variables.RequestableVariable-1666100091071]: 
