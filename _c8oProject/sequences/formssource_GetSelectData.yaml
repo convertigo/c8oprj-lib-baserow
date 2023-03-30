@@ -140,7 +140,7 @@ comment: |
     }
     
     '
-  description: Returns the rows of the table related to the provided value
+  description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
   required: true
   value: 
 ↓forms_filter [variables.RequestableVariable-1666100091071]: 
