@@ -8,6 +8,23 @@ comment: |
     
     
 ↓Input_variables [steps.InputVariablesStep-1680078354202]: 
+↓Call_Sequence1 [steps.SequenceStep-1680262420398]: 
+  sourceSequence: lib_BaseRow.FieldsList
+  ↓table_id [variables.StepVariable-1680262420400]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓jFields [steps.JsonSourceStep-1680262487884]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1680262420398
+        - java.lang.String: 
+          - ↑value: ./document/array
+  variableName: jFields
 ↓PrepareData [steps.SimpleStep-1680084166698]: 
   expression: |
     '// convert XML to JSON doc
@@ -15,11 +32,102 @@ comment: |
     
     data = {}
     for (var key in jDoc.variable.resp) {
-    	log.warn("** Key is : " + key + " value is : " + jDoc.variable.resp[key].value)
-    	data[key] = jDoc.variable.resp[key].value;
+    	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
+    	let type = jFields.find((object) => object.name === key ).type;
+    	log.warn("** type is : " + type)
+    	switch (type) {
+    		case ''text'':
+    		case ''number'':
+    		case ''date'':
+    		case ''single_select'':
+    		case ''boolean'':
+    				data[key] = jDoc.variable.resp[key].value;
+    				break;
+    
+    		case ''link_row'':
+    				data[key] = [jDoc.variable.resp[key].value];
+    				break;
+    				
+    		default: 
+    			log.warn("** type is : " + type + " is not yet handled")
+    	}
     }
     data = JSON.stringify(data);
     '
+↓jIterator [steps.SimpleIteratorStep-1680167384790]: 
+  comment: Handle Attachements
+  expression: Object.keys(jDoc.variable.resp)
+  ↓jIf [steps.IfStep-1680167384793]: 
+    condition: jDoc.variable.resp[item].att_type === true
+    ↓getAttachmentName [steps.SimpleStep-1680167384796]: 
+      expression: |
+        'function makeid(length) {
+            var result           = '''';
+            var characters       = ''ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+              result += characters.charAt(Math.floor(Math.random() * charactersLength));
+           }
+           return result;
+        }
+        
+        var filesToDelete = [];
+        var _use_attname = jDoc.variable.resp[item].name;
+        var _use_docid   = jDoc.variable._id;
+        
+        b64Value = "";
+        var fileName = new Date().getTime() + "_" + makeid(20);
+        //var dir = context.getProjectDirectory()+"/attachments/";
+        var _use_attpath = "/tmp/" + fileName;
+         
+        log.warn("_use_attpath log" + _use_attpath);
+        filesToDelete.push(_use_attpath)
+        '
+      output: true
+    ↓Call_Transaction [steps.TransactionStep-1680167384799]: 
+      output: true
+      sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+      ↓_use_attname [variables.StepVariable-1680167384802]: 
+        description: Attachment name
+      ↓_use_docid [variables.StepVariable-1680167384805]: 
+        description: Document ID
+      ↓_use_attpath [variables.StepVariable-1680167384808]: 
+        description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+    ↓jSimpleSource1 [steps.SimpleSourceStep-1680167384811]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1680167384799
+            - java.lang.String: 
+              - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+      variableName: contentType
+    ↓element [steps.ElementStep-1680267486261]: 
+      expression: _use_attpath
+      nodeName: AttachmentPath
+    ↓Call_Sequence [steps.SequenceStep-1680267245329]: 
+      sourceSequence: lib_BaseRow.TokenGetOrRefresh
+    ↓Call_Transaction1 [steps.TransactionStep-1680267313862]: 
+      sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
+      ↓__header_Authorization [variables.StepVariable-1680267313865]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1680267245329
+              - java.lang.String: 
+                - ↑value: ./document/Bearer/text()
+      ↓file [variables.StepVariable-1680267313868]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1680267486261
+              - java.lang.String: 
+                - ↑value: ./text()
 ↓Call_Sequence [steps.SequenceStep-1680078354205]: 
   sourceSequence: lib_BaseRow.TableCreateRow
   ↓data [variables.StepVariable-1680078576091]: 
