@@ -19,10 +19,22 @@ This library uses the following symbols
 <details><summary><span style="color:DarkGoldenRod"><i>References</i></span></summary><blockquote><p>
 
 
+<details><summary><b>C8Oforms</b></summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
+
+
+</p></blockquote></details>
+
+<details><summary><b>CouchDb_schema</b></summary><blockquote><p>
+
+
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/XsdSchemaReference_16x16.png?raw=true "ImportXsdSchemaReference") CouchDb_schema
 
 
 see [documentation](http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd)
+</p></blockquote></details>
 </p></blockquote></details>
 
 <details><summary><span style="color:DarkGoldenRod"><i>Connectors</i></span></summary><blockquote><p>
@@ -6992,8 +7004,7 @@ Creates a row in a table with a given configuration
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetFieldValues</b> : Get all possible values for a given field to feed a Select 
-</summary><blockquote><p>
+<details><summary><b>formssource_GetFieldValues</b> : Get all possible values for a given field to feed a Select </summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetFieldValues
@@ -7049,6 +7060,15 @@ comment
 </td>
 <td>
 Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_CustomFilter
+</td>
+<td>
+A custom filter following  JSON styntax
+
 </td>
 </tr>
 <tr>

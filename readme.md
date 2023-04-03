@@ -286,6 +286,10 @@ Get data from a baserow table for a Select
 <td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
 </tr>
 <tr>
+<td>forms_CustomFilter</td><td>A custom filter following  JSON styntax
+</td>
+</tr>
+<tr>
 <td>forms_filter</td><td>Filters
 </td>
 </tr>

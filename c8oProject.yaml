@@ -16,7 +16,7 @@
     
     '
   corsOrigin: =Origin
-  version: 1.0.13
+  version: 1.0.14
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓lib_baserow_fullsync [connectors.FullSyncConnector]: 🗏 connectors/lib_baserow_fullsync.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
@@ -54,6 +54,8 @@
   ↓TableReadRow [sequences.GenericSequence]: 🗏 sequences/TableReadRow.yaml
   ↓TableUpdateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableUpdateRowApiKey.yaml
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
+  ↓C8Oforms_reference [references.ProjectSchemaReference]: 
+    projectName: C8Oforms
   ↓CouchDb_schema [references.ImportXsdSchemaReference]: 
     urlpath: http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd
   ↓Project_reference [references.ProjectSchemaReference]: 
