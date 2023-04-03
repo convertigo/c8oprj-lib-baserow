@@ -41,18 +41,22 @@ comment: |
     		case ''date'':
     		case ''single_select'':
     		case ''boolean'':
-    				data[key] = jDoc.variable.resp[key].value;
-    				break;
+    			data[key] = jDoc.variable.resp[key].value;
+    			break;
     
     		case ''link_row'':
-    				data[key] = [jDoc.variable.resp[key].value];
-    				break;
+    			data[key] = [jDoc.variable.resp[key].value];
+    			break;
+    
+    		case ''file'':
+    			data[key] = [];  // will be filled further on  by the attachment loop.
+    			break;
     				
     		default: 
-    			log.warn("** type is : " + type + " is not yet handled")
+    			log.warn("** type: " + type + " is not yet handled")
     	}
     }
-    data = JSON.stringify(data);
+    
     '
 ↓jIterator [steps.SimpleIteratorStep-1680167384790]: 
   comment: Handle Attachements
@@ -128,6 +132,26 @@ comment: |
                 - ↑value: 1680267486261
               - java.lang.String: 
                 - ↑value: ./text()
+    ↓jAttachmentName [steps.SimpleSourceStep-1680517771791]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1680267313862
+            - java.lang.String: 
+              - ↑value: ./document/object/name/text()
+      variableName: jAttachmentName
+    ↓AddAttachementToBRField [steps.SimpleStep-1680517961917]: 
+      expression: |
+        'data[_use_attname].push({
+        	name: jAttachmentName
+        });
+        '
+↓StringifyData [steps.SimpleStep-1680526198273]: 
+  expression: |
+    data = JSON.stringify(data);
+    
 ↓Call_Sequence [steps.SequenceStep-1680078354205]: 
   sourceSequence: lib_BaseRow.TableCreateRow
   ↓data [variables.StepVariable-1680078576091]: 
