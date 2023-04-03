@@ -77,8 +77,8 @@ comment: |
         
         b64Value = "";
         var fileName = new Date().getTime() + "_" + makeid(20);
-        //var dir = context.getProjectDirectory()+"/attachments/";
-        var _use_attpath = "/tmp/" + fileName;
+        var dir = context.getProjectDirectory()+"/attachments/";
+        var _use_attpath = dir + fileName;
          
         log.warn("_use_attpath log" + _use_attpath);
         filesToDelete.push(_use_attpath)
