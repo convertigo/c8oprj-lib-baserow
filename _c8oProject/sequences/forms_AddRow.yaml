@@ -66,7 +66,7 @@ comment: |
   comment: Handle Attachements
   expression: Object.keys(jDoc.variable.resp)
   ↓jIf [steps.IfStep-1680167384793]: 
-    comment: If From field type is an attachment
+    comment: If From field type is an attachment (Photo)
     condition: jDoc.variable.resp[item].att_type === true
     ↓getAttachmentName [steps.SimpleStep-1680167384796]: 
       comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
@@ -161,6 +161,111 @@ comment: |
         	name: jAttachmentName
         });
         '
+  ↓jIf1 [steps.IfStep-1680611569650]: 
+    comment: If From field type is an uploaded file, can be an array of files
+    condition: jDoc.variable.resp[item].type === 'file'
+    ↓SaveItemToRespItem [steps.SimpleStep-1680612360876]: 
+      expression: |
+        let respItem = item;
+        let respIndex = index;
+        
+        
+    ↓jIterator [steps.SimpleIteratorStep-1680611652986]: 
+      expression: jDoc.variable.resp[respItem].value
+      ↓getAttachmentName [steps.SimpleStep-1680611569653]: 
+        comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
+        expression: |
+          'function makeid(length) {
+              var result           = '''';
+              var characters       = ''ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'';
+              var charactersLength = characters.length;
+              for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+             }
+             return result;
+          }
+          
+          var filesToDelete = [];
+          var _use_attname = item;
+          var _use_docid   = jDoc.variable._id;
+          
+          b64Value = "";
+          var fileName = new Date().getTime() + "_" + makeid(20);
+          var dir = context.getProjectDirectory()+"/attachments/";
+          var _use_attpath = dir + fileName;
+           
+          log.warn("_use_attpath: " + _use_attpath);
+          log.warn("_use_attname: " + _use_attpath);
+          filesToDelete.push(_use_attpath)
+          '
+        output: true
+      ↓Call_Transaction [steps.TransactionStep-1680611569656]: 
+        comment: read the attachment in the workspace
+        output: true
+        sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+        ↓_use_attname [variables.StepVariable-1680611569659]: 
+          description: Attachment name
+        ↓_use_docid [variables.StepVariable-1680611569662]: 
+          description: Document ID
+        ↓_use_attpath [variables.StepVariable-1680611569665]: 
+          description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+      ↓jSimpleSource1 [steps.SimpleSourceStep-1680611569668]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1680611569656
+              - java.lang.String: 
+                - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+        variableName: contentType
+      ↓element [steps.ElementStep-1680611569671]: 
+        expression: _use_attpath
+        nodeName: AttachmentPath
+      ↓Call_Sequence [steps.SequenceStep-1680611569674]: 
+        comment: Push it to BR
+        sourceSequence: lib_BaseRow.TokenGetOrRefresh
+      ↓Call_Transaction1 [steps.TransactionStep-1680611569677]: 
+        sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
+        ↓__header_Authorization [variables.StepVariable-1680611569680]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1680611569674
+                - java.lang.String: 
+                  - ↑value: ./document/Bearer/text()
+        ↓file [variables.StepVariable-1680611569683]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1680611569671
+                - java.lang.String: 
+                  - ↑value: ./text()
+      ↓Delete_file [steps.DeleteStep-1680611569686]: 
+        comment: Delete attachment from workspace as it has been uploaded
+        sourcePath: filesToDelete[0]
+      ↓jAttachmentName [steps.SimpleSourceStep-1680611569689]: 
+        comment: Get the BR Attachment ID
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1680611569677
+              - java.lang.String: 
+                - ↑value: ./document/object/name/text()
+        variableName: jAttachmentName
+      ↓AddAttachementToBRField [steps.SimpleStep-1680611569692]: 
+        comment: Add this id to the data
+        expression: |
+          'data[jDoc.variable.resp[respItem].name].push({
+          	name: jAttachmentName
+          });
+          '
 ↓StringifyData [steps.SimpleStep-1680526198273]: 
   expression: |
     data = JSON.stringify(data);
