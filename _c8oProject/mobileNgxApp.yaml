@@ -285,3 +285,36 @@ tplProjectName: mobilebuilder_tpl_8_1_0_ngx
           /** Ionic CSS Variables **/
           
           
+↓Font [ngx.components.UIFont-1678902975505]: 
+  fontSource: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.FontSource
+      - com.twinsoft.convertigo.beans.common.FontSource: 
+        →: '{"fontId":"saira","fontFamily":"Saira","fontWeight":"400","fontStyle":"normal","fontSubset":"latin"}'
+  styleContent: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+      - com.twinsoft.convertigo.beans.common.FormatedContent: 
+        →: |
+          'font-family: "Saira";
+          font-weight: 400;
+          font-style: "normal";
+          font-variant: "latin";
+          '
+↓Font1 [ngx.components.UIFont-1678902975508]: 
+  fontSource: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.FontSource
+      - com.twinsoft.convertigo.beans.common.FontSource: 
+        →: '{"fontId":"work-sans","fontFamily":"Work Sans","fontWeight":"400","fontStyle":"normal","fontSubset":"latin"}'
+  isDefault: true
+  styleContent: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+      - com.twinsoft.convertigo.beans.common.FormatedContent: 
+        →: |
+          'font-family: "Work Sans";
+          font-weight: 400;
+          font-style: "normal";
+          font-variant: "latin";
+          '

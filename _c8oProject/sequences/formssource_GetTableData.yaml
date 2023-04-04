@@ -440,7 +440,7 @@ comment: |
   comment: |
     Filters
     
-  description: 
+  description: filter
 ↓model [variables.RequestableVariable-1671813057661]: 
   comment: If true, just return one line of data so that No Code studio can compte the table model
 ↓TestWithFilters [core.TestCase]: 
