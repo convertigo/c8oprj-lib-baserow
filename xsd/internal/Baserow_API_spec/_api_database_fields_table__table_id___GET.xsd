@@ -112,7 +112,28 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_text_defaultType">
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_read_onlyType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_date_formatType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_date_include_timeType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_date_time_formatType">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
                 <xsd:attribute default="string" name="type" type="xsd:string"/>
@@ -147,6 +168,63 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_number_decimal_placesType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_number_negativeType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_text_defaultType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_object_idType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_object_valueType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_object_colorType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute default="string" name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_objectType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="id" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_object_idType"/>
+            <xsd:element minOccurs="0" name="value" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_object_valueType"/>
+            <xsd:element minOccurs="0" name="color" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_object_colorType"/>
+        </xsd:sequence>
+        <xsd:attribute default="object" name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_optionsType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="object" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_options_objectType"/>
+        </xsd:sequence>
+        <xsd:attribute name="length" type="xsd:byte"/>
+        <xsd:attribute default="array" name="type" type="xsd:string"/>
+    </xsd:complexType>
     <xsd:complexType name="Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_objectType">
         <xsd:sequence>
             <xsd:element minOccurs="0" name="id" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_idType"/>
@@ -155,11 +233,18 @@
             <xsd:element minOccurs="0" name="order" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_orderType"/>
             <xsd:element minOccurs="0" name="type" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_typeType"/>
             <xsd:element minOccurs="0" name="primary" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_primaryType"/>
-            <xsd:element minOccurs="0" name="text_default" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_text_defaultType"/>
+            <xsd:element minOccurs="0" name="read_only" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_read_onlyType"/>
+            <xsd:element minOccurs="0" name="date_format" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_date_formatType"/>
+            <xsd:element minOccurs="0" name="date_include_time" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_date_include_timeType"/>
+            <xsd:element minOccurs="0" name="date_time_format" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_date_time_formatType"/>
             <xsd:element minOccurs="0" name="link_row_table_id" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_link_row_table_idType"/>
             <xsd:element minOccurs="0" name="link_row_related_field_id" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_link_row_related_field_idType"/>
             <xsd:element minOccurs="0" name="link_row_table" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_link_row_tableType"/>
             <xsd:element minOccurs="0" name="link_row_related_field" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_link_row_related_fieldType"/>
+            <xsd:element minOccurs="0" name="number_decimal_places" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_number_decimal_placesType"/>
+            <xsd:element minOccurs="0" name="number_negative" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_number_negativeType"/>
+            <xsd:element minOccurs="0" name="text_default" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_text_defaultType"/>
+            <xsd:element minOccurs="0" name="select_options" type="lib_BaseRow_ns:Baserow_API_spec__api_database_fields_table__table_id___GET_document_array_object_select_optionsType"/>
         </xsd:sequence>
         <xsd:attribute default="object" name="type" type="xsd:string"/>
     </xsd:complexType>
@@ -179,6 +264,7 @@
         <xsd:attribute name="connector" type="xsd:string"/>
         <xsd:attribute name="context" type="xsd:string"/>
         <xsd:attribute name="contextId" type="xsd:string"/>
+        <xsd:attribute name="expires" type="xsd:string"/>
         <xsd:attribute name="fromStub" type="xsd:boolean"/>
         <xsd:attribute name="fromcache" type="xsd:boolean"/>
         <xsd:attribute name="generated" type="xsd:string"/>

@@ -13,23 +13,8 @@ comment: |
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
     
-    if (forms_filter) { 
-    	filterExpression = JSON.stringify({
-    		"mode": "OR",
-    		"filters": [
-    			{
-    				"field": jConfig.columns[0],
-    				"op": "contains",
-    				"value": forms_filter
-    			},
-    			{
-    				"field": jConfig.columns[1],
-    				"op": "contains",
-    				"value": forms_filter
-    			}
-    		]
-    	});
-    }
+    filterExpression = forms_CustomFilter;
+    
     
     '
 ↓Input_variables [steps.InputVariablesStep-1666100090915]: 
@@ -88,48 +73,147 @@ comment: |
             - ↑value: 1666717386561
           - java.lang.String: 
             - ↑value: ./document/results/object
-    ↓Object [steps.JsonObjectStep-1666100090966]: 
-      comment: The data object
-      key: 
+    ↓myVariable [steps.SimpleSourceStep-1680172220072]: 
+      sourceDefinition: 
         - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-          - SmartType: 
-            - ↑mode: PLAIN
-            - →→: item
-      ↓Field [steps.JsonFieldStep-1666100497109]: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1666100090963
+            - java.lang.String: 
+              - ↑value: ./*[3]
+      variableName: jDisplayValue
+    ↓jIf [steps.IfStep-1680171852321]: 
+      condition: forms_filter == undefined || jDisplayValue.toLowerCase().indexOf(forms_filter.toLowerCase()) != -1
+      ↓Object [steps.JsonObjectStep-1666100090966]: 
+        comment: The data object
         key: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
             - SmartType: 
               - ↑mode: PLAIN
-              - →→: displayValue
-        value: 
-          - xmlizable: 
-            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-            - SmartType: 
-              - ↑mode: SOURCE
+              - →→: item
+        ↓myVariable [steps.SimpleSourceStep-1680187009986]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
               - com.twinsoft.convertigo.beans.common.XMLVector: 
                 - java.lang.String: 
                   - ↑value: 1666100090963
                 - java.lang.String: 
-                  - ↑value: ./*[3]
-      ↓Field1 [steps.JsonFieldStep-1666100514159]: 
-        key: 
-          - xmlizable: 
-            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-            - SmartType: 
-              - ↑mode: PLAIN
-              - →→: value
-        value: 
-          - xmlizable: 
-            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-            - SmartType: 
-              - ↑mode: SOURCE
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - java.lang.String: 
-                  - ↑value: 1666100090963
-                - java.lang.String: 
-                  - ↑value: ./*[4]
+                  - ↑value: ./*[3]/@type
+          variableName: jType
+        ↓jIfThenElse1 [steps.IfThenElseStep-1680187009989]: 
+          condition: jType == 'array'
+          ↓jThen [steps.ThenStep-1680187009992]: 
+            ↓Field1 [steps.JsonFieldStep-1680187009995]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: displayValue
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: SOURCE
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1666100090963
+                      - java.lang.String: 
+                        - ↑value: ./*[3]/object/value/text()
+          ↓jElse [steps.ElseStep-1680187009998]: 
+            ↓Field1 [steps.JsonFieldStep-1680187010001]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: displayValue
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: SOURCE
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1666100090963
+                      - java.lang.String: 
+                        - ↑value: ./*[3]
+        ↓jIfThenElse [steps.IfThenElseStep-1680171726503]: 
+          condition: jConfig.columns.length > 1
+          ↓jThen [steps.ThenStep-1680171726949]: 
+            ↓myVariable [steps.SimpleSourceStep-1680186046321]: 
+              sourceDefinition: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                  - com.twinsoft.convertigo.beans.common.XMLVector: 
+                    - java.lang.String: 
+                      - ↑value: 1666100090963
+                    - java.lang.String: 
+                      - ↑value: ./*[4]/@type
+              variableName: jType
+            ↓__todo [steps.LogStep-1680186543077]: 
+              expression: '''type is : '' + jType'
+              isEnabled: false
+              level: WARN
+            ↓jIfThenElse [steps.IfThenElseStep-1680186131271]: 
+              condition: jType == 'array'
+              ↓jThen [steps.ThenStep-1680186131273]: 
+                ↓Field1 [steps.JsonFieldStep-1680185612646]: 
+                  key: 
+                    - xmlizable: 
+                      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                      - SmartType: 
+                        - ↑mode: PLAIN
+                        - →→: value
+                  value: 
+                    - xmlizable: 
+                      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                      - SmartType: 
+                        - ↑mode: SOURCE
+                        - com.twinsoft.convertigo.beans.common.XMLVector: 
+                          - java.lang.String: 
+                            - ↑value: 1666100090963
+                          - java.lang.String: 
+                            - ↑value: ./*[4]/object/value/text()
+              ↓jElse [steps.ElseStep-1680186131275]: 
+                ↓Field1 [steps.JsonFieldStep-1680171775809]: 
+                  key: 
+                    - xmlizable: 
+                      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                      - SmartType: 
+                        - ↑mode: PLAIN
+                        - →→: value
+                  value: 
+                    - xmlizable: 
+                      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                      - SmartType: 
+                        - ↑mode: SOURCE
+                        - com.twinsoft.convertigo.beans.common.XMLVector: 
+                          - java.lang.String: 
+                            - ↑value: 1666100090963
+                          - java.lang.String: 
+                            - ↑value: ./*[4]
+          ↓jElse [steps.ElseStep-1680171726951]: 
+            ↓Field1 [steps.JsonFieldStep-1680186271061]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: value
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: SOURCE
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1666100090963
+                      - java.lang.String: 
+                        - ↑value: ./id/text()
 ↓forms_config [variables.RequestableVariable-1666100091062]: 
   comment: |
     '{
@@ -140,12 +224,19 @@ comment: |
     }
     
     '
-  description: Returns the rows of the table related to the provided value
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
   required: true
   value: 
 ↓forms_filter [variables.RequestableVariable-1666100091071]: 
   comment: |
     Filters
+    
+  description: 
+  required: true
+  value: 
+↓forms_CustomFilter [variables.RequestableVariable-1680171408883]: 
+  comment: |
+    A custom filter following  JSON styntax
     
   description: 
   required: true
@@ -157,22 +248,85 @@ comment: |
     required: true
     value: |
       '{
-      	"table_id": "109863",
-      	"columns": ["Name", "Phone number"]
+      	"table_id": "660",
+      	"columns": ["Number"]
       }
       '
   ↓forms_filter [variables.TestCaseVariable-1666717686496]: 
     description: 
     required: true
-    value: Alman
-↓TestWithNoFilter [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1666166961536]: 
+    value: 100
+↓TestWithLinkedFileds [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680180805970]: 
     comment: The Table ID you want to get data from
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
     value: |
       '{
-      	"table_id": "109863",
-      	"columns": ["Name", "Phone number"]
+      	"table_id": "661",
+      	"columns": ["Code", "Customer name"]
+      }
+      '
+↓TestWithLinkedFiledsAndOneCol [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680187153247]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "661",
+      	"columns": ["Customer name"]
+      }
+      '
+↓TestWithNoFilter [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680173707703]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Number"]
+      }
+      '
+↓TestWithNoFilterWith2Cols [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680173777993]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Number", "Accommodates"]
+      }
+      '
+↓TestWithNoFilterWithCustomFilter [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680174266714]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Number", "Accommodates"]
+      }
+      '
+  ↓forms_filter [variables.TestCaseVariable-1680174292982]: 
+    description: 
+    required: true
+    value: 
+  ↓forms_CustomFilter [variables.TestCaseVariable-1680174292984]: 
+    description: 
+    required: true
+    value: |
+      '{
+      	"mode": "AND",  
+      	"filters": [
+      		{
+      			"field": "Number",  
+      			"op": "contains",	
+      			"value": "100"	
+      		}
+      	]
       }
       '

@@ -19,10 +19,22 @@ This library uses the following symbols
 <details><summary><span style="color:DarkGoldenRod"><i>References</i></span></summary><blockquote><p>
 
 
+<details><summary><b>C8Oforms</b></summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
+
+
+</p></blockquote></details>
+
+<details><summary><b>CouchDb_schema</b></summary><blockquote><p>
+
+
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/XsdSchemaReference_16x16.png?raw=true "ImportXsdSchemaReference") CouchDb_schema
 
 
 see [documentation](http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd)
+</p></blockquote></details>
 </p></blockquote></details>
 
 <details><summary><span style="color:DarkGoldenRod"><i>Connectors</i></span></summary><blockquote><p>
@@ -6945,6 +6957,85 @@ Returns only the fields of the table related to the provided value.
 
 </p></blockquote></details>
 
+<details><summary><b>forms_AddRow</b> : Add a row to a Basrerow table</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_AddRow
+
+Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
+Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
+
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;doc
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
+</td>
+<td>
+Creates a row in a table with a given configuration
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;originalDoc
+</td>
+<td>
+
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>formssource_GetFieldValues</b> : Get all possible values for a given field to feed a Select </summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetFieldValues
+
+Get all possible values for a given field to feed a Select 
+
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
+</td>
+<td>
+Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
 <details><summary><b>formssource_GetSelectData</b> : Get data from a baserow table for a Select</summary><blockquote><p>
 
 
@@ -6970,6 +7061,15 @@ comment
 </td>
 <td>
 Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_CustomFilter
+</td>
+<td>
+A custom filter following  JSON styntax
+
 </td>
 </tr>
 <tr>
