@@ -1,7 +1,9 @@
 comment: |
-  Add a row to a basrerow table
+  Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
+  Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
   
 ↓ParseConfig [steps.SimpleStep-1680078354199]: 
+  comment: Parse JSON configuration ti get table id
   expression: |
     jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
@@ -16,6 +18,7 @@ comment: |
     required: true
     value: 
 ↓jFields [steps.JsonSourceStep-1680262487884]: 
+  comment: Get lits of fields and type from BR Table
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
@@ -26,6 +29,7 @@ comment: |
           - ↑value: ./document/array
   variableName: jFields
 ↓PrepareData [steps.SimpleStep-1680084166698]: 
+  comment: Prepare data to submit according to BR field type
   expression: |
     '// convert XML to JSON doc
     var jDoc = JSON.parse('''' + com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson(doc, true, true));
@@ -62,8 +66,10 @@ comment: |
   comment: Handle Attachements
   expression: Object.keys(jDoc.variable.resp)
   ↓jIf [steps.IfStep-1680167384793]: 
+    comment: If From field type is an attachment
     condition: jDoc.variable.resp[item].att_type === true
     ↓getAttachmentName [steps.SimpleStep-1680167384796]: 
+      comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
       expression: |
         'function makeid(length) {
             var result           = '''';
@@ -89,6 +95,7 @@ comment: |
         '
       output: true
     ↓Call_Transaction [steps.TransactionStep-1680167384799]: 
+      comment: read the attachment in the workspace
       output: true
       sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
       ↓_use_attname [variables.StepVariable-1680167384802]: 
@@ -111,6 +118,7 @@ comment: |
       expression: _use_attpath
       nodeName: AttachmentPath
     ↓Call_Sequence [steps.SequenceStep-1680267245329]: 
+      comment: Push it to BR
       sourceSequence: lib_BaseRow.TokenGetOrRefresh
     ↓Call_Transaction1 [steps.TransactionStep-1680267313862]: 
       sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
@@ -132,7 +140,11 @@ comment: |
                 - ↑value: 1680267486261
               - java.lang.String: 
                 - ↑value: ./text()
+    ↓Delete_file [steps.DeleteStep-1680596558348]: 
+      comment: Delete attachment from workspace as it has been uploaded
+      sourcePath: filesToDelete[0]
     ↓jAttachmentName [steps.SimpleSourceStep-1680517771791]: 
+      comment: Get the BR Attachment ID
       sourceDefinition: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
@@ -143,6 +155,7 @@ comment: |
               - ↑value: ./document/object/name/text()
       variableName: jAttachmentName
     ↓AddAttachementToBRField [steps.SimpleStep-1680517961917]: 
+      comment: Add this id to the data
       expression: |
         'data[_use_attname].push({
         	name: jAttachmentName
@@ -153,6 +166,7 @@ comment: |
     data = JSON.stringify(data);
     
 ↓Call_Sequence [steps.SequenceStep-1680078354205]: 
+  comment: Push the row to BR
   sourceSequence: lib_BaseRow.TableCreateRow
   ↓data [variables.StepVariable-1680078576091]: 
     comment: A JSON object with each field name and value

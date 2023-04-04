@@ -6957,12 +6957,13 @@ Returns only the fields of the table related to the provided value.
 
 </p></blockquote></details>
 
-<details><summary><b>forms_AddRow</b> : Add a row to a basrerow table</summary><blockquote><p>
+<details><summary><b>forms_AddRow</b> : Add a row to a Basrerow table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_AddRow
 
-Add a row to a basrerow table
+Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
+Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
 
 
 <span style="color:DarkGoldenRod">Variables</span>

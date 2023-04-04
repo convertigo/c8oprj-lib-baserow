@@ -235,7 +235,8 @@ Lists all the fields in a baserow table
 
 ### forms_AddRow
 
-Add a row to a basrerow table
+Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
+Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
 
 
 **variables**
