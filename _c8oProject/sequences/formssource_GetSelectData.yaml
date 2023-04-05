@@ -224,14 +224,14 @@ comment: |
     }
     
     '
-  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/select
   required: true
   value: 
-↓forms_filter [variables.RequestableVariable-1666100091071]: 
+↓forms_tableFilter [variables.RequestableVariable-1666100091071]: 
   comment: |
     Filters
     
-  description: 
+  description: filter
   required: true
   value: 
 ↓forms_CustomFilter [variables.RequestableVariable-1680171408883]: 
@@ -241,6 +241,8 @@ comment: |
   description: 
   required: true
   value: 
+↓model [variables.RequestableVariable-1680688774991]: 
+  comment: If true, just return one line of data so that No Code studio can compte the table model
 ↓TestWithFilter [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666717673009]: 
     comment: The Table ID you want to get data from
@@ -252,7 +254,7 @@ comment: |
       	"columns": ["Number"]
       }
       '
-  ↓forms_filter [variables.TestCaseVariable-1666717686496]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1666717686496]: 
     description: 
     required: true
     value: 100
@@ -311,7 +313,7 @@ comment: |
       	"columns": ["Number", "Accommodates"]
       }
       '
-  ↓forms_filter [variables.TestCaseVariable-1680174292982]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1680174292982]: 
     description: 
     required: true
     value: 

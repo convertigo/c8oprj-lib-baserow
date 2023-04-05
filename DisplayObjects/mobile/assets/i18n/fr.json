@@ -10,9 +10,13 @@
  "Include": "Inclure",
  "Hide": "Cacher",
  "Confirm": "Confirmer",
- "Select_columns_you_would_like_to_retriev": "Sélectionnez les colonnes que vous souhaitez récupérer à partir de la table sélectionnée dans la grille de données. Vous pouvez également masquer de la grille les colonnes sélectionnées. Ils ne seront pas visibles mais vous pourrez utiliser les données de ces colonnes dans vos applications. Cochez pour sélectionner toutes les colonnes",
+ "Select_columns_you_would_like_to_retriev": "Sélectionnez les colonnes que vous souhaitez récupérer à partir de la table sélectionnée dans la table. Vous pouvez également masquer de la grille les colonnes sélectionnées. Ils ne seront pas visibles mais vous pourrez utiliser les données de ces colonnes dans vos applications. Cochez pour sélectionner toutes les colonnes",
  "notice2":"Veuillez sélectionner parmi les éléments suivants les colonnes que vous souhaitez récupérer à partir du tableau sélectionné dans la grille de données. Vous pouvez également masquer de la grille les colonnes sélectionnées. Ils ne seront pas visibles mais vous pourrez utiliser les données de ces colonnes dans vos applications.",
  "Page": "Page",
  "Action_1": "Action 1",
- "Action_2": "Action 2"
+ "Action_2": "Action 2",
+ "notice3":"Veuillez sélectionner parmi les éléments suivants les colonnes que vous souhaitez récupérer. Vous pouvez également choisir une valeur différente de la valeur d'affichage pour pouvoir utiliser ces données dans vos applications.",
+ "Display_value": "Valeur affichée",
+ "Use_a_different_column_for_the_value_and": "Utiliser une colonne différente pour la valeur et la valeur affichée",
+ "Value": "Valeur"
 }

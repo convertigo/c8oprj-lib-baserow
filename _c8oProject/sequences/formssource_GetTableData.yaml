@@ -655,7 +655,7 @@ comment: |
     		"displayName":"Configuration"
     	}
     }'
-  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
   required: true
   value: 
 ↓forms_tableFilter [variables.RequestableVariable-1665911494442]: 
