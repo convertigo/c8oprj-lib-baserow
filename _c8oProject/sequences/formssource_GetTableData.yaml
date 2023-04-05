@@ -6,6 +6,171 @@ comment: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
+    let describeStructure = false;
+    let verbsByType = {
+    	text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        long_text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        link_row: [
+            "link_row_has",
+            "link_row_has_not",
+            "link_row_contains",
+            "link_row_not_contains",
+            "empty",
+            "not_empty"
+        ],
+        number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "higher_than",
+            "lower_than",
+            "empty",
+            "not_empty",
+        ],
+        rating : [
+            "equal",
+            "not_equal",
+            "higher_than",
+            "lower_than",
+        ],
+        boolean:[
+            "boolean",
+            "empty",
+            "not_empty",
+        ],
+        date:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        last_modified:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        created_on:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        url:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        email:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        file:[
+            "filename_contains",
+            "has_file_type",
+            "empty",
+            "not_empty"
+        ],
+        single_select:[
+            "single_select_equal",
+            "single_select_not_equal",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        multiple_select:[
+            "multiple_select_has",
+            "multiple_select_has_not",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        phone_number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ]
+    }
     
     // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
     // With the BaseRow API.
@@ -21,7 +186,8 @@ comment: |
     // If Forms asks us for a model, just return the 5 First lines, ignoring all filters
     if (model == "true") {
     	size = "1";
-    	filterExpression = null;;
+    	filterExpression = null;
+    	describeStructure = true;
     }
     
     '
@@ -54,6 +220,7 @@ comment: |
     comment: Includes all the filters and sorts of the provided view.
     description: view_id
   ↓filterExpression [variables.StepVariable-1665915671261]: 
+  ↓describeStructure [variables.StepVariable-1680617375032]: 
 ↓IfExist [steps.IfExistStep-1665402674584]: 
   sourceDefinition: 
     - xmlizable: 
@@ -75,6 +242,16 @@ comment: |
             - java.lang.String: 
               - ↑value: ./document/error/message/text()
   ↓Return [steps.ReturnStep-1665402714329]: 
+↓myVariable [steps.JsonSourceStep-1680617809832]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1665402300413
+        - java.lang.String: 
+          - ↑value: ./document/structure/object
+  variableName: structure
 ↓Array [steps.JsonArrayStep-1665402723840]: 
   key: 
     - xmlizable: 
@@ -423,6 +600,51 @@ comment: |
                   - SmartType: 
                     - ↑mode: PLAIN
                     - →→: true
+          ↓jIf1 [steps.IfStep-1680617618286]: 
+            condition: model == "true" && "structure" in this
+            ↓ComputeCompletionAndHideForFilters [steps.SimpleStep-1680617788099]: 
+              expression: |
+                'let cName = jOriginalKeyName ? jOriginalKeyName : jKeyName;
+                let cTarget = structure.filter((x)=>{
+                	return x.name == cName
+                })[0];
+                // if target is formula use it''s formula_type
+                let cType = cTarget != undefined ? cTarget.type : null;
+                if(cType == "formula"){
+                	cType = cTarget.formula_type;
+                }
+                let cTargetCompletion = verbsByType[cType];
+                let cHideFromFiltering = false;
+                if(cTargetCompletion == undefined){
+                	cTargetCompletion = [];
+                	cHideFromFiltering = true;
+                }'
+            ↓filterCompletion [steps.JsonToXmlStep-1680623987414]: 
+              jsonObject: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: JS
+                    - →→: cTargetCompletion
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: filterCompletion
+            ↓filterHide [steps.JsonToXmlStep-1680624024529]: 
+              jsonObject: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: JS
+                    - →→: cHideFromFiltering
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: filterHide
         ↓FinishHtmlEntry [steps.SimpleStep-1665833852150]: 
           expression: jHtml += "</div>"
 ↓forms_config [variables.RequestableVariable-1665402317348]: 
@@ -449,7 +671,7 @@ comment: |
     required: true
     value: |
       '{
-      	"table_id": "109863"
+      	"table_id": "384"
       }
       '
   ↓forms_tableFilter [variables.TestCaseVariable-1666432865700]: 
@@ -460,9 +682,9 @@ comment: |
       	"mode": "AND",
       	"filters": [
       		{
-      			"field": "Name",
+      			"field": "Nom",
       			"op": "contains",
-      			"value": "Little"
+      			"value": "Ada"
       		}
       	]
       }
@@ -492,6 +714,17 @@ comment: |
       '{"mode":"AND","filters":[{"field":"name","op":"equal","value":"Fulton Airport"}]}
       
       '
+↓TestWithFiltersAndModel [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680617453967]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "715"
+      }
+      '
+  ↓model [variables.TestCaseVariable-1680617465191]: 
+    value: true
 ↓TestWithInlcude [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666430403998]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables

@@ -1,16 +1,16 @@
 comment: Gets data from a given table
 ↓Call_Sequence [steps.SequenceStep-1666705450278]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Sequence1 [steps.SequenceStep-1665925387944]: 
+  comment: We need the field list for this table to build the filter
+  sourceSequence: lib_BaseRow.FieldsList
+  ↓table_id [variables.StepVariable-1665925404786]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
 ↓jIf [steps.IfStep-1666632106805]: 
   condition: 'filterExpression ? filterExpression.length != 0: false'
-  ↓Call_Sequence [steps.SequenceStep-1665925387944]: 
-    comment: We need the field list for this table to build the filter
-    sourceSequence: lib_BaseRow.FieldsList
-    ↓table_id [variables.StepVariable-1665925404786]: 
-      comment: Returns only the fields of the table related to the provided value.
-      description: table_id
-      required: true
-      value: 
   ↓JsonSource [steps.JsonSourceStep-1665925437972]: 
     comment: Our field list is now in aFields
     sourceDefinition: 
@@ -136,6 +136,22 @@ comment: Gets data from a given table
           - ↑value: 1665320785554
         - java.lang.String: 
           - ↑value: ./document/object/*
+↓jIf1 [steps.IfStep-1680617256741]: 
+  condition: describeStructure == "true"
+  ↓structure [steps.XMLComplexStep-1680611271528]: 
+    nodeName: structure
+    ↓type [steps.XMLAttributeStep-1680617178913]: 
+      nodeName: type
+      nodeText: array
+    ↓Copy1 [steps.XMLCopyStep-1680611235050]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1665925387944
+            - java.lang.String: 
+              - ↑value: ./document/array/*
 ↓exclude [variables.RequestableVariable-1665321650976]: 
   comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
   description: exclude
@@ -223,11 +239,25 @@ comment: Gets data from a given table
     |empty|		|field is empty|
     |not_empty|		|field is not empty|
     '
+↓describeStructure [variables.RequestableVariable-1680617232646]: 
 ↓TestAllShows [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1665393522746]: 
     description: table_id
     required: true
-    value: 344
+    value: 708
+  ↓filterExpression [variables.TestCaseVariable-1680610559337]: 
+    value: |
+      '{
+      	"mode": "AND",
+      	"filters": [
+      		{
+      			"field": "Name",
+      			"op": "contains",
+      			"value": "a"
+      		}
+      	]
+      }
+      '
 ↓TestBeneficiaries [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1665393910409]: 
     description: table_id
