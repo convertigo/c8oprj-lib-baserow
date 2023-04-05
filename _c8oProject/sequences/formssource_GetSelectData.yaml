@@ -13,7 +13,180 @@ comment: |
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
     
-    filterExpression = forms_CustomFilter;
+    filterExpression = forms_Filter;
+    
+    
+    let describeStructure = false;
+    
+    if (model == "true") {
+    	size = "1";
+    	filterExpression = null;
+    	describeStructure = true;
+    }
+    let verbsByType = {
+    	text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        long_text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        link_row: [
+            "link_row_has",
+            "link_row_has_not",
+            "link_row_contains",
+            "link_row_not_contains",
+            "empty",
+            "not_empty"
+        ],
+        number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "higher_than",
+            "lower_than",
+            "empty",
+            "not_empty",
+        ],
+        rating : [
+            "equal",
+            "not_equal",
+            "higher_than",
+            "lower_than",
+        ],
+        boolean:[
+            "boolean",
+            "empty",
+            "not_empty",
+        ],
+        date:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        last_modified:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        created_on:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        url:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        email:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        file:[
+            "filename_contains",
+            "has_file_type",
+            "empty",
+            "not_empty"
+        ],
+        single_select:[
+            "single_select_equal",
+            "single_select_not_equal",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        multiple_select:[
+            "multiple_select_has",
+            "multiple_select_has_not",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        phone_number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ]
+    }
     
     
     '
@@ -46,6 +219,7 @@ comment: |
     comment: Includes all the filters and sorts of the provided view.
     description: view_id
   ↓filterExpression [variables.StepVariable-1666717386588]: 
+  ↓describeStructure [variables.StepVariable-1680699118688]: 
 ↓IfExist [steps.IfExistStep-1666100090951]: 
   sourceDefinition: 
     - xmlizable: 
@@ -57,6 +231,16 @@ comment: |
           - ↑value: ./document/error
   ↓Error_structure [steps.XMLErrorStep-1666100090954]: 
   ↓Return [steps.ReturnStep-1666100090957]: 
+↓myVariable [steps.JsonSourceStep-1680699208395]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1666717386561
+        - java.lang.String: 
+          - ↑value: ./document/structure/object
+  variableName: structure
 ↓Array [steps.JsonArrayStep-1666100090960]: 
   key: 
     - xmlizable: 
@@ -214,6 +398,32 @@ comment: |
                         - ↑value: 1666100090963
                       - java.lang.String: 
                         - ↑value: ./id/text()
+↓jIf [steps.IfStep-1680699398785]: 
+  condition: model == "true" && "structure" in this
+  ↓Sequence_JS [steps.SimpleStep-1680699255296]: 
+    expression: |
+      'let data = [{}];
+      structure.forEach((e)=>{
+      	e.filterHide = false;
+      	e.filterCompletion = verbsByType[e.type];
+      	if(e.filterCompletion == null){
+      		e.filterCompletion = [];
+      	}
+      	data[0][e.name] = e;
+      })'
+  ↓data [steps.JsonToXmlStep-1680699661741]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: data
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: data
 ↓forms_config [variables.RequestableVariable-1666100091062]: 
   comment: |
     '{
@@ -227,18 +437,18 @@ comment: |
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/select
   required: true
   value: 
-↓forms_tableFilter [variables.RequestableVariable-1666100091071]: 
+↓forms_filter [variables.RequestableVariable-1666100091071]: 
   comment: |
     Filters
     
-  description: filter
+  description: 
   required: true
   value: 
-↓forms_CustomFilter [variables.RequestableVariable-1680171408883]: 
+↓forms_Filter [variables.RequestableVariable-1680171408883]: 
   comment: |
     A custom filter following  JSON styntax
     
-  description: 
+  description: filter
   required: true
   value: 
 ↓model [variables.RequestableVariable-1680688774991]: 
@@ -317,7 +527,7 @@ comment: |
     description: 
     required: true
     value: 
-  ↓forms_CustomFilter [variables.TestCaseVariable-1680174292984]: 
+  ↓forms_Filter [variables.TestCaseVariable-1680174292984]: 
     description: 
     required: true
     value: |
