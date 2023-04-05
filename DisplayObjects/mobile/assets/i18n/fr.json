@@ -15,8 +15,9 @@
  "Page": "Page",
  "Action_1": "Action 1",
  "Action_2": "Action 2",
- "notice3":"Veuillez sélectionner parmi les éléments suivants les colonnes que vous souhaitez récupérer. Vous pouvez également choisir une valeur différente de la valeur d'affichage pour pouvoir utiliser ces données dans vos applications.",
+ "notice3":"Veuillez sélectionner parmi les éléments suivants les colonnes que vous souhaitez récupérer à partir du tableau sélectionné dans la sélection. La première colonne contiendra tous les champs sur lesquels vous pourrez filtrer. La deuxième colonne sera les valeurs d'affichage qui apparaîtront dans la sélection. Les troisièmes valeurs seront la valeur réelle derrière un élément sélectionné.",
  "Display_value": "Valeur affichée",
  "Use_a_different_column_for_the_value_and": "Utiliser une colonne différente pour la valeur et la valeur affichée",
- "Value": "Valeur"
+ "Value": "Valeur",
+ "Identifier": "Identifiant"
 }

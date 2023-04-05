@@ -605,20 +605,27 @@ comment: |
             ↓ComputeCompletionAndHideForFilters [steps.SimpleStep-1680617788099]: 
               expression: |
                 'let cName = jOriginalKeyName ? jOriginalKeyName : jKeyName;
-                let cTarget = structure.filter((x)=>{
-                	return x.name == cName
-                })[0];
-                // if target is formula use it''s formula_type
-                let cType = cTarget != undefined ? cTarget.type : null;
-                if(cType == "formula"){
-                	cType = cTarget.formula_type;
+                let cTargetCompletion = [];
+                let cHideFromFiltering = true;
+                log.warn("cName " + cName);
+                log.warn("jConfig.columns  " + JSON.stringify(jConfig.columns));
+                if(jConfig.columns.indexOf(cName) != -1){
+                	let cTarget = structure.filter((x)=>{
+                		return x.name == cName
+                	})[0];
+                	// if target is formula use it''s formula_type
+                	let cType = cTarget != undefined ? cTarget.type : null;
+                	if(cType == "formula"){
+                		cType = cTarget.formula_type;
+                	}
+                	cTargetCompletion = verbsByType[cType];
+                	cHideFromFiltering = false;
+                	if(cTargetCompletion == undefined){
+                		cTargetCompletion = [];
+                		cHideFromFiltering = true;
+                	}
                 }
-                let cTargetCompletion = verbsByType[cType];
-                let cHideFromFiltering = false;
-                if(cTargetCompletion == undefined){
-                	cTargetCompletion = [];
-                	cHideFromFiltering = true;
-                }'
+                '
             ↓filterCompletion [steps.JsonToXmlStep-1680623987414]: 
               jsonObject: 
                 - xmlizable: 

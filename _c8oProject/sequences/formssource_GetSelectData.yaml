@@ -12,6 +12,8 @@ comment: |
     	jConfig.columns.forEach(col => include_fields += col +",")
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
+    let displayValue = jConfig.displayValue;
+    let value = jConfig.value;
     
     filterExpression = forms_Filter;
     
@@ -231,6 +233,16 @@ comment: |
           - ↑value: ./document/error
   ↓Error_structure [steps.XMLErrorStep-1666100090954]: 
   ↓Return [steps.ReturnStep-1666100090957]: 
+↓myVariable1 [steps.JsonSourceStep-1680712167643]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1666717386561
+        - java.lang.String: 
+          - ↑value: ./document/results/object
+  variableName: res
 ↓myVariable [steps.JsonSourceStep-1680699208395]: 
   sourceDefinition: 
     - xmlizable: 
@@ -241,7 +253,37 @@ comment: |
         - java.lang.String: 
           - ↑value: ./document/structure/object
   variableName: structure
+↓computeValue [steps.SimpleStep-1680712348539]: 
+  expression: |
+    'if(!(Array.isArray(res))){
+    	res =  [res];
+    }
+    res = res.map((x)=>{
+    	return {
+    		displayValue: x[displayValue],
+    		value : x[value]
+    	} 
+    })
+    if(forms_filter != undefined && forms_filter != ""){
+    	res = res.filter((z)=>{
+    		return z.displayValue.toLowerCase().indexOf(forms_filter.toLowerCase()) != -1;
+    	})
+    }'
+↓object [steps.JsonToXmlStep-1680712764673]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: res
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: value
 ↓Array [steps.JsonArrayStep-1666100090960]: 
+  isEnabled: false
   key: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -404,12 +446,15 @@ comment: |
     expression: |
       'let data = [{}];
       structure.forEach((e)=>{
-      	e.filterHide = false;
-      	e.filterCompletion = verbsByType[e.type];
-      	if(e.filterCompletion == null){
-      		e.filterCompletion = [];
+      	if(jConfig.columns.indexOf(e.name) != -1){
+      		e.filterHide = false;
+      		e.filterCompletion = verbsByType[e.type];
+      		if(e.filterCompletion == null){
+      			e.filterCompletion = [];
+      		}
+      		data[0][e.name] = e;
       	}
-      	data[0][e.name] = e;
+      	
       })'
   ↓data [steps.JsonToXmlStep-1680699661741]: 
     jsonObject: 
