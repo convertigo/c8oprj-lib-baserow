@@ -1876,9 +1876,9 @@ title: First page
                     		else{
                     			let col1 = JSON.parse(page.local.displayColumn);
                     			conf.table_id = col1.table_id;
-                    			conf.columns.push(col1);
+                    			conf.columns.push(col1.name);
                     			if(page.local.diffrentVals){
-                    				conf.columns.push(JSON.parse(page.local.valueColumn));
+                    				conf.columns.push(JSON.parse(page.local.valueColumn).name);
                     			}
                     		}
                     		console.log("conf", conf);
