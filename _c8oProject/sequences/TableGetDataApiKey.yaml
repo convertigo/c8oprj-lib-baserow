@@ -71,7 +71,7 @@ comment: Gets data from a given table
       		if (filter.op == "equal" && filter.value.length == 0)
       			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
       			
-      		built += "filter__field_" + getFieldId(filter.field) + "__" + filter.op + "=" + filter.value + "&";
+      		built += "filter__field_" + encodeURIComponent(getFieldId(filter.field)) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
       	});
       	
       	filterExpression = built;
