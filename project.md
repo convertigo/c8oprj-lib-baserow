@@ -19,23 +19,10 @@ This library uses the following symbols
 <details><summary><span style="color:DarkGoldenRod"><i>References</i></span></summary><blockquote><p>
 
 
-<details><summary><b>C8Oforms</b></summary><blockquote><p>
-
-
-## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
-
-
-see [readme](https://github.com/convertigo/C8oForms/tree/NGX#readme)
-</p></blockquote></details>
-
-<details><summary><b>CouchDb_schema</b></summary><blockquote><p>
-
-
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/XsdSchemaReference_16x16.png?raw=true "ImportXsdSchemaReference") CouchDb_schema
 
 
 see [documentation](http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd)
-</p></blockquote></details>
 </p></blockquote></details>
 
 <details><summary><span style="color:DarkGoldenRod"><i>Connectors</i></span></summary><blockquote><p>
@@ -8276,5 +8263,37 @@ Describes the mobile application global properties
 ### ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/pagecomponent_color_16x16.png?raw=true "PageComponent") BrowseTables
 
 My First Page as root page
+</p></blockquote></details>
+
+<details><summary><span style="color:DarkGoldenRod"><i>Shared Components</i></span></summary><blockquote><p>
+
+
+### ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uisharedcomponent_16x16.png?raw=true "UISharedRegularComponent") BaseRowGrid
+
+Provides a Grid that can be fed by data from a Baserow No Code database.
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;Requestable
+</td>
+<td>
+The BaseRow CRUD "List" sequence imported from the NoCode View. For example :
+<pre>.Hotel_BookingsRoomsList</pre>
+
+</td>
+</tr>
+</table>
+
 </p></blockquote></details>
 </p></blockquote></details>

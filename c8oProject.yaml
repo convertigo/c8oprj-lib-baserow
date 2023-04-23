@@ -54,8 +54,6 @@
   ↓TableReadRow [sequences.GenericSequence]: 🗏 sequences/TableReadRow.yaml
   ↓TableUpdateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableUpdateRowApiKey.yaml
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
-  ↓C8Oforms_reference [references.ProjectSchemaReference]: 
-    projectName: C8Oforms
   ↓CouchDb_schema [references.ImportXsdSchemaReference]: 
     urlpath: http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd
   ↓Project_reference [references.ProjectSchemaReference]: 

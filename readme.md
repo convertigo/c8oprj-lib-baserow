@@ -58,6 +58,8 @@ For more technical informations : [documentation](./project.md)
     - [TableUpdateRowApiKey](#tableupdaterowapikey)
     - [TokenGetOrRefresh](#tokengetorrefresh)
 - [Mobile Library](#mobile-library)
+    - [Shared Components](#shared-components)
+        - [BaseRowGrid](#baserowgrid)
 
 
 ## Installation
@@ -287,12 +289,15 @@ Get data from a baserow table for a Select
 <td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
 </tr>
 <tr>
-<td>forms_CustomFilter</td><td>A custom filter following  JSON styntax
+<td>forms_filter</td><td>Filters
 </td>
 </tr>
 <tr>
-<td>forms_filter</td><td>Filters
+<td>forms_Filter</td><td>A custom filter following  JSON styntax
 </td>
+</tr>
+<tr>
+<td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
 </tr>
 </table>
 
@@ -598,6 +603,9 @@ Gets data from a given table
 <th>name</th><th>comment</th>
 </tr>
 <tr>
+<td>describeStructure</td><td></td>
+</tr>
+<tr>
 <td>exclude</td><td>All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.</td>
 </tr>
 <tr>
@@ -881,6 +889,25 @@ Gets a token or refresh it if the token is expired the Token will be placed in t
 ## Mobile Library
 
 Describes the mobile application global properties
+
+### Shared Components
+
+#### BaseRowGrid
+
+Provides a Grid that can be fed by data from a Baserow No Code database.
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>Requestable</td><td>The BaseRow CRUD "List" sequence imported from the NoCode View. For example :
+<pre>.Hotel_BookingsRoomsList</pre>
+</td>
+</tr>
+</table>
 
 
 
