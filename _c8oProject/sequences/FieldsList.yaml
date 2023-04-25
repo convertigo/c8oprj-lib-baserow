@@ -1,4 +1,4 @@
-accessibility: Private
+accessibility: Hidden
 comment: Lists all the fields in a baserow table
 responseExpiryDate: absolute,60
 ↓Call_Sequence [steps.SequenceStep-1667802514338]: 
