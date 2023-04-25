@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Lists all Groups for the current user
 ↓Call_Sequence [steps.SequenceStep-1666705555028]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh

@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Gets data from a given table
 ↓Call_Sequence [steps.SequenceStep-1666705450278]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh

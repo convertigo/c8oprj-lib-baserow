@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Deletes the existing view if the authorized user has access to the related database's group. Note that all the related settings of the view are going to be deleted also. The data stays intact after deleting the view because this is related to the table and not the view.
 ↓Input_variables [steps.InputVariablesStep-1673545912127]: 
 ↓Call_Sequence [steps.SequenceStep-1673545912130]: 

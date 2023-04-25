@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Uploads a file asset, the returned link can be used to be set as a value of a 'file' Type cell
 ↓Input_variables [steps.InputVariablesStep-1671641965857]: 
   output: true

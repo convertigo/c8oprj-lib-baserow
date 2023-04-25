@@ -16,7 +16,7 @@
     
     '
   corsOrigin: =Origin
-  version: 1.0.17
+  version: 1.0.18
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓lib_baserow_fullsync [connectors.FullSyncConnector]: 🗏 connectors/lib_baserow_fullsync.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
@@ -54,8 +54,12 @@
   ↓TableReadRow [sequences.GenericSequence]: 🗏 sequences/TableReadRow.yaml
   ↓TableUpdateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableUpdateRowApiKey.yaml
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
+  ↓C8Oforms_reference [references.ProjectSchemaReference]: 
+    projectName: C8Oforms
   ↓CouchDb_schema [references.ImportXsdSchemaReference]: 
     urlpath: http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd
+  ↓lib_ExtendedComponents_ui_ngx_reference [references.ProjectSchemaReference]: 
+    projectName: lib_ExtendedComponents_ui_ngx=https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx.git:branch=8.1.0.0
   ↓Project_reference [references.ProjectSchemaReference]: 
     comment: ngx builder template
     projectName: mobilebuilder_tpl_8_1_0_ngx=https://github.com/convertigo/c8oprj-mobilebuilder-tpl/archive/mobilebuilder_tpl_8_1_0_ngx.zip

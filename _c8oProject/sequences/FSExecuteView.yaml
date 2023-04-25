@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Execute a FullSync View
 ↓Call_Transaction [steps.TransactionStep-1672151981464]: 
   sourceTransaction: lib_BaseRow.lib_baserow_fullsync.GetView

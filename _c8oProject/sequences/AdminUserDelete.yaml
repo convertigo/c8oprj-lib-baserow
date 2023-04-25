@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Delete a User
 ↓Call_Sequence [steps.SequenceStep-1670746558679]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh

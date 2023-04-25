@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Delete a previously created Token by providing its id
 ↓Call_Sequence [steps.SequenceStep-1672066170523]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh

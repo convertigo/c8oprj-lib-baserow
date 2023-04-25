@@ -1,3 +1,4 @@
+accessibility: Private
 clientCachable: true
 comment: Lists all the fields in a baserow table
 responseExpiryDate: absolute,60000000

@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Establishes a session with Baserow. Must be called before any other API
 ↓Object [steps.JsonObjectStep-1664964135915]: 
   key: 

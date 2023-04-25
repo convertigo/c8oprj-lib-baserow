@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Push a BaserowTable to FullSync for offline access
 ↓Call_Sequence [steps.SequenceStep-1670750961352]: 
   comment: Export table as CSV

@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Reads a row from a  from a given table
 ↓Call_Sequence [steps.SequenceStep-1667622853574]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh

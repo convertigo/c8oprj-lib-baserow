@@ -1,3 +1,5 @@
+accessibility: Hidden
+authenticatedContextRequired: true
 comment: |
   Get data from a baserow table for a Grid
   

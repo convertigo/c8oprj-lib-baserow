@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Updates a row in a table ising apikey instead of credentials
 ↓Input_variables [steps.InputVariablesStep-1673475302604]: 
 ↓Concat [steps.XMLConcatStep-1673475302607]: 

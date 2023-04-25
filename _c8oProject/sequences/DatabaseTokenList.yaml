@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Create a Token to acess databases within a group. This token will hold permissions to specific databases in the group
 ↓Call_Sequence [steps.SequenceStep-1677078151939]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh

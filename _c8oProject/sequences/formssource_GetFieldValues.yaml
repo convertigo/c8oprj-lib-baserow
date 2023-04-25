@@ -1,3 +1,5 @@
+accessibility: Hidden
+authenticatedContextRequired: true
 comment: |
   Get all possible values for a given field to feed a Select 
   

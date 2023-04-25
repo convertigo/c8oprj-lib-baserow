@@ -19,10 +19,31 @@ This library uses the following symbols
 <details><summary><span style="color:DarkGoldenRod"><i>References</i></span></summary><blockquote><p>
 
 
+<details><summary><b>C8Oforms</b></summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
+
+
+</p></blockquote></details>
+
+<details><summary><b>CouchDb_schema</b></summary><blockquote><p>
+
+
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/XsdSchemaReference_16x16.png?raw=true "ImportXsdSchemaReference") CouchDb_schema
 
 
 see [documentation](http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd)
+</p></blockquote></details>
+
+<details><summary><b>lib_ExtendedComponents_ui_ngx</b></summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") lib_ExtendedComponents_ui_ngx
+
+
+see [readme](https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx/tree/8.1.0.0#readme)
+</p></blockquote></details>
 </p></blockquote></details>
 
 <details><summary><span style="color:DarkGoldenRod"><i>Connectors</i></span></summary><blockquote><p>

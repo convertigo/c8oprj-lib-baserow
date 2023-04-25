@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Gets a token or refresh it if the token is expired the Token will be placed in the current user session
 ↓GetTokenFromSession [steps.SessionGetStep-1666701028415]: 
   key: token

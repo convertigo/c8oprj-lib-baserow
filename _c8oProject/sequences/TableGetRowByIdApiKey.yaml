@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Gets data from a given table
 ↓Input_variables [steps.InputVariablesStep-1677244732612]: 
 ↓Concat [steps.XMLConcatStep-1677244732615]: 

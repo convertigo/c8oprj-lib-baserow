@@ -138,6 +138,46 @@ comment: Provides a Grid that can be fed by data from a Baserow No Code database
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
         - MobileSmartSourceType: script:''
+  ↓attr [ngx.components.UIControlEvent-1682327850637]: 
+    attrName: (CellClicked)
+    comment: Fired when a cell is clicked. Data will be the agGrid event
+    eventName: CellClicked
+  ↓attr1 [ngx.components.UIControlEvent-1682327850639]: 
+    attrName: (RowClicked)
+    comment: Fired when a row is clicked. Data will be the agGrid event
+    eventName: RowClicked
+  ↓attr2 [ngx.components.UIControlEvent-1682327850641]: 
+    attrName: (RowSelected)
+    comment: Fired when a row is selected. Data will be the agGrid event
+    eventName: RowSelected
+  ↓attr3 [ngx.components.UIControlEvent-1682327850643]: 
+    attrName: (SortChanged)
+    comment: Fired when a a column is sorted. Data will be the agGrid event
+    eventName: SortChanged
+  ↓attr4 [ngx.components.UIControlEvent-1682327850645]: 
+    attrName: (RowDataChanged)
+    comment: Fired when Row data changed. Data will be the agGrid event
+    eventName: RowDataChanged
+  ↓attr5 [ngx.components.UIControlEvent-1682327850647]: 
+    attrName: (CellValueChanged)
+    comment: Fired when A Cell is edited changed. Data will be the agGrid event
+    eventName: CellValueChanged
+  ↓attr6 [ngx.components.UIControlEvent-1682327850649]: 
+    attrName: (RowDoubleClicked)
+    comment: Fired when A Cell is edited changed. Data will be the agGrid event
+    eventName: RowDoubleClicked
+  ↓attr7 [ngx.components.UIControlEvent-1682327850651]: 
+    attrName: (SelectionChanged)
+    comment: Fired when selectionChange. Data will be the agGrid event
+    eventName: SelectionChanged
+  ↓attr8 [ngx.components.UIControlEvent-1682327850653]: 
+    attrName: (GridReady)
+    comment: Fired when the Grid is ready. Data will be the agGrid event
+    eventName: GridReady
+  ↓attr9 [ngx.components.UIControlEvent-1682327850655]: 
+    attrName: (GetRows)
+    comment: Fire when the RowModelType is 'infinite'. Excepts fromatted data into a agGridUpdateRows action
+    eventName: GetRows
 ↓SharedComponent_Event [ngx.components.UISharedComponentEvent-1682233502889]: 
   ↓BuildDataDefs [ngx.components.UICustomAction-1682233502892]: 
     actionValue: 

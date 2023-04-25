@@ -1,3 +1,4 @@
+accessibility: Private
 comment: Exports a Table to CSV.. Export status must me monitored with the TableBulkExportWaitFinished sequence
 ↓Call_Sequence [steps.SequenceStep-1670748395048]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
