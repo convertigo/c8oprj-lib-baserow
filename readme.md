@@ -71,13 +71,13 @@ For more technical informations : [documentation](./project.md)
      <tr><td>To contribute</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow.git:branch=8.2.x
+     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow.git:branch=master
      ```
      </td></tr>
      <tr><td>To simply use</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow/archive/8.2.x.zip
+     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow/archive/master.zip
      ```
      </td></tr>
     </table>

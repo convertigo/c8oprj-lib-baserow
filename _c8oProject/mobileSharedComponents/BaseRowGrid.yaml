@@ -6,13 +6,13 @@ comment: Provides a Grid that can be fed by data from a Baserow No Code database
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:false
+        - MobileSmartSourceType: script:true
   ↓paginationPageSize [ngx.components.UIUseVariable-1682233502826]: 
     comment: 'integer: 10 by default'
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:10
+        - MobileSmartSourceType: script:100
   ↓rowSelection [ngx.components.UIUseVariable-1682233502829]: 
     comment: 'string: ''single'' (default) or ''multiple'''
     varValue: 
@@ -115,13 +115,13 @@ comment: Provides a Grid that can be fed by data from a Baserow No Code database
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:'clientSide'
+        - MobileSmartSourceType: script:'infinite'
   ↓maxBlocksInCache [ngx.components.UIUseVariable-1682233502877]: 
     comment: How many blocks to keep in the store. Default is no limit, so every requested block is kept
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:''
+        - MobileSmartSourceType: script:50
   ↓autoSizeColumns [ngx.components.UIUseVariable-1682233502880]: 
     varValue: 
       - xmlizable: 
@@ -178,6 +178,112 @@ comment: Provides a Grid that can be fed by data from a Baserow No Code database
     attrName: (GetRows)
     comment: Fire when the RowModelType is 'infinite'. Excepts fromatted data into a agGridUpdateRows action
     eventName: GetRows
+    ↓CallRequestableAndComputeIndexes [ngx.components.UICustomAction-1682850073523]: 
+      actionValue: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+          - com.twinsoft.convertigo.beans.common.FormatedContent: 
+            →: |
+              '		
+              		let size = vars.limit
+              		let brPage = 1 + vars.skip / vars.limit
+              		page.c8o.log.warn(''size is : '' + size  + '' Page is : '' + brPage)
+              		
+              		page.c8o.callJsonObject(vars.requestable, {
+              			size: size,
+              			page: brPage 
+              		})
+              		.async()
+              		.then((response : any)=> {
+              			if (response.object.error) {
+              				resolve({})	
+              				return;
+              			}
+              			
+              			let colDefs = [];
+              			let rowData = [];
+              			let keys = Object.keys(response.object.results[0])
+              			for (let i=0; i < keys.length ; i++) {
+              				if (keys[i] != ''order'')
+              					colDefs.push({
+              						headerName: keys[i],
+              						field: keys[i]
+              					})
+              			}
+              			
+              			for (let i = 0; i < response.object.results.length; i ++) {
+              				let row = {};
+              				for (let j = 0; j < keys.length; j++) {
+              					if (keys[j] != ''order'') {
+              						console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
+              						
+              						if (typeof response.object.results[i][keys[j]] == ''object'') {
+              							if (Array.isArray(response.object.results[i][keys[j]])) {
+              								let text = ""
+              								for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
+              									if (response.object.results[i][keys[j]][k])
+              										text += response.object.results[i][keys[j]][k].value + '', '' 
+              								}
+              								row[keys[j]] = text;
+              							} else {
+              								if (response.object.results[i][keys[j]])
+              									row[keys[j]] = response.object.results[i][keys[j]].value
+              							}
+              						} else {
+              							row[keys[j]] = response.object.results[i][keys[j]]
+              						}
+              					}
+              				}
+              				rowData.push(row);
+              			}
+              	
+              			let output = {
+              				ColDef: colDefs,
+              				RowData : rowData,
+              				lastRow: response.object.count
+              			}
+              			
+              			resolve(output);
+              		})
+              '
+      ↓requestable [ngx.components.UIControlVariable-1682850147322]: 
+        varValue: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+            - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.Requestable","prefix":"","suffix":"","custom":"","useCustom":false}}
+      ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1682850406387]: 
+        beanData: '{"ionBean":"InvokeAction"}'
+        stack: lib_ExtendedComponents_ui_ngx.MobileApplication.Application.agGridUpdateRows
+        tagName: InvokeSharedAction
+        ↓data [ngx.components.UIControlVariable-1682850421636]: 
+          comment: data must receive a JSON with a RowData key and an optional ColDef key
+          varValue: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+              - MobileSmartSourceType: source:{"filter":"Action","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682850073523,"rootEvent":false,"pageLocals":false},{"priority":1682327850655,"rootEvent":true,"pageLocals":false}],"path":"?.out","prefix":"","suffix":"","custom":"","useCustom":false}}
+        ↓agGridEvent [ngx.components.UIControlVariable-1682850421638]: 
+          comment: map agGridEvent to the TS 'event' parameter from the GetRows Control
+          varValue: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+              - MobileSmartSourceType: script:event
+      ↓skip [ngx.components.UIControlVariable-1682917421677]: 
+        varValue: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+            - MobileSmartSourceType: script:out.skip
+      ↓limit [ngx.components.UIControlVariable-1682917433134]: 
+        varValue: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+            - MobileSmartSourceType: script:out.limit
+      ↓bookmark [ngx.components.UIControlVariable-1682917453119]: 
+        varValue: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+            - MobileSmartSourceType: script:out.bookmark
+      ↓If [ngx.components.UIDynamicAction-1682921554490]: 
+        beanData: '{"ionBean":"IfAction"}'
 ↓SharedComponent_Event [ngx.components.UISharedComponentEvent-1682233502889]: 
   ↓BuildDataDefs [ngx.components.UICustomAction-1682233502892]: 
     actionValue: 
@@ -188,7 +294,8 @@ comment: Provides a Grid that can be fed by data from a Baserow No Code database
             '		page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
             		
             		page.c8o.callJsonObject(vars.Requestable, {
-            			
+            			size: vars.limit,
+            			page: 1
             		})
             		.async()
             		.then((response : any)=> {
@@ -232,8 +339,8 @@ comment: Provides a Grid that can be fed by data from a Baserow No Code database
             			}
             	
             			let output = {
-            				columnDefs: colDefs,
-            				rowData : rowData
+            				ColDef: colDefs,
+            				RowData : rowData
             			}
             			
             			// page.c8o.log.warn(''OUtput'' +  JSON.stringify(output));
@@ -242,6 +349,7 @@ comment: Provides a Grid that can be fed by data from a Baserow No Code database
             
             			});		
             '
+    isEnabled: false
     ↓Data [ngx.components.UIControlVariable-1682233502895]: 
       varValue: 
         - xmlizable: 
