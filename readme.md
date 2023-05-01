@@ -907,6 +907,11 @@ Provides a Grid that can be fed by data from a Baserow No Code database.
 <pre>.Hotel_BookingsRoomsList</pre>
 </td>
 </tr>
+<tr>
+<td>Search</td><td>Will only return data that matches this search whatever the column
+<pre>.Hotel_BookingsRoomsList</pre>
+</td>
+</tr>
 </table>
 
 

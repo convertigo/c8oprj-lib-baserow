@@ -8314,6 +8314,16 @@ The BaseRow CRUD "List" sequence imported from the NoCode View. For example :
 
 </td>
 </tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;Search
+</td>
+<td>
+Will only return data that matches this search whatever the column
+<pre>.Hotel_BookingsRoomsList</pre>
+
+</td>
+</tr>
 </table>
 
 </p></blockquote></details>
