@@ -894,7 +894,7 @@ Describes the mobile application global properties
 
 #### BaseRowGrid
 
-Provides a Grid that can be fed by data from a Baserow No Code database.
+Provides an infinite paginated Grid that can be fed by data from a BaseRow No Code database.
 
 **variables**
 
@@ -907,12 +907,13 @@ Provides a Grid that can be fed by data from a Baserow No Code database.
 
 <pre>
 {
-	filter<And/Or><Column Name 1><Op>: <filter to apply N° 1>,
-	filter<And/Or><Column Name 2><Op>: <filter to apply N° 2>
+	filter&lt;And/Or&gt;&lt;Column Name 1&gt;&lt;Op&gt;: &lt;filter to apply N° 1&gt;,
+	filter&lt;And/Or&gt;&lt;Column Name 2&gt;&lt;Op&gt;: &lt;filter to apply N° 2&gt;
 }
 </pre>
 
 for example for Sequence GTFSPlacesSmallAirportsList :
+
 NB: Be sure to use simple quotes in your JSON structure for strings
 
 <pre>
@@ -935,14 +936,14 @@ Will fill the grid with all records where column *Type* *Contains* to *small_air
 
 <pre>MyProject.Hotel_BookingsRoomsList</pre>
 
-Where *MyProject* is the anem of the projet holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
+Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
 
 
 </td>
 </tr>
 <tr>
 <td>Search</td><td>Will only return data that matches this search whatever the column
-<pre>.Hotel_BookingsRoomsList</pre>
+<pre>.Hotel_BookingsRoomsList</pre>
 </td>
 </tr>
 </table>

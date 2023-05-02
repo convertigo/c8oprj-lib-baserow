@@ -8291,7 +8291,7 @@ My First Page as root page
 
 ### ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uisharedcomponent_16x16.png?raw=true "UISharedRegularComponent") BaseRowGrid
 
-Provides a Grid that can be fed by data from a Baserow No Code database.
+Provides an infinite paginated Grid that can be fed by data from a BaseRow No Code database.
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -8313,12 +8313,13 @@ An JSON object containing the filter to apply to a BaseRow filtered view where e
 
 <pre>
 {
-	filter<And/Or><Column Name 1><Op>: <filter to apply N° 1>,
-	filter<And/Or><Column Name 2><Op>: <filter to apply N° 2>
+	filter&lt;And/Or&gt;&lt;Column Name 1&gt;&lt;Op&gt;: &lt;filter to apply N° 1&gt;,
+	filter&lt;And/Or&gt;&lt;Column Name 2&gt;&lt;Op&gt;: &lt;filter to apply N° 2&gt;
 }
 </pre>
 
 for example for Sequence GTFSPlacesSmallAirportsList :
+
 NB: Be sure to use simple quotes in your JSON structure for strings
 
 <pre>
@@ -8346,7 +8347,7 @@ The BaseRow CRUD "List" sequence name imported from the NoCode View. For example
 
 <pre>MyProject.Hotel_BookingsRoomsList</pre>
 
-Where *MyProject* is the anem of the projet holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
+Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
 
 
 
