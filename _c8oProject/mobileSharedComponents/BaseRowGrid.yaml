@@ -394,9 +394,7 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
     
 ↓Search [ngx.components.UICompVariable-1682931994842]: 
   comment: |
-    Will only return data that matches this search whatever the column
-    
-    
+    Will only return data that matches this search whatever the column is 
     
 ↓Filters [ngx.components.UICompVariable-1682960960466]: 
   comment: |

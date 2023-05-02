@@ -8358,9 +8358,7 @@ Where *MyProject* is the name of the project holding the Sequence and *Hotel_Boo
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;Search
 </td>
 <td>
-Will only return data that matches this search whatever the column
-
-
+Will only return data that matches this search whatever the column is 
 
 </td>
 </tr>

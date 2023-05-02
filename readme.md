@@ -942,9 +942,7 @@ Where *MyProject* is the name of the project holding the Sequence and *Hotel_Boo
 </td>
 </tr>
 <tr>
-<td>Search</td><td>Will only return data that matches this search whatever the column
-
-
+<td>Search</td><td>Will only return data that matches this search whatever the column is 
 </td>
 </tr>
 </table>
