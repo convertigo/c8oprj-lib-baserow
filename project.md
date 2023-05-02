@@ -8306,11 +8306,49 @@ comment
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;Requestable
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;Filters
 </td>
 <td>
-The BaseRow CRUD "List" sequence imported from the NoCode View. For example :
-<pre>.Hotel_BookingsRoomsList</pre>
+An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
+
+<pre>
+{
+	filter<And/Or><Column Name 1><Op>: <filter to apply N° 1>,
+	filter<And/Or><Column Name 2><Op>: <filter to apply N° 2>
+}
+</pre>
+
+for example for Sequence GTFSPlacesSmallAirportsList :
+NB: Be sure to use simple quotes in your JSON structure for strings
+
+<pre>
+
+{
+	filterAndTypeContains: 'small_airport',
+	filterAndIso_countryEqual: 'FR'
+}
+</pre>
+
+
+Will fill the grid with all records where column *Type* *Contains* to *small_airports* and column *Type* *Contains* to *Iso_countryEqual* equals *FR*. Filter names will be imported from the No Code Database view.
+
+
+
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;ListSequenceName
+</td>
+<td>
+The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
+
+<pre>MyProject.Hotel_BookingsRoomsList</pre>
+
+Where *MyProject* is the anem of the projet holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
+
+
 
 </td>
 </tr>
