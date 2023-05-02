@@ -436,7 +436,7 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
   value: true
 ↓defaultColDef [ngx.components.UICompVariable-1683005576441]: 
   comment: 'default is {hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}'
-  value: '{hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}'
+  value: '{hide: false, editable: false, sortable: false, resizable: true, filter: false, checkboxSelection: false, singleClickEdit: false}'
 ↓width [ngx.components.UICompVariable-1683005576444]: 
   comment: width value in % or px
   value: '''100%'''
