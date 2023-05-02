@@ -12,25 +12,25 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:100
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.paginationPageSize","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓rowSelection [ngx.components.UIUseVariable-1682233502829]: 
     comment: 'string: ''single'' (default) or ''multiple'''
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:'single'
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.rowSelection","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓rowDeselection [ngx.components.UIUseVariable-1682233502832]: 
     comment: 'boolean: true (default) or false'
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:true
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.rowDeselection","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓defaultColDef [ngx.components.UIUseVariable-1682233502835]: 
     comment: 'default is {hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}'
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: 'script:{hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}'
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.defaultColDef","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓columnDefs [ngx.components.UIUseVariable-1682233502838]: 
     comment: 'Array of columnDef {headerName: ''headerName'', field: ''fieldName''} objects'
     varValue: 
@@ -48,13 +48,13 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:'100%'
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.width","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓height [ngx.components.UIUseVariable-1682233502847]: 
     comment: height is 'auto' or value in % or px
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:'auto'
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.height","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓class [ngx.components.UIUseVariable-1682233502850]: 
     comment: |
       'One of the themes provided here :
@@ -71,45 +71,45 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:'ag-theme-balham'
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.class","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓id [ngx.components.UIUseVariable-1682233502853]: 
     comment: An Optional ID
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:''
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.id","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓suppressCellSelection [ngx.components.UIUseVariable-1682233502856]: 
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:false
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.suppressCellSelection","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓suppressRowClickSelection [ngx.components.UIUseVariable-1682233502859]: 
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:false
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.suppressRowClickSelection","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓overlayLoadingTemplate [ngx.components.UIUseVariable-1682233502862]: 
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:''
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.overlayLoadingTemplate","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓overlayNoRowsTemplate [ngx.components.UIUseVariable-1682233502865]: 
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:''
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.overlayNoRowsTemplate","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓rowHeight [ngx.components.UIUseVariable-1682233502868]: 
     comment: Height of the row in pixels as a string
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:'25'
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.rowHeight","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓wrapperClass [ngx.components.UIUseVariable-1682233502871]: 
     comment: Height of the row in pixels as a string
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:''
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.wrapperClass","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓rowModelType [ngx.components.UIUseVariable-1682233502874]: 
     comment: Row model type
     varValue: 
@@ -126,18 +126,18 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:true
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.autoSizeColumns","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓accessibility [ngx.components.UIUseVariable-1682233502883]: 
     comment: 'boolean: true (default) or false'
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:false
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.accessibility","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓ariaLabel [ngx.components.UIUseVariable-1682233502886]: 
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:''
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.ariaLabel","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓attr [ngx.components.UIControlEvent-1682327850637]: 
     attrName: (CellClicked)
     comment: Fired when a cell is clicked. Data will be the agGrid event
@@ -221,7 +221,7 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
               				let row = {};
               				for (let j = 0; j < keys.length; j++) {
               					if (keys[j] != ''order'') {
-              						console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
+              						//console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
               						
               						if (typeof response.object.results[i][keys[j]] == ''object'') {
               							if (Array.isArray(response.object.results[i][keys[j]])) {
@@ -425,3 +425,54 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
     
     
     '
+↓paginationPageSize [ngx.components.UICompVariable-1683005576432]: 
+  comment: 'integer: 10 by default'
+  value: 10
+↓rowSelection [ngx.components.UICompVariable-1683005576435]: 
+  comment: 'string: ''single'' (default) or ''multiple'''
+  value: '''single'''
+↓rowDeselection [ngx.components.UICompVariable-1683005576438]: 
+  comment: 'boolean: true (default) or false'
+  value: true
+↓defaultColDef [ngx.components.UICompVariable-1683005576441]: 
+  comment: 'default is {hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}'
+  value: '{hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}'
+↓width [ngx.components.UICompVariable-1683005576444]: 
+  comment: width value in % or px
+  value: '''100%'''
+↓height [ngx.components.UICompVariable-1683005576447]: 
+  comment: height is 'auto' or value in % or px
+  value: '''auto'''
+↓class [ngx.components.UICompVariable-1683005576450]: 
+  comment: |
+    'One of the themes provided here :
+    
+    https://www.ag-grid.com/javascript-grid-themes-provided/
+    
+    Also be shure to add the theme in the Theme object as :
+    
+    @import "../../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.scss";
+    
+    
+    
+    '
+  value: '''ag-theme-balham'''
+↓id [ngx.components.UICompVariable-1683005576453]: 
+  comment: An Optional ID
+↓suppressCellSelection [ngx.components.UICompVariable-1683005576456]: 
+  value: false
+↓suppressRowClickSelection [ngx.components.UICompVariable-1683005576459]: 
+  value: false
+↓overlayLoadingTemplate [ngx.components.UICompVariable-1683005576462]: 
+↓overlayNoRowsTemplate [ngx.components.UICompVariable-1683005576465]: 
+↓rowHeight [ngx.components.UICompVariable-1683005576468]: 
+  comment: Height of the row in pixels as a string
+  value: '''25'''
+↓wrapperClass [ngx.components.UICompVariable-1683005576471]: 
+  comment: Height of the row in pixels as a string
+↓autoSizeColumns [ngx.components.UICompVariable-1683005576474]: 
+  value: true
+↓accessibility [ngx.components.UICompVariable-1683005576477]: 
+  comment: 'boolean: true (default) or false'
+  value: false
+↓ariaLabel [ngx.components.UICompVariable-1683005576480]: 

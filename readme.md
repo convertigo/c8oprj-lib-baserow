@@ -903,6 +903,31 @@ Provides an infinite paginated Grid that can be fed by data from a BaseRow No Co
 <th>name</th><th>comment</th>
 </tr>
 <tr>
+<td>accessibility</td><td>boolean: true (default) or false</td>
+</tr>
+<tr>
+<td>ariaLabel</td><td></td>
+</tr>
+<tr>
+<td>autoSizeColumns</td><td></td>
+</tr>
+<tr>
+<td>class</td><td>One of the themes provided here :
+
+https://www.ag-grid.com/javascript-grid-themes-provided/
+
+Also be shure to add the theme in the Theme object as :
+
+@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.scss";
+
+
+
+</td>
+</tr>
+<tr>
+<td>defaultColDef</td><td>default is {hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}</td>
+</tr>
+<tr>
 <td>Filters</td><td>An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
 
 <pre>
@@ -932,6 +957,12 @@ Will fill the grid with all records where column *Type* *Contains* to *small_air
 </td>
 </tr>
 <tr>
+<td>height</td><td>height is 'auto' or value in % or px</td>
+</tr>
+<tr>
+<td>id</td><td>An Optional ID</td>
+</tr>
+<tr>
 <td>ListSequenceName</td><td>The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
 
 <pre>MyProject.Hotel_BookingsRoomsList</pre>
@@ -942,8 +973,38 @@ Where *MyProject* is the name of the project holding the Sequence and *Hotel_Boo
 </td>
 </tr>
 <tr>
+<td>overlayLoadingTemplate</td><td></td>
+</tr>
+<tr>
+<td>overlayNoRowsTemplate</td><td></td>
+</tr>
+<tr>
+<td>paginationPageSize</td><td>integer: 10 by default</td>
+</tr>
+<tr>
+<td>rowDeselection</td><td>boolean: true (default) or false</td>
+</tr>
+<tr>
+<td>rowHeight</td><td>Height of the row in pixels as a string</td>
+</tr>
+<tr>
+<td>rowSelection</td><td>string: 'single' (default) or 'multiple'</td>
+</tr>
+<tr>
 <td>Search</td><td>Will only return data that matches this search whatever the column is 
 </td>
+</tr>
+<tr>
+<td>suppressCellSelection</td><td></td>
+</tr>
+<tr>
+<td>suppressRowClickSelection</td><td></td>
+</tr>
+<tr>
+<td>width</td><td>width value in % or px</td>
+</tr>
+<tr>
+<td>wrapperClass</td><td>Height of the row in pixels as a string</td>
 </tr>
 </table>
 
