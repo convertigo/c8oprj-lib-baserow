@@ -476,3 +476,8 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
   comment: 'boolean: true (default) or false'
   value: false
 ↓ariaLabel [ngx.components.UICompVariable-1683005576480]: 
+↓SharedComponent_Event1 [ngx.components.UISharedComponentEvent-1683126029073]: 
+  componentEvent: onChanges
+  ↓Log [ngx.components.UIDynamicAction-1683127028533]: 
+    beanData: '{"ionBean":"LogAction","message":"plain:Comp Changes"}'
+    tagName: Log

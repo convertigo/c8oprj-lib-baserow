@@ -1,9 +1,16 @@
 accessibility: Hidden
-authenticatedContextRequired: true
 comment: |
   Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
   Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
   
+↓authenticatedUserID [steps.SetAuthenticatedUserStep-1684937000401]: 
+  comment: Set a Hard coded Auth use as fix waiting for official Async Execute sequence to pass the authenticaded user
+  userid: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: HARDCODED
 ↓ParseConfig [steps.SimpleStep-1680078354199]: 
   comment: Parse JSON configuration ti get table id
   expression: |
