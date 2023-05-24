@@ -39,7 +39,10 @@ comment: |
     data = {}
     for (var key in jDoc.variable.resp) {
     	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
-    	let type = jFields.find((object) => object.name === key ).type;
+    	
+    	let obj  = jFields.find((object) => object.name === key )
+    	let type = obj ? obj.type : null
+    	
     	log.warn("** type is : " + type)
     	switch (type) {
     		case ''text'':
