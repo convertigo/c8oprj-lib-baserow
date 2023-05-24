@@ -46,6 +46,7 @@ comment: |
     	log.warn("** type is : " + type)
     	switch (type) {
     		case ''text'':
+    		case ''long_text'':
     		case ''number'':
     		case ''date'':
     		case ''single_select'':
