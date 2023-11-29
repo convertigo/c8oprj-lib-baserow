@@ -1,0 +1,81 @@
+accessibility: Private
+comment: Creates a row  in a table
+↓Input_variables [steps.InputVariablesStep-1701249149256]: 
+↓Concat [steps.XMLConcatStep-1701249732516]: 
+  nodeName: tokenValue
+  output: false
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: Token
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1701249149256
+                - java.lang.String: 
+                  - ↑value: ./apikey/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓Call_Transaction [steps.TransactionStep-1701249332780]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id__batch__POST
+  ↓__header_Authorization [variables.StepVariable-1701249791733]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1701249732516
+          - java.lang.String: 
+            - ↑value: ./text()
+  ↓__body [variables.StepVariable-1701249355917]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1701249149256
+          - java.lang.String: 
+            - ↑value: ./data/text()
+    value: 
+  ↓table_id [variables.StepVariable-1701249355925]: 
+    comment: Creates the rows in the table.
+    description: table_id
+    required: true
+  ↓user_field_names [variables.StepVariable-1701249355927]: 
+    comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+    description: user_field_names
+↓data [variables.RequestableVariable-1701249149334]: 
+  comment: 'A JSON object with each field name and value, such as: {"items" : [{"field1":"value1", "field2": "value2"}, {"field1":"value1B", "field2": "value2B"}]}'
+  required: true
+↓table_id [variables.RequestableVariable-1701249149331]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓apikey [variables.RequestableVariable-1701249265188]: 
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xf0b9662b7d0f7b89ee5197e3dffeab542af4b3619f2a8566a180c24e0abd2f2f
+  visibility: '-1'
+↓user_field_names [variables.RequestableVariable-1701249370035]: 
+  comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+  description: table_id
+  required: true
+  value: true

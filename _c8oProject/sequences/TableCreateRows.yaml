@@ -1,53 +1,6 @@
 accessibility: Private
 comment: Creates a row  in a table
 ↓Input_variables [steps.InputVariablesStep-1677070764851]: 
-↓Call_Sequence [steps.SequenceStep-1677070764854]: 
-  isEnabled: false
-  sourceSequence: lib_BaseRow.TokenGetOrRefresh
-↓Call_Transaction [steps.TransactionStep-1677070764857]: 
-  isEnabled: false
-  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___POST
-  ↓__header_Authorization [variables.StepVariable-1677070764860]: 
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1677070764854
-          - java.lang.String: 
-            - ↑value: ./document/Bearer/text()
-  ↓__body [variables.StepVariable-1677070764863]: 
-    required: true
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1677070764851
-          - java.lang.String: 
-            - ↑value: ./data/text()
-  ↓before [variables.StepVariable-1677070764866]: 
-    comment: If provided then the newly created row will be positioned before the row with the provided id.
-    description: before
-  ↓user_field_names [variables.StepVariable-1677070764869]: 
-    comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
-    description: user_field_names
-    value: true
-  ↓table_id [variables.StepVariable-1677070764872]: 
-    comment: Creates a row in the table related to the provided value.
-    description: table_id
-    required: true
-    value: 
-↓Copy [steps.XMLCopyStep-1677070764875]: 
-  isEnabled: false
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1677070764857
-        - java.lang.String: 
-          - ↑value: ./document/object/*
 ↓Call_Sequence1 [steps.SequenceStep-1677070810578]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Call_Transaction1 [steps.TransactionStep-1677070810584]: 
