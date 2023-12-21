@@ -2980,6 +2980,7 @@ title: First page
                     '		page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
                     		let conf : any = {
                     			table_id: null,
+                    			table_id_int: null,
                     			columns: [],
                     			hidden: []
                     		}
@@ -2987,7 +2988,7 @@ title: First page
                     				
                     		if(page.local.target == "table"){
                     			Object.keys(page.local.selectedColumns).forEach(item => {
-                    				//conf.table_id = page.local.selectedColumns[item]["table_id"]
+                    				conf.table_id_int = page.local.selectedColumns[item]["table_id"]
                     				if (page.local.selectedColumns[item]["selected"]) {
                     					conf.columns.push(item)
                     				}			
@@ -2998,7 +2999,7 @@ title: First page
                     		}
                     		else{
                     			Object.keys(page.local.selectedColumns).forEach(item => {
-                    				//conf.table_id = page.local.selectedColumns[item]["table_id"]
+                    				conf.table_id_int = page.local.selectedColumns[item]["table_id"]
                     				if (page.local.selectedColumns[item]["selected"]) {
                     					conf.columns.push(item)
                     				}
