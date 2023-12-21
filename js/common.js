@@ -1,4 +1,5 @@
 const api = JavaImporter(
+	java.util.Collections,
 	java.util.HashMap,
 	java.lang.String,
 	java.lang.System,
@@ -28,21 +29,46 @@ with (api) {
 			return;
 		}
 		
-		const __header_Authorization = "JWT " + getAuthToken();
-		let doc = call(".._api_applications__GET", {__header_Authorization});
-		let node = xpath.selectSingleNode(doc, '/document/array/object[name="' + database + '" and workspace/name="'+ application + '"]/id/text()');
-		if (!node) {
-			log.debug("database id not found");
-			return;
+		const table_id_key = new String(table_id);
+		const project_hash = System.identityHashCode(context.project.original ? context.project.original : context.project);
+		log.trace("project_hash: " + project_hash);
+		
+		let table_id_cache = context.project.get('table_id_cache');
+		
+		if (table_id_cache != null) {
+			if (table_id_cache.get('project_hash') != project_hash) {
+				table_id_cache = null;
+				log.trace("project changed, renew cache");
+			}
 		}
-		const database_id = node.getNodeValue();
-		doc = call(".._api_database_tables_database__database_id___GET", {__header_Authorization, database_id});
-		node = xpath.selectSingleNode(doc, '/document/array/object[name="' + table + '"]/id/text()');
-		if (!node) {
-			log.debug("table '" + table + "' not found in database id '" + database_id + "'");
-			return;
+		
+		if (table_id_cache == null) {
+			context.project.set('table_id_cache', table_id_cache = Collections.synchronizedMap(new HashMap()));
+			table_id_cache.put('project_hash', project_hash);
 		}
-		table_id = node.getNodeValue();
+		
+		table_id = table_id_cache.get(table_id_key);
+		
+		if (table_id == null) {
+			log.trace("no table_id found for: " + table_id_key);
+			const __header_Authorization = "JWT " + getAuthToken();
+			let doc = call(".._api_applications__GET", {__header_Authorization});
+			let node = xpath.selectSingleNode(doc, '/document/array/object[name="' + database + '" and workspace/name="'+ application + '"]/id/text()');
+			if (!node) {
+				log.debug("database id not found");
+				return;
+			}
+			const database_id = node.getNodeValue();
+			doc = call(".._api_database_tables_database__database_id___GET", {__header_Authorization, database_id});
+			node = xpath.selectSingleNode(doc, '/document/array/object[name="' + table + '"]/id/text()');
+			if (!node) {
+				log.debug("table '" + table + "' not found in database id '" + database_id + "'");
+				return;
+			}
+			table_id = node.getNodeValue();
+			table_id_cache.put(table_id_key, table_id);
+		}
+		
 		context.transaction.variables.put("table_id", table_id);
 		context.connector.prepareForTransaction(context);
 	}
