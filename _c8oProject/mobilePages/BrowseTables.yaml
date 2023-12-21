@@ -553,6 +553,14 @@ title: First page
                                  "Value": "source:{\"filter\":\"Iteration\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1667635335398}],\"path\":\"?.name\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}"
                                 }'
                               tagName: SetLocal
+                            ↓SetLocal2 [ngx.components.UIDynamicAction-1703093264555]: 
+                              beanData: |
+                                '{
+                                 "ionBean": "SetLocalAction",
+                                 "Property": "plain:groupName",
+                                 "Value": "source:{\"filter\":\"Iteration\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1667635335398}],\"path\":\"?.group?.name\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}"
+                                }'
+                              tagName: SetLocal
       ↓tag [ngx.components.UIControlDirective-1679049305245]: 
         directiveName: If
         directiveSource: 
@@ -2975,9 +2983,11 @@ title: First page
                     			columns: [],
                     			hidden: []
                     		}
+                    		conf.table_id = `${page.local.groupName}~>${page.local.baseName}~>${page.local.tableName}`;
+                    				
                     		if(page.local.target == "table"){
                     			Object.keys(page.local.selectedColumns).forEach(item => {
-                    				conf.table_id = page.local.selectedColumns[item]["table_id"]
+                    				//conf.table_id = page.local.selectedColumns[item]["table_id"]
                     				if (page.local.selectedColumns[item]["selected"]) {
                     					conf.columns.push(item)
                     				}			
@@ -2988,7 +2998,7 @@ title: First page
                     		}
                     		else{
                     			Object.keys(page.local.selectedColumns).forEach(item => {
-                    				conf.table_id = page.local.selectedColumns[item]["table_id"]
+                    				//conf.table_id = page.local.selectedColumns[item]["table_id"]
                     				if (page.local.selectedColumns[item]["selected"]) {
                     					conf.columns.push(item)
                     				}

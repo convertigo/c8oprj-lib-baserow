@@ -888,7 +888,14 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
   subDir: /api/database/rows/table/{table_id}/?{filterExpression}
   handlers: 
     →: |
-      '
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      
+      
       // Handles the XML generated event.
       function onXmlGenerated() {
       	var m;
