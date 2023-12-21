@@ -566,6 +566,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/export/table/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340770]: 
     httpMethod: POST
     required: true
@@ -765,6 +774,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/x-www-form-urlencoded
   responseExpiryDate: absolute,1
   subDir: /api/database/fields/table/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓table_id [variables.RequestableHttpVariable-1664959340814]: 
     comment: Returns only the fields of the table related to the provided value.
     description: table_id
@@ -793,6 +811,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/fields/table/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340818]: 
     httpMethod: POST
     required: true
@@ -830,6 +857,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/formula/{table_id}/type/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340828]: 
     httpMethod: POST
     required: true
@@ -983,6 +1019,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/rows/table/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340862]: 
     httpMethod: POST
     required: true
@@ -1029,6 +1074,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/x-www-form-urlencoded
   httpVerb: DELETE
   subDir: /api/database/rows/table/{table_id}/{row_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__header_ClientSessionId [variables.RequestableHttpVariable-1664959340884]: 
     comment: An optional header that marks the action performed by this request as having occurred in a particular client session. Then using the undo/redo endpoints with the same ClientSessionId header this action can be undone/redone.
     description: ClientSessionId
@@ -1067,6 +1121,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/database/rows/table/{table_id}/{row_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓row_id [variables.RequestableHttpVariable-1664959340876]: 
     comment: Returns the row related the provided value.
     description: row_id
@@ -1105,6 +1168,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: PUT
   subDir: /api/database/rows/table/{table_id}/{row_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340894]: 
     httpMethod: POST
     required: true
@@ -1150,6 +1222,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/database/rows/table/{table_id}/{row_id}/adjacent/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓previous [variables.RequestableHttpVariable-1664959340908]: 
     comment: A flag query parameter which if provided returns theprevious row to the specified row_id. If it's not setit will return the next row.
     description: previous
@@ -1200,6 +1281,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/x-www-form-urlencoded
   httpVerb: PUT
   subDir: /api/database/rows/table/{table_id}/{row_id}/move/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__header_ClientSessionId [variables.RequestableHttpVariable-1664959340922]: 
     comment: An optional header that marks the action performed by this request as having occurred in a particular client session. Then using the undo/redo endpoints with the same ClientSessionId header this action can be undone/redone.
     description: ClientSessionId
@@ -1251,6 +1341,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: PUT
   subDir: /api/database/rows/table/{table_id}/batch/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340950]: 
     httpMethod: POST
     required: true
@@ -1295,6 +1394,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/rows/table/{table_id}/batch/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340936]: 
     httpMethod: POST
     required: true
@@ -1343,6 +1451,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/rows/table/{table_id}/batch-delete/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340962]: 
     httpMethod: POST
     required: true
@@ -1380,6 +1497,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/x-www-form-urlencoded
   httpVerb: DELETE
   subDir: /api/database/tables/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__header_ClientSessionId [variables.RequestableHttpVariable-1664959340976]: 
     comment: An optional header that marks the action performed by this request as having occurred in a particular client session. Then using the undo/redo endpoints with the same ClientSessionId header this action can be undone/redone.
     description: ClientSessionId
@@ -1413,6 +1539,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/database/tables/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓table_id [variables.RequestableHttpVariable-1664959340972]: 
     comment: Returns the table related to the provided value.
     description: table_id
@@ -1442,6 +1577,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: PUT
   subDir: /api/database/tables/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959340984]: 
     httpMethod: POST
     required: true
@@ -1479,6 +1623,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/x-www-form-urlencoded
   httpVerb: POST
   subDir: /api/database/tables/{table_id}/duplicate/async/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__header_ClientSessionId [variables.RequestableHttpVariable-1664959340994]: 
     comment: An optional header that marks the action performed by this request as having occurred in a particular client session. Then using the undo/redo endpoints with the same ClientSessionId header this action can be undone/redone.
     description: ClientSessionId
@@ -1513,6 +1666,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/tables/{table_id}/import/async/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959341002]: 
     httpMethod: POST
     required: true
@@ -3260,6 +3422,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/database/views/table/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓include [variables.RequestableHttpVariable-1664959341400]: 
     comment: A comma separated list of extra attributes to include on each view in the response. The supported attributes are `filters`, `sortings` and `decorations`. For example `include=filters,sortings` will add the attributes `filters` and `sortings` to every returned view, containing a list of the views filters and sortings respectively.
     description: include
@@ -3300,6 +3471,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/views/table/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959341410]: 
     httpMethod: POST
     required: true
@@ -3341,6 +3521,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/views/table/{table_id}/order/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959341422]: 
     httpMethod: POST
     required: true
@@ -3464,6 +3653,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/database/webhooks/table/{table_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓table_id [variables.RequestableHttpVariable-1664959341446]: 
     comment: Returns only webhooks of the table related to this value.
     description: table_id
@@ -3523,6 +3721,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/database/webhooks/table/{table_id}/test-call/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959341456]: 
     httpMethod: POST
     required: true
@@ -4417,6 +4624,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
             - java.lang.String: 
               - ↑value: application/x-www-form-urlencoded
   subDir: /api/row_comments/{table_id}/{row_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓limit [variables.RequestableHttpVariable-1664959341608]: 
     comment: Defines how many rows should be returned.
     description: limit
@@ -4466,6 +4682,15 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/json
   httpVerb: POST
   subDir: /api/row_comments/{table_id}/{row_id}/
+  handlers: 
+    →: |
+      '// Handles the transaction start event.
+      function onTransactionStarted() {
+          include(''js/common.js'');
+          
+          resolveTableId();
+      }
+      '
   ↓__body [variables.RequestableHttpVariable-1664959341622]: 
     httpMethod: POST
     required: true
