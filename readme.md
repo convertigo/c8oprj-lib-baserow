@@ -28,6 +28,7 @@ For more technical informations : [documentation](./project.md)
     - [AdminUserDelete](#adminuserdelete)
     - [ApplicationsList](#applicationslist)
     - [AssetFileUpload](#assetfileupload)
+    - [ClearTableIdCache](#cleartableidcache)
     - [DatabaseTokenCreate](#databasetokencreate)
     - [DatabaseTokenDelete](#databasetokendelete)
     - [DatabaseTokenList](#databasetokenlist)
@@ -46,6 +47,7 @@ For more technical informations : [documentation](./project.md)
     - [TableCreateRow](#tablecreaterow)
     - [TableCreateRowApiKey](#tablecreaterowapikey)
     - [TableCreateRows](#tablecreaterows)
+    - [TableCreateRowsApiKey](#tablecreaterowsapikey)
     - [TableCreateView](#tablecreateview)
     - [TableCreateViewFilter](#tablecreateviewfilter)
     - [TableDeleteRow](#tabledeleterow)
@@ -164,6 +166,8 @@ Uploads a file asset, the returned link can be used to be set as a value of a 'f
 <td>file</td><td>A File variable holding the path to the file to be uploaded</td>
 </tr>
 </table>
+
+### ClearTableIdCache
 
 ### DatabaseTokenCreate
 
@@ -508,6 +512,30 @@ Creates a row  in a table
 </tr>
 <tr>
 <td>table_id</td><td>Insert row in this table_id</td>
+</tr>
+</table>
+
+### TableCreateRowsApiKey
+
+Creates a row  in a table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>apikey</td><td></td>
+</tr>
+<tr>
+<td>data</td><td>A JSON object with each field name and value, such as: {"items" : [{"field1":"value1", "field2": "value2"}, {"field1":"value1B", "field2": "value2B"}]}</td>
+</tr>
+<tr>
+<td>table_id</td><td>Insert row in this table_id</td>
+</tr>
+<tr>
+<td>user_field_names</td><td>A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).</td>
 </tr>
 </table>
 
