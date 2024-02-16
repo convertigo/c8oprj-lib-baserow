@@ -61,6 +61,26 @@ comment: Creates a row  in a table
   ↓user_field_names [variables.StepVariable-1701249355927]: 
     comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
     description: user_field_names
+↓IfExist [steps.IfExistStep-1708104318265]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1701249332780
+        - java.lang.String: 
+          - ↑value: ./document/object/error
+  ↓Error_structure [steps.XMLErrorStep-1708104381755]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1701249332780
+            - java.lang.String: 
+              - ↑value: ./document/object/error/text()
 ↓data [variables.RequestableVariable-1701249149334]: 
   comment: 'A JSON object with each field name and value, such as: {"items" : [{"field1":"value1", "field2": "value2"}, {"field1":"value1B", "field2": "value2B"}]}'
   required: true
