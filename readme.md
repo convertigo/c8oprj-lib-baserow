@@ -44,12 +44,14 @@ For more technical informations : [documentation](./project.md)
     - [TableBulkExportToCSV](#tablebulkexporttocsv)
     - [TableBulkExportWaitFInished](#tablebulkexportwaitfinished)
     - [TableBulkImportFromCSV](#tablebulkimportfromcsv)
+    - [TableBulkUpdateFromCSV](#tablebulkupdatefromcsv)
     - [TableCreateRow](#tablecreaterow)
     - [TableCreateRowApiKey](#tablecreaterowapikey)
     - [TableCreateRows](#tablecreaterows)
     - [TableCreateRowsApiKey](#tablecreaterowsapikey)
     - [TableCreateView](#tablecreateview)
     - [TableCreateViewFilter](#tablecreateviewfilter)
+    - [TableDeleteAllRows](#tabledeleteallrows)
     - [TableDeleteRow](#tabledeleterow)
     - [TableDeleteView](#tabledeleteview)
     - [TableGetData](#tablegetdata)
@@ -73,13 +75,13 @@ For more technical informations : [documentation](./project.md)
      <tr><td>To contribute</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow.git:branch=master
+     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow.git:branch=master
      ```
      </td></tr>
      <tr><td>To simply use</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow/archive/master.zip
+     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow/archive/master.zip
      ```
      </td></tr>
     </table>
@@ -452,6 +454,39 @@ Uploads a CSV to a table.
 </tr>
 </table>
 
+### TableBulkUpdateFromCSV
+
+Uploads a CSV to a table. 
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>chunkSize</td><td></td>
+</tr>
+<tr>
+<td>files</td><td></td>
+</tr>
+<tr>
+<td>fileSeparator</td><td></td>
+</tr>
+<tr>
+<td>firstLineColumn</td><td></td>
+</tr>
+<tr>
+<td>quoteChar</td><td></td>
+</tr>
+<tr>
+<td>table_id</td><td></td>
+</tr>
+<tr>
+<td>uniqueFields</td><td></td>
+</tr>
+</table>
+
 ### TableCreateRow
 
 Creates a row  in a table
@@ -581,6 +616,24 @@ Updates the existing filter if the authorized user has access to the related dat
 </tr>
 <tr>
 <td>view_id</td><td>Creates a filter for the view related to the provided value.</td>
+</tr>
+</table>
+
+### TableDeleteAllRows
+
+Uploads a CSV to a table. 
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>chunkSize</td><td></td>
+</tr>
+<tr>
+<td>table_id</td><td></td>
 </tr>
 </table>
 

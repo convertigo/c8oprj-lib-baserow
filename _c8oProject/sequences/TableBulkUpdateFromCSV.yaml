@@ -1,0 +1,274 @@
+accessibility: Private
+comment: Uploads a CSV to a table. 
+responseTimeout: 60000000000000000
+↓Input_variables [steps.InputVariablesStep-1708443313313]: 
+↓auth [steps.SimpleStep-1708505463386]: 
+  expression: |
+    cptTotalInsert = 0;
+    cptTotalUpdate = 0;
+    __header_Authorization = "Token ${lib_baserow.apikey.secret}";
+↓Iterator [steps.IteratorStep-1708443313316]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1708443313313
+        - java.lang.String: 
+          - ↑value: ./files
+  ↓jSimpleSource [steps.SimpleSourceStep-1708443313319]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1708443313316
+          - java.lang.String: 
+            - ↑value: ./text()
+    variableName: file
+  ↓CreateCSVReader [steps.SimpleStep-1708443313322]: 
+    expression: |
+      '// Java Imports
+      var Paths = java.nio.file.Paths;
+      var Files = java.nio.file.Files;
+      var CSVReaderBuilder = com.opencsv.CSVReaderBuilder;
+      var CSVParserBuilder = com.opencsv.CSVParserBuilder;
+      var RFC4180ParserBuilder = com.opencsv.RFC4180ParserBuilder;
+      // Log params
+      log.debug("fileSeparator used will be: " + fileSeparator);
+      log.debug("quoteChar used will be: " + quoteChar);
+      
+      // Declare global variables
+      var br = null;
+      var line = "";
+      var path;
+      var uniqueField = null;
+      var uniqueFieldFilter = null;
+      try {
+      	uniqueField = uniqueFields[index];
+      	include_fields = uniqueField;
+      	uniqueFieldFilter = ''filter__'' + encodeURIComponent(uniqueField) + ''__equal'';
+      } catch (e) { }
+      var searchUniques = {};
+      try {
+      	// Get file path
+      	path = Paths.get(file);
+      	// Create a buffer reader
+      	br = Files.newBufferedReader(path);
+      	// Instanciate CSVReaderBuilder, with RFC4180ParserBuilder (helping for special chars as \) 
+      	var reader = new CSVReaderBuilder(br)
+      		.withCSVParser(new RFC4180ParserBuilder()
+      			.withQuoteChar("" + quoteChar)
+      			.withSeparator("" + fileSeparator)
+      			.build())
+      		.build();
+      	// If firstLine are columns name ignore them
+      	if (firstLineColumn == true || firstLineColumn == "true") {
+      		cols = reader.readNext();
+      		log.debug("Skipped first line since its column name");
+      	}
+      }
+      catch (e) {
+      	log.warn("An error occured " + JSON.stringify(e))
+      }
+      
+      var items = [];
+      var last = false;'
+  ↓jWhile [steps.WhileStep-1708443313325]: 
+    condition: |
+      'try { line = reader.readNext() } catch (e) {
+      	log.warn("error reading" + JSON.stringify(e));
+      	reader.skip(1);
+      	line = line = reader.readNext();
+      }
+      line != null || last != true'
+    ↓ComputeData [steps.SimpleStep-1708443313328]: 
+      expression: |
+        'if (line != null) {
+        	log.warn("Line : " + JSON.stringify(line));
+        	let tblLine = {};
+        	for (i = 0; i < cols.length; i++) {
+        		tblLine[cols[i]] = line[i];
+        	}
+        	if (uniqueField != null) {
+        		searchUniques[tblLine[uniqueField]] = null;
+        	}
+        	log.warn("tbl : " + JSON.stringify(tblLine));
+        	items.push(tblLine);
+        } else {
+        	last = true;
+        }
+        '
+    ↓jIf [steps.IfStep-1708443313331]: 
+      condition: items.length >= (+chunkSize) || last == true
+      ↓filters [steps.SimpleStep-1708443313334]: 
+        expression: 'var filters = uniqueField == null ? [] : Object.keys(searchUniques);'
+      ↓jWhile [steps.WhileStep-1708505804020]: 
+        condition: filters.length > 0
+        ↓makeFilterId [steps.SimpleStep-1708505826451]: 
+          expression: |
+            'filterExpression = "filter_type=OR";
+            var filter;
+            while (filter = filters.pop()) {
+            	var next = "&" + uniqueFieldFilter + "=" + encodeURIComponent(filter);
+            	if (filterExpression.length + next.length > 2000) {
+            		filters.push(filter);
+            		break;
+            	} else {
+            		filterExpression += next;
+            	}
+            }
+            '
+        ↓Call_Transaction [steps.TransactionStep-1708504956673]: 
+          sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET
+          ↓__header_Authorization [variables.StepVariable-1708505481577]: 
+          ↓include_fields [variables.StepVariable-1708504956679]: 
+            comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+            description: include
+          ↓size [variables.StepVariable-1708504956687]: 
+            comment: Defines how many rows should be returned per page.
+            description: size
+          ↓table_id [variables.StepVariable-1708504956689]: 
+            comment: Returns the rows of the table related to the provided value.
+            description: table_id
+            required: true
+          ↓user_field_names [variables.StepVariable-1708504956691]: 
+            comment: A flag query parameter which if provided the returned json will use the user specified field names instead of internal Baserow field names (field_123 etc). 
+            description: user_field_names
+            value: true
+          ↓filterExpression [variables.StepVariable-1708504956695]: 
+        ↓Iterator [steps.IteratorStep-1708507255463]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1708504956673
+                - java.lang.String: 
+                  - ↑value: ./document/object/results/object
+          ↓map [steps.SimpleStep-1708507291543]: 
+            expression: |
+              var id = item.getFirstChild().getTextContent();
+              var key = item.getLastChild().getTextContent();
+              searchUniques[key] = id;
+      ↓body_update [steps.SimpleStep-1708507555773]: 
+        expression: |
+          'var updateItems = [];
+          var insertItems = [];
+          var item;
+          __body = null;
+          if (uniqueField != null) {
+          	while (item = items.pop()) {
+          		var id = searchUniques[item[uniqueField]];
+          		if (id != null) {
+          			item.id = 1 * id;
+          			updateItems.push(item);
+          		} else {
+          			insertItems.push(item);
+          		}
+          	}
+          	if (updateItems.length) {
+          		__body = JSON.stringify({items: updateItems});
+          	}
+          } else {
+          	insertItems = item;
+          }
+          
+          cptTotalInsert += insertItems.length;
+          cptTotalUpdate += updateItems.length;
+          
+          item = [];
+          '
+      ↓if_body_update [steps.IfStep-1708529251593]: 
+        condition: __body != null
+        ↓Call_Transaction [steps.TransactionStep-1708527945445]: 
+          sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id__batch__PATCH
+          ↓__header_Authorization [variables.StepVariable-1708528008423]: 
+          ↓__body [variables.StepVariable-1708527945447]: 
+            required: true
+          ↓table_id [variables.StepVariable-1708527945453]: 
+            comment: Updates the rows in the table.
+            description: table_id
+            required: true
+          ↓user_field_names [variables.StepVariable-1708527945455]: 
+            comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+            description: user_field_names
+            value: true
+        ↓IfExist [steps.IfExistStep-1708443313349]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1708527945445
+                - java.lang.String: 
+                  - ↑value: ./document/error
+          ↓Error_structure [steps.XMLErrorStep-1708443313352]: 
+            message: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: SOURCE
+                  - com.twinsoft.convertigo.beans.common.XMLVector: 
+                    - java.lang.String: 
+                      - ↑value: 1708527945445
+                    - java.lang.String: 
+                      - ↑value: ./document/error/message/text()
+          ↓Return [steps.ReturnStep-1708443313355]: 
+      ↓body_insert [steps.SimpleStep-1708529300209]: 
+        expression: |
+          '__body = null;
+          if (insertItems.length) {
+          	__body = JSON.stringify({items: insertItems});
+          }'
+      ↓if_body_insert [steps.IfStep-1708529311112]: 
+        condition: __body != null
+        ↓Call_Transaction1 [steps.TransactionStep-1708529211472]: 
+          sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id__batch__POST
+          ↓__header_Authorization [variables.StepVariable-1708530427833]: 
+          ↓__body [variables.StepVariable-1708529211474]: 
+            required: true
+          ↓table_id [variables.StepVariable-1708529211482]: 
+            comment: Creates the rows in the table.
+            description: table_id
+            required: true
+          ↓user_field_names [variables.StepVariable-1708529211484]: 
+            comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+            description: user_field_names
+            value: true
+        ↓IfExist1 [steps.IfExistStep-1708529221451]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1708529211472
+                - java.lang.String: 
+                  - ↑value: ./document/error
+          ↓Error_structure [steps.XMLErrorStep-1708529221454]: 
+            message: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: SOURCE
+                  - com.twinsoft.convertigo.beans.common.XMLVector: 
+                    - java.lang.String: 
+                      - ↑value: 1708529211472
+                    - java.lang.String: 
+                      - ↑value: ./document/error/message/text()
+          ↓Return [steps.ReturnStep-1708529221457]: 
+↓jElement [steps.ElementStep-1708443313358]: 
+  expression: cptTotalInsert + " elements have been inserted and " + cptTotalUpdate + " updated"
+  nodeName: result
+↓files [variables.RequestableMultiValuedVariable-1708443313361]: 
+  isFileUpload: true
+↓table_id [variables.RequestableVariable-1708443313364]: 
+↓fileSeparator [variables.RequestableVariable-1708443313367]: 
+  value: ;
+↓quoteChar [variables.RequestableVariable-1708443313370]: 
+  value: '"'
+↓firstLineColumn [variables.RequestableVariable-1708443313373]: 
+  value: true
+↓chunkSize [variables.RequestableVariable-1708443313376]: 
+  value: 200
+↓uniqueFields [variables.RequestableMultiValuedVariable-1708444190892]: 

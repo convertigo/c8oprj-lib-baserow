@@ -16,7 +16,7 @@
     
     '
   corsOrigin: =Origin
-  version: 1.0.24
+  version: 1.0.25
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓lib_baserow_fullsync [connectors.FullSyncConnector]: 🗏 connectors/lib_baserow_fullsync.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
@@ -41,12 +41,14 @@
   ↓TableBulkExportToCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkExportToCSV.yaml
   ↓TableBulkExportWaitFInished [sequences.GenericSequence]: 🗏 sequences/TableBulkExportWaitFInished.yaml
   ↓TableBulkImportFromCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkImportFromCSV.yaml
+  ↓TableBulkUpdateFromCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkUpdateFromCSV.yaml
   ↓TableCreateRow [sequences.GenericSequence]: 🗏 sequences/TableCreateRow.yaml
   ↓TableCreateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableCreateRowApiKey.yaml
   ↓TableCreateRows [sequences.GenericSequence]: 🗏 sequences/TableCreateRows.yaml
   ↓TableCreateRowsApiKey [sequences.GenericSequence]: 🗏 sequences/TableCreateRowsApiKey.yaml
   ↓TableCreateView [sequences.GenericSequence]: 🗏 sequences/TableCreateView.yaml
   ↓TableCreateViewFilter [sequences.GenericSequence]: 🗏 sequences/TableCreateViewFilter.yaml
+  ↓TableDeleteAllRows [sequences.GenericSequence]: 🗏 sequences/TableDeleteAllRows.yaml
   ↓TableDeleteRow [sequences.GenericSequence]: 🗏 sequences/TableDeleteRow.yaml
   ↓TableDeleteView [sequences.GenericSequence]: 🗏 sequences/TableDeleteView.yaml
   ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml

@@ -1,0 +1,71 @@
+accessibility: Private
+comment: Uploads a CSV to a table. 
+responseTimeout: 60000000000000000
+↓Input_variables [steps.InputVariablesStep-1708425206509]: 
+↓auth [steps.SimpleStep-1708425810529]: 
+  expression: |
+    cptTotal = 0;
+    __header_Authorization = "Token ${lib_baserow.apikey.secret}";
+↓jWhile [steps.WhileStep-1708442552539]: 
+  condition: true
+  ↓Call_Transaction [steps.TransactionStep-1708425387826]: 
+    sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET
+    ↓__header_Authorization [variables.StepVariable-1708425789771]: 
+    ↓include_fields [variables.StepVariable-1708425387832]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+      description: include
+      value: field_1
+    ↓page [variables.StepVariable-1708425387836]: 
+      comment: Defines which page of rows should be returned.
+      description: page
+    ↓size [variables.StepVariable-1708425387840]: 
+      comment: Defines how many rows should be returned per page.
+      description: size
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1708425206509
+            - java.lang.String: 
+              - ↑value: ./chunkSize/text()
+    ↓table_id [variables.StepVariable-1708425410491]: 
+      comment: Returns the rows of the table related to the provided value.
+      description: table_id
+      required: true
+  ↓ids [steps.SourceStep-1708438380156]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1708425387826
+          - java.lang.String: 
+            - ↑value: ./document/object/results/object/id/text()
+    variableName: ids
+  ↓jIf [steps.IfStep-1708442610722]: 
+    condition: ids.length == 0
+    ↓jBreak [steps.BreakStep-1708442598138]: 
+  ↓body [steps.SimpleStep-1708438120729]: 
+    expression: |
+      'var array = [];
+      for (var i = 0; i < ids.length; i++) {
+      	array.push(ids.item(i).nodeValue);
+      }
+      __body = JSON.stringify({items: array});
+      cptTotal += array.length;'
+  ↓Call_Transaction1 [steps.TransactionStep-1708438000041]: 
+    sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id__batch_delete__POST
+    ↓__header_Authorization [variables.StepVariable-1708438110482]: 
+    ↓__body [variables.StepVariable-1708438000043]: 
+      required: true
+    ↓table_id [variables.StepVariable-1708438000049]: 
+      comment: Deletes the rows in the table related to the value.
+      description: table_id
+      required: true
+↓jElement [steps.ElementStep-1708425206554]: 
+  expression: cptTotal + " elements have been deleted"
+  nodeName: result
+↓table_id [variables.RequestableVariable-1708425206560]: 
+↓chunkSize [variables.RequestableVariable-1708425206572]: 
+  value: 200
