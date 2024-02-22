@@ -7436,12 +7436,13 @@ The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
 
 </p></blockquote></details>
 
-<details><summary><b>TableBulkUpdateFromCSV</b> : Updates a Table from a CSV file</summary><blockquote><p>
+<details><summary><b>TableBulkUpdateFromCSV</b> : Updates or inserts data in a Table from a CSV file</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableBulkUpdateFromCSV
 
-Updates a Table from a CSV file
+Updates or inserts data in a Table from a CSV file. Given a list of column names, the sequence will update all lines from the CSV where the column names will be considered as unique ids. If CSV file contains lines not matching the columns names, they will be added to the table.
+
 
 <span style="color:DarkGoldenRod">Variables</span>
 

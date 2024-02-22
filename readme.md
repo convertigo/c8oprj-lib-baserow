@@ -456,7 +456,8 @@ Uploads a CSV to a table.
 
 ### TableBulkUpdateFromCSV
 
-Updates a Table from a CSV file
+Updates or inserts data in a Table from a CSV file. Given a list of column names, the sequence will update all lines from the CSV where the column names will be considered as unique ids. If CSV file contains lines not matching the columns names, they will be added to the table.
+
 
 **variables**
 
