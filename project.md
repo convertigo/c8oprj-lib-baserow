@@ -7829,7 +7829,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;chunkSize
 </td>
 <td>
-
+The Number of lines deleted for each loop
 </td>
 </tr>
 <tr>
@@ -7837,7 +7837,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
 </td>
 <td>
-
+The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
 </td>
 </tr>
 </table>

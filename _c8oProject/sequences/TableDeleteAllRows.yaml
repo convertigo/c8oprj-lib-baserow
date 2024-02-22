@@ -67,5 +67,7 @@ responseTimeout: 60000000000000000
   expression: cptTotal + " elements have been deleted"
   nodeName: result
 ↓table_id [variables.RequestableVariable-1708425206560]: 
+  comment: The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
 ↓chunkSize [variables.RequestableVariable-1708425206572]: 
+  comment: The Number of lines deleted for each loop
   value: 200

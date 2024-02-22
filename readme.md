@@ -630,10 +630,10 @@ Deletes all rows from a table
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>chunkSize</td><td></td>
+<td>chunkSize</td><td>The Number of lines deleted for each loop</td>
 </tr>
 <tr>
-<td>table_id</td><td></td>
+<td>table_id</td><td>The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)</td>
 </tr>
 </table>
 
