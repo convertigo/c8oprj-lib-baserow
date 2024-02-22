@@ -75,13 +75,13 @@ For more technical informations : [documentation](./project.md)
      <tr><td>To contribute</td><td>
 
      ```
-     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow.git:branch=master
+     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow.git:branch=master
      ```
      </td></tr>
      <tr><td>To simply use</td><td>
 
      ```
-     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow/archive/master.zip
+     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow/archive/master.zip
      ```
      </td></tr>
     </table>
@@ -435,28 +435,28 @@ Uploads a CSV to a table.
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>chunkSize</td><td></td>
+<td>chunkSize</td><td>The Number of lines imported for each loop</td>
 </tr>
 <tr>
-<td>files</td><td></td>
+<td>files</td><td>List of CSV files to be imported in the table . Can be only one</td>
 </tr>
 <tr>
-<td>fileSeparator</td><td></td>
+<td>fileSeparator</td><td>The column seperatorr ( , or ; )</td>
 </tr>
 <tr>
-<td>firstLineColumn</td><td></td>
+<td>firstLineColumn</td><td>Set to true if the first CSV lines represents columns names</td>
 </tr>
 <tr>
-<td>quoteChar</td><td></td>
+<td>quoteChar</td><td>The character to be used to identify strings ion the CSV file (Usually " but can be ')</td>
 </tr>
 <tr>
-<td>table_id</td><td></td>
+<td>table_id</td><td>The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)</td>
 </tr>
 </table>
 
 ### TableBulkUpdateFromCSV
 
-Uploads a CSV to a table. 
+Updates a Table from a CSV file
 
 **variables**
 
@@ -465,25 +465,25 @@ Uploads a CSV to a table.
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>chunkSize</td><td></td>
+<td>chunkSize</td><td>The Number of lines imported for each loop</td>
 </tr>
 <tr>
-<td>files</td><td></td>
+<td>files</td><td>List of CSV files to be imported in the table . Can be only one</td>
 </tr>
 <tr>
-<td>fileSeparator</td><td></td>
+<td>fileSeparator</td><td>The column seperatorr ( , or ; )</td>
 </tr>
 <tr>
-<td>firstLineColumn</td><td></td>
+<td>firstLineColumn</td><td>Set to true if the first CSV lines represents columns names</td>
 </tr>
 <tr>
-<td>quoteChar</td><td></td>
+<td>quoteChar</td><td>The character to be used to identify strings ion the CSV file (Usually " but can be ')</td>
 </tr>
 <tr>
-<td>table_id</td><td></td>
+<td>table_id</td><td>The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)</td>
 </tr>
 <tr>
-<td>uniqueFields</td><td></td>
+<td>uniqueFields</td><td>List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be on field)</td>
 </tr>
 </table>
 
@@ -621,7 +621,7 @@ Updates the existing filter if the authorized user has access to the related dat
 
 ### TableDeleteAllRows
 
-Uploads a CSV to a table. 
+Deletes all rows from a table
 
 **variables**
 

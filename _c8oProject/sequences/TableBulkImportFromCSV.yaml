@@ -136,13 +136,19 @@ responseTimeout: 60000000000000000
   expression: cptTotal + " elements have been inserted"
   nodeName: result
 ↓files [variables.RequestableMultiValuedVariable-1669295387272]: 
+  comment: List of CSV files to be imported in the table . Can be only one
   isFileUpload: true
 ↓table_id [variables.RequestableVariable-1669198780789]: 
+  comment: The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
 ↓fileSeparator [variables.RequestableVariable-1669198780798]: 
+  comment: The column seperatorr ( , or ; )
   value: ;
 ↓quoteChar [variables.RequestableVariable-1669285765904]: 
+  comment: The character to be used to identify strings ion the CSV file (Usually " but can be ')
   value: '"'
 ↓firstLineColumn [variables.RequestableVariable-1669198905193]: 
+  comment: Set to true if the first CSV lines represents columns names
   value: true
 ↓chunkSize [variables.RequestableVariable-1669199116278]: 
+  comment: The Number of lines imported for each loop
   value: 200

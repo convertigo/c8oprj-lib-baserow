@@ -1,5 +1,5 @@
 accessibility: Private
-comment: Uploads a CSV to a table. 
+comment: Updates a Table from a CSV file
 responseTimeout: 60000000000000000
 ↓Input_variables [steps.InputVariablesStep-1708443313313]: 
 ↓auth [steps.SimpleStep-1708505463386]: 
@@ -261,14 +261,21 @@ responseTimeout: 60000000000000000
   expression: cptTotalInsert + " elements have been inserted and " + cptTotalUpdate + " updated"
   nodeName: result
 ↓files [variables.RequestableMultiValuedVariable-1708443313361]: 
+  comment: List of CSV files to be imported in the table . Can be only one
   isFileUpload: true
 ↓table_id [variables.RequestableVariable-1708443313364]: 
+  comment: The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
 ↓fileSeparator [variables.RequestableVariable-1708443313367]: 
+  comment: The column seperatorr ( , or ; )
   value: ;
 ↓quoteChar [variables.RequestableVariable-1708443313370]: 
+  comment: The character to be used to identify strings ion the CSV file (Usually " but can be ')
   value: '"'
 ↓firstLineColumn [variables.RequestableVariable-1708443313373]: 
+  comment: Set to true if the first CSV lines represents columns names
   value: true
 ↓chunkSize [variables.RequestableVariable-1708443313376]: 
+  comment: The Number of lines imported for each loop
   value: 200
 ↓uniqueFields [variables.RequestableMultiValuedVariable-1708444190892]: 
+  comment: List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be on field)

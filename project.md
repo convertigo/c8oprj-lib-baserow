@@ -7389,7 +7389,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;chunkSize
 </td>
 <td>
-
+The Number of lines imported for each loop
 </td>
 </tr>
 <tr>
@@ -7397,7 +7397,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/multivaluedvariable_color_16x16.png?raw=true "  alt="RequestableMultiValuedVariable" >&nbsp;files
 </td>
 <td>
-
+List of CSV files to be imported in the table . Can be only one
 </td>
 </tr>
 <tr>
@@ -7405,7 +7405,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;fileSeparator
 </td>
 <td>
-
+The column seperatorr ( , or ; )
 </td>
 </tr>
 <tr>
@@ -7413,7 +7413,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;firstLineColumn
 </td>
 <td>
-
+Set to true if the first CSV lines represents columns names
 </td>
 </tr>
 <tr>
@@ -7421,7 +7421,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;quoteChar
 </td>
 <td>
-
+The character to be used to identify strings ion the CSV file (Usually " but can be ')
 </td>
 </tr>
 <tr>
@@ -7429,7 +7429,85 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
 </td>
 <td>
+The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
+</td>
+</tr>
+</table>
 
+</p></blockquote></details>
+
+<details><summary><b>TableBulkUpdateFromCSV</b> : Updates a Table from a CSV file</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableBulkUpdateFromCSV
+
+Updates a Table from a CSV file
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;chunkSize
+</td>
+<td>
+The Number of lines imported for each loop
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/multivaluedvariable_color_16x16.png?raw=true "  alt="RequestableMultiValuedVariable" >&nbsp;files
+</td>
+<td>
+List of CSV files to be imported in the table . Can be only one
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;fileSeparator
+</td>
+<td>
+The column seperatorr ( , or ; )
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;firstLineColumn
+</td>
+<td>
+Set to true if the first CSV lines represents columns names
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;quoteChar
+</td>
+<td>
+The character to be used to identify strings ion the CSV file (Usually " but can be ')
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/multivaluedvariable_color_16x16.png?raw=true "  alt="RequestableMultiValuedVariable" >&nbsp;uniqueFields
+</td>
+<td>
+List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be on field)
 </td>
 </tr>
 </table>
@@ -7722,6 +7800,44 @@ Returns only the fields of the table related to the provided value.
 </td>
 <td>
 Creates a filter for the view related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>TableDeleteAllRows</b> : Deletes all rows from a table</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableDeleteAllRows
+
+Deletes all rows from a table
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;chunkSize
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+
 </td>
 </tr>
 </table>
