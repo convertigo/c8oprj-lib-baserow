@@ -280,4 +280,4 @@ responseTimeout: 60000000000000000
   comment: The Number of lines imported for each loop
   value: 200
 ↓uniqueFields [variables.RequestableMultiValuedVariable-1708444190892]: 
-  comment: List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be on field)
+  comment: List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be only one field)

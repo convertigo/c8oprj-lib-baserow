@@ -484,7 +484,7 @@ Updates or inserts data in a Table from a CSV file. Given a list of column names
 <td>table_id</td><td>The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)</td>
 </tr>
 <tr>
-<td>uniqueFields</td><td>List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be on field)</td>
+<td>uniqueFields</td><td>List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be only one field)</td>
 </tr>
 </table>
 

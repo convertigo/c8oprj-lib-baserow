@@ -7508,7 +7508,7 @@ The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/multivaluedvariable_color_16x16.png?raw=true "  alt="RequestableMultiValuedVariable" >&nbsp;uniqueFields
 </td>
 <td>
-List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be on field)
+List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be only one field)
 </td>
 </tr>
 </table>
