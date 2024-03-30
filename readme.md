@@ -3,21 +3,18 @@
 
 # lib_BaseRow
 
-This is the Baserow connector for Convertigo. Use this connector to exchange data with Baserow databases.
-
-## Symbols
-This library uses the following symbols
-
-| Symbol    | Usage |
-|-----------|-------------------|
-|lib_baserow.server  | the host name of the baserow server |
-|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for http |
-|lib_baserow.https   | set to true for https, to false otherwise |
-|lib_baserow.password.secret| The baserow admin password |
-|lib_baserow.adminuser| The baserow admin user email. |
-
-
-
+	This is the Baserow connector for Convertigo. Use this connector to exchange data with Baserow databases.
+	
+	## Symbols
+	This library uses the following symbols
+	
+	| Symbol    | Usage |
+	|-----------|-------------------|
+	|lib_baserow.server  | the host name of the baserow server |
+	|lib_baserow.port    | the port baserow server, set to 443 for https, to 80 for http |
+	|lib_baserow.https   | set to true for https, to false otherwise |
+	|lib_baserow.password.secret| The baserow admin password |
+	|lib_baserow.adminuser| The baserow admin user email. |
 
 For more technical informations : [documentation](./project.md)
 
@@ -282,7 +279,7 @@ Get all possible values for a given field to feed a Select
 
 ### formssource_GetSelectData
 
-Get data from a baserow table for a Select
+Get data from a Baserow table as options for a Select component. You will be able to chose the Baserow columns  for the names to be displayed in the select drop downlist and the column for the values of each name.
 
 
 **variables**
@@ -309,7 +306,7 @@ Get data from a baserow table for a Select
 
 ### formssource_GetTableData
 
-Get data from a baserow table for a Grid
+Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
 
 
 **variables**

@@ -1,7 +1,7 @@
 accessibility: Hidden
 authenticatedContextRequired: true
 comment: |
-  Get data from a baserow table for a Grid
+  Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
   
 ↓ParseConfig [steps.SimpleStep-1666429506760]: 
   expression: |
