@@ -10,8 +10,7 @@
             "displayName": "Base de donnée NoCode Baserow ",
             "comment": "Connecteur aux base de données NoCode Baserow"
         }
-    }
-    '
+    }'
   corsOrigin: =Origin
   version: 1.0.27
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
