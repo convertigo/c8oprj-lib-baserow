@@ -1,8 +1,25 @@
 accessibility: Hidden
 authenticatedContextRequired: true
 comment: |
-  Get all possible values for a given field to feed a Select 
-  
+  '{
+      "en": {
+          "displayName": "GetFieldValues",
+          "comment": "Get all possible values for a given field to feed a Select"
+      },
+      "fr": {
+          "displayName": "GetFieldValues",
+          "comment": "Obtenez toutes les valeurs possibles pour un champ donné pour alimenter un Sélecteur"
+      },
+      "it": {
+          "displayName": "GetFieldValues",
+          "comment": "Ottieni tutti i valori possibili per un determinato campo per alimentare un Selettore"
+      },
+      "es": {
+          "displayName": "GetFieldValues",
+          "comment": "Obtén todos los valores posibles para un campo dado para alimentar un Select"
+      },
+      "types": ["select"]
+  }'
 ↓ParseConfig [steps.SimpleStep-1680099603300]: 
   expression: |
     jConfig = JSON.parse(forms_config);

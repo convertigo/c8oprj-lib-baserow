@@ -1,8 +1,26 @@
 accessibility: Hidden
 authenticatedContextRequired: true
 comment: |
-  Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
-  
+  '{
+      "en": {
+          "displayName": "GetTableData",
+          "comment": "Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid"
+      },
+      "fr": {
+          "displayName": "GetTableData",
+          "comment": "Obtenez des données à partir d''une table Baserow pour une grille de données. Chaque colonne de la table Baserow sera affichée comme la même colonne dans la grille de données"
+      },
+      "it": {
+          "displayName": "GetTableData",
+          "comment": "Ottieni dati da una tabella Baserow per una griglia di dati. Ogni colonna della tabella Baserow verrà visualizzata come la stessa colonna nella griglia di dati"
+      },
+      "es": {
+          "displayName": "GetTableData",
+          "comment": "Obtén datos de una tabla Baserow para una cuadrícula de datos. Cada columna de la tabla Baserow se mostrará como la misma columna en la cuadrícula de datos"
+      },
+      "types": ["grid"]
+  }
+  '
 ↓ParseConfig [steps.SimpleStep-1666429506760]: 
   expression: |
     'jConfig = JSON.parse(forms_config);

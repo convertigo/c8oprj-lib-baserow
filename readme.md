@@ -240,9 +240,7 @@ Lists all the fields in a baserow table
 
 ### forms_AddRow
 
-Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
-Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
-
+Add a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns.
 
 **variables**
 
@@ -263,8 +261,7 @@ Forms fields can be any type but usually select lists are mapped on Baserow Link
 
 ### formssource_GetFieldValues
 
-Get all possible values for a given field to feed a Select 
-
+Get all possible values for a given field to feed a Select
 
 **variables**
 
@@ -279,8 +276,7 @@ Get all possible values for a given field to feed a Select
 
 ### formssource_GetSelectData
 
-Get data from a Baserow table as options for a Select component. You will be able to chose the Baserow columns  for the names to be displayed in the select drop downlist and the column for the values of each name.
-
+Get data from a Baserow table as options for a Select component. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
 
 **variables**
 
@@ -307,7 +303,6 @@ Get data from a Baserow table as options for a Select component. You will be abl
 ### formssource_GetTableData
 
 Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
-
 
 **variables**
 

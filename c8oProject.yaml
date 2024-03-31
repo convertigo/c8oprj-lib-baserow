@@ -12,7 +12,7 @@
         }
     }'
   corsOrigin: =Origin
-  version: 1.0.27
+  version: 1.0.28
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml

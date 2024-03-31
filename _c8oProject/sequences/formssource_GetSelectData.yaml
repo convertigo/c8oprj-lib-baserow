@@ -1,8 +1,26 @@
 accessibility: Hidden
 authenticatedContextRequired: true
 comment: |
-  Get data from a Baserow table as options for a Select component. You will be able to chose the Baserow columns  for the names to be displayed in the select drop downlist and the column for the values of each name.
-  
+  '{
+      "en": {
+          "displayName": "GetSelectData",
+          "comment": "Get data from a Baserow table as options for a Select component. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name."
+      },
+      "fr": {
+          "displayName": "GetSelectData",
+          "comment": "Obtenez des données d''une table Baserow comme options pour un composant Sélecteur. Vous pourrez choisir les colonnes Baserow pour les noms à afficher dans la liste déroulante de sélection et la colonne pour les valeurs de chaque nom."
+      },
+      "it": {
+          "displayName": "GetSelectData",
+          "comment": "Ottieni dati da una tabella Baserow come opzioni per un componente di Selezione. Sarai in grado di scegliere le colonne Baserow per i nomi da visualizzare nella lista a discesa di selezione e la colonna per i valori di ciascun nome."
+      },
+      "es": {
+          "displayName": "GetSelectData",
+          "comment": "Obtén datos de una tabla Baserow como opciones para un componente Select. Podrás elegir las columnas de Baserow para los nombres que se mostrarán en la lista desplegable de selección y la columna para los valores de cada nombre."
+      },
+      "types": ["select"]
+  }
+  '
 ↓ParseConfig [steps.SimpleStep-1666717197201]: 
   expression: |
     'jConfig = JSON.parse(forms_config);

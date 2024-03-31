@@ -6833,14 +6833,12 @@ Returns only the fields of the table related to the provided value.
 
 </p></blockquote></details>
 
-<details><summary><b>forms_AddRow</b> : Add a row to a Basrerow table</summary><blockquote><p>
+<details><summary><b>forms_AddRow</b> : Add a row to a Baserow table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_AddRow
 
-Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
-Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
-
+Add a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns.
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6881,13 +6879,12 @@ Creates a row in a table with a given configuration
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetFieldValues</b> : Get all possible values for a given field to feed a Select </summary><blockquote><p>
+<details><summary><b>formssource_GetFieldValues</b> : Get all possible values for a given field to feed a Select</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetFieldValues
 
-Get all possible values for a given field to feed a Select 
-
+Get all possible values for a given field to feed a Select
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6917,8 +6914,7 @@ Fills the select component from data with a given configuration. The first colum
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetSelectData
 
-Get data from a Baserow table as options for a Select component. You will be able to chose the Baserow columns  for the names to be displayed in the select drop downlist and the column for the values of each name.
-
+Get data from a Baserow table as options for a Select component. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6975,7 +6971,6 @@ If true, just return one line of data so that No Code studio can compte the tabl
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetTableData
 
 Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
-
 
 <span style="color:DarkGoldenRod">Variables</span>
 

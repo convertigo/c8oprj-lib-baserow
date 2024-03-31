@@ -1,9 +1,25 @@
 accessibility: Hidden
 authenticatedContextRequired: true
 comment: |
-  Add a row to a Basrerow table. Each column of the table must be the same name than the technicalID of a field on the form.
-  Forms fields can be any type but usually select lists are mapped on Baserow Linked Columns. 
-  
+  '{
+      "en": {
+          "displayName": "AddRowToBaserow",
+          "comment": "Add a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns."
+      },
+      "fr": {
+          "displayName": "AddRowToBaserow",
+          "comment": "Ajoutez une ligne à une table Baserow. Chaque colonne de la table doit avoir le même nom que le technicalID d''un champ sur le formulaire. Les champs des formulaires peuvent être de n''importe quel type, mais généralement, les listes de sélection sont mappées sur les Colonnes Liées Baserow."
+      },
+      "it": {
+          "displayName": "AddRowToBaserow",
+          "comment": "Aggiungi una riga a una tabella Baserow. Ogni colonna della tabella deve avere lo stesso nome del technicalID di un campo nel modulo. I campi dei moduli possono essere di qualsiasi tipo, ma di solito le liste di selezione sono mappate su Colonne Collegate Baserow."
+      },
+      "es": {
+          "displayName": "AddRowToBaserow",
+          "comment": "Añade una fila a una tabla de Baserow. Cada columna de la tabla debe tener el mismo nombre que el technicalID de un campo en el formulario. Los campos de los formularios pueden ser de cualquier tipo, pero usualmente las listas de selección están mapeadas en Columnas Vinculadas de Baserow."
+      }
+  }
+  '
 ↓ParseConfig [steps.SimpleStep-1680078354199]: 
   comment: Parse JSON configuration ti get table id
   expression: |
