@@ -12,6 +12,7 @@ This is the Baserow No Code connector for Convertigo. Use this connector to exch
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
 
 
+see [readme](https://github.com/convertigo/C8oForms/tree/2.0.0-beta50.2#readme)
 </p></blockquote></details>
 
 <details><summary><b>CouchDb_schema</b></summary><blockquote><p>
@@ -29,7 +30,7 @@ see [documentation](http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd)
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") lib_ExtendedComponents_ui_ngx
 
 
-see [readme](https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx/tree/8.1.0.0#readme)
+see [readme](https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx/tree/8.3.0.0#readme)
 </p></blockquote></details>
 </p></blockquote></details>
 
@@ -7225,7 +7226,9 @@ The job id to lookup information about.
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableBulkImportFromCSV
 
-Uploads a CSV to a table. 
+Uploads a CSV to a table. Each CSV column will be mapped to the existing table Column. If there is more columns in the CSV than in the table additional columns will not be mapped.
+
+
 
 <span style="color:DarkGoldenRod">Variables</span>
 

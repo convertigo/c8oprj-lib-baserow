@@ -11,8 +11,10 @@
             "comment": "Connecteur aux base de données NoCode Baserow"
         }
     }'
+  contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
-  version: 1.0.28
+  httpSessionTimeout: ${lib_baserow.session_timout=3600}
+  version: 1.0.29
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml

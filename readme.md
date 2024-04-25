@@ -418,7 +418,9 @@ Wait for an export job to be finished. Will return the URL to the exported data
 
 ### TableBulkImportFromCSV
 
-Uploads a CSV to a table. 
+Uploads a CSV to a table. Each CSV column will be mapped to the existing table Column. If there is more columns in the CSV than in the table additional columns will not be mapped.
+
+
 
 **variables**
 

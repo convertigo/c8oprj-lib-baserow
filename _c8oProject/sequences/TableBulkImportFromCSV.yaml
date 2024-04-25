@@ -1,5 +1,8 @@
 accessibility: Private
-comment: Uploads a CSV to a table. 
+comment: |
+  Uploads a CSV to a table. Each CSV column will be mapped to the existing table Column. If there is more columns in the CSV than in the table additional columns will not be mapped.
+  
+  
 responseTimeout: 60000000000000000
 ↓Input_variables [steps.InputVariablesStep-1669198830917]: 
 ↓Iterator [steps.IteratorStep-1669295413862]: 
