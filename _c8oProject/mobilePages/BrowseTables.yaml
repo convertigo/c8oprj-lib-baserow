@@ -33,7 +33,7 @@ title: First page
       beanData: '{"ionBean":"BarTitle"}'
       tagName: ion-title
       ↓Grid [ngx.components.UIDynamicElement-1667717249971]: 
-        beanData: '{"ionBean":"Grid"}'
+        beanData: '{"ionBean":"Grid","Height":"plain:100%"}'
         isEnabled: false
         tagName: ion-grid
         ↓GridRow [ngx.components.UIDynamicElement-1667717249973]: 
@@ -260,7 +260,7 @@ title: First page
               	justify-content: center;
               '
   ↓Grid [ngx.components.UIDynamicElement-1667635898879]: 
-    beanData: '{"ionBean":"Grid"}'
+    beanData: '{"ionBean":"Grid","Height":"plain:100%"}'
     tagName: ion-grid
     ↓GridRow [ngx.components.UIDynamicElement-1667635898881]: 
       beanData: '{"ionBean":"GridRow"}'
@@ -752,7 +752,7 @@ title: First page
                                 - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                                 - MobileSmartSourceType: 'plain: '
                         ↓Grid [ngx.components.UIDynamicElement-1679050853676]: 
-                          beanData: '{"ionBean":"Grid","Height":"plain"}'
+                          beanData: '{"ionBean":"Grid"}'
                           tagName: ion-grid
                           ↓GridRow [ngx.components.UIDynamicElement-1679050853679]: 
                             beanData: '{"ionBean":"GridRow","Height":"plain"}'
@@ -1059,7 +1059,7 @@ title: First page
                               - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                               - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1667636016496}],"path":"?.type","prefix":"","suffix":"","custom":"","useCustom":false}}
                       ↓Grid [ngx.components.UIDynamicElement-1667763124847]: 
-                        beanData: '{"ionBean":"Grid","Height":"plain"}'
+                        beanData: '{"ionBean":"Grid"}'
                         tagName: ion-grid
                         ↓GridRow [ngx.components.UIDynamicElement-1667763124849]: 
                           beanData: '{"ionBean":"GridRow","Height":"plain"}'
@@ -1845,7 +1845,7 @@ title: First page
                                   - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                                   - MobileSmartSourceType: 'plain: '
                           ↓Grid [ngx.components.UIDynamicElement-1680704190939]: 
-                            beanData: '{"ionBean":"Grid","Height":"plain"}'
+                            beanData: '{"ionBean":"Grid"}'
                             tagName: ion-grid
                             ↓GridRow [ngx.components.UIDynamicElement-1680704190942]: 
                               beanData: '{"ionBean":"GridRow","Height":"plain"}'
@@ -2040,7 +2040,7 @@ title: First page
                                   - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                                   - MobileSmartSourceType: plain:Identifier
                           ↓Grid [ngx.components.UIDynamicElement-1680705023912]: 
-                            beanData: '{"ionBean":"Grid","Height":"plain"}'
+                            beanData: '{"ionBean":"Grid"}'
                             tagName: ion-grid
                             ↓GridRow [ngx.components.UIDynamicElement-1680705023915]: 
                               beanData: '{"ionBean":"GridRow","Height":"plain"}'
@@ -2473,7 +2473,7 @@ title: First page
                                 - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                                 - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1667636016496}],"path":"?.type","prefix":"","suffix":"","custom":"","useCustom":false}}
                         ↓Grid [ngx.components.UIDynamicElement-1680704191083]: 
-                          beanData: '{"ionBean":"Grid","Height":"plain"}'
+                          beanData: '{"ionBean":"Grid"}'
                           tagName: ion-grid
                           ↓GridRow [ngx.components.UIDynamicElement-1680704191086]: 
                             beanData: '{"ionBean":"GridRow","Height":"plain"}'

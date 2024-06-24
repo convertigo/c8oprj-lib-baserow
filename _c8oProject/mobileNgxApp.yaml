@@ -62,7 +62,7 @@ componentScriptContent:
         /*Begin_c8o_AppFunction*/
         	/*End_c8o_AppFunction*/
         '
-tplProjectName: mobilebuilder_tpl_8_1_0_ngx
+tplProjectName: mobilebuilder_tpl_8_3_0_ngx
 ↓Menu [ngx.components.UIDynamicMenu-1500890597895]: 🗏 mobileMenus/Menu.yaml
 ↓BaseRowGrid [ngx.components.UISharedRegularComponent-1682233502817]: 🗏 mobileSharedComponents/BaseRowGrid.yaml
 ↓BrowseTables [ngx.components.PageComponent-1500538678074]: 🗏 mobilePages/BrowseTables.yaml
