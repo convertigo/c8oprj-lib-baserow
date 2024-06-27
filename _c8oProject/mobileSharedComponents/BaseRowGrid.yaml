@@ -31,18 +31,6 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
         - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.defaultColDef","prefix":"","suffix":"","custom":"","useCustom":false}}
-  ↓columnDefs [ngx.components.UIUseVariable-1682233502838]: 
-    comment: 'Array of columnDef {headerName: ''headerName'', field: ''fieldName''} objects'
-    varValue: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: source:{"filter":"Local","project":"lib_ExtendedComponents_ui_ngx","input":"","model":{"data":[{"localObject":"local"}],"path":"?.dataDef","prefix":"","suffix":"?.columnDefs","custom":"","useCustom":false}}
-  ↓rowData [ngx.components.UIUseVariable-1682233502841]: 
-    comment: 'Array of row { fieldName1: ''value1'', fieldName2: ''value2'', fieldName3: true, ...} objects'
-    varValue: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: source:{"filter":"Local","project":"lib_ExtendedComponents_ui_ngx","input":"","model":{"data":[{"localObject":"local"}],"path":"?.dataDef","prefix":"","suffix":"?.rowData","custom":"","useCustom":false}}
   ↓width [ngx.components.UIUseVariable-1682233502844]: 
     comment: width value in % or px
     varValue: 
