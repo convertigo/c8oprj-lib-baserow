@@ -970,7 +970,16 @@ Describes the mobile application global properties
 
 #### BaseRowGrid
 
-Provides an infinite paginated Grid that can be fed by data from a BaseRow No Code database.
+Provides an infinite paginated data Grid that can be fed by data from a BaseRow No Code database. The data grid supports pagination or infinite scroll.
+
+## Setting grid height
+
+By default the height property is set to 'auto'. This means that the grid height will automatically be adjusted to the height of its content. In paginated mode (pagination = true) this will be height of the number of lines in page. You can explicitly set the height a CSS measure unit such a 400px or 300pt. You can set the height to a % of the its container height such as 100%
+
+When using infinite scroll mode (pagination=false) never use height='auto' if the grid is inserted in a scrollable component such as **Content**. If you do so the grid will try to adjust its height with an infinite height and crash. To prevent this set the height to a fixed size in PX or have its container's height constrained.
+
+
+
 
 **variables**
 
@@ -988,14 +997,12 @@ Provides an infinite paginated Grid that can be fed by data from a BaseRow No Co
 <td>autoSizeColumns</td><td></td>
 </tr>
 <tr>
-<td>class</td><td>One of the themes provided here :
+<td>dataSource</td><td>The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
 
-https://www.ag-grid.com/javascript-grid-themes-provided/
+<pre>MyProject.Hotel_BookingsRoomsList</pre>
+<pre>.Hotel_BookingsRoomsList</pre>
 
-Also be shure to add the theme in the Theme object as :
-
-@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.scss";
-
+Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
 
 
 </td>
@@ -1004,7 +1011,7 @@ Also be shure to add the theme in the Theme object as :
 <td>defaultColDef</td><td>default is {hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}</td>
 </tr>
 <tr>
-<td>Filters</td><td>An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
+<td>filters</td><td>An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
 
 <pre>
 {
@@ -1039,20 +1046,13 @@ Will fill the grid with all records where column *Type* *Contains* to *small_air
 <td>id</td><td>An Optional ID</td>
 </tr>
 <tr>
-<td>ListSequenceName</td><td>The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
-
-<pre>MyProject.Hotel_BookingsRoomsList</pre>
-
-Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
-
-
-</td>
-</tr>
-<tr>
 <td>overlayLoadingTemplate</td><td></td>
 </tr>
 <tr>
 <td>overlayNoRowsTemplate</td><td></td>
+</tr>
+<tr>
+<td>pagination</td><td>integer: 10 by default</td>
 </tr>
 <tr>
 <td>paginationPageSize</td><td>integer: 10 by default</td>
@@ -1067,7 +1067,7 @@ Where *MyProject* is the name of the project holding the Sequence and *Hotel_Boo
 <td>rowSelection</td><td>string: 'single' (default) or 'multiple'</td>
 </tr>
 <tr>
-<td>Search</td><td>Will only return data that matches this search whatever the column is 
+<td>search</td><td>Will only return data that matches this search whatever the column is 
 </td>
 </tr>
 <tr>

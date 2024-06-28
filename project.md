@@ -8326,7 +8326,16 @@ My First Page as root page
 
 ### ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uisharedcomponent_16x16.png?raw=true "UISharedRegularComponent") BaseRowGrid
 
-Provides an infinite paginated Grid that can be fed by data from a BaseRow No Code database.
+Provides an infinite paginated data Grid that can be fed by data from a BaseRow No Code database. The data grid supports pagination or infinite scroll.
+
+## Setting grid height
+
+By default the height property is set to 'auto'. This means that the grid height will automatically be adjusted to the height of its content. In paginated mode (pagination = true) this will be height of the number of lines in page. You can explicitly set the height a CSS measure unit such a 400px or 300pt. You can set the height to a % of the its container height such as 100%
+
+When using infinite scroll mode (pagination=false) never use height='auto' if the grid is inserted in a scrollable component such as **Content**. If you do so the grid will try to adjust its height with an infinite height and crash. To prevent this set the height to a fixed size in PX or have its container's height constrained.
+
+
+
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -8365,17 +8374,15 @@ boolean: true (default) or false
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;class
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;dataSource
 </td>
 <td>
-One of the themes provided here :
+The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
 
-https://www.ag-grid.com/javascript-grid-themes-provided/
+<pre>MyProject.Hotel_BookingsRoomsList</pre>
+<pre>.Hotel_BookingsRoomsList</pre>
 
-Also be shure to add the theme in the Theme object as :
-
-@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.scss";
-
+Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
 
 
 
@@ -8391,7 +8398,7 @@ default is {hide: false, editable: true, sortable: true, resizable: true, filter
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;Filters
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;filters
 </td>
 <td>
 An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
@@ -8441,21 +8448,6 @@ An Optional ID
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;ListSequenceName
-</td>
-<td>
-The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
-
-<pre>MyProject.Hotel_BookingsRoomsList</pre>
-
-Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
-
-
-
-</td>
-</tr>
-<tr>
-<td>
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;overlayLoadingTemplate
 </td>
 <td>
@@ -8468,6 +8460,14 @@ Where *MyProject* is the name of the project holding the Sequence and *Hotel_Boo
 </td>
 <td>
 
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;pagination
+</td>
+<td>
+integer: 10 by default
 </td>
 </tr>
 <tr>
@@ -8504,7 +8504,7 @@ string: 'single' (default) or 'multiple'
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;Search
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;search
 </td>
 <td>
 Will only return data that matches this search whatever the column is 
