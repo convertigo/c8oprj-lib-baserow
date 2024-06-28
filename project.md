@@ -8369,7 +8369,7 @@ boolean: true (default) or false
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;autoSizeColumns
 </td>
 <td>
-
+If true, columns will sized to fit their content
 </td>
 </tr>
 <tr>
@@ -8378,10 +8378,8 @@ boolean: true (default) or false
 </td>
 <td>
 The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
-
 <pre>MyProject.Hotel_BookingsRoomsList</pre>
 <pre>.Hotel_BookingsRoomsList</pre>
-
 Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
 
 
@@ -8467,7 +8465,7 @@ An Optional ID
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;pagination
 </td>
 <td>
-integer: 10 by default
+true : paginate, false : infinitescroll (Warning! do not use height='auto' in this case)
 </td>
 </tr>
 <tr>
@@ -8516,7 +8514,7 @@ Will only return data that matches this search whatever the column is
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;suppressCellSelection
 </td>
 <td>
-
+Enables or not cell selection
 </td>
 </tr>
 <tr>
@@ -8524,7 +8522,7 @@ Will only return data that matches this search whatever the column is
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;suppressRowClickSelection
 </td>
 <td>
-
+Enables or not row selection
 </td>
 </tr>
 <tr>
@@ -8540,7 +8538,7 @@ width value in % or px
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;wrapperClass
 </td>
 <td>
-Height of the row in pixels as a string
+A class name for the grid container
 </td>
 </tr>
 </table>

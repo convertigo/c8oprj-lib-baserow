@@ -369,10 +369,8 @@ comment: |
 ↓dataSource [ngx.components.UICompVariable-1682233502904]: 
   comment: |
     The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
-    
     <pre>MyProject.Hotel_BookingsRoomsList</pre>
     <pre>.Hotel_BookingsRoomsList</pre>
-    
     Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
     
     
@@ -414,7 +412,7 @@ comment: |
   comment: 'integer: 10 by default'
   value: 10
 ↓pagination [ngx.components.UICompVariable-1719507598536]: 
-  comment: 'integer: 10 by default'
+  comment: 'true : paginate, false : infinitescroll (Warning! do not use height=''auto'' in this case)'
   value: true
 ↓rowSelection [ngx.components.UICompVariable-1683005576435]: 
   comment: 'string: ''single'' (default) or ''multiple'''
@@ -434,8 +432,10 @@ comment: |
 ↓id [ngx.components.UICompVariable-1683005576453]: 
   comment: An Optional ID
 ↓suppressCellSelection [ngx.components.UICompVariable-1683005576456]: 
+  comment: Enables or not cell selection
   value: false
 ↓suppressRowClickSelection [ngx.components.UICompVariable-1683005576459]: 
+  comment: Enables or not row selection
   value: false
 ↓overlayLoadingTemplate [ngx.components.UICompVariable-1683005576462]: 
 ↓overlayNoRowsTemplate [ngx.components.UICompVariable-1683005576465]: 
@@ -443,8 +443,9 @@ comment: |
   comment: Height of the row in pixels as a string
   value: '''25'''
 ↓wrapperClass [ngx.components.UICompVariable-1683005576471]: 
-  comment: Height of the row in pixels as a string
+  comment: A class name for the grid container
 ↓autoSizeColumns [ngx.components.UICompVariable-1683005576474]: 
+  comment: If true, columns will sized to fit their content
   value: true
 ↓accessibility [ngx.components.UICompVariable-1683005576477]: 
   comment: 'boolean: true (default) or false'

@@ -994,14 +994,12 @@ When using infinite scroll mode (pagination=false) never use height='auto' if th
 <td>ariaLabel</td><td></td>
 </tr>
 <tr>
-<td>autoSizeColumns</td><td></td>
+<td>autoSizeColumns</td><td>If true, columns will sized to fit their content</td>
 </tr>
 <tr>
 <td>dataSource</td><td>The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
-
 <pre>MyProject.Hotel_BookingsRoomsList</pre>
 <pre>.Hotel_BookingsRoomsList</pre>
-
 Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
 
 
@@ -1052,7 +1050,7 @@ Will fill the grid with all records where column *Type* *Contains* to *small_air
 <td>overlayNoRowsTemplate</td><td></td>
 </tr>
 <tr>
-<td>pagination</td><td>integer: 10 by default</td>
+<td>pagination</td><td>true : paginate, false : infinitescroll (Warning! do not use height='auto' in this case)</td>
 </tr>
 <tr>
 <td>paginationPageSize</td><td>integer: 10 by default</td>
@@ -1071,16 +1069,16 @@ Will fill the grid with all records where column *Type* *Contains* to *small_air
 </td>
 </tr>
 <tr>
-<td>suppressCellSelection</td><td></td>
+<td>suppressCellSelection</td><td>Enables or not cell selection</td>
 </tr>
 <tr>
-<td>suppressRowClickSelection</td><td></td>
+<td>suppressRowClickSelection</td><td>Enables or not row selection</td>
 </tr>
 <tr>
 <td>width</td><td>width value in % or px</td>
 </tr>
 <tr>
-<td>wrapperClass</td><td>Height of the row in pixels as a string</td>
+<td>wrapperClass</td><td>A class name for the grid container</td>
 </tr>
 </table>
 
