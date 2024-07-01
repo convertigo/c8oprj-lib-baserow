@@ -211,8 +211,13 @@ comment: |
               							if (Array.isArray(response.object.results[i][keys[j]])) {
               								let text = ""
               								for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
-              									if (response.object.results[i][keys[j]][k])
-              										text += response.object.results[i][keys[j]][k].value + '', '' 
+              									if (response.object.results[i][keys[j]][k].url) {
+              										// if we have an Url  this means we have an attachment image.
+              										text += response.object.results[i][keys[j]][k].thumbnails.tiny.url + '', ''
+              									} else {
+              										if (response.object.results[i][keys[j]][k])
+              											text += response.object.results[i][keys[j]][k].value + '', ''
+              									} 
               								}
               								row[keys[j]] = text;
               							} else {
