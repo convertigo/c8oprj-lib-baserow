@@ -195,10 +195,23 @@ comment: |
               			let keys = Object.keys(response.object.results[0])
               			for (let i=0; i < keys.length ; i++) {
               				if (keys[i] != ''order'')
-              					colDefs.push({
-              						headerName: keys[i],
-              						field: keys[i]
-              					})
+              					if (Array.isArray(response.object.results[0][keys[i]])) {
+              						console.log(''Array found in header'')
+              						let obj = response.object.results[0][keys[i]][0]
+              						if (obj.url) {
+              							console.log(''Array Image Column found in header'')
+              							colDefs.push({
+              								headerName: keys[i],
+              								field: keys[i],
+              								cellRenderer: window[''brCellRenderer'']
+              							})
+              						}
+              					} else {
+              						colDefs.push({
+              							headerName: keys[i],
+              							field: keys[i]
+              						})
+              					}
               			}
               			
               			for (let i = 0; i < response.object.results.length; i ++) {
@@ -209,17 +222,17 @@ comment: |
               						
               						if (typeof response.object.results[i][keys[j]] == ''object'') {
               							if (Array.isArray(response.object.results[i][keys[j]])) {
-              								let text = ""
-              								for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
-              									if (response.object.results[i][keys[j]][k].url) {
-              										// if we have an Url  this means we have an attachment image.
-              										text += response.object.results[i][keys[j]][k].thumbnails.tiny.url + '', ''
-              									} else {
+              								if (response.object.results[i][keys[j]][0]?.url) {
+              									row[keys[j]] = response.object.results[i][keys[j]]
+              								} else {
+              									let text = ""
+              									for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
               										if (response.object.results[i][keys[j]][k])
               											text += response.object.results[i][keys[j]][k].value + '', ''
-              									} 
+              										
+              										row[keys[j]] = text;
+              									}
               								}
-              								row[keys[j]] = text;
               							} else {
               								if (response.object.results[i][keys[j]])
               									row[keys[j]] = response.object.results[i][keys[j]].value
@@ -288,89 +301,33 @@ comment: |
             - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
             - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.filters","prefix":"","suffix":"","custom":"","useCustom":false}}
 ↓SharedComponent_Event [ngx.components.UISharedComponentEvent-1682233502889]: 
-  ↓BuildDataDefs [ngx.components.UICustomAction-1682233502892]: 
+  ↓SetupCellRenderer [ngx.components.UICustomAction-1719849580882]: 
     actionValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
         - com.twinsoft.convertigo.beans.common.FormatedContent: 
           →: |
             '		page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
-            		
-            		page.c8o.callJsonObject(vars.Requestable, {
-            			size: vars.limit,
-            			page: 1
-            		})
-            		.async()
-            		.then((response : any)=> {
-            			// page.c8o.log.warn(''OUtput'' +  JSON.stringify(response));
-            			
-            			let colDefs = [];
-            			let rowData = [];
-            			let keys = Object.keys(response.object.results[0])
-            			for (let i=0; i < keys.length ; i++) {
-            				if (keys[i] != ''order'')
-            					colDefs.push({
-            						headerName: keys[i],
-            						field: keys[i]
-            					})
+            		window[''brCellRenderer''] = function(data) {
+            			// data is an array of objects, each object contains the url of the image and the name of the image to be displayed on the same row. The name must be displayed when hovers the image.
+            			// build a lits of img tags and span tags with the src being the url of the image and the text being the name of the image using th template syntax
+            			// return the html string
+            			let html = '''';
+            			let value = data.value;
+            			for (let i = 0; i < value.length; i++) {
+            				html += ''<img src="'' + value[i].thumbnails.tiny.url +
+            						''" title="'' + value[i].name + 
+            						''" style="height: 20px; border: solid 1px grey; border-radius: 4px; margin-right: 4px "/>'';
             			}
+            			// now create a dom object from the html string
+            			let div = document.createElement(''div'');
+            			div.innerHTML = html;
+            			// return the dom object
+            			return div;
+            		}
             			
-            			for (let i = 0; i < response.object.results.length; i ++) {
-            				let row = {};
-            				for (let j = 0; j < keys.length; j++) {
-            					if (keys[j] != ''order'') {
-            						console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
-            						
-            						if (typeof response.object.results[i][keys[j]] == ''object'') {
-            							if (Array.isArray(response.object.results[i][keys[j]])) {
-            								let text = ""
-            								for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
-            									if (response.object.results[i][keys[j]][k])
-            										text += response.object.results[i][keys[j]][k].value + '', '' 
-            								}
-            								row[keys[j]] = text;
-            							} else {
-            								if (response.object.results[i][keys[j]])
-            									row[keys[j]] = response.object.results[i][keys[j]].value
-            							}
-            						} else {
-            							row[keys[j]] = response.object.results[i][keys[j]]
-            						}
-            					}
-            				}
-            				rowData.push(row);
-            			}
-            	
-            			let output = {
-            				ColDef: colDefs,
-            				RowData : rowData
-            			}
-            			
-            			// page.c8o.log.warn(''OUtput'' +  JSON.stringify(output));
-            			
-            			resolve(output);
-            
-            			});		
+            		resolve();
             '
-    isEnabled: false
-    ↓Data [ngx.components.UIControlVariable-1682233502895]: 
-      varValue: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-          - MobileSmartSourceType: script:out
-    ↓SetLocal [ngx.components.UIDynamicAction-1682233502898]: 
-      beanData: |
-        '{
-         "ionBean": "SetLocalAction",
-         "Property": "plain:dataDef",
-         "Value": "script:out"
-        }'
-      tagName: SetLocal
-    ↓Requestable [ngx.components.UIControlVariable-1682233502901]: 
-      varValue: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-          - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_ExtendedComponents_ui_ngx","input":"","model":{"data":[{"priority":1681812168270,"regular":true}],"path":"?.dataSource","prefix":"","suffix":"","custom":"","useCustom":false}}
 ↓dataSource [ngx.components.UICompVariable-1682233502904]: 
   comment: |
     The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
