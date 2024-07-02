@@ -198,7 +198,7 @@ comment: |
               					if (Array.isArray(response.object.results[0][keys[i]])) {
               						// console.log(''Array found in header'')
               						let obj = response.object.results[0][keys[i]][0]
-              						if (obj.url) {
+              						if (obj?.url)  {
               							//  console.log(''Array Image Column found in header'')
               							colDefs.push({
               								headerName: keys[i],
