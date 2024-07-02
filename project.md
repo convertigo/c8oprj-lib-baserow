@@ -8505,7 +8505,8 @@ string: 'single' (default) or 'multiple'
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uicompvariable_16x16.png?raw=true "  alt="UICompVariable" >&nbsp;search
 </td>
 <td>
-Will only return data that matches this search whatever the column is 
+Will only return data that matches this search whatever the column is. This is a dynamic variable meaning that if modified bounded to search field for example each time the search changes the grid will be refreshed with the new search.
+
 
 </td>
 </tr>

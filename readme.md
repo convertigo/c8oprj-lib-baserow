@@ -1065,7 +1065,8 @@ Will fill the grid with all records where column *Type* *Contains* to *small_air
 <td>rowSelection</td><td>string: 'single' (default) or 'multiple'</td>
 </tr>
 <tr>
-<td>search</td><td>Will only return data that matches this search whatever the column is 
+<td>search</td><td>Will only return data that matches this search whatever the column is. This is a dynamic variable meaning that if modified bounded to search field for example each time the search changes the grid will be refreshed with the new search.
+
 </td>
 </tr>
 <tr>
