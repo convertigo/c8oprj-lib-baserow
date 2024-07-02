@@ -314,16 +314,19 @@ comment: |
             			// return the html string
             			let html = '''';
             			let value = data.value;
-            			for (let i = 0; i < value.length; i++) {
-            				html += ''<img src="'' + value[i].thumbnails.tiny.url +
-            						''" title="'' + value[i].name + 
-            						''" style="height: 20px; border: solid 1px grey; border-radius: 4px; margin-right: 4px "/>'';
+            			if (value instanceof Array) {
+            				
+            				for (let i = 0; i < value.length; i++) {
+            					html += ''<img src="'' + value[i].thumbnails.tiny.url +
+            							''" title="'' + value[i].name + 
+            							''" style="height: 20px; border: solid 1px grey; border-radius: 4px; margin-right: 4px "/>'';
+            				}
+            				// now create a dom object from the html string
+            				let div = document.createElement(''div'');
+            				div.innerHTML = html;
+            				// return the dom object
+            				return div;
             			}
-            			// now create a dom object from the html string
-            			let div = document.createElement(''div'');
-            			div.innerHTML = html;
-            			// return the dom object
-            			return div;
             		}
             			
             		resolve();
