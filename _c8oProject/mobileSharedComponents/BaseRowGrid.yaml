@@ -9,6 +9,45 @@ comment: |
   
   
   '
+scriptContent: 
+  - xmlizable: 
+    - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+    - com.twinsoft.convertigo.beans.common.FormatedContent: 
+      →: |
+        /*Begin_c8o_CompImport*/
+        /*End_c8o_CompImport*/
+        /*Begin_c8o_CompDeclaration*/
+        	/*End_c8o_CompDeclaration*/
+        /*Begin_c8o_CompConstructor*/
+        		/*End_c8o_CompConstructor*/
+        /*Begin_c8o_CompInitialization*/
+        		/*End_c8o_CompInitialization*/
+        /*Begin_c8o_CompFinalization*/
+        		/*End_c8o_CompFinalization*/
+        /*Begin_c8o_CompChanges*/
+        		// Check new Search value
+        		if (changes.search != undefined && changes.search.currentValue != undefined && changes.search.previousValue != undefined) {
+        			// get the agGrid instance api
+        			if (this.lib_extendedcomponents_ui_ngx_aggrid != undefined) {
+        				let api = this.lib_extendedcomponents_ui_ngx_aggrid.api;
+        				api.refreshInfiniteCache();
+        			}
+        		}
+        		
+        		/*End_c8o_CompChanges*/
+        /*Begin_c8o_CompDoCheck*/
+        		/*End_c8o_CompDoCheck*/
+        /*Begin_c8o_CompAfterContentInit*/
+        		/*End_c8o_CompAfterContentInit*/
+        /*Begin_c8o_CompAfterContentChecked*/
+        		/*End_c8o_CompAfterContentChecked*/
+        /*Begin_c8o_CompAfterViewInit*/
+        		/*End_c8o_CompAfterViewInit*/
+        /*Begin_c8o_CompAfterViewChecked*/
+        		/*End_c8o_CompAfterViewChecked*/
+        /*Begin_c8o_CompFunction*/
+        	/*End_c8o_CompFunction*/
+        
 ↓tag [ngx.components.UIUseShared-1682233502820]: 
   sharedcomponent: lib_ExtendedComponents_ui_ngx.MobileApplication.Application.agGrid
   ↓pagination [ngx.components.UIUseVariable-1682233502823]: 
@@ -192,59 +231,62 @@ comment: |
               			
               			let colDefs = [];
               			let rowData = [];
-              			let keys = Object.keys(response.object.results[0])
-              			for (let i=0; i < keys.length ; i++) {
-              				if (keys[i] != ''order'')
-              					if (Array.isArray(response.object.results[0][keys[i]])) {
-              						// console.log(''Array found in header'')
-              						let obj = response.object.results[0][keys[i]][0]
-              						if (obj?.url)  {
-              							//  console.log(''Array Image Column found in header'')
-              							colDefs.push({
-              								headerName: keys[i],
-              								field: keys[i],
-              								cellRenderer: window[''brCellRenderer'']
-              							})
-              						}
-              					} else {
-              						colDefs.push({
-              							headerName: keys[i],
-              							field: keys[i]
-              						})
-              					}
-              			}
               			
-              			for (let i = 0; i < response.object.results.length; i ++) {
-              				let row = {};
-              				for (let j = 0; j < keys.length; j++) {
-              					if (keys[j] != ''order'') {
-              						//console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
-              						
-              						if (typeof response.object.results[i][keys[j]] == ''object'') {
-              							if (Array.isArray(response.object.results[i][keys[j]])) {
-              								if (response.object.results[i][keys[j]][0]?.url) {
-              									row[keys[j]] = response.object.results[i][keys[j]]
-              								} else {
-              									let text = ""
-              									for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
-              										if (response.object.results[i][keys[j]][k])
-              											text += response.object.results[i][keys[j]][k].value + '', ''
-              										
-              										row[keys[j]] = text;
-              									}
-              								}
-              							} else {
-              								if (response.object.results[i][keys[j]])
-              									row[keys[j]] = response.object.results[i][keys[j]].value
+              			if (response.object.count != 0) {
+              				let keys = Object.keys(response.object.results[0])
+              				for (let i=0; i < keys.length ; i++) {
+              					if (keys[i] != ''order'')
+              						if (Array.isArray(response.object.results[0][keys[i]])) {
+              							// console.log(''Array found in header'')
+              							let obj = response.object.results[0][keys[i]][0]
+              							if (obj?.url)  {
+              								//  console.log(''Array Image Column found in header'')
+              								colDefs.push({
+              									headerName: keys[i],
+              									field: keys[i],
+              									cellRenderer: window[''brCellRenderer'']
+              								})
               							}
               						} else {
-              							row[keys[j]] = response.object.results[i][keys[j]]
+              							colDefs.push({
+              								headerName: keys[i],
+              								field: keys[i]
+              							})
+              						}
+              				}
+              				
+              				for (let i = 0; i < response.object.results.length; i ++) {
+              					let row = {};
+              					for (let j = 0; j < keys.length; j++) {
+              						if (keys[j] != ''order'') {
+              							//console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
+              							
+              							if (typeof response.object.results[i][keys[j]] == ''object'') {
+              								if (Array.isArray(response.object.results[i][keys[j]])) {
+              									if (response.object.results[i][keys[j]][0]?.url) {
+              										row[keys[j]] = response.object.results[i][keys[j]]
+              									} else {
+              										let text = ""
+              										for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
+              											if (response.object.results[i][keys[j]][k])
+              												text += response.object.results[i][keys[j]][k].value + '', ''
+              											
+              											row[keys[j]] = text;
+              										}
+              									}
+              								} else {
+              									if (response.object.results[i][keys[j]])
+              										row[keys[j]] = response.object.results[i][keys[j]].value
+              								}
+              							} else {
+              								row[keys[j]] = response.object.results[i][keys[j]]
+              							}
               						}
               					}
+              					rowData.push(row);
               				}
-              				rowData.push(row);
               			}
-              	
+              				
               			let output = {
               				ColDef: colDefs,
               				RowData : rowData,
