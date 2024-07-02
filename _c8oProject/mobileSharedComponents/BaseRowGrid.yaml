@@ -208,11 +208,56 @@ scriptContent:
               		let size = vars.limit
               		let brPage = 1 + vars.skip / vars.limit
               		page.c8o.log.warn(''size is : '' + size  + '' Page is : '' + brPage)
+              
+              		/* Build baserow filters based on agGrid filters avilable in vars.params.filterModel. Each filter is an object with the following properties: 
+              		 		filterModel {
+              					columnName1 {
+              						filterType: ''text''
+              			            type: ''contains''
+              						filter: ''text to filter1''
+              					} 
+              					columnName2 {
+              						filterType: ''text''
+              			            type: ''equals''
+              						filter: ''text to filter2''
+              					}
+              				}
+              				
+              				
+              				We have to build baserow filters in this format:
+              				{
+              					"filter_type": "AND",
+              					"filters": [
+              						{"field": "columnName1", "type": "contains", "value": "text to filter1"},
+              						{"field": "columnName2", "type": "equal", "value": "text to filter2"}
+              					]
+              				}
+              		*/
               		
+              		let brFilters = null;
+              		if (vars.params.filterModel) {
+              			let filters = []
+              			Object.keys(vars.params.filterModel).forEach((key) => {
+              				let filter = vars.params.filterModel[key]
+              				let filterObj = {
+              					field: key,
+              					type: filter.type,
+              					value: filter.filter
+              				}
+              				filters.push(filterObj)
+              			})
+              
+              			brFilters = {
+              				filter_type: ''AND'',
+              				filters: filters
+              			}
+              		}
+              				
               		let args = {
               			size: size,
               			page: brPage, 
-              			search: vars.search ? vars.search: null 
+              			search: vars.search ? vars.search: null ,
+              			// filters: JSON.stringify(brFilters) 				// TODO : As of today list sequences do not support filters so this will not work
               		}
               		
               		if (vars.filters)
@@ -250,7 +295,13 @@ scriptContent:
               						} else {
               							colDefs.push({
               								headerName: keys[i],
-              								field: keys[i]
+              								field: keys[i],
+              								/*	TODO: as of today sequence list does not support filters so we disable it
+              								filter: ''agTextColumnFilter'',
+              								filterParams: {
+              									suppressAndOrCondition: true,
+              								}
+              								*/
               							})
               						}
               				}
@@ -342,6 +393,11 @@ scriptContent:
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
             - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.filters","prefix":"","suffix":"","custom":"","useCustom":false}}
+      ↓params [ngx.components.UIControlVariable-1719937229335]: 
+        varValue: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+            - MobileSmartSourceType: source:{"filter":"Action","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682327850655,"rootEvent":true,"pageLocals":false}],"path":"?.out","prefix":"","suffix":"","custom":"","useCustom":false}}
 ↓SharedComponent_Event [ngx.components.UISharedComponentEvent-1682233502889]: 
   ↓SetupCellRenderer [ngx.components.UICustomAction-1719849580882]: 
     actionValue: 
