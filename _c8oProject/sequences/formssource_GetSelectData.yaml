@@ -339,6 +339,13 @@ comment: |
         - SmartType: 
           - ↑mode: PLAIN
           - →→: data
+↓forms_filter [variables.RequestableVariable-1666100091071]: 
+  comment: |
+    Filters
+    
+  description: 
+  required: true
+  value: 
 ↓forms_config [variables.RequestableVariable-1666100091062]: 
   comment: |
     '{
@@ -350,13 +357,6 @@ comment: |
     
     '
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/select
-  required: true
-  value: 
-↓forms_filter [variables.RequestableVariable-1666100091071]: 
-  comment: |
-    Filters
-    
-  description: 
   required: true
   value: 
 ↓forms_Filter [variables.RequestableVariable-1680171408883]: 

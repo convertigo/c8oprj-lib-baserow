@@ -774,7 +774,6 @@ title: First page
                                     '{
                                      "ionBean": "CheckBox",
                                      "ControlName": "plain:name1667636420064",
-                                     "DoubleBinding": "plain",
                                      "Checked": "plain:true"
                                     }'
                                   tagName: ion-checkbox
@@ -1802,12 +1801,7 @@ title: First page
                                   - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                                   - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1680696113214}],"path":"?.name","prefix":"","suffix":"","custom":"","useCustom":false}}
                 ↓RadioGroup [ngx.components.UIDynamicElement-1680708184852]: 
-                  beanData: |
-                    '{
-                     "ionBean": "RadioGroup",
-                     "ControlName": "plain:name1680708184852",
-                     "DoubleBinding": "plain"
-                    }'
+                  beanData: '{"ionBean":"RadioGroup","ControlName":"plain:name1680708184852"}'
                   tagName: ion-radio-group
                   ↓ReorderGroup [ngx.components.UIDynamicElement-1680704190918]: 
                     beanData: '{"ionBean":"ReorderGroup"}'
@@ -1867,7 +1861,6 @@ title: First page
                                       '{
                                        "ionBean": "CheckBox",
                                        "ControlName": "plain:name1667636420064",
-                                       "DoubleBinding": "plain",
                                        "Checked": "plain:true"
                                       }'
                                     tagName: ion-checkbox
