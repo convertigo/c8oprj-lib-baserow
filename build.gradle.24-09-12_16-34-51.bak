@@ -8,7 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath 'org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:[5.4,)'
-		classpath 'com.convertigo:gradle-plugin:8.3.0'
+		classpath 'com.convertigo:gradle-plugin:8.1.0-SNAPSHOT'
 	}
 }
 
@@ -53,7 +53,7 @@ generateMobileBuilder {
 	//// configure the generation mode, can be can be production (default) or debugplus, debug, fast
 	//// if omitted, compileMobileBuilder.mode is used
 	//// can also be configured with a -Pconvertigo.generateMobileBuilder.mode as Gradle parameter
-	// mode 'production'
+	mode 'debug'
 }
 
 //// the 'compileMobileBuilder' task depends on 'generateMobileBuilder' and compiles the Ionic application with NPM into DisplayObject/mobile
@@ -61,7 +61,7 @@ compileMobileBuilder {
 	//// configure the generation mode, can be can be production (default) or debug
 	//// if omitted, generateMobileBuilder.mode is used
 	//// can also be configured with a -Pconvertigo.compileMobileBuilder.mode as Gradle parameter
-	// mode 'production'
+	mode 'debug'
 }
 
 //// the 'car' task allows to build a <projectName>.car inside the <projectdir>/build folder
@@ -238,4 +238,4 @@ if (!tasks.findByName('wrapper')) {
 		description 'Generates Gradle wrapper files.'
 	}
 }
-wrapper.gradleVersion = '8.5'
+wrapper.gradleVersion = '7.5.1'
