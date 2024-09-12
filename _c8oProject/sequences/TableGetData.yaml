@@ -49,7 +49,7 @@ comment: Gets data from a given table
       	if (built.indexOf("unknown_field") != -1)
       		bFieldError = true;
       		
-      	log.warn(filterExpression);
+      	log.warn("Built filter expression is : " + filterExpression);
       }
       
       '

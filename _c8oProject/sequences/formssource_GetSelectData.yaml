@@ -45,6 +45,7 @@ comment: |
     let describeStructure = false;
     
     if (model == "true") {
+    	log.warn("Forms Model True")
     	size = "1";
     	filterExpression = null;
     	describeStructure = true;
