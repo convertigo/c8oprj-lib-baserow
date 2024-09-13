@@ -292,41 +292,83 @@ comment: |
   expression: |
     data = JSON.stringify(data);
     
-↓Call_Sequence [steps.SequenceStep-1680078354205]: 
-  comment: Push the row to BR
-  sourceSequence: lib_BaseRow.TableCreateRow
-  ↓data [variables.StepVariable-1680078576091]: 
-    comment: A JSON object with each field name and value
-    required: true
-    value: 
-  ↓table_id [variables.StepVariable-1680078591586]: 
-    comment: Insert row in this table_id
-    description: table_id
-    required: true
-  ↓before [variables.StepVariable-1680078591588]: 
-    comment: If provided then the newly created row will be positioned before the row with the provided id.
-    description: before
-↓IfExist [steps.IfExistStep-1680078354235]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1680078354205
-        - java.lang.String: 
-          - ↑value: ./document/error
-  ↓Error_structure [steps.XMLErrorStep-1680078354238]: 
-    message: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-        - SmartType: 
-          - ↑mode: SOURCE
+↓jIfThenElse [steps.IfThenElseStep-1726213751006]: 
+  condition: forms_id != '' || forms_id != null || forms_id != undefined
+  ↓jThen [steps.ThenStep-1726213751008]: 
+    ↓MakeRowID [steps.SimpleStep-1726214039657]: 
+      expression: |
+        row_id = forms_id
+        
+        
+    ↓Call_Sequence [steps.SequenceStep-1726213836036]: 
+      comment: Push the row to BR
+      sourceSequence: lib_BaseRow.TableUpdateRowApiKey
+      ↓table_id [variables.StepVariable-1726213898219]: 
+        comment: Insert row in this table_id
+        description: table_id
+        required: true
+      ↓row_id [variables.StepVariable-1726213898223]: 
+        comment: Insert row in this table_id
+        description: table_id
+        required: true
+      ↓data [variables.StepVariable-1726213898225]: 
+    ↓IfExist [steps.IfExistStep-1726214087646]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
               - ↑value: 1680078354205
             - java.lang.String: 
-              - ↑value: ./document/error/message/text()
-  ↓Return [steps.ReturnStep-1680078354241]: 
+              - ↑value: ./document/error
+      ↓Error_structure [steps.XMLErrorStep-1726214087652]: 
+        message: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1680078354205
+                - java.lang.String: 
+                  - ↑value: ./document/error/message/text()
+      ↓Return [steps.ReturnStep-1726214087655]: 
+  ↓jElse [steps.ElseStep-1726213751010]: 
+    ↓Call_Sequence [steps.SequenceStep-1680078354205]: 
+      comment: Push the row to BR
+      sourceSequence: lib_BaseRow.TableCreateRow
+      ↓data [variables.StepVariable-1680078576091]: 
+        comment: A JSON object with each field name and value
+        required: true
+        value: 
+      ↓table_id [variables.StepVariable-1680078591586]: 
+        comment: Insert row in this table_id
+        description: table_id
+        required: true
+      ↓before [variables.StepVariable-1680078591588]: 
+        comment: If provided then the newly created row will be positioned before the row with the provided id.
+        description: before
+    ↓IfExist [steps.IfExistStep-1680078354235]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1680078354205
+            - java.lang.String: 
+              - ↑value: ./document/error
+      ↓Error_structure [steps.XMLErrorStep-1680078354238]: 
+        message: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1680078354205
+                - java.lang.String: 
+                  - ↑value: ./document/error/message/text()
+      ↓Return [steps.ReturnStep-1680078354241]: 
 ↓forms_config [variables.RequestableVariable-1680078354355]: 
   comment: |
     '{
@@ -340,3 +382,15 @@ comment: |
   value: 
 ↓doc [variables.RequestableVariable-1680085008489]: 
 ↓originalDoc [variables.RequestableVariable-1680078875207]: 
+↓forms_id [variables.RequestableVariable-1726159331067]: 
+  comment: |
+    '{
+    	"en": {
+    		"comment":"The ID of the row to update. If not set , the action will add a row. If set, all rows''s columns identified by the ''technicalID'' will be updated",
+    		"displayName":"ID"
+    	},
+    	"fr": {
+    		"comment":"L''ID de la ligne à mettre à jour. S''il n''est pas défini, l''action ajoutera une ligne. S''il est défini, toutes les colonnes des lignes identifiées par le « technicalID » seront mises à jour",
+    		"displayName":"ID"
+    	}
+    }'

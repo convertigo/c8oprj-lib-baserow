@@ -6869,6 +6869,14 @@ Creates a row in a table with a given configuration
 </tr>
 <tr>
 <td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_id
+</td>
+<td>
+The ID of the row to update. If not set , the action will add a row. If set, all rows's columns identified by the 'technicalID' will be updated
+</td>
+</tr>
+<tr>
+<td>
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;originalDoc
 </td>
 <td>
@@ -8237,6 +8245,52 @@ Deletes the row related to the value.
 </td>
 <td>
 Returns the rows of the table related to the provided value.
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>TableUpdateRow</b> : Updates a row in a table </summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableUpdateRow
+
+Updates a row in a table 
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;data
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;row_id
+</td>
+<td>
+Insert row in this table_id
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Insert row in this table_id
 </td>
 </tr>
 </table>
