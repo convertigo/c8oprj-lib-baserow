@@ -302,7 +302,7 @@ comment: |
         
     ↓Call_Sequence [steps.SequenceStep-1726213836036]: 
       comment: Push the row to BR
-      sourceSequence: lib_BaseRow.TableUpdateRowApiKey
+      sourceSequence: lib_BaseRow.TableUpdateRow
       ↓table_id [variables.StepVariable-1726213898219]: 
         comment: Insert row in this table_id
         description: table_id
