@@ -1,0 +1,96 @@
+accessibility: Hidden
+authenticatedContextRequired: true
+comment: |
+  '{
+      "en": {
+          "displayName": "DeleteRow",
+          "comment": "Deletes a data row from  a table"
+      },
+      "fr": {
+          "displayName": "DeleteRow",
+          "comment": "Supprime une ligne de données de la table"
+      }
+  }
+  '
+↓ParseConfig [steps.SimpleStep-1726474061152]: 
+  comment: Parse JSON configuration ti get table id
+  expression: |
+    jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+    
+    
+↓jIfThenElse [steps.IfThenElseStep-1726474061274]: 
+  condition: forms_id != '' || forms_id != null || forms_id != undefined
+  ↓jThen [steps.ThenStep-1726474061277]: 
+    ↓MakeRowID [steps.SimpleStep-1726474061280]: 
+      expression: |
+        row_id = forms_id
+        
+        
+    ↓Call_Sequence [steps.SequenceStep-1726474061283]: 
+      comment: Delet row from BR table
+      sourceSequence: lib_BaseRow.TableDeleteRow
+      ↓table_id [variables.StepVariable-1726474302036]: 
+        comment: Returns the rows of the table related to the provided value.
+        description: table_id
+        required: true
+        value: 
+      ↓row_id [variables.StepVariable-1726474302038]: 
+        comment: Deletes the row related to the value.
+        description: row_id
+        required: true
+        value: 
+    ↓IfExist [steps.IfExistStep-1726474061295]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1726474061283
+            - java.lang.String: 
+              - ↑value: ./document/transaction/document/error
+      ↓Error_structure [steps.XMLErrorStep-1726474061298]: 
+        message: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1726474061283
+                - java.lang.String: 
+                  - ↑value: ./document/transaction/document/error/message/text()
+      ↓Return [steps.ReturnStep-1726474061301]: 
+  ↓jElse [steps.ElseStep-1726474061304]: 
+    ↓Error_structure [steps.XMLErrorStep-1726474339162]: 
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: A row id is mandatory for DeleteRow Action
+↓forms_config [variables.RequestableVariable-1726474061328]: 
+  comment: |
+    '{
+    	"en": {
+    		"comment":"Creates a row in a table with a given configuration",
+    		"displayName":"Configuration"
+    	}
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables?noCols=true
+  required: true
+  value: 
+↓doc [variables.RequestableVariable-1726474061331]: 
+↓originalDoc [variables.RequestableVariable-1726474061334]: 
+↓forms_id [variables.RequestableVariable-1726474061337]: 
+  comment: |
+    '{
+    	"en": {
+    		"comment":"The ID of the row to delete",
+    		"displayName":"ID"
+    	},
+    	"fr": {
+    		"comment":"L''ID de la ligne à supprimer",
+    		"displayName":"ID"
+    	}
+    }'

@@ -377,7 +377,7 @@ comment: |
     		"displayName":"Configuration"
     	}
     }'
-  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables?noCols=true
   required: true
   value: 
 ↓doc [variables.RequestableVariable-1680085008489]: 
