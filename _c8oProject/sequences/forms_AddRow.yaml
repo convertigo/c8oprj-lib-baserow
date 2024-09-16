@@ -293,7 +293,7 @@ comment: |
     data = JSON.stringify(data);
     
 ↓jIfThenElse [steps.IfThenElseStep-1726213751006]: 
-  condition: forms_id != '' || forms_id != null || forms_id != undefined
+  condition: forms_id != '' && forms_id != null && forms_id != undefined
   ↓jThen [steps.ThenStep-1726213751008]: 
     ↓MakeRowID [steps.SimpleStep-1726214039657]: 
       expression: |

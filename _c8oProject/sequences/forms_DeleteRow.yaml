@@ -20,7 +20,7 @@ comment: |
     
     
 ↓jIfThenElse [steps.IfThenElseStep-1726474061274]: 
-  condition: forms_id != '' || forms_id != null || forms_id != undefined
+  condition: forms_id != '' && forms_id != null && forms_id != undefined
   ↓jThen [steps.ThenStep-1726474061277]: 
     ↓MakeRowID [steps.SimpleStep-1726474061280]: 
       expression: |
