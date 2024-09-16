@@ -492,7 +492,10 @@ title: First page
                                     - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
                                     - com.twinsoft.convertigo.beans.common.FormatedContent: 
                                       →: |
-                                        '		page.local.show = true;
+                                        '		
+                                        		if (page.navParams.data.noCols != ''true'')
+                                        			page.local.show = true;
+                                        		
                                         		page.local.selectedColumns = {};
                                         		let i = 0;
                                         		if(page.local.target == "table"){
