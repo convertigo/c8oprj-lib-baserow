@@ -496,16 +496,18 @@ title: First page
                                         		if (page.navParams.data.noCols != ''true'')
                                         			page.local.show = true;
                                         		
-                                        		page.local.selectedColumns = {};
+                                        		page.local.selectedColumns = [];
                                         		let i = 0;
+                                        		
                                         		if(page.local.target == "table"){
                                         			vars.columns.forEach((item, i) => {
-                                        				page.local.selectedColumns[item.name] = {
+                                        				page.local.selectedColumns.push({
+                                        					name : item.name,
                                         					selected : !event.target.checked,
                                         					order: i++,
                                         					id: item.id,
                                         					table_id: item.table_id 
-                                        				}	
+                                        				})	
                                         			})
                                         		}
                                         		else if(page.local.target == "select"){
@@ -871,6 +873,14 @@ title: First page
                                   - xmlizable: 
                                     - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                                     - MobileSmartSourceType: plain:Hide
+                      ↓Style [ngx.components.UIStyle-1726835565229]: 
+                        styleContent: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                              →: |
+                                '	margin-left: -20px;
+                                '
                 ↓ReorderGroup [ngx.components.UIDynamicElement-1667635999495]: 
                   beanData: '{"ionBean":"ReorderGroup"}'
                   tagName: ion-reorder-group
@@ -883,9 +893,20 @@ title: First page
                           - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
                           - com.twinsoft.convertigo.beans.common.FormatedContent: 
                             →: |
-                              '		page.c8o.log.debug(''[Reorder] Dragged from ''+ event.detail.from  +'' to : ''+ event.detail.to);
-                              		event.detail.complete();
-                              		resolve();
+                              '			page.c8o.log.debug(''[Reorder] Dragged from ''+ event.detail.from  +'' to : ''+ event.detail.to);
+                              			
+                              			let selectedCols = page.local.selectedColumns;
+                              		  	const draggedItem = selectedCols[event.detail.from];
+                              		  	
+                              			// Reorder the array by moving the item from `from` to `to`
+                              			selectedCols.splice(event.detail.from, 1); // Remove item from original position
+                              			selectedCols.splice(event.detail.to, 0, draggedItem); // Insert item at new position
+                              			
+                              			page.local.selectedColumns = selectedCols;
+                              			
+                              			event.detail.complete();
+                              			
+                              			resolve(null);
                               '
                   ↓Directive [ngx.components.UIControlDirective-1667636016496]: 
                     directiveIndexName: idx
@@ -1096,7 +1117,7 @@ title: First page
                                   '{
                                    "ionBean": "CheckBox",
                                    "ControlName": "plain:name1667636420064",
-                                   "DoubleBinding": "script:local?.selectedColumns[column.name]?.selected"
+                                   "DoubleBinding": "script:local?.selectedColumns[idx]?.selected"
                                   }'
                                 tagName: ion-checkbox
                                 ↓Style [ngx.components.UIStyle-1667808051108]: 
@@ -1152,7 +1173,7 @@ title: First page
                                   '{
                                    "ionBean": "CheckBox",
                                    "ControlName": "plain:name1667636420064",
-                                   "DoubleBinding": "script:local.selectedColumns[column.name].hidden",
+                                   "DoubleBinding": "script:local.selectedColumns[idx].hidden",
                                    "Disabled": "script:! local?.selectedColumns[column.name]?.selected"
                                   }'
                                 tagName: ion-checkbox
@@ -2746,6 +2767,16 @@ title: First page
                             - com.twinsoft.convertigo.beans.common.FormatedContent: 
                               →: |
                                 '		page.c8o.log.debug(''[Reorder] Dragged from ''+ event.detail.from  +'' to : ''+ event.detail.to);
+                                		
+                                		let selectedCols = page.local.selectedColumns;
+                                	  	const draggedItem = selectedCols[event.detail.from];
+                                		  	
+                                		// Reorder the array by moving the item from `from` to `to`
+                                		selectedCols.splice(event.detail.from, 1); // Remove item from original position
+                                		selectedCols.splice(event.detail.to, 0, draggedItem); // Insert item at new position
+                                		
+                                		page.local.selectedColumns = selectedCols;
+                                		
                                 		event.detail.complete();
                                 		resolve();
                                 '
