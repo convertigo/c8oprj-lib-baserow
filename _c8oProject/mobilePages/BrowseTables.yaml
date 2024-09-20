@@ -1174,7 +1174,7 @@ title: First page
                                    "ionBean": "CheckBox",
                                    "ControlName": "plain:name1667636420064",
                                    "DoubleBinding": "script:local.selectedColumns[idx].hidden",
-                                   "Disabled": "script:! local?.selectedColumns[column.name]?.selected"
+                                   "Disabled": "script:! local?.selectedColumns[idx]?.selected"
                                   }'
                                 tagName: ion-checkbox
                                 ↓Style [ngx.components.UIStyle-1667808006243]: 
@@ -2966,9 +2966,6 @@ title: First page
        "Property": "plain:valueColumn",
        "Value": "script:{}"
       }'
-  ↓CallSequence1 [ngx.components.UIDynamicAction-1726834620651]: 
-    beanData: '{"ionBean":"CallSequenceAction","requestable":"plain:lib_GoogleSheet.TestLogin"}'
-    isEnabled: false
 ↓Footer [ngx.components.UIDynamicElement-1678902748559]: 
   beanData: '{"ionBean":"Footer"}'
   tagName: ion-footer
@@ -3023,10 +3020,10 @@ title: First page
                     			Object.keys(page.local.selectedColumns).forEach(item => {
                     				conf.table_id_int = page.local.selectedColumns[item]["table_id"]
                     				if (page.local.selectedColumns[item]["selected"]) {
-                    					conf.columns.push(item)
+                    					conf.columns.push(page.local.selectedColumns[item]["name"])
                     				}			
                     				if (page.local.selectedColumns[item]["hidden"]) {
-                    					conf.hidden.push(item)
+                    					conf.hidden.push(page.local.selectedColumns[item]["name"])
                     				}			
                     			})
                     		}
