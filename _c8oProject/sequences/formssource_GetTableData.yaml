@@ -437,7 +437,7 @@ comment: |
                       variableName: jMyEntry
                     ↓AddEntry [steps.SimpleStep-1665407618555]: 
                       expression: |
-                        'log.warn("______" + JSON.stringify(jMyEntry))
+                        'log.debug("______" + JSON.stringify(jMyEntry))
                         
                         if (jMyEntry["value"] != undefined) {
                         	jHtml +=
@@ -522,7 +522,7 @@ comment: |
                 expression: |
                   'function computeHtml() {
                   	if (jData["value"] != undefined) {
-                  		log.warn("************** JData has a Value Key");
+                  		log.debug("************** JData has a Value Key");
                   		if (jData["color"] != undefined) {
                   			jHtml +=
                   			"<div class=\"c8obaserow_link\" style=\"background-color: " + colors[jData["color"]] +	"\">" + 
@@ -532,11 +532,11 @@ comment: |
                   		return
                   	}
                   	
-                  	log.warn("************** jData is simple string ");
+                  	log.debug("************** jData is simple string ");
                   	jHtml += jData;
                   }	
                   
-                  log.warn("**************" + JSON.stringify(jData));
+                  log.debug("**************" + JSON.stringify(jData));
                   if (jData != null) computeHtml();
                   '
               ↓JSON_to_XML [steps.JsonToXmlStep-1667927358648]: 

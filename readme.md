@@ -32,6 +32,7 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [FieldsListApiKey](#fieldslistapikey)
     - [forms_AddRow](#forms_addrow)
+    - [forms_DeleteRow](#forms_deleterow)
     - [formssource_GetFieldValues](#formssource_getfieldvalues)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
@@ -56,6 +57,7 @@ For more technical informations : [documentation](./project.md)
     - [TableGetRowByIdApiKey](#tablegetrowbyidapikey)
     - [TableGetViews](#tablegetviews)
     - [TableReadRow](#tablereadrow)
+    - [TableUpdateRow](#tableupdaterow)
     - [TableUpdateRowApiKey](#tableupdaterowapikey)
     - [TokenGetOrRefresh](#tokengetorrefresh)
 - [Mobile Library](#mobile-library)
@@ -240,7 +242,7 @@ Lists all the fields in a baserow table
 
 ### forms_AddRow
 
-Add a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns.
+Add or update a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns.
 
 **variables**
 
@@ -253,6 +255,33 @@ Add a row to a Baserow table. Each column of the table must have the same name a
 </tr>
 <tr>
 <td>forms_config</td><td>Creates a row in a table with a given configuration</td>
+</tr>
+<tr>
+<td>forms_id</td><td>The ID of the row to update. If not set , the action will add a row. If set, all rows's columns identified by the 'technicalID' will be updated</td>
+</tr>
+<tr>
+<td>originalDoc</td><td></td>
+</tr>
+</table>
+
+### forms_DeleteRow
+
+Deletes a data row from  a table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>doc</td><td></td>
+</tr>
+<tr>
+<td>forms_config</td><td>Creates a row in a table with a given configuration</td>
+</tr>
+<tr>
+<td>forms_id</td><td>The ID of the row to delete</td>
 </tr>
 <tr>
 <td>originalDoc</td><td></td>
@@ -931,6 +960,27 @@ Reads a row from a  from a given table
 </tr>
 <tr>
 <td>table_id</td><td>Returns the rows of the table related to the provided value.</td>
+</tr>
+</table>
+
+### TableUpdateRow
+
+Updates a row in a table 
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>data</td><td></td>
+</tr>
+<tr>
+<td>row_id</td><td>Insert row in this table_id</td>
+</tr>
+<tr>
+<td>table_id</td><td>Insert row in this table_id</td>
 </tr>
 </table>
 
