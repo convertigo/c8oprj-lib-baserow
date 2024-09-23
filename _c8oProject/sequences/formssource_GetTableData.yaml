@@ -697,6 +697,9 @@ comment: |
     ↓ReorderColumns [steps.SimpleStep-1726918802256]: 
       expression: |
         'jReorderedRow = {};
+        jReorderedRow["id"] = jRow["id"];
+        jReorderedRow["order"] = jRow["order"];
+        
         jConfig.columns.forEach((col) => {
           if (jRow.hasOwnProperty(col)) {
             jReorderedRow[col] = jRow[col];
