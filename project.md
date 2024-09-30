@@ -12,6 +12,7 @@ This is the Baserow No Code connector for Convertigo. Use this connector to exch
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
 
 
+see [readme](https://github.com/convertigo/C8oForms/tree/hotfix/2.0.50.X#readme)
 </p></blockquote></details>
 
 <details><summary><b>CouchDb_schema</b></summary><blockquote><p>
@@ -8427,6 +8428,36 @@ Describes the mobile application global properties
 ### ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/pagecomponent_color_16x16.png?raw=true "PageComponent") BrowseTables
 
 My First Page as root page
+</p></blockquote></details>
+
+<details><summary><span style="color:DarkGoldenRod"><i>Shared Actions</i></span></summary><blockquote><p>
+
+
+### ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uiactionstack_color_16x16.png?raw=true "UIActionStack") DisplayTableColumns
+
+
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uistackvariable_16x16.png?raw=true "  alt="UIStackVariable" >&nbsp;tableId
+</td>
+<td>
+
+</td>
+</tr>
+</table>
+
 </p></blockquote></details>
 
 <details><summary><span style="color:DarkGoldenRod"><i>Shared Components</i></span></summary><blockquote><p>

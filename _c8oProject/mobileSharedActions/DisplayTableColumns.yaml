@@ -1,0 +1,75 @@
+↓CallSequence [ngx.components.UIDynamicAction-1727686162011]: 
+  beanData: '{"ionBean":"CallSequenceAction","requestable":"plain:lib_BaseRow.FieldsList"}'
+  ↓table_id [ngx.components.UIControlVariable-1727686162014]: 
+    comment: table_id
+    varValue: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+        - MobileSmartSourceType: script:params.tableId
+  ↓SelectAllColumnsAfterInit [ngx.components.UICustomAction-1727686162038]: 
+    actionValue: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+        - com.twinsoft.convertigo.beans.common.FormatedContent: 
+          →: |
+            '		
+            		if (page["navParams"].data.noCols != ''true'')
+            			page.local.show = true;
+            		
+            		page.local.selectedColumns = [];
+            		let i = 0;
+            		
+            		if(page.local.target == "table"){
+            			vars.columns.forEach((item, i) => {
+            				// check if the column name is in the local.initialSelectedColumns and if it is
+            				// set a selected boolean to true
+            				let selected = false;
+            				page.local.initialSelectedColumns.forEach((col) => {
+            					if (col == item.name) {
+            						selected = true;
+            					}
+            				})
+            				
+            				page.local.selectedColumns.push({
+            					name : item.name,
+            					selected : event.target ? !event.target.checked : selected,
+            					order: i++,
+            					id: item.id,
+            					hidden: false,
+            					table_id: item.table_id 
+            				})	
+            			})
+            		}
+            		else if(page.local.target == "select"){
+            			page.local.selectedColumns["id"] = {
+            					selected : true,
+            					displayValue: false,
+            					value:true,
+            					order: 0,
+            					id: "id"
+            				}	
+            			vars.columns.forEach((item, i) => {
+            				page.local.selectedColumns[item.name] = {
+            					selected : !event.target.checked,
+            					displayValue: i == 0,
+            					value:false,
+            					order: i++,
+            					id: item.id,
+            					table_id: item.table_id 
+            				}	
+            			})
+            			let str = JSON.stringify(vars.columns[0]);
+            			page.local.displayColumn = vars.columns[0].name;
+            			page.local.valueColumn = "id";
+            			page.local.diffrentVals = false;
+            			
+            		}
+            		
+            		resolve();
+            '
+    ↓columns [ngx.components.UIControlVariable-1727686162041]: 
+      varValue: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+          - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.FieldsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
+↓tableId [ngx.components.UIStackVariable-1727686198206]: 
