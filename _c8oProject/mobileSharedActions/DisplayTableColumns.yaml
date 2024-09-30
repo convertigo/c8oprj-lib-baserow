@@ -30,12 +30,20 @@
             					}
             				})
             				
+            				// same for hidden columns use the local.initalHiddenColumns
+            				let hidden = false;
+            				page.local.initialHiddenColumns.forEach((col) => {
+            					if (col == item.name) {
+            						hidden = true;
+            					}
+            				})
+            				
             				page.local.selectedColumns.push({
             					name : item.name,
             					selected : event.target ? !event.target.checked : selected,
             					order: i++,
             					id: item.id,
-            					hidden: false,
+            					hidden: hidden,
             					table_id: item.table_id 
             				})	
             			})
