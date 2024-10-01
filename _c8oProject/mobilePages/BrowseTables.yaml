@@ -901,7 +901,7 @@ title: First page
                     directiveSource: 
                       - xmlizable: 
                         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                        - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.FieldsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.selectedColumns","prefix":"","suffix":"","custom":"","useCustom":false}}
                     ↓tag [ngx.components.UIControlDirective-1679050821406]: 
                       directiveName: If
                       directiveSource: 
@@ -916,7 +916,7 @@ title: First page
                         directiveSource: 
                           - xmlizable: 
                             - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                            - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1667636016496}],"path":"?.type","prefix":"","suffix":"","custom":"","useCustom":false}}
+                            - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1667636016496}],"path":"","prefix":"","suffix":"?.type","custom":"","useCustom":false}}
                         ↓Directive [ngx.components.UIControlDirective-1667636860165]: 
                           directiveName: SwitchCase
                           directiveSource: 
@@ -1074,7 +1074,7 @@ title: First page
                           textValue: 
                             - xmlizable: 
                               - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                              - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1667636016496}],"path":"?.name","prefix":"","suffix":"","custom":"","useCustom":false}}
+                              - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1667636016496}],"path":"","prefix":"","suffix":"?.name","custom":"","useCustom":false}}
                         ↓Text1 [ngx.components.UIText-1667676947047]: 
                           isEnabled: false
                           textValue: 
@@ -2967,6 +2967,13 @@ title: First page
            "ionBean": "SetLocalAction",
            "Property": "plain:valueColumn",
            "Value": "script:{}"
+          }'
+      ↓selectedColumns [ngx.components.UIDynamicAction-1727792675265]: 
+        beanData: |
+          '{
+           "ionBean": "SetLocalAction",
+           "Property": "plain:selectedColumns",
+           "Value": "script:[]"
           }'
       ↓If [ngx.components.UIDynamicAction-1727692720318]: 
         beanData: '{"ionBean":"IfAction","condition":"source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id_int\",\"custom\":\"\",\"useCustom\":false}}"}'
