@@ -6,7 +6,7 @@
  "Select_a_database_and_table": "Select a database and table",
  "Please_select_among_the_following_elemen": "Please select among the following elements a database and a table",
  "Select": "Select",
- "Select_Columns": "Select Columns",
+ "Select_Columns": "Select Columns of ",
  "notice2": "Please select among the following elements columns you would like to retrieve from the selected table in the data grid. You can also hide from the grid selected columns. They will not be visible but you will be able to use this columns data in your application. Note that you will only be able to filter on the columns you selected",
  "_": " ",
  "Include": "Include",

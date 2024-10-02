@@ -12,7 +12,6 @@ scriptContent:
         	/*End_c8o_PageDeclaration*/
         /*Begin_c8o_PageConstructor*/
         		window["p"] = this;
-        		this.local.accordions = ["Employee Directory"];
         		/*End_c8o_PageConstructor*/
         /*Begin_c8o_PageFunction*/
         	addInSelectedColumn(colName) {
@@ -443,7 +442,7 @@ title: First page
             beanData: '{"ionBean":"CardContent"}'
             tagName: ion-card-content
             ↓AccordionGroup [ngx.components.UIDynamicElement-1667634603471]: 
-              beanData: '{"ionBean":"AccordionGroup","Value":"script:this.local.accordions"}'
+              beanData: '{"ionBean":"AccordionGroup","Value":"plain:"}'
               tagName: ion-accordion-group
               ↓Directive [ngx.components.UIControlDirective-1667635335398]: 
                 directiveIndexName: dbIdx
@@ -552,7 +551,7 @@ title: First page
                 attrValue: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                    - MobileSmartSourceType: script:getApplicationIDFromTableId(414)
+                    - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.table_id_int","prefix":"getApplicationIDFromTableId(","suffix":")","custom":"","useCustom":false}}
       ↓tag [ngx.components.UIControlDirective-1679049305245]: 
         directiveName: If
         directiveSource: 
@@ -612,6 +611,35 @@ title: First page
                                 font-size: 24px;
                                 font-style: normal;
                                 '
+                      ↓Break [ngx.components.UIDynamicElement-1727876722198]: 
+                        beanData: '{"ionBean":"Break"}'
+                        selfClose: true
+                        tagName: br
+                      ↓Text1 [ngx.components.UIText-1727876532403]: 
+                        textValue: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                            - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.groupName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                      ↓Text4 [ngx.components.UIText-1727876611296]: 
+                        textValue: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                            - MobileSmartSourceType: plain:~>
+                      ↓Text2 [ngx.components.UIText-1727876579282]: 
+                        textValue: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                            - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.baseName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                      ↓Text5 [ngx.components.UIText-1727876640053]: 
+                        textValue: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                            - MobileSmartSourceType: plain:~>
+                      ↓Text3 [ngx.components.UIText-1727876584955]: 
+                        textValue: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                            - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.tableName","prefix":"","suffix":"","custom":"","useCustom":false}}
                     ↓Style [ngx.components.UIStyle-1678905330214]: 
                       styleContent: 
                         - xmlizable: 
@@ -2990,7 +3018,7 @@ title: First page
             '{
              "ionBean": "SetLocalAction",
              "Property": "plain:tableName",
-             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[0]\",\"custom\":\"\",\"useCustom\":false}}"
+             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[2]\",\"custom\":\"\",\"useCustom\":false}}"
             }'
           tagName: SetLocal
         ↓SetLocal1 [ngx.components.UIDynamicAction-1727715216847]: 
@@ -3006,7 +3034,7 @@ title: First page
             '{
              "ionBean": "SetLocalAction",
              "Property": "plain:groupName",
-             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[2]\",\"custom\":\"\",\"useCustom\":false}}"
+             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[0]\",\"custom\":\"\",\"useCustom\":false}}"
             }'
           tagName: SetLocal
   ↓defineTarget [ngx.components.UICustomAsyncAction-1680694055713]: 
