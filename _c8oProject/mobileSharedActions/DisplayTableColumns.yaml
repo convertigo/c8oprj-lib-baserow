@@ -22,8 +22,8 @@
             		if(page.local.target == "table"){
             			// loop through the initalSelectedColumns to handle the selected and hidden columns ordered by the 
             			// order of the columns in the initialSelectedColumns
-            			page.local.initialSelectedColumns.forEach((col, i) => {
-            				if (vars.columns.find((item) => item.name == col) != undefined)
+            			page.local.initialSelectedColumns?.forEach((col, i) => {
+            				if (vars.columns.find((item) => item.name == col) != undefined) {
             					page.local.selectedColumns.push({
             						name: col,
             						selected: true,
@@ -33,6 +33,7 @@
             						hidden: page.local.initialHiddenColumns.indexOf(col) != -1,
             						table_id: vars.columns.find((item) => item.name == col).table_id
             					})
+            				}
             			})
             			
             			// Now handle the rest of the columns
@@ -40,7 +41,7 @@
             				// check if the column name is in the local.initialSelectedColumns and if it is
             				// set a selected boolean to true
             				let selected = false;
-            				page.local.initialSelectedColumns.forEach((col) => {
+            				page.local.initialSelectedColumns?.forEach((col) => {
             					if (col == item.name) {
             						selected = true;
             					}
@@ -48,7 +49,7 @@
             				
             				// same for hidden columns use the local.initalHiddenColumns
             				let hidden = false;
-            				page.local.initialHiddenColumns.forEach((col) => {
+            				page.local.initialHiddenColumns?.forEach((col) => {
             					if (col == item.name) {
             						hidden = true;
             					}
