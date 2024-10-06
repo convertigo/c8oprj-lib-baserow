@@ -2994,14 +2994,21 @@ title: First page
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:valueColumn",
-           "Value": "script:{}"
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.value\",\"custom\":\"\",\"useCustom\":false}}"
+          }'
+      ↓SetLocal4 [ngx.components.UIDynamicAction-1728227239574]: 
+        beanData: |
+          '{
+           "ionBean": "SetLocalAction",
+           "Property": "plain:displayValueColumn",
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.displayValue\",\"custom\":\"\",\"useCustom\":false}}"
           }'
       ↓selectedColumns [ngx.components.UIDynamicAction-1727792675265]: 
         beanData: |
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:selectedColumns",
-           "Value": "script:[]"
+           "Value": "script:{}"
           }'
       ↓If [ngx.components.UIDynamicAction-1727692720318]: 
         beanData: '{"ionBean":"IfAction","condition":"source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id_int\",\"custom\":\"\",\"useCustom\":false}}"}'
