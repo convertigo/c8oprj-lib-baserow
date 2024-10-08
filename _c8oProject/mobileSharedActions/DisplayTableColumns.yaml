@@ -59,7 +59,9 @@
             				if (!selected) {				
             					page.local.selectedColumns.push({
             						name : item.name,
-            						selected : false,
+            						// If we have initialSelected Columns then set the selected boolean to false beacuse the previous loop has already added the selected columns
+            						// If not set it to true to select all columns by default
+            						selected : page.local.initialSelectedColumns ? false : true,
             						order: i++,
             						id: item.id,
             						type : item.type,
