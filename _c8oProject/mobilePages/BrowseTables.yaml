@@ -2958,15 +2958,26 @@ title: First page
           - com.twinsoft.convertigo.beans.common.FormatedContent: 
             →: |
               '			page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
-              			
-              			// from another project called from an iframe
-              			var getConfigurationData = ""
-              			
+              
               			if (window.parent) {
-              				getConfigurationData = window.parent["getConfigurationData"]();
-              				page.c8o.log.debug("[MB] getConfigurationData: " + getConfigurationData)
+              				const [ts, call] = [new Date().getTime(), "getConfigurationData"];
+              				var handler;
+              				window.addEventListener(''message'', handler = (event) => {
+              					if (event.data.ts != ts || event.data.call != call) {
+              						return;
+              					}
+              					window.removeEventListener(''message'', handler);
+              					page.c8o.log.debug(''[MB] getConfigurationData: '' + event.data.result);
+              					resolve(JSON.parse(event.data.result));
+              				});
+              				setTimeout(() => {
+              					window.removeEventListener(''message'', handler);
+              					reject(new Error(''Configuration request timed out''));
+              				}, 5000);
+              				window.parent.postMessage({ts, call}, ''*'');
+              			} else {
+              				resolve({});
               			}
-              			resolve(JSON.parse(getConfigurationData));
               '
       ↓SetLocal [ngx.components.UIDynamicAction-1667721165359]: 
         beanData: |
@@ -3146,9 +3157,24 @@ title: First page
                     		}
                     		console.log("conf", conf);
                     		if (window.parent) {
-                    			window.parent["setConfigurationData"](JSON.stringify(conf))
+                    			const [ts, call, args] = [new Date().getTime(), "setConfigurationData", [JSON.stringify(conf)]];
+                    			var handler;
+                    			window.addEventListener(''message'', handler = (event) => {
+                    				if (event.data.ts != ts || event.data.call != call) {
+                    					return;
+                    				}
+                    				window.removeEventListener(''message'', handler);
+                    				page.c8o.log.debug(''[MB] getConfigurationData: '' + event.data.result);
+                    				resolve(conf);
+                    			});
+                    			setTimeout(() => {
+                    				window.removeEventListener(''message'', handler);
+                    				reject(new Error(''Configuration request timed out''));
+                    			}, 5000);
+                    			window.parent.postMessage({ts, call, args}, ''*'');
+                    		} else {
+                    			resolve(conf);
                     		}
-                    		resolve(conf);
                     '
             ↓Log [ngx.components.UIDynamicAction-1678902774237]: 
               beanData: |
