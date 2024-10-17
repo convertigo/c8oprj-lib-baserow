@@ -1,5 +1,4 @@
 accessibility: Hidden
-authenticatedContextRequired: true
 comment: |
   '{
       "en": {
@@ -20,6 +19,31 @@ comment: |
       },
       "types": ["grid", "chart", "map"]
   }'
+↓Call_Sequence1 [steps.SequenceStep-1729157466231]: 
+  sourceSequence: lib_BaseRow.formssource_CheckConfig
+  ↓forms_config [variables.StepVariable-1729157466233]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+↓IfError [steps.IfExistStep-1729157599546]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157466231
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1729157599549]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157466231
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1729157599552]: 
 ↓ParseConfig [steps.SimpleStep-1666429506760]: 
   expression: |
     'jConfig = JSON.parse(forms_config);
@@ -208,7 +232,6 @@ comment: |
     	filterExpression = null;
     	describeStructure = true;
     }
-    
     '
 ↓Input_variables [steps.InputVariablesStep-1665402570169]: 
 ↓Call_Sequence [steps.SequenceStep-1665402300413]: 
@@ -721,13 +744,13 @@ comment: |
 ↓forms_config [variables.RequestableVariable-1665402317348]: 
   comment: |
     '{
-        "en": {
+    	"en": {
             "comment": "Choose a table in Baserow",
             "displayName": "Configuration"
         },
         "fr": {
             "comment": "Choisissez une table dans Baserow",
-            "displayName": "Configuration"
+    		"displayName":"Configuration"
         },
         "es": {
             "comment": "Elija una tabla en Baserow",
@@ -736,7 +759,7 @@ comment: |
         "it": {
             "comment": "Scegli una tabella in Baserow",
             "displayName": "Configurazione"
-        }
+    	}
     }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
   required: true

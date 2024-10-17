@@ -14,13 +14,12 @@
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.0.44
+  version: 1.1.0-beta1
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
   ↓AdminUserCreate [sequences.GenericSequence]: 🗏 sequences/AdminUserCreate.yaml
   ↓AdminUserDelete [sequences.GenericSequence]: 🗏 sequences/AdminUserDelete.yaml
-  ↓ApplicationsList [sequences.GenericSequence]: 🗏 sequences/ApplicationsList.yaml
   ↓AssetFileUpload [sequences.GenericSequence]: 🗏 sequences/AssetFileUpload.yaml
   ↓ClearTableIdCache [sequences.GenericSequence-1703166628211]: 🗏 sequences/ClearTableIdCache.yaml
   ↓DatabaseTokenCreate [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenCreate.yaml
@@ -29,7 +28,9 @@
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
   ↓FieldsListApiKey [sequences.GenericSequence]: 🗏 sequences/FieldsListApiKey.yaml
   ↓forms_AddRow [sequences.GenericSequence]: 🗏 sequences/forms_AddRow.yaml
+  ↓forms_ApplicationsList [sequences.GenericSequence]: 🗏 sequences/forms_ApplicationsList.yaml
   ↓forms_DeleteRow [sequences.GenericSequence]: 🗏 sequences/forms_DeleteRow.yaml
+  ↓formssource_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formssource_CheckConfig.yaml
   ↓formssource_GetFieldValues [sequences.GenericSequence]: 🗏 sequences/formssource_GetFieldValues.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml

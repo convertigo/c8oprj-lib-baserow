@@ -23,7 +23,6 @@ For more technical informations : [documentation](./project.md)
     - [AdminLogin](#adminlogin)
     - [AdminUserCreate](#adminusercreate)
     - [AdminUserDelete](#adminuserdelete)
-    - [ApplicationsList](#applicationslist)
     - [AssetFileUpload](#assetfileupload)
     - [ClearTableIdCache](#cleartableidcache)
     - [DatabaseTokenCreate](#databasetokencreate)
@@ -32,7 +31,9 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [FieldsListApiKey](#fieldslistapikey)
     - [forms_AddRow](#forms_addrow)
+    - [forms_ApplicationsList](#forms_applicationslist)
     - [forms_DeleteRow](#forms_deleterow)
+    - [formssource_CheckConfig](#formssource_checkconfig)
     - [formssource_GetFieldValues](#formssource_getfieldvalues)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
@@ -61,6 +62,8 @@ For more technical informations : [documentation](./project.md)
     - [TableUpdateRowApiKey](#tableupdaterowapikey)
     - [TokenGetOrRefresh](#tokengetorrefresh)
 - [Mobile Library](#mobile-library)
+    - [Shared Actions](#shared-actions)
+        - [DisplayTableColumns](#displaytablecolumns)
     - [Shared Components](#shared-components)
         - [BaseRowGrid](#baserowgrid)
 
@@ -74,13 +77,13 @@ For more technical informations : [documentation](./project.md)
      <tr><td>To contribute</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow.git:branch=8.3.X
+     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow.git:branch=8.4.x
      ```
      </td></tr>
      <tr><td>To simply use</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow/archive/8.3.X.zip
+     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow/archive/8.4.x.zip
      ```
      </td></tr>
     </table>
@@ -121,9 +124,6 @@ Create a user
 <td>email</td><td></td>
 </tr>
 <tr>
-<td>language</td><td></td>
-</tr>
-<tr>
 <td>name</td><td></td>
 </tr>
 <tr>
@@ -145,10 +145,6 @@ Delete a User
 <td>user_id</td><td>The id of the user to delete</td>
 </tr>
 </table>
-
-### ApplicationsList
-
-Lists all applications (databases) in baserow
 
 ### AssetFileUpload
 
@@ -264,6 +260,10 @@ Add or update a row to a Baserow table. Each column of the table must have the s
 </tr>
 </table>
 
+### forms_ApplicationsList
+
+Lists all applications (databases) in baserow
+
 ### forms_DeleteRow
 
 Deletes a data row from  a table
@@ -285,6 +285,19 @@ Deletes a data row from  a table
 </tr>
 <tr>
 <td>originalDoc</td><td></td>
+</tr>
+</table>
+
+### formssource_CheckConfig
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
 </tr>
 </table>
 
@@ -1012,9 +1025,38 @@ Updates a row in a table ising apikey instead of credentials
 
 Gets a token or refresh it if the token is expired the Token will be placed in the current user session
 
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>email</td><td>The Base row admin email</td>
+</tr>
+<tr>
+<td>password</td><td>The baserow admin password</td>
+</tr>
+</table>
+
 ## Mobile Library
 
 Describes the mobile application global properties
+
+### Shared Actions
+
+#### DisplayTableColumns
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>tableId</td><td></td>
+</tr>
+</table>
 
 ### Shared Components
 
