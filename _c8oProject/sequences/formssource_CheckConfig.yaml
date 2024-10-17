@@ -1,0 +1,100 @@
+accessibility: Private
+↓ParseConfig [steps.SimpleStep-1729157238699]: 
+  expression: |
+    jConfig = JSON.parse(forms_config);
+    _use_docid = jConfig.form_id;
+    source_id = "" + jConfig.source_id;
+    owner = jConfig.source_owner;
+    
+↓Call_Transaction [steps.TransactionStep-1729157830649]: 
+  sourceTransaction: C8Oforms.c8oforms_fs.GetDocument
+  ↓_use_docid [variables.StepVariable-1729157830651]: 
+    description: Document ID
+↓IfExistThenElse [steps.IfExistThenElseStep-1729158259008]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157830649
+        - java.lang.String: 
+          - ↑value: ./document/couchdb_output//item[id = '{{{ source_id }}}']/sources[.//forms_config/str = '{{{ forms_config }}}']
+  ↓jThen [steps.ThenStep-1729158260118]: 
+  ↓jElse [steps.ElseStep-1729158260120]: 
+    ↓Error_structure [steps.XMLErrorStep-1729158280799]: 
+      code: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: 7
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: forms_config mismatch
+    ↓Return [steps.ReturnStep-1729158270026]: 
+↓Call_Sequence1 [steps.SequenceStep-1729157238702]: 
+  sourceSequence: C8Oforms.BaserowAccountGet
+  ↓owner [variables.StepVariable-1729157238705]: 
+↓IfError [steps.IfExistStep-1729157238708]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157238702
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1729157238711]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157238702
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1729157238714]: 
+↓Call_Sequence2 [steps.SequenceStep-1729157238717]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+  ↓password [variables.StepVariable-1729157238720]: 
+    comment: The baserow admin password
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157238702
+          - java.lang.String: 
+            - ↑value: ./document/password/text()
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xd8e180806a1c1d83a6255212121ab827
+    visibility: '-1'
+  ↓email [variables.StepVariable-1729157238723]: 
+    comment: The Base row admin email
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157238702
+          - java.lang.String: 
+            - ↑value: ./document/email/text()
+↓forms_config [variables.RequestableVariable-1729157210751]: 
+  comment: |
+    '{
+    	"en": {
+    		"comment":"Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item",
+    		"displayName":"Configuration"
+    	}
+    }
+    
+    '
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  required: true
+  value: 

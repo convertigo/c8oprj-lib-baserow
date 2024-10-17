@@ -1,5 +1,4 @@
 accessibility: Hidden
-authenticatedContextRequired: true
 comment: |
   '{
       "en": {
@@ -21,6 +20,31 @@ comment: |
       "types": ["select"]
   }
   '
+↓Call_Sequence2 [steps.SequenceStep-1729157633820]: 
+  sourceSequence: lib_BaseRow.formssource_CheckConfig
+  ↓forms_config [variables.StepVariable-1729157633823]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+↓IfError [steps.IfExistStep-1729157633826]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157633820
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1729157633829]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157633820
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1729157633832]: 
 ↓ParseConfig [steps.SimpleStep-1666717197201]: 
   expression: |
     'jConfig = JSON.parse(forms_config);

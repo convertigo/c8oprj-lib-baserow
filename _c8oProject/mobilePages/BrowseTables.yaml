@@ -42,7 +42,7 @@ scriptContent:
         	 * ]	 
         	 */
         	getApplicationIDFromTableId(tableId) {
-        		let application = this.listen(['lib_BaseRow.ApplicationsList'])?.array
+        		let application = this.listen(['lib_BaseRow.forms_ApplicationsList'])?.array
         		if (application) {
         			for (let app of application) {
         				for (let table of app.tables) {
@@ -53,6 +53,29 @@ scriptContent:
         			}
         		}
         		return 0;
+        	}
+        	
+        	async callParentFunction(call, ...args) {
+        		return await new Promise((resolve, reject) => {
+        			if (window.parent) {
+        				const ts = new Date().getTime();
+        				var handler;
+        				window.addEventListener('message', handler = (event) => {
+        					if (event.data.ts != ts || event.data.call != call) {
+        						return;
+        					}
+        					window.removeEventListener('message', handler);
+        					resolve(event.data.result);
+        				});
+        				setTimeout(() => {
+        					window.removeEventListener('message', handler);
+        					reject(new Error('Parent call timed out'));
+        				}, 5000);
+        				window.parent.postMessage({ts, call, args}, '*');
+        			} else {
+        				resolve();
+        			}
+        		});
         	}
         	/*End_c8o_PageFunction*/
         
@@ -450,7 +473,7 @@ title: First page
                 directiveSource: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                    - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.ApplicationsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
+                    - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.forms_ApplicationsList","marker":""}],"path":"","prefix":"","suffix":"?.array","custom":"","useCustom":false}}
                 ↓Accordion [ngx.components.UIDynamicElement-1667634603474]: 
                   beanData: '{"ionBean":"Accordion","Value":"source:{\"filter\":\"Iteration\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1667635335398}],\"path\":\"?.id\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}"}'
                   tagName: ion-accordion
@@ -2941,6 +2964,7 @@ title: First page
                 tagName: ion-card-content
   ↓H1 [ngx.components.UIDynamicElement-1727282354563]: 
     beanData: '{"ionBean":"Heading1"}'
+    isEnabled: false
     tagName: h1
     ↓Text [ngx.components.UIText-1727282354553]: 
       textValue: 
@@ -2950,109 +2974,97 @@ title: First page
 ↓PageEvent [ngx.components.UIPageEvent-1667634909158]: 
   viewEvent: onWillLoad
   ↓CallSequence [ngx.components.UIDynamicAction-1667634917133]: 
-    beanData: '{"ionBean":"CallSequenceAction","requestable":"plain:lib_BaseRow.ApplicationsList"}'
-    ↓ReadConfiguration [ngx.components.UICustomAction-1727276628944]: 
+    beanData: '{"ionBean":"CallSequenceAction","requestable":"plain:lib_BaseRow.forms_ApplicationsList"}'
+    ↓ReadConfiguration [ngx.components.UICustomAsyncAction-1729087057370]: 
       actionValue: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
           - com.twinsoft.convertigo.beans.common.FormatedContent: 
             →: |
-              '			page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
+              '		try {
+              			page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
               
-              			if (window.parent) {
-              				const [ts, call] = [new Date().getTime(), "getConfigurationData"];
-              				var handler;
-              				window.addEventListener(''message'', handler = (event) => {
-              					if (event.data.ts != ts || event.data.call != call) {
-              						return;
-              					}
-              					window.removeEventListener(''message'', handler);
-              					page.c8o.log.debug(''[MB] getConfigurationData: '' + event.data.result);
-              					resolve(JSON.parse(event.data.result));
-              				});
-              				setTimeout(() => {
-              					window.removeEventListener(''message'', handler);
-              					reject(new Error(''Configuration request timed out''));
-              				}, 5000);
-              				window.parent.postMessage({ts, call}, ''*'');
-              			} else {
-              				resolve({});
-              			}
+              			let result: any = await page.callParentFunction("getConfigurationData");
+              			page.c8o.log.debug(''[MB] getConfigurationData: '' + result);
+              			return JSON.parse(result);
+              		} catch (e) {
+              		
+              		}
               '
-      ↓SetLocal [ngx.components.UIDynamicAction-1667721165359]: 
+      ↓SetLocal [ngx.components.UIDynamicAction-1729087093147]: 
         beanData: |
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:initialSelectedColumns",
-           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.columns\",\"custom\":\"\",\"useCustom\":false}}"
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.columns\",\"custom\":\"\",\"useCustom\":false}}"
           }'
-      ↓SetLocal1 [ngx.components.UIDynamicAction-1680696552557]: 
+      ↓SetLocal1 [ngx.components.UIDynamicAction-1729087093150]: 
         beanData: |
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:initialHiddenColumns",
-           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.hidden\",\"custom\":\"\",\"useCustom\":false}}"
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.hidden\",\"custom\":\"\",\"useCustom\":false}}"
           }'
-      ↓SetLocal3 [ngx.components.UIDynamicAction-1727282059999]: 
+      ↓SetLocal3 [ngx.components.UIDynamicAction-1729087093153]: 
         beanData: |
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:table_id_int",
-           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id_int\",\"custom\":\"\",\"useCustom\":false}}"
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id_int\",\"custom\":\"\",\"useCustom\":false}}"
           }'
-      ↓SetLocal2 [ngx.components.UIDynamicAction-1680696554212]: 
+      ↓SetLocal2 [ngx.components.UIDynamicAction-1729087093156]: 
         beanData: |
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:valueColumn",
-           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.value\",\"custom\":\"\",\"useCustom\":false}}"
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.value\",\"custom\":\"\",\"useCustom\":false}}"
           }'
-      ↓SetLocal4 [ngx.components.UIDynamicAction-1728227239574]: 
+      ↓SetLocal4 [ngx.components.UIDynamicAction-1729087093159]: 
         beanData: |
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:displayValueColumn",
-           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.displayValue\",\"custom\":\"\",\"useCustom\":false}}"
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.displayValue\",\"custom\":\"\",\"useCustom\":false}}"
           }'
-      ↓selectedColumns [ngx.components.UIDynamicAction-1727792675265]: 
+      ↓selectedColumns [ngx.components.UIDynamicAction-1729087093162]: 
         beanData: |
           '{
            "ionBean": "SetLocalAction",
            "Property": "plain:selectedColumns",
            "Value": "script:{}"
           }'
-      ↓If [ngx.components.UIDynamicAction-1727692720318]: 
-        beanData: '{"ionBean":"IfAction","condition":"source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id_int\",\"custom\":\"\",\"useCustom\":false}}"}'
-        ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1727692786533]: 
+      ↓If [ngx.components.UIDynamicAction-1729087093165]: 
+        beanData: '{"ionBean":"IfAction","condition":"source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id_int\",\"custom\":\"\",\"useCustom\":false}}"}'
+        ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1729087093168]: 
           beanData: '{"ionBean":"InvokeAction"}'
           stack: lib_BaseRow.Application.NgxApp.DisplayTableColumns
-          ↓tableId [ngx.components.UIControlVariable-1727692811178]: 
+          ↓tableId [ngx.components.UIControlVariable-1729087093171]: 
             varValue: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                - MobileSmartSourceType: source:{"filter":"Action","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1727276628944,"rootEvent":false,"pageLocals":false},{"priority":1667634909158,"rootEvent":true,"pageLocals":false}],"path":"?.out","prefix":"","suffix":"?.table_id_int","custom":"","useCustom":false}}
-        ↓SetLocal [ngx.components.UIDynamicAction-1727715216844]: 
+                - MobileSmartSourceType: source:{"filter":"Action","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1729087057370,"rootEvent":false,"pageLocals":false},{"priority":1667634909158,"rootEvent":true,"pageLocals":false},{"priority":1667634917133,"rootEvent":false,"pageLocals":false}],"path":"?.out","prefix":"","suffix":"?.table_id_int","custom":"","useCustom":false}}
+        ↓SetLocal [ngx.components.UIDynamicAction-1729087093174]: 
           beanData: |
             '{
              "ionBean": "SetLocalAction",
              "Property": "plain:tableName",
-             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[2]\",\"custom\":\"\",\"useCustom\":false}}"
+             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[2]\",\"custom\":\"\",\"useCustom\":false}}"
             }'
           tagName: SetLocal
-        ↓SetLocal1 [ngx.components.UIDynamicAction-1727715216847]: 
+        ↓SetLocal1 [ngx.components.UIDynamicAction-1729087093177]: 
           beanData: |
             '{
              "ionBean": "SetLocalAction",
              "Property": "plain:baseName",
-             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[1]\",\"custom\":\"\",\"useCustom\":false}}"
+             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[1]\",\"custom\":\"\",\"useCustom\":false}}"
             }'
           tagName: SetLocal
-        ↓SetLocal2 [ngx.components.UIDynamicAction-1727715216850]: 
+        ↓SetLocal2 [ngx.components.UIDynamicAction-1729087093180]: 
           beanData: |
             '{
              "ionBean": "SetLocalAction",
              "Property": "plain:groupName",
-             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1727276628944,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[0]\",\"custom\":\"\",\"useCustom\":false}}"
+             "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id.split(''~>'')[0]\",\"custom\":\"\",\"useCustom\":false}}"
             }'
           tagName: SetLocal
   ↓defineTarget [ngx.components.UICustomAsyncAction-1680694055713]: 
@@ -3107,73 +3119,61 @@ title: First page
                 - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
                 - MobileSmartSourceType: plain:Confirm
         ↓Event [ngx.components.UIControlEvent-1678902774231]: 
-          ↓ComputeBaserowConfiguration [ngx.components.UICustomAction-1678902774234]: 
+          ↓ComputeBaserowConfiguration [ngx.components.UICustomAsyncAction-1729156058188]: 
             actionValue: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
                 - com.twinsoft.convertigo.beans.common.FormatedContent: 
                   →: |
-                    '		page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
-                    		let conf : any = {
-                    			table_id: null,
-                    			table_id_int: null,
-                    			columns: [],
-                    			hidden: []
-                    		}
-                    		conf.table_id = `${page.local.groupName}~>${page.local.baseName}~>${page.local.tableName}`;
+                    '		try {
+                    			page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
+                    			let conf : any = {
+                    				table_id: `${page.local.groupName}~>${page.local.baseName}~>${page.local.tableName}`,
+                    				table_id_int: null,
+                    				columns: [],
+                    				hidden: [],
+                    				form_id: await page.callParentFunction("getFormId"),
+                    				source_id: await page.callParentFunction("getSourceId"),
+                    				source_owner: await page.callParentFunction("getAuthenticatedUser"),
+                    			};
+                    					
+                    			if (page.local.target == "table") {
+                    				Object.keys(page.local.selectedColumns).forEach(item => {
+                    					conf.table_id_int = page.local.selectedColumns[item]["table_id"]
+                    					if (page.local.selectedColumns[item]["selected"]) {
+                    						conf.columns.push(page.local.selectedColumns[item]["name"])
+                    					}
+                    					if (page.local.selectedColumns[item]["hidden"]) {
+                    						conf.hidden.push(page.local.selectedColumns[item]["name"])
+                    					}
+                    				})
+                    			} else {
+                    				Object.keys(page.local.selectedColumns).forEach(item => {
+                    					conf.table_id_int = page.local.selectedColumns[item]["table_id"]
+                    					if (page.local.selectedColumns[item]["selected"]) {
+                    						conf.columns.push(item)
+                    					}
+                    					if (page.local.selectedColumns[item]["displayValue"]) {
+                    						conf.displayValue = item;
+                    					}
+                    					if (page.local.selectedColumns[item]["value"]) {
+                    						conf.value = item;
+                    					}
+                    				})
                     				
-                    		if(page.local.target == "table"){
-                    			Object.keys(page.local.selectedColumns).forEach(item => {
-                    				conf.table_id_int = page.local.selectedColumns[item]["table_id"]
-                    				if (page.local.selectedColumns[item]["selected"]) {
-                    					conf.columns.push(page.local.selectedColumns[item]["name"])
-                    				}			
-                    				if (page.local.selectedColumns[item]["hidden"]) {
-                    					conf.hidden.push(page.local.selectedColumns[item]["name"])
-                    				}			
-                    			})
-                    		}
-                    		else{
-                    			Object.keys(page.local.selectedColumns).forEach(item => {
-                    				conf.table_id_int = page.local.selectedColumns[item]["table_id"]
-                    				if (page.local.selectedColumns[item]["selected"]) {
-                    					conf.columns.push(item)
-                    				}
-                    				if (page.local.selectedColumns[item]["displayValue"]) {
-                    					conf.displayValue = item;
-                    				}
-                    				if (page.local.selectedColumns[item]["value"]) {
-                    					conf.value = item;
-                    				}			
-                    			})
-                    			
-                    			
-                    			/*let col1 = JSON.parse(page.local.displayColumn);
-                    			conf.table_id = col1.table_id;
-                    			conf.columns.push(col1.name);
-                    			if(page.local.diffrentVals){
-                    				conf.columns.push(JSON.parse(page.local.valueColumn).name);
-                    			}*/
-                    		}
-                    		console.log("conf", conf);
-                    		if (window.parent) {
-                    			const [ts, call, args] = [new Date().getTime(), "setConfigurationData", [JSON.stringify(conf)]];
-                    			var handler;
-                    			window.addEventListener(''message'', handler = (event) => {
-                    				if (event.data.ts != ts || event.data.call != call) {
-                    					return;
-                    				}
-                    				window.removeEventListener(''message'', handler);
-                    				page.c8o.log.debug(''[MB] getConfigurationData: '' + event.data.result);
-                    				resolve(conf);
-                    			});
-                    			setTimeout(() => {
-                    				window.removeEventListener(''message'', handler);
-                    				reject(new Error(''Configuration request timed out''));
-                    			}, 5000);
-                    			window.parent.postMessage({ts, call, args}, ''*'');
-                    		} else {
-                    			resolve(conf);
+                    				
+                    				/*let col1 = JSON.parse(page.local.displayColumn);
+                    				conf.table_id = col1.table_id;
+                    				conf.columns.push(col1.name);
+                    				if(page.local.diffrentVals){
+                    					conf.columns.push(JSON.parse(page.local.valueColumn).name);
+                    				}*/
+                    			}
+                    			console.log("conf", conf);
+                    			conf = await page.callParentFunction("setConfigurationData", JSON.stringify(conf));
+                    			return conf;
+                    		} catch (e) {
+                    			return e;
                     		}
                     '
             ↓Log [ngx.components.UIDynamicAction-1678902774237]: 
