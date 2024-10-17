@@ -3,23 +3,22 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "AddRowToBaserow",
+          "displayName": "Add or update a row to a Baserow",
           "comment": "Add or update a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns."
       },
       "fr": {
-          "displayName": "AddRowToBaserow",
-          "comment": "Ajoutez ou mettre à jour une ligne à une table Baserow. Chaque colonne de la table doit avoir le même nom que le technicalID d''un champ sur le formulaire. Les champs des formulaires peuvent être de n''importe quel type, mais généralement, les listes de sélection sont mappées sur les Colonnes Liées Baserow."
-      },
-      "it": {
-          "displayName": "AddRowToBaserow",
-          "comment": "Aggiungi o modifica una riga a una tabella Baserow. Ogni colonna della tabella deve avere lo stesso nome del technicalID di un campo nel modulo. I campi dei moduli possono essere di qualsiasi tipo, ma di solito le liste di selezione sono mappate su Colonne Collegate Baserow."
+          "displayName": "Ajouter ou mettre à jour une ligne dans un Baserow",
+          "comment": "Ajoutez ou mettez à jour une ligne dans une table Baserow. Chaque colonne de la table doit avoir le même nom que l''ID technique d''un champ du formulaire. Les champs du formulaire peuvent être de n''importe quel type, mais généralement les listes de sélection sont mappées sur les colonnes liées de Baserow."
       },
       "es": {
-          "displayName": "AddRowToBaserow",
-          "comment": "Añade o modificar una fila a una tabla de Baserow. Cada columna de la tabla debe tener el mismo nombre que el technicalID de un campo en el formulario. Los campos de los formularios pueden ser de cualquier tipo, pero usualmente las listas de selección están mapeadas en Columnas Vinculadas de Baserow."
+          "displayName": "Agregar o actualizar una fila en Baserow",
+          "comment": "Agregue o actualice una fila en una tabla de Baserow. Cada columna de la tabla debe tener el mismo nombre que el ID técnico de un campo en el formulario. Los campos del formulario pueden ser de cualquier tipo, pero generalmente las listas de selección están asignadas a Columnas Vinculadas de Baserow."
+      },
+      "it": {
+          "displayName": "Aggiungere o aggiornare una riga in Baserow",
+          "comment": "Aggiungi o aggiorna una riga in una tabella di Baserow. Ogni colonna della tabella deve avere lo stesso nome dell''ID tecnico di un campo nel modulo. I campi del modulo possono essere di qualsiasi tipo, ma di solito le liste di selezione sono mappate sulle Colonne Collegate di Baserow."
       }
-  }
-  '
+  }'
 ↓ParseConfig [steps.SimpleStep-1680078354199]: 
   comment: Parse JSON configuration ti get table id
   expression: |
@@ -372,10 +371,22 @@ comment: |
 ↓forms_config [variables.RequestableVariable-1680078354355]: 
   comment: |
     '{
-    	"en": {
-    		"comment":"Creates a row in a table with a given configuration",
-    		"displayName":"Configuration"
-    	}
+        "en": {
+            "comment": "Choose a table in Baserow",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table dans Baserow",
+            "displayName": "Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en Baserow",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in Baserow",
+            "displayName": "Configurazione"
+        }
     }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables?noCols=true
   required: true
@@ -385,12 +396,20 @@ comment: |
 ↓forms_id [variables.RequestableVariable-1726159331067]: 
   comment: |
     '{
-    	"en": {
-    		"comment":"The ID of the row to update. If not set , the action will add a row. If set, all rows''s columns identified by the ''technicalID'' will be updated",
-    		"displayName":"ID"
-    	},
-    	"fr": {
-    		"comment":"L''ID de la ligne à mettre à jour. S''il n''est pas défini, l''action ajoutera une ligne. S''il est défini, toutes les colonnes des lignes identifiées par le « technicalID » seront mises à jour",
-    		"displayName":"ID"
-    	}
+        "en": {
+            "comment": "The Identifier of the row to update. If not set, the action will add a row. If set, all row''s columns identified by the ''technicalID'' will be updated",
+            "displayName": "Identifier"
+        },
+        "fr": {
+            "comment": "L''identifiant de la ligne à mettre à jour. S''il n''est pas défini, l''action ajoutera une ligne. S''il est défini, toutes les colonnes de la ligne identifiées par l''ID technique seront mises à jour",
+            "displayName": "Identifiant"
+        },
+        "es": {
+            "comment": "El identificador de la fila a actualizar. Si no se establece, la acción agregará una fila. Si se establece, se actualizarán todas las columnas de la fila identificadas por el ''ID técnico''",
+            "displayName": "Identificador"
+        },
+        "it": {
+            "comment": "L''identificatore della riga da aggiornare. Se non impostato, l''azione aggiungerà una riga. Se impostato, tutte le colonne della riga identificate dal ''technicalID'' verranno aggiornate",
+            "displayName": "Identificatore"
+        }
     }'

@@ -3,15 +3,22 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "DeleteRow",
-          "comment": "Deletes a data row from  a table"
+          "displayName": "Delete row to a Baserow",
+          "comment": "Deletes a data row from a Baserow table"
       },
       "fr": {
-          "displayName": "DeleteRow",
-          "comment": "Supprime une ligne de données de la table"
+          "displayName": "Supprimer une ligne dans un Baserow",
+          "comment": "Supprime une ligne de données d''une table Baserow"
+      },
+      "es": {
+          "displayName": "Eliminar una fila en Baserow",
+          "comment": "Elimina una fila de datos de una tabla de Baserow"
+      },
+      "it": {
+          "displayName": "Eliminare una riga in Baserow",
+          "comment": "Elimina una riga di dati da una tabella di Baserow"
       }
-  }
-  '
+  }'
 ↓ParseConfig [steps.SimpleStep-1726474061152]: 
   comment: Parse JSON configuration ti get table id
   expression: |
@@ -72,10 +79,22 @@ comment: |
 ↓forms_config [variables.RequestableVariable-1726474061328]: 
   comment: |
     '{
-    	"en": {
-    		"comment":"Creates a row in a table with a given configuration",
-    		"displayName":"Configuration"
-    	}
+        "en": {
+            "comment": "Choose a table in Baserow",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table dans Baserow",
+            "displayName": "Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en Baserow",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in Baserow",
+            "displayName": "Configurazione"
+        }
     }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables?noCols=true
   required: true
@@ -85,12 +104,20 @@ comment: |
 ↓forms_id [variables.RequestableVariable-1726474061337]: 
   comment: |
     '{
-    	"en": {
-    		"comment":"The ID of the row to delete",
-    		"displayName":"ID"
-    	},
-    	"fr": {
-    		"comment":"L''ID de la ligne à supprimer",
-    		"displayName":"ID"
-    	}
+        "en": {
+            "comment": "The Identifier of the row to delete",
+            "displayName": "Identifier"
+        },
+        "fr": {
+            "comment": "L''identifiant de la ligne à supprimer",
+            "displayName": "Identifiant"
+        },
+        "es": {
+            "comment": "El identificador de la fila a eliminar",
+            "displayName": "Identificador"
+        },
+        "it": {
+            "comment": "L''identificatore della riga da eliminare",
+            "displayName": "Identificatore"
+        }
     }'

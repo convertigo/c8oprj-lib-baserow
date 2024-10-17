@@ -6865,7 +6865,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Creates a row in a table with a given configuration
+Choose a table in Baserow
 </td>
 </tr>
 <tr>
@@ -6873,7 +6873,7 @@ Creates a row in a table with a given configuration
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_id
 </td>
 <td>
-The ID of the row to update. If not set , the action will add a row. If set, all rows's columns identified by the 'technicalID' will be updated
+The Identifier of the row to update. If not set, the action will add a row. If set, all row's columns identified by the 'technicalID' will be updated
 </td>
 </tr>
 <tr>
@@ -6888,12 +6888,12 @@ The ID of the row to update. If not set , the action will add a row. If set, all
 
 </p></blockquote></details>
 
-<details><summary><b>forms_DeleteRow</b> : Deletes a data row from  a table</summary><blockquote><p>
+<details><summary><b>forms_DeleteRow</b> : Deletes a data row from a Baserow table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_DeleteRow
 
-Deletes a data row from  a table
+Deletes a data row from a Baserow table
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6919,7 +6919,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Creates a row in a table with a given configuration
+Choose a table in Baserow
 </td>
 </tr>
 <tr>
@@ -6927,7 +6927,7 @@ Creates a row in a table with a given configuration
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_id
 </td>
 <td>
-The ID of the row to delete
+The Identifier of the row to delete
 </td>
 </tr>
 <tr>
@@ -6965,19 +6965,19 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
+Choose a table in Baserow
 </td>
 </tr>
 </table>
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetSelectData</b> : Get data from a Baserow table as options for a Select component</summary><blockquote><p>
+<details><summary><b>formssource_GetSelectData</b> : Get data from a Baserow table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetSelectData
 
-Get data from a Baserow table as options for a Select component. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -6995,7 +6995,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
+Choose a table in Baserow
 </td>
 </tr>
 <tr>
@@ -7012,8 +7012,7 @@ Filters
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_Filter
 </td>
 <td>
-A custom filter following  JSON styntax
-
+Define a filter to apply to Baserow table
 </td>
 </tr>
 <tr>
@@ -7051,7 +7050,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Returns the rows of the table with a given configuration
+Choose a table in Baserow
 </td>
 </tr>
 <tr>
@@ -7059,8 +7058,7 @@ Returns the rows of the table with a given configuration
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableFilter
 </td>
 <td>
-Filters
-
+Define a filter to apply to Baserow table
 </td>
 </tr>
 <tr>

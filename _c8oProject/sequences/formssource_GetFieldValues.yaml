@@ -3,20 +3,20 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "GetFieldValues",
+          "displayName": "Get field values",
           "comment": "Get all possible values for a given field to feed a Select"
       },
       "fr": {
-          "displayName": "GetFieldValues",
-          "comment": "Obtenez toutes les valeurs possibles pour un champ donné pour alimenter un Sélecteur"
-      },
-      "it": {
-          "displayName": "GetFieldValues",
-          "comment": "Ottieni tutti i valori possibili per un determinato campo per alimentare un Selettore"
+          "displayName": "Récupérer les valeurs du champ",
+          "comment": "Récupérez toutes les valeurs possibles pour un champ donné afin d''alimenter un Select"
       },
       "es": {
-          "displayName": "GetFieldValues",
-          "comment": "Obtén todos los valores posibles para un campo dado para alimentar un Select"
+          "displayName": "Obtener valores del campo",
+          "comment": "Obtenga todos los valores posibles para un campo dado para alimentar un Select"
+      },
+      "it": {
+          "displayName": "Ottenere i valori del campo",
+          "comment": "Ottieni tutti i valori possibili per un campo dato per alimentare un Select"
       },
       "types": ["select"]
   }'
@@ -128,13 +128,23 @@ comment: |
 ↓forms_config [variables.RequestableVariable-1680099603360]: 
   comment: |
     '{
-    	"en": {
-    		"comment":"Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item",
-    		"displayName":"Configuration"
-    	}
-    }
-    
-    '
+        "en": {
+            "comment": "Choose a table in Baserow",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table dans Baserow",
+            "displayName": "Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en Baserow",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in Baserow",
+            "displayName": "Configurazione"
+        }
+    }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
   required: true
   value: 

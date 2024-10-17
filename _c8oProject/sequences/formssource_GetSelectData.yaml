@@ -3,24 +3,23 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "GetSelectData",
-          "comment": "Get data from a Baserow table as options for a Select component. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name."
+          "displayName": "Get Data",
+          "comment": "Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name."
       },
       "fr": {
-          "displayName": "GetSelectData",
-          "comment": "Obtenez des données d''une table Baserow comme options pour un composant Sélecteur. Vous pourrez choisir les colonnes Baserow pour les noms à afficher dans la liste déroulante de sélection et la colonne pour les valeurs de chaque nom."
-      },
-      "it": {
-          "displayName": "GetSelectData",
-          "comment": "Ottieni dati da una tabella Baserow come opzioni per un componente di Selezione. Sarai in grado di scegliere le colonne Baserow per i nomi da visualizzare nella lista a discesa di selezione e la colonna per i valori di ciascun nome."
+          "displayName": "Récupérer les données",
+          "comment": "Récupérez des données à partir d''une table Baserow. Vous pourrez choisir les colonnes de Baserow pour les noms à afficher dans la liste déroulante et la colonne pour les valeurs de chaque nom."
       },
       "es": {
-          "displayName": "GetSelectData",
-          "comment": "Obtén datos de una tabla Baserow como opciones para un componente Select. Podrás elegir las columnas de Baserow para los nombres que se mostrarán en la lista desplegable de selección y la columna para los valores de cada nombre."
+          "displayName": "Obtener datos",
+          "comment": "Obtener datos de una tabla de Baserow. Podrá elegir las columnas de Baserow para que los nombres se muestren en la lista desplegable y la columna para los valores de cada nombre."
+      },
+      "it": {
+          "displayName": "Ottenere dati",
+          "comment": "Ottieni dati da una tabella di Baserow. Sarai in grado di scegliere le colonne di Baserow per i nomi da visualizzare nel menu a discesa e la colonna per i valori di ogni nome."
       },
       "types": ["select"]
-  }
-  '
+  }'
 ↓ParseConfig [steps.SimpleStep-1666717197201]: 
   expression: |
     'jConfig = JSON.parse(forms_config);
@@ -280,16 +279,20 @@ comment: |
   variableName: structure
 ↓computeValue [steps.SimpleStep-1680712348539]: 
   expression: |
-    'if(!(Array.isArray(res))){
-    	res =  [res];
+    'if ("res" in this) {
+    	if (!(Array.isArray(res))) {
+    		res = [res];
+    	}
+    	res = res.map((x) => {
+    		return {
+    			displayValue: x[displayValue],
+    			value: x[value]
+    		}
+    	})
     }
-    res = res.map((x)=>{
-    	return {
-    		displayValue: x[displayValue],
-    		value : x[value]
-    	} 
-    })
-    
+    else {
+    	res = [];
+    }
     // Now fiter is done on the backend using the search API, so no use for the next lines...
     /*
     if(forms_filter != undefined && forms_filter != ""){
@@ -350,20 +353,46 @@ comment: |
 ↓forms_config [variables.RequestableVariable-1666100091062]: 
   comment: |
     '{
-    	"en": {
-    		"comment":"Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item",
-    		"displayName":"Configuration"
-    	}
-    }
-    
-    '
+        "en": {
+            "comment": "Choose a table in Baserow",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table dans Baserow",
+            "displayName": "Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en Baserow",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in Baserow",
+            "displayName": "Configurazione"
+        }
+    }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/select
   required: true
   value: 
 ↓forms_Filter [variables.RequestableVariable-1680171408883]: 
   comment: |
-    A custom filter following  JSON styntax
-    
+    '{
+        "en": {
+            "comment": "Define a filter to apply to Baserow table",
+            "displayName": "Filter"
+        },
+        "fr": {
+            "comment": "Définir un filtre à appliquer à la table Baserow",
+            "displayName": "Filtre"
+        },
+        "es": {
+            "comment": "Definir un filtro para aplicar a la tabla de Baserow",
+            "displayName": "Filtro"
+        },
+        "it": {
+            "comment": "Definire un filtro da applicare alla tabella di Baserow",
+            "displayName": "Filtro"
+        }
+    }'
   description: filter
   required: true
   value: 
