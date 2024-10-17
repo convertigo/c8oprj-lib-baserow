@@ -18,7 +18,7 @@ comment: |
           "displayName": "GetTableData",
           "comment": "Obtén datos de una tabla Baserow para una cuadrícula de datos. Cada columna de la tabla Baserow se mostrará como la misma columna en la cuadrícula de datos"
       },
-      "types": ["grid"]
+      "types": ["grid", "chart", "map"]
   }
   '
 ↓ParseConfig [steps.SimpleStep-1666429506760]: 
