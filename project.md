@@ -14831,7 +14831,6 @@ The Identifier of the row to update. If not set, the action will add a row. If s
 
 </p></blockquote></details>
 
-<<<<<<< HEAD
 <details><summary><b>forms_ApplicationsList</b> : Lists all applications (databases) in baserow</summary><blockquote><p>
 
 
@@ -14840,10 +14839,7 @@ The Identifier of the row to update. If not set, the action will add a row. If s
 Lists all applications (databases) in baserow
 </p></blockquote></details>
 
-<details><summary><b>forms_DeleteRow</b> : Deletes a data row from  a table</summary><blockquote><p>
-=======
 <details><summary><b>forms_DeleteRow</b> : Deletes a data row from a Baserow table</summary><blockquote><p>
->>>>>>> refs/remotes/origin/8.3.X
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_DeleteRow

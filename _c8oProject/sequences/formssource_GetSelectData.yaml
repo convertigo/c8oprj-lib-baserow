@@ -346,7 +346,12 @@ comment: |
       structure.forEach((e)=>{
       	if(jConfig.columns.indexOf(e.name) != -1){
       		e.filterHide = false;
-      		e.filterCompletion = verbsByType[e.type];
+      		// if target is formula use it''s formula_type
+      		var cType = e.type;
+      		if(cType == "formula"){
+      			cType = e.formula_type;
+      		}
+      		e.filterCompletion = verbsByType[cType];
       		if(e.filterCompletion == null){
       			e.filterCompletion = [];
       		}
