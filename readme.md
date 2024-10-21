@@ -33,7 +33,7 @@ For more technical informations : [documentation](./project.md)
     - [forms_AddRow](#forms_addrow)
     - [forms_ApplicationsList](#forms_applicationslist)
     - [forms_DeleteRow](#forms_deleterow)
-    - [formssource_CheckConfig](#formssource_checkconfig)
+    - [formscommon_CheckConfig](#formscommon_checkconfig)
     - [formssource_GetFieldValues](#formssource_getfieldvalues)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
@@ -250,10 +250,10 @@ Add or update a row to a Baserow table. Each column of the table must have the s
 <td>doc</td><td></td>
 </tr>
 <tr>
-<td>forms_config</td><td>Creates a row in a table with a given configuration</td>
+<td>forms_config</td><td>Choose a table in Baserow</td>
 </tr>
 <tr>
-<td>forms_id</td><td>The ID of the row to update. If not set , the action will add a row. If set, all rows's columns identified by the 'technicalID' will be updated</td>
+<td>forms_id</td><td>The Identifier of the row to update. If not set, the action will add a row. If set, all row's columns identified by the 'technicalID' will be updated</td>
 </tr>
 <tr>
 <td>originalDoc</td><td></td>
@@ -266,7 +266,7 @@ Lists all applications (databases) in baserow
 
 ### forms_DeleteRow
 
-Deletes a data row from  a table
+Deletes a data row from a Baserow table
 
 **variables**
 
@@ -278,17 +278,17 @@ Deletes a data row from  a table
 <td>doc</td><td></td>
 </tr>
 <tr>
-<td>forms_config</td><td>Creates a row in a table with a given configuration</td>
+<td>forms_config</td><td>Choose a table in Baserow</td>
 </tr>
 <tr>
-<td>forms_id</td><td>The ID of the row to delete</td>
+<td>forms_id</td><td>The Identifier of the row to delete</td>
 </tr>
 <tr>
 <td>originalDoc</td><td></td>
 </tr>
 </table>
 
-### formssource_CheckConfig
+### formscommon_CheckConfig
 
 **variables**
 
@@ -312,13 +312,13 @@ Get all possible values for a given field to feed a Select
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
+<td>forms_config</td><td>Choose a table in Baserow</td>
 </tr>
 </table>
 
 ### formssource_GetSelectData
 
-Get data from a Baserow table as options for a Select component. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
 
 **variables**
 
@@ -327,15 +327,14 @@ Get data from a Baserow table as options for a Select component. You will be abl
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
+<td>forms_config</td><td>Choose a table in Baserow</td>
 </tr>
 <tr>
 <td>forms_filter</td><td>Filters
 </td>
 </tr>
 <tr>
-<td>forms_Filter</td><td>A custom filter following  JSON styntax
-</td>
+<td>forms_Filter</td><td>Define a filter to apply to Baserow table</td>
 </tr>
 <tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
@@ -353,11 +352,10 @@ Get data from a Baserow table for a data grid. Each column of the Baserow table 
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Returns the rows of the table with a given configuration</td>
+<td>forms_config</td><td>Choose a table in Baserow</td>
 </tr>
 <tr>
-<td>forms_tableFilter</td><td>Filters
-</td>
+<td>forms_tableFilter</td><td>Define a filter to apply to Baserow table</td>
 </tr>
 <tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>

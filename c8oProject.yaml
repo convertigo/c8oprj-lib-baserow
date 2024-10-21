@@ -30,7 +30,7 @@
   ↓forms_AddRow [sequences.GenericSequence]: 🗏 sequences/forms_AddRow.yaml
   ↓forms_ApplicationsList [sequences.GenericSequence]: 🗏 sequences/forms_ApplicationsList.yaml
   ↓forms_DeleteRow [sequences.GenericSequence]: 🗏 sequences/forms_DeleteRow.yaml
-  ↓formssource_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formssource_CheckConfig.yaml
+  ↓formscommon_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formscommon_CheckConfig.yaml
   ↓formssource_GetFieldValues [sequences.GenericSequence]: 🗏 sequences/formssource_GetFieldValues.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml

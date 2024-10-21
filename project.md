@@ -14893,10 +14893,10 @@ The Identifier of the row to delete
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_CheckConfig</b></summary><blockquote><p>
+<details><summary><b>formscommon_CheckConfig</b></summary><blockquote><p>
 
 
-## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_CheckConfig
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formscommon_CheckConfig
 
 
 

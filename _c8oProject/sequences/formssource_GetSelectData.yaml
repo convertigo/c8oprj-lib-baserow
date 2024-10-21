@@ -20,7 +20,7 @@ comment: |
       "types": ["select"]
   }'
 ↓Call_Sequence2 [steps.SequenceStep-1729157633820]: 
-  sourceSequence: lib_BaseRow.formssource_CheckConfig
+  sourceSequence: lib_BaseRow.formscommon_CheckConfig
   ↓forms_config [variables.StepVariable-1729157633823]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
