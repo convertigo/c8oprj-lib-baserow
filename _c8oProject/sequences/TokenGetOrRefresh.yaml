@@ -5,24 +5,39 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
     'email += "";
     password += "";
     
+    var token_owner = context.httpSession.getAttribute("token_owner");
+    if (token_owner == null) {
+    	token_owner = "owner";
+    } else {
+    	token_owner += "";
+    }
+    
     if (password || email) {
     	owner = "" + org.apache.commons.codec.digest.DigestUtils.md5Hex("owner:" + email + ":" + password);
+    	if (token_owner != owner) {
+    		context.httpSession.setAttribute("token_for_" + token_owner, context.httpSession.getAttribute("token"));
+    		context.httpSession.setAttribute("token_timestamp_for_" + token_owner, context.httpSession.getAttribute("token_timestamp"));
+    		var exToken = context.httpSession.getAttribute("token_for_" + owner);
+    		if (exToken != null) {
+    			var exTokenTS = context.httpSession.getAttribute("token_timestamp_for_" + owner);
+    			context.httpSession.setAttribute("token_owner", owner);
+    			context.httpSession.setAttribute("token", exToken);
+    			context.httpSession.setAttribute("token_timestamp", exTokenTS);
+    			token_owner = owner;
+    			log.info("swap token for this account: " + email);
+    		} else {
+    			log.info("no previous token for this account: " + email);
+    		}
+    	} else {
+    		log.info("reuse token for this account: " + email);
+    	}
     } else {
     	owner = "owner";
-    }'
-↓GetTokenOwnerFromSession [steps.SessionGetStep-1729093387316]: 
-  key: token_owner
-  output: false
-↓IfExistSameOwner [steps.IfExistStep-1729093461696]: 
-  condition: IfExistSameOwner
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1729093387316
-        - java.lang.String: 
-          - ↑value: ./expression[. = '{{{ owner }}}' or 'owner' = '{{{ owner }}}']
+    	log.info("use previous token");
+    }
+    '
+↓jIf [steps.IfStep-1729518676568]: 
+  condition: token_owner == owner || owner == "owner"
   ↓GetTokenFromSession [steps.SessionGetStep-1666701028415]: 
     key: token
     output: false

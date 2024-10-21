@@ -1,11 +1,5 @@
 ↓CallSequence [ngx.components.UIDynamicAction-1727686162011]: 
-  beanData: '{"ionBean":"CallSequenceAction","requestable":"plain:lib_BaseRow.FieldsList"}'
-  ↓table_id [ngx.components.UIControlVariable-1727686162014]: 
-    comment: table_id
-    varValue: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:params.tableId
+  beanData: '{"ionBean":"CallSequenceAction","requestable":"plain:lib_BaseRow.formscommon_FieldsList"}'
   ↓SelectAllColumnsAfterInit [ngx.components.UICustomAction-1727686162038]: 
     actionValue: 
       - xmlizable: 
@@ -127,5 +121,11 @@
       varValue: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-          - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.FieldsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
-↓tableId [ngx.components.UIStackVariable-1727686198206]: 
+          - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.formscommon_FieldsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
+  ↓forms_config [ngx.components.UIControlVariable-1729516246665]: 
+    comment: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    varValue: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+        - MobileSmartSourceType: script:params.forms_config
+↓forms_config [ngx.components.UIStackVariable-1727686198206]: 

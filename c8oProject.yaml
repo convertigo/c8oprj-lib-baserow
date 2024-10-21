@@ -14,7 +14,7 @@
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.1.0-beta3
+  version: 1.1.0-beta5
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
@@ -28,9 +28,10 @@
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
   ↓FieldsListApiKey [sequences.GenericSequence]: 🗏 sequences/FieldsListApiKey.yaml
   ↓forms_AddRow [sequences.GenericSequence]: 🗏 sequences/forms_AddRow.yaml
-  ↓forms_ApplicationsList [sequences.GenericSequence]: 🗏 sequences/forms_ApplicationsList.yaml
   ↓forms_DeleteRow [sequences.GenericSequence]: 🗏 sequences/forms_DeleteRow.yaml
+  ↓formscommon_ApplicationsList [sequences.GenericSequence]: 🗏 sequences/formscommon_ApplicationsList.yaml
   ↓formscommon_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formscommon_CheckConfig.yaml
+  ↓formscommon_FieldsList [sequences.GenericSequence-1729515070603]: 🗏 sequences/formscommon_FieldsList.yaml
   ↓formssource_GetFieldValues [sequences.GenericSequence]: 🗏 sequences/formssource_GetFieldValues.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml

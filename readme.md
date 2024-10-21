@@ -31,9 +31,10 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [FieldsListApiKey](#fieldslistapikey)
     - [forms_AddRow](#forms_addrow)
-    - [forms_ApplicationsList](#forms_applicationslist)
     - [forms_DeleteRow](#forms_deleterow)
+    - [formscommon_ApplicationsList](#formscommon_applicationslist)
     - [formscommon_CheckConfig](#formscommon_checkconfig)
+    - [formscommon_FieldsList](#formscommon_fieldslist)
     - [formssource_GetFieldValues](#formssource_getfieldvalues)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
@@ -260,10 +261,6 @@ Add or update a row to a Baserow table. Each column of the table must have the s
 </tr>
 </table>
 
-### forms_ApplicationsList
-
-Lists all applications (databases) in baserow
-
 ### forms_DeleteRow
 
 Deletes a data row from a Baserow table
@@ -288,6 +285,10 @@ Deletes a data row from a Baserow table
 </tr>
 </table>
 
+### formscommon_ApplicationsList
+
+Lists all applications (databases) in baserow
+
 ### formscommon_CheckConfig
 
 **variables**
@@ -298,6 +299,19 @@ Deletes a data row from a Baserow table
 </tr>
 <tr>
 <td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
+</tr>
+</table>
+
+### formscommon_FieldsList
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in Baserow</td>
 </tr>
 </table>
 
@@ -1052,7 +1066,7 @@ Describes the mobile application global properties
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>tableId</td><td></td>
+<td>forms_config</td><td></td>
 </tr>
 </table>
 

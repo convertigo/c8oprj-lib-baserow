@@ -14831,14 +14831,6 @@ The Identifier of the row to update. If not set, the action will add a row. If s
 
 </p></blockquote></details>
 
-<details><summary><b>forms_ApplicationsList</b> : Lists all applications (databases) in baserow</summary><blockquote><p>
-
-
-## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_ApplicationsList
-
-Lists all applications (databases) in baserow
-</p></blockquote></details>
-
 <details><summary><b>forms_DeleteRow</b> : Deletes a data row from a Baserow table</summary><blockquote><p>
 
 
@@ -14893,6 +14885,14 @@ The Identifier of the row to delete
 
 </p></blockquote></details>
 
+<details><summary><b>formscommon_ApplicationsList</b> : Lists all applications (databases) in baserow</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formscommon_ApplicationsList
+
+Lists all applications (databases) in baserow
+</p></blockquote></details>
+
 <details><summary><b>formscommon_CheckConfig</b></summary><blockquote><p>
 
 
@@ -14917,6 +14917,36 @@ comment
 </td>
 <td>
 Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>formscommon_FieldsList</b></summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formscommon_FieldsList
+
+
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
+</td>
+<td>
+Choose a table in Baserow
 </td>
 </tr>
 </table>
@@ -16459,7 +16489,7 @@ comment
 </tr>
 <tr>
 <td>
-<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uistackvariable_16x16.png?raw=true "  alt="UIStackVariable" >&nbsp;tableId
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/ngx/components/images/uistackvariable_16x16.png?raw=true "  alt="UIStackVariable" >&nbsp;forms_config
 </td>
 <td>
 
