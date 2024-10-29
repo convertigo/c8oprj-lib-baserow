@@ -17,7 +17,7 @@ comment: |
           "displayName": "Ottenere dati",
           "comment": "Ottieni dati da una tabella di Baserow. Sarai in grado di scegliere le colonne di Baserow per i nomi da visualizzare nel menu a discesa e la colonna per i valori di ogni nome."
       },
-      "types": ["select"]
+      "types": ["select", "checkbox", "radio"]
   }'
 ↓Call_Sequence2 [steps.SequenceStep-1729157633820]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig

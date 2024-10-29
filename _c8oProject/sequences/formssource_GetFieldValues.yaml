@@ -17,7 +17,7 @@ comment: |
           "displayName": "Ottenere i valori del campo",
           "comment": "Ottieni tutti i valori possibili per un campo dato per alimentare un Select"
       },
-      "types": ["select"]
+      "types": ["select", "checkbox", "radio"]
   }'
 ↓Call_Sequence2 [steps.SequenceStep-1729157637689]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
