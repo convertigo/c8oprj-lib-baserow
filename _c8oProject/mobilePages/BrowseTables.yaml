@@ -1187,7 +1187,7 @@ title: First page
                                   '{
                                    "ionBean": "CheckBox",
                                    "ControlName": "plain:name1667636420064",
-                                   "DoubleBinding": "script:local?.selectedColumns[idx]?.selected"
+                                   "DoubleBinding": "script:local.selectedColumns[idx].selected"
                                   }'
                                 tagName: ion-checkbox
                                 ↓Style [ngx.components.UIStyle-1667808051108]: 
@@ -2152,7 +2152,7 @@ title: First page
                                       '{
                                        "ionBean": "CheckBox",
                                        "ControlName": "plain:name1667636420064",
-                                       "DoubleBinding": "script:local?.selectedColumns[''id'']?.selected",
+                                       "DoubleBinding": "script:local.selectedColumns[''id''].selected",
                                        "Disabled": "plain:true",
                                        "Checked": "plain:true"
                                       }'
@@ -2585,7 +2585,7 @@ title: First page
                                     '{
                                      "ionBean": "CheckBox",
                                      "ControlName": "plain:name1667636420064",
-                                     "DoubleBinding": "script:local?.selectedColumns[column.name]?.selected"
+                                     "DoubleBinding": "script:local.selectedColumns[column.name].selected"
                                     }'
                                   tagName: ion-checkbox
                                   ↓Style [ngx.components.UIStyle-1680704191101]: 
