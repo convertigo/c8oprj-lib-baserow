@@ -23,6 +23,7 @@
  "Display_value": "Valeur affichée",
  "Use_a_different_column_for_the_value_and": "Utiliser une colonne différente pour la valeur et la valeur affichée",
  "Value": "Valeur",
- "Identifier": "Identifiant"
-
+ "Identifier": "Identifiant",
+ "lines":"Lignes",
+ "columns":"Colonnes"
 }

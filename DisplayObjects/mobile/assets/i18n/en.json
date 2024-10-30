@@ -23,5 +23,7 @@
  "Page": "Page",
  "Action_1": "Action 1",
  "Action_2": "Action 2",
- "Identifier": "ID"
+ "Identifier": "ID",
+ "lines":"lines",
+ "columns":"Columns"
 }

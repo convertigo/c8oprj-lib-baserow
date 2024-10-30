@@ -17,7 +17,7 @@ comment: |
           "displayName": "Ottenere dati",
           "comment": "Ottieni dati da una tabella di Baserow. Sarai in grado di scegliere le colonne di Baserow per i nomi da visualizzare nel menu a discesa e la colonna per i valori di ogni nome."
       },
-      "types": ["select", "checkbox", "radio"]
+      "types": ["select", "checkbox", "radio", "checkbox_group", "radio_group"]
   }'
 ↓Call_Sequence2 [steps.SequenceStep-1729157633820]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
@@ -55,8 +55,8 @@ comment: |
     	jConfig.columns.forEach(col => include_fields += col +",")
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
-    let displayValue = jConfig.displayValue;
-    let value = jConfig.value;
+    var displayValue = jConfig.displayValue != undefined ? jConfig.displayValue: jConfig.column;
+    var value = jConfig.value != undefined ? jConfig.value : jConfig.line;
     
     filterExpression = forms_Filter;					// This is the Constructed Fiter API for baserow.
     
@@ -305,18 +305,30 @@ comment: |
   expression: |
     'if ("res" in this) {
     	if (!(Array.isArray(res))) {
-    	res =  [res];
-    }
-    res = res.map((x)=>{
-    	return {
-    		displayValue: x[displayValue],
-    		value : x[value]
-    	} 
-    })
+    		res = [res];
+    	}
+    	if (jConfig.displayValue) {
+    		res = res.map((x) => {
+    			return {
+    				displayValue: x[displayValue],
+    				value: x[value]
+    			}
+    		})
+    	}
+    	else if (jConfig.column) {
+    		res = res.map((x) => {
+    			return {
+    				column: x[displayValue],
+    				line: x[value]
+    			}
+    		})
+    
+    	}
     }
     else {
     	res = [];
     }
+    
     // Now fiter is done on the backend using the search API, so no use for the next lines...
     /*
     if(forms_filter != undefined && forms_filter != ""){
