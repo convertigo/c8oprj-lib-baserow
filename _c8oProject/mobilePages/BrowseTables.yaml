@@ -3710,6 +3710,15 @@ title: First page
               			const authentifiedUser = await page.callParentFunction("getAuthenticatedUser");
               			console.log("authentifiedUser: " + authentifiedUser + " source_owner: " + output.source_owner);
               			output.editorNotOwner = output.source_owner && output.source_owner != authentifiedUser;
+              			try{
+              				if (page.local.type == "checkbox_group" && output.column != undefined && output.line != undefined) {
+              					output.value = output.column;
+              					output.displayValue = output.line;
+              				}
+              			}
+              			catch (e) {
+              
+              			}
               			return output;
               		} catch (e) {
               		
@@ -3894,11 +3903,11 @@ title: First page
                     				Object.keys(page.local.selectedColumns).forEach(item => {
                     					conf.table_id_int = page.local.selectedColumns[item]["table_id"];
                     					if (page.local.selectedColumns[item]["displayValue"]) {
-                    						conf.column = item;
+                    						conf.line = item;
                     						conf.columns.push(item);
                     					}
                     					if (page.local.selectedColumns[item]["value"]) {
-                    						conf.line = item;
+                    						conf.column = item;
                     						conf.columns.push(item);
                     					}
                     				})
