@@ -78,7 +78,9 @@
             				order: 0,
             				id: "id"
             			}
-            				
+            			if(page.local.displayValueColumn != undefined){
+            				vars.columns = vars.columns.concat([{name: "id"}]);
+            			}
             			vars.columns.forEach((item, i) => {
             				// if page.local.dispayValueColumn is defined and not empty  and the column name is in it	
             				// set the displayValue boolean to true else set it false
