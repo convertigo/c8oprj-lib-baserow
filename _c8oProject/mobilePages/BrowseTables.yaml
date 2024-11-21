@@ -563,7 +563,7 @@ title: First page
                                 '{
                                  "ionBean": "SetLocalAction",
                                  "Property": "plain:groupName",
-                                 "Value": "source:{\"filter\":\"Iteration\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1667635335398}],\"path\":\"?.group?.name\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}"
+                                 "Value": "source:{\"filter\":\"Iteration\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1667635335398}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"?.workspace?.name\",\"custom\":\"\",\"useCustom\":false}}"
                                 }'
                               tagName: SetLocal
                               ↓SetLocal1 [ngx.components.UIDynamicAction-1679052845680]: 
