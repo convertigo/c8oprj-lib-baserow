@@ -11262,22 +11262,10 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
               - ↑value: application/x-www-form-urlencoded
   httpVerb: POST
   subDir: /api/workspaces/
-  ↓id [variables.RequestableHttpVariable-1729002694758]: 
-    description: id
-    httpMethod: POST
-    httpName: id
-    required: true
-    value: 
   ↓name [variables.RequestableHttpVariable-1729002694761]: 
     description: name
     httpMethod: POST
     httpName: name
-    required: true
-    value: 
-  ↓generative_ai_models_enabled [variables.RequestableHttpVariable-1729002694764]: 
-    description: generative_ai_models_enabled
-    httpMethod: POST
-    httpName: generative_ai_models_enabled
     required: true
     value: 
   ↓__header_ClientSessionId [variables.RequestableHttpVariable-1729002694767]: 
