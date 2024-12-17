@@ -14761,12 +14761,12 @@ Returns only the fields of the table related to the provided value.
 
 </p></blockquote></details>
 
-<details><summary><b>forms_AddRow</b> : Add or update a row to a Baserow table</summary><blockquote><p>
+<details><summary><b>forms_AddRow</b> : Add or update a row in a Baserow table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_AddRow
 
-Add or update a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns.
+Add or update a row in a Baserow table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the 'Columns creation' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns in Baserow.
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -14793,6 +14793,14 @@ comment
 </td>
 <td>
 Choose a table in Baserow
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_createColumn
+</td>
+<td>
+Create a column if a field identifier does not match any column in the table
 </td>
 </tr>
 <tr>
@@ -15421,6 +15429,44 @@ The table ID (Can also be a generic 'Workspace~>Base~>Table' definition)
 </td>
 <td>
 List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be only one field)
+</td>
+</tr>
+</table>
+
+</p></blockquote></details>
+
+<details><summary><b>TableCreateColumn</b> : Creates a row  in a table</summary><blockquote><p>
+
+
+## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") TableCreateColumn
+
+Creates a row  in a table
+
+<span style="color:DarkGoldenRod">Variables</span>
+
+<table>
+<tr>
+<th>
+name
+</th>
+<th>
+comment
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;data
+</td>
+<td>
+A JSON object with each field name and value
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;table_id
+</td>
+<td>
+Insert row in this table_id
 </td>
 </tr>
 </table>

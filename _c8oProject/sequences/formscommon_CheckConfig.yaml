@@ -11,6 +11,7 @@ accessibility: Private
   ↓_use_docid [variables.StepVariable-1729157830651]: 
     description: Document ID
 ↓formSourceConfig [steps.SimpleSourceStep-1732208590734]: 
+  output: true
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
@@ -18,7 +19,10 @@ accessibility: Private
         - java.lang.String: 
           - ↑value: 1729157830649
         - java.lang.String: 
-          - ↑value: ./document/couchdb_output//item[id = '{{{ source_id }}}']/sources//forms_config/str/text()
+          - ↑value: |
+            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='actions']//forms_config/str/text()
+            
+            
   variableName: doc_forms_config
 ↓jIf [steps.IfStep-1732208668695]: 
   condition: forms_config != doc_forms_config

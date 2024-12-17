@@ -3,29 +3,62 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "Add or update a row to a Baserow",
-          "comment": "Add or update a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns."
+          "displayName": "Add or update a row in Baserow",
+          "comment": "Add or update a row in a Baserow table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the ''Columns creation'' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns in Baserow."
       },
       "fr": {
           "displayName": "Ajouter ou mettre à jour une ligne dans un Baserow",
-          "comment": "Ajoutez ou mettez à jour une ligne dans une table Baserow. Chaque colonne de la table doit avoir le même nom que l''ID technique d''un champ du formulaire. Les champs du formulaire peuvent être de n''importe quel type, mais généralement les listes de sélection sont mappées sur les colonnes liées de Baserow."
+          "comment": "Ajoutez ou mettez à jour une ligne dans une table Baserow. Si une colonne de la table a le même nom que l''ID technique d''un champ du formulaire, la donnée sera insérée dans cette colonne. Si l''option ''Création de colonnes'' est activée, une colonne sera créée quand l''ID technique d''un champ ne correspond à aucune colonne du formulaire. Les champs du formulaire peuvent être de n''importe quel type, mais généralement les listes de sélection sont mappées sur les colonnes liées de Baserow."
       },
       "es": {
           "displayName": "Agregar o actualizar una fila en Baserow",
-          "comment": "Agregue o actualice una fila en una tabla de Baserow. Cada columna de la tabla debe tener el mismo nombre que el ID técnico de un campo en el formulario. Los campos del formulario pueden ser de cualquier tipo, pero generalmente las listas de selección están asignadas a Columnas Vinculadas de Baserow."
+          "comment": "Agregue o actualice una fila en una tabla de Baserow. Si una columna en la tabla tiene el mismo nombre que el ID técnico de un campo del formulario, los datos se insertarán en esa columna. Si la opción ''Creación de columnas'' está habilitada, se creará una columna cuando el ID técnico de un campo del formulario no coincida con ninguna columna en el formulario. Los campos del formulario pueden ser de cualquier tipo, pero generalmente las listas de selección se asignan a columnas vinculadas en Baserow."
       },
       "it": {
-          "displayName": "Aggiungere o aggiornare una riga in Baserow",
-          "comment": "Aggiungi o aggiorna una riga in una tabella di Baserow. Ogni colonna della tabella deve avere lo stesso nome dell''ID tecnico di un campo nel modulo. I campi del modulo possono essere di qualsiasi tipo, ma di solito le liste di selezione sono mappate sulle Colonne Collegate di Baserow."
+          "displayName": "Aggiungi o aggiorna una riga in Baserow",
+          "comment": "Aggiungi o aggiorna una riga in una tabella Baserow. Se una colonna della tabella ha lo stesso nome dell''ID tecnico di un campo del modulo, i dati verranno inseriti in quella colonna. Se l''opzione ''Creazione di colonne'' è abilitata, verrà creata una colonna quando l''ID tecnico di un campo del modulo non corrisponde a nessuna colonna del modulo. I campi del modulo possono essere di qualsiasi tipo, ma generalmente le liste di selezione sono mappate su colonne collegate in Baserow."
       }
   }'
-↓ParseConfig [steps.SimpleStep-1680078354199]: 
-  comment: Parse JSON configuration ti get table id
+↓Call_Sequence2 [steps.SequenceStep-1734427992515]: 
+  sourceSequence: lib_BaseRow.formscommon_CheckConfig
+  ↓forms_config [variables.StepVariable-1734427992518]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+↓IfError [steps.IfExistStep-1734427992521]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734427992515
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1734427992524]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1734427992515
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1734427992527]: 
+↓ParseConfig [steps.SimpleStep-1734427992530]: 
   expression: |
-    jConfig = JSON.parse(forms_config);
+    'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
+    view_id = jConfig.view_id ? jConfig.view_id : null;
     
+    // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
+    // With the BaseRow API.
+    if (jConfig.columns) {
+    	include_fields ="";
+    	jConfig.columns.forEach(col => include_fields += col +",")
+    	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
+    }
     
+    '
 ↓Input_variables [steps.InputVariablesStep-1680078354202]: 
 ↓Call_Sequence1 [steps.SequenceStep-1680262420398]: 
   sourceSequence: lib_BaseRow.FieldsList
@@ -50,7 +83,7 @@ comment: |
   expression: |
     '// convert XML to JSON doc
     var jDoc = JSON.parse('''' + com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson(doc, true, true));
-    
+    var columnToBeCreated = [];
     data = {}
     for (var key in jDoc.variable.resp) {
     	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
@@ -77,6 +110,15 @@ comment: |
     			data[key] = [];  // will be filled further on  by the attachment loop.
     			break;
     				
+    		case null:
+    			if(forms_createColumn == "true"){
+    				columnToBeCreated.push({name: key, type: "text"});
+    				data[key] = jDoc.variable.resp[key].value;
+    			}
+    			else{
+    				log.warn("** key: " + key + " doesn''t exists in target table")
+    			}
+    			break;
     		default: 
     			log.warn("** type: " + type + " is not yet handled")
     	}
@@ -291,6 +333,297 @@ comment: |
   expression: |
     data = JSON.stringify(data);
     
+↓jIf1 [steps.IfStep-1734430788668]: 
+  condition: forms_createColumn == "true" && columnToBeCreated.length > 0
+  ↓jIterator [steps.SimpleIteratorStep-1734430886786]: 
+    expression: columnToBeCreated
+    ↓Sequence_JS [steps.SimpleStep-1734430925957]: 
+      expression: |
+        //todo
+        var data = JSON.stringify(item);
+    ↓Call_Sequence [steps.SequenceStep-1734431284662]: 
+      output: true
+      sourceSequence: lib_BaseRow.TableCreateColumn
+      ↓table_id [variables.StepVariable-1734431301676]: 
+        comment: Insert row in this table_id
+        description: table_id
+        required: true
+      ↓data [variables.StepVariable-1734431301678]: 
+        comment: A JSON object with each field name and value
+        required: true
+  ↓Call_Sequence1 [steps.SequenceStep-1734431536049]: 
+    sourceSequence: lib_BaseRow.FieldsList
+    ↓table_id [variables.StepVariable-1734431536052]: 
+      comment: Returns only the fields of the table related to the provided value.
+      description: table_id
+      required: true
+      value: 
+  ↓jFields [steps.JsonSourceStep-1734431536055]: 
+    comment: Get lits of fields and type from BR Table
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1734431536049
+          - java.lang.String: 
+            - ↑value: ./document/array
+    variableName: jFields
+  ↓PrepareData [steps.SimpleStep-1734431536058]: 
+    comment: Prepare data to submit according to BR field type
+    expression: |
+      '// convert XML to JSON doc
+      var jDoc = JSON.parse('''' + com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson(doc, true, true));
+      var columnToBeCreated = [];
+      data = {}
+      for (var key in jDoc.variable.resp) {
+      	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
+      	
+      	let obj  = jFields.find((object) => object.name === key )
+      	let type = obj ? obj.type : null
+      	
+      	log.warn("** type is : " + type)
+      	switch (type) {
+      		case ''text'':
+      		case ''long_text'':
+      		case ''number'':
+      		case ''date'':
+      		case ''single_select'':
+      		case ''boolean'':
+      			data[key] = jDoc.variable.resp[key].value;
+      			break;
+      
+      		case ''link_row'':
+      			data[key] = [jDoc.variable.resp[key].value];
+      			break;
+      
+      		case ''file'':
+      			data[key] = [];  // will be filled further on  by the attachment loop.
+      			break;
+      				
+      		case null:
+      			if(forms_createColumn == "true"){
+      				columnToBeCreated.push({name: key, type: "text"});
+      				data[key] = jDoc.variable.resp[key].value;
+      			}
+      			else{
+      				log.warn("** key: " + key + " doesn''t exists in target table")
+      			}
+      			break;
+      		default: 
+      			log.warn("** type: " + type + " is not yet handled")
+      	}
+      }
+      
+      '
+  ↓jIterator1 [steps.SimpleIteratorStep-1734431536061]: 
+    comment: Handle Attachements
+    expression: Object.keys(jDoc.variable.resp)
+    ↓jIf [steps.IfStep-1734431536064]: 
+      comment: If From field type is an attachment (Photo)
+      condition: jDoc.variable.resp[item].att_type === true
+      ↓getAttachmentName [steps.SimpleStep-1734431536067]: 
+        comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
+        expression: |
+          'function makeid(length) {
+              var result           = '''';
+              var characters       = ''ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'';
+              var charactersLength = characters.length;
+              for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+             }
+             return result;
+          }
+          
+          var filesToDelete = [];
+          var _use_attname = jDoc.variable.resp[item].name;
+          var _use_docid   = jDoc.variable._id;
+          
+          b64Value = "";
+          var fileName = new Date().getTime() + "_" + makeid(20);
+          var dir = context.getProjectDirectory()+"/attachments/";
+          var _use_attpath = dir + fileName;
+           
+          log.warn("_use_attpath log" + _use_attpath);
+          filesToDelete.push(_use_attpath)
+          '
+        output: true
+      ↓Call_Transaction [steps.TransactionStep-1734431536070]: 
+        comment: read the attachment in the workspace
+        output: true
+        sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+        ↓_use_attname [variables.StepVariable-1734431536073]: 
+          description: Attachment name
+        ↓_use_docid [variables.StepVariable-1734431536076]: 
+          description: Document ID
+        ↓_use_attpath [variables.StepVariable-1734431536079]: 
+          description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+      ↓jSimpleSource1 [steps.SimpleSourceStep-1734431536082]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1734431536070
+              - java.lang.String: 
+                - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+        variableName: contentType
+      ↓element [steps.ElementStep-1734431536085]: 
+        expression: _use_attpath
+        nodeName: AttachmentPath
+      ↓Call_Sequence [steps.SequenceStep-1734431536088]: 
+        comment: Push it to BR
+        sourceSequence: lib_BaseRow.TokenGetOrRefresh
+      ↓Call_Transaction1 [steps.TransactionStep-1734431536091]: 
+        sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
+        ↓__header_Authorization [variables.StepVariable-1734431536094]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1734431536088
+                - java.lang.String: 
+                  - ↑value: ./document/Bearer/text()
+        ↓file [variables.StepVariable-1734431536097]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1734431536085
+                - java.lang.String: 
+                  - ↑value: ./text()
+      ↓Delete_file [steps.DeleteStep-1734431536100]: 
+        comment: Delete attachment from workspace as it has been uploaded
+        sourcePath: filesToDelete[0]
+      ↓jAttachmentName [steps.SimpleSourceStep-1734431536103]: 
+        comment: Get the BR Attachment ID
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1734431536091
+              - java.lang.String: 
+                - ↑value: ./document/object/name/text()
+        variableName: jAttachmentName
+      ↓AddAttachementToBRField [steps.SimpleStep-1734431536106]: 
+        comment: Add this id to the data
+        expression: |
+          'data[_use_attname].push({
+          	name: jAttachmentName
+          });
+          '
+    ↓jIf1 [steps.IfStep-1734431536109]: 
+      comment: If From field type is an uploaded file, can be an array of files
+      condition: jDoc.variable.resp[item].type === 'file'
+      ↓SaveItemToRespItem [steps.SimpleStep-1734431536112]: 
+        expression: |
+          let respItem = item;
+          let respIndex = index;
+          
+          
+      ↓jIterator [steps.SimpleIteratorStep-1734431536115]: 
+        expression: jDoc.variable.resp[respItem].value
+        ↓getAttachmentName [steps.SimpleStep-1734431536118]: 
+          comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
+          expression: |
+            'function makeid(length) {
+                var result           = '''';
+                var characters       = ''ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'';
+                var charactersLength = characters.length;
+                for ( var i = 0; i < length; i++ ) {
+                  result += characters.charAt(Math.floor(Math.random() * charactersLength));
+               }
+               return result;
+            }
+            
+            var filesToDelete = [];
+            var _use_attname = item;
+            var _use_docid   = jDoc.variable._id;
+            
+            b64Value = "";
+            var fileName = new Date().getTime() + "_" + makeid(20);
+            var dir = context.getProjectDirectory()+"/attachments/";
+            var _use_attpath = dir + fileName;
+             
+            log.warn("_use_attpath: " + _use_attpath);
+            log.warn("_use_attname: " + _use_attpath);
+            filesToDelete.push(_use_attpath)
+            '
+          output: true
+        ↓Call_Transaction [steps.TransactionStep-1734431536121]: 
+          comment: read the attachment in the workspace
+          output: true
+          sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+          ↓_use_attname [variables.StepVariable-1734431536124]: 
+            description: Attachment name
+          ↓_use_docid [variables.StepVariable-1734431536127]: 
+            description: Document ID
+          ↓_use_attpath [variables.StepVariable-1734431536130]: 
+            description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+        ↓jSimpleSource1 [steps.SimpleSourceStep-1734431536133]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1734431536121
+                - java.lang.String: 
+                  - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+          variableName: contentType
+        ↓element [steps.ElementStep-1734431536136]: 
+          expression: _use_attpath
+          nodeName: AttachmentPath
+        ↓Call_Sequence [steps.SequenceStep-1734431536139]: 
+          comment: Push it to BR
+          sourceSequence: lib_BaseRow.TokenGetOrRefresh
+        ↓Call_Transaction1 [steps.TransactionStep-1734431536142]: 
+          sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
+          ↓__header_Authorization [variables.StepVariable-1734431536145]: 
+            sourceDefinition: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: 1734431536139
+                  - java.lang.String: 
+                    - ↑value: ./document/Bearer/text()
+          ↓file [variables.StepVariable-1734431536148]: 
+            sourceDefinition: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: 1734431536136
+                  - java.lang.String: 
+                    - ↑value: ./text()
+        ↓Delete_file [steps.DeleteStep-1734431536151]: 
+          comment: Delete attachment from workspace as it has been uploaded
+          sourcePath: filesToDelete[0]
+        ↓jAttachmentName [steps.SimpleSourceStep-1734431536154]: 
+          comment: Get the BR Attachment ID
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1734431536142
+                - java.lang.String: 
+                  - ↑value: ./document/object/name/text()
+          variableName: jAttachmentName
+        ↓AddAttachementToBRField [steps.SimpleStep-1734431536157]: 
+          comment: Add this id to the data
+          expression: |
+            'data[jDoc.variable.resp[respItem].name].push({
+            	name: jAttachmentName
+            });
+            '
+  ↓StringifyData [steps.SimpleStep-1734431536160]: 
+    expression: |
+      data = JSON.stringify(data);
+      
 ↓jIfThenElse [steps.IfThenElseStep-1726213751006]: 
   condition: forms_id != '' && forms_id != null && forms_id != undefined
   ↓jThen [steps.ThenStep-1726213751008]: 
@@ -413,3 +746,24 @@ comment: |
             "displayName": "Identificatore"
         }
     }'
+↓forms_createColumn [variables.RequestableVariable-1734430377087]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "Create a column if a field identifier does not match any column in the table",
+            "displayName": "Columns creation"
+        },
+        "fr": {
+            "comment": "Créer une colonne si un identifiant de champ ne correspond à aucune colonne dans le tableau",
+            "displayName": "Création de colonnes"
+        },
+        "es": {
+            "comment": "Crear una columna si un identificador de campo no coincide con ninguna columna en la tabla",
+            "displayName": "Creación de columnas"
+        },
+        "it": {
+            "comment": "Creare una colonna se un identificatore di campo non corrisponde a nessuna colonna nella tabella",
+            "displayName": "Creazione di colonne"
+        }
+    }'
+  description: boolean

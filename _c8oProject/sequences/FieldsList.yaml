@@ -18,7 +18,6 @@ responseExpiryDate: absolute,60
     comment: Returns only the fields of the table related to the provided value.
     description: table_id
     required: true
-    value: 
 ↓Copy [steps.XMLCopyStep-1665297256066]: 
   sourceDefinition: 
     - xmlizable: 
@@ -37,7 +36,7 @@ responseExpiryDate: absolute,60
   ↓table_id [variables.TestCaseVariable-1665298068600]: 
     description: table_id
     required: true
-    value: 191
+    value: 109
 ↓TestOK1 [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1665917990559]: 
     description: table_id
