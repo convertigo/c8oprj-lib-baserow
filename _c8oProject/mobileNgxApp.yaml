@@ -65,6 +65,7 @@ componentScriptContent:
 tplProjectName: mobilebuilder_tpl_8_4_0_ngx
 ↓Menu [ngx.components.UIDynamicMenu-1500890597895]: 🗏 mobileMenus/Menu.yaml
 ↓DisplayTableColumns [ngx.components.UIActionStack-1727686134411]: 🗏 mobileSharedActions/DisplayTableColumns.yaml
+↓includeOnlyNeeded [ngx.components.UIActionStack-1734530731686]: 🗏 mobileSharedActions/includeOnlyNeeded.yaml
 ↓BaseRowGrid [ngx.components.UISharedRegularComponent-1682233502817]: 🗏 mobileSharedComponents/BaseRowGrid.yaml
 ↓BrowseTables [ngx.components.PageComponent-1500538678074]: 🗏 mobilePages/BrowseTables.yaml
 ↓Style [ngx.components.UIStyle-1491635462437]: 

@@ -116,6 +116,56 @@
             			page.local.diffrentVals = false;
             			
             		}
+            		else if(page.local.target == "map"){
+            				//We do not have any initalSelectedColumns in this case so make value to be the id
+            				page.local.selectedColumns["id"] = {
+            					selected: vars.columns.length < 3,
+            					displayValue: false,
+            					value: page.local.valueColumn != undefined
+            						   && page.local.valueColumn.length > 0 ? 
+            						   		page.local.valueColumn.indexOf(''id'') != -1 : vars.columns.length < 3,
+            						   	 
+            					order: 0,
+            					id: "id"
+            				}
+            				if(page.local.displayValueColumn != undefined){
+            					vars.columns = vars.columns.concat([{name: "id"}]);
+            				}
+            				vars.columns.forEach((item, i) => {
+            					// if page.local.dispayValueColumn is defined and not empty  and the column name is in it	
+            					// set the displayValue boolean to true else set it false
+            					let displayValue = false;
+            					if (page.local.displayValueColumn != undefined && page.local.displayValueColumn.length > 0) {
+            						displayValue = page.local.displayValueColumn.indexOf(item.name) != -1		
+            					} else {
+            						// by default the first column is the displayValue
+            						if (i== 0)
+            							displayValue = true;
+            					}
+            					
+            					let selCol = {
+            						// if page.local.initialSelectedColumns is defined and not empty  and the column name is in it
+            						// set the selected boolean to true
+            						// if it is empty select all columns
+            						selected : page.local.initialSelectedColumns != undefined && page.local.initialSelectedColumns.length > 0 ? page.local.initialSelectedColumns.indexOf(item.name) != -1 : true,
+            						
+            						// if page.local.valueColumn is defined and not empty  and the column name is in it	
+            						// set the displayValue boolean to true else set it false
+            						value: page.local.valueColumn?.length > 0 ? page.local.valueColumn.indexOf(item.name) != -1 : i == 1,
+            						value2: page.local.valueColumn2?.length > 0 ? page.local.valueColumn2.indexOf(item.name) != -1 : i == 2,
+            						displayValue: displayValue,
+            						order: i++,
+            						id: item.id,
+            						table_id: item.table_id 
+            					}
+            					page.local.selectedColumns[item.name] = selCol
+            				})
+            				let str = JSON.stringify(vars.columns[0]);
+            				page.local.displayColumn = vars.columns[0].name;
+            				page.local.valueColumn = "id";
+            				page.local.diffrentVals = false;
+            				
+            			}
             		
             		resolve();
             '

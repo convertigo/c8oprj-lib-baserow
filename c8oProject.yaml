@@ -33,6 +33,7 @@
   ↓formscommon_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formscommon_CheckConfig.yaml
   ↓formscommon_FieldsList [sequences.GenericSequence-1729515070603]: 🗏 sequences/formscommon_FieldsList.yaml
   ↓formssource_GetFieldValues [sequences.GenericSequence]: 🗏 sequences/formssource_GetFieldValues.yaml
+  ↓formssource_GetMapData [sequences.GenericSequence]: 🗏 sequences/formssource_GetMapData.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓FSExecuteView [sequences.GenericSequence]: 🗏 sequences/FSExecuteView.yaml

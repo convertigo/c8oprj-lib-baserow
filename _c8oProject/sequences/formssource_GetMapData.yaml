@@ -1,50 +1,50 @@
 accessibility: Hidden
 comment: |
   '{
-      "en": {
-          "displayName": "Get data",
-          "comment": "Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid"
-      },
-      "fr": {
-          "displayName": "Récupérer les données",
-          "comment": "Récupérez les données d''une table Baserow pour une grille de données. Chaque colonne de la table Baserow sera affichée comme la même colonne dans la grille de données"
-      },
-      "es": {
-          "displayName": "Obtener datos",
-          "comment": "Obtenga datos de una tabla de Baserow para una cuadrícula de datos. Cada columna de la tabla de Baserow se mostrará como la misma columna en la cuadrícula de datos"
-      },
-      "it": {
-          "displayName": "Ottenere dati",
-          "comment": "Ottieni dati da una tabella di Baserow per una griglia di dati. Ogni colonna della tabella di Baserow verrà visualizzata come la stessa colonna nella griglia di dati"
-      },
-      "types": ["grid", "chart"]
+  	"en": {
+  		"displayName": "Retrieve Data",
+  		"comment": "Retrieve data from a Baserow table to populate a map."
+  	},
+  	"fr": {
+  		"displayName": "Récupérer les données",
+  		"comment": "Récupérez les données d''une table Baserow pour alimenter une carte."
+  	},
+  	"es": {
+  		"displayName": "Recuperar datos",
+  		"comment": "Recupere datos de una tabla de Baserow para completar un mapa."
+  	},
+  	"it": {
+  		"displayName": "Recupera dati",
+  		"comment": "Recupera i dati da una tabella Baserow per popolare una mappa."
+  	},
+      "types": ["map"]
   }'
-↓Call_Sequence1 [steps.SequenceStep-1729157466231]: 
+↓Call_Sequence1 [steps.SequenceStep-1734534653433]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
-  ↓forms_config [variables.StepVariable-1729157466233]: 
+  ↓forms_config [variables.StepVariable-1734534653436]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
-↓IfError [steps.IfExistStep-1729157599546]: 
+↓IfError [steps.IfExistStep-1734534653439]: 
   condition: IfError
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1729157466231
+          - ↑value: 1734534653433
         - java.lang.String: 
           - ↑value: ./document/error
-  ↓Copy [steps.XMLCopyStep-1729157599549]: 
+  ↓Copy [steps.XMLCopyStep-1734534653442]: 
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1729157466231
+            - ↑value: 1734534653433
           - java.lang.String: 
             - ↑value: ./document/error
-  ↓Return [steps.ReturnStep-1729157599552]: 
-↓ParseConfig [steps.SimpleStep-1666429506760]: 
+  ↓Return [steps.ReturnStep-1734534653445]: 
+↓ParseConfig [steps.SimpleStep-1734534653448]: 
   expression: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
@@ -233,46 +233,46 @@ comment: |
     	describeStructure = true;
     }
     '
-↓Input_variables [steps.InputVariablesStep-1665402570169]: 
-↓Call_Sequence [steps.SequenceStep-1665402300413]: 
+↓Input_variables [steps.InputVariablesStep-1734534653451]: 
+↓Call_Sequence [steps.SequenceStep-1734534653454]: 
   sourceSequence: lib_BaseRow.TableGetData
-  ↓exclude [variables.StepVariable-1665402300415]: 
+  ↓exclude [variables.StepVariable-1734534653457]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
     description: exclude
-  ↓include_fields [variables.StepVariable-1665402300421]: 
+  ↓include_fields [variables.StepVariable-1734534653460]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
     description: include
-  ↓order_by [variables.StepVariable-1665402300423]: 
+  ↓order_by [variables.StepVariable-1734534653463]: 
     comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
     description: order_by
-  ↓page [variables.StepVariable-1665402300425]: 
+  ↓page [variables.StepVariable-1734534653466]: 
     comment: Defines which page of rows should be returned.
     description: page
-  ↓search [variables.StepVariable-1665402300427]: 
+  ↓search [variables.StepVariable-1734534653469]: 
     comment: If provided only rows with data that matches the search query are going to be returned.
     description: search
-  ↓size [variables.StepVariable-1665402300429]: 
+  ↓size [variables.StepVariable-1734534653472]: 
     comment: Defines how many rows should be returned per page.
     description: size
-  ↓table_id [variables.StepVariable-1665402300431]: 
+  ↓table_id [variables.StepVariable-1734534653475]: 
     comment: Returns the rows of the table related to the provided value.
     description: table_id
     required: true
-  ↓view_id [variables.StepVariable-1665402300433]: 
+  ↓view_id [variables.StepVariable-1734534653478]: 
     comment: Includes all the filters and sorts of the provided view.
     description: view_id
-  ↓filterExpression [variables.StepVariable-1665915671261]: 
-  ↓describeStructure [variables.StepVariable-1680617375032]: 
-↓IfExist [steps.IfExistStep-1665402674584]: 
+  ↓filterExpression [variables.StepVariable-1734534653481]: 
+  ↓describeStructure [variables.StepVariable-1734534653484]: 
+↓IfExist [steps.IfExistStep-1734534653487]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1665402300413
+          - ↑value: 1734534653454
         - java.lang.String: 
           - ↑value: ./document/error
-  ↓Error_structure [steps.XMLErrorStep-1665402703369]: 
+  ↓Error_structure [steps.XMLErrorStep-1734534653490]: 
     message: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -280,37 +280,37 @@ comment: |
           - ↑mode: SOURCE
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1665402300413
+              - ↑value: 1734534653454
             - java.lang.String: 
               - ↑value: ./document/error/message/text()
-  ↓Return [steps.ReturnStep-1665402714329]: 
-↓myVariable [steps.JsonSourceStep-1680617809832]: 
+  ↓Return [steps.ReturnStep-1734534653493]: 
+↓myVariable [steps.JsonSourceStep-1734534653496]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1665402300413
+          - ↑value: 1734534653454
         - java.lang.String: 
           - ↑value: ./document/structure/object
   variableName: structure
-↓Array [steps.JsonArrayStep-1665402723840]: 
+↓Array [steps.JsonArrayStep-1734534653499]: 
   key: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
       - SmartType: 
         - ↑mode: PLAIN
         - →→: data
-  ↓Iterator [steps.IteratorStep-1665402736681]: 
+  ↓Iterator [steps.IteratorStep-1734534653502]: 
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1665402300413
+            - ↑value: 1734534653454
           - java.lang.String: 
             - ↑value: ./document/results/object
-    ↓Object [steps.JsonObjectStep-1665406203249]: 
+    ↓Object [steps.JsonObjectStep-1734534653505]: 
       comment: The data object
       key: 
         - xmlizable: 
@@ -319,17 +319,17 @@ comment: |
             - ↑mode: PLAIN
             - →→: Object
       output: false
-      ↓Iterator [steps.IteratorStep-1665403182897]: 
+      ↓Iterator [steps.IteratorStep-1734534653508]: 
         comment: Ignore id as this is a technical id not to be displayed
         sourceDefinition: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
             - com.twinsoft.convertigo.beans.common.XMLVector: 
               - java.lang.String: 
-                - ↑value: 1665402736681
+                - ↑value: 1734534653502
               - java.lang.String: 
                 - ↑value: ./*
-        ↓InitHtmEntry [steps.SimpleStep-1665407550205]: 
+        ↓InitHtmEntry [steps.SimpleStep-1734534653511]: 
           comment: Start a DIV HTML with styling
           expression: |
             'jHtml = `
@@ -386,27 +386,27 @@ comment: |
             }
             
             '
-        ↓jSimpleSource [steps.SimpleSourceStep-1665875996794]: 
+        ↓jSimpleSource [steps.SimpleSourceStep-1734534653514]: 
           sourceDefinition: 
             - xmlizable: 
               - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
               - com.twinsoft.convertigo.beans.common.XMLVector: 
                 - java.lang.String: 
-                  - ↑value: 1665403182897
+                  - ↑value: 1734534653508
                 - java.lang.String: 
                   - ↑value: ./@originalKeyName
           variableName: jOriginalKeyName
-        ↓jSimpleSource1 [steps.SimpleSourceStep-1665876065904]: 
+        ↓jSimpleSource1 [steps.SimpleSourceStep-1734534653517]: 
           sourceDefinition: 
             - xmlizable: 
               - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
               - com.twinsoft.convertigo.beans.common.XMLVector: 
                 - java.lang.String: 
-                  - ↑value: 1665403182897
+                  - ↑value: 1734534653508
                 - java.lang.String: 
                   - ↑value: name(.)
           variableName: jKeyName
-        ↓Object [steps.JsonObjectStep-1665407248434]: 
+        ↓Object [steps.JsonObjectStep-1734534653520]: 
           comment: Create entry
           key: 
             - xmlizable: 
@@ -415,51 +415,51 @@ comment: |
                 - ↑mode: JS
                 - →→: 'jOriginalKeyName ? jOriginalKeyName : jKeyName'
           output: false
-          ↓IfExistThenElse [steps.IfExistThenElseStep-1665406758754]: 
+          ↓IfExistThenElse [steps.IfExistThenElseStep-1734534653523]: 
             comment: Handle multivalued 
             sourceDefinition: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                 - com.twinsoft.convertigo.beans.common.XMLVector: 
                   - java.lang.String: 
-                    - ↑value: 1665403182897
+                    - ↑value: 1734534653508
                   - java.lang.String: 
                     - ↑value: .[@type = 'array']
-            ↓jThen [steps.ThenStep-1665406759518]: 
-              ↓InitValueArray [steps.SimpleStep-1667889960531]: 
+            ↓jThen [steps.ThenStep-1734534653526]: 
+              ↓InitValueArray [steps.SimpleStep-1734534653529]: 
                 expression: |
                   jValues = [];
                   
-              ↓Iterator [steps.IteratorStep-1665407450731]: 
+              ↓Iterator [steps.IteratorStep-1734534653532]: 
                 sourceDefinition: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                     - com.twinsoft.convertigo.beans.common.XMLVector: 
                       - java.lang.String: 
-                        - ↑value: 1665403182897
+                        - ↑value: 1734534653508
                       - java.lang.String: 
                         - ↑value: ./object
-                ↓IfExistThenElse [steps.IfExistThenElseStep-1665684721073]: 
+                ↓IfExistThenElse [steps.IfExistThenElseStep-1734534653535]: 
                   sourceDefinition: 
                     - xmlizable: 
                       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                       - com.twinsoft.convertigo.beans.common.XMLVector: 
                         - java.lang.String: 
-                          - ↑value: 1665407450731
+                          - ↑value: 1734534653532
                         - java.lang.String: 
                           - ↑value: ./value
-                  ↓jThen [steps.ThenStep-1665684723422]: 
-                    ↓JsonSource [steps.JsonSourceStep-1668099201803]: 
+                  ↓jThen [steps.ThenStep-1734534653538]: 
+                    ↓JsonSource [steps.JsonSourceStep-1734534653541]: 
                       sourceDefinition: 
                         - xmlizable: 
                           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                           - com.twinsoft.convertigo.beans.common.XMLVector: 
                             - java.lang.String: 
-                              - ↑value: 1665407450731
+                              - ↑value: 1734534653532
                             - java.lang.String: 
                               - ↑value: .
                       variableName: jMyEntry
-                    ↓AddEntry [steps.SimpleStep-1665407618555]: 
+                    ↓AddEntry [steps.SimpleStep-1734534653544]: 
                       expression: |
                         'log.debug("______" + JSON.stringify(jMyEntry))
                         
@@ -473,52 +473,52 @@ comment: |
                         }
                         jValues.push(jMyEntry);
                         '
-                  ↓jElse [steps.ElseStep-1665684723424]: 
-                    ↓jSimpleSource [steps.SimpleSourceStep-1665685771320]: 
+                  ↓jElse [steps.ElseStep-1734534653547]: 
+                    ↓jSimpleSource [steps.SimpleSourceStep-1734534653550]: 
                       sourceDefinition: 
                         - xmlizable: 
                           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                           - com.twinsoft.convertigo.beans.common.XMLVector: 
                             - java.lang.String: 
-                              - ↑value: 1665407450731
+                              - ↑value: 1734534653532
                             - java.lang.String: 
                               - ↑value: ./url/text()
                       variableName: jURL
-                    ↓isImage [steps.SimpleSourceStep-1665684886493]: 
+                    ↓isImage [steps.SimpleSourceStep-1734534653553]: 
                       sourceDefinition: 
                         - xmlizable: 
                           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                           - com.twinsoft.convertigo.beans.common.XMLVector: 
                             - java.lang.String: 
-                              - ↑value: 1665407450731
+                              - ↑value: 1734534653532
                             - java.lang.String: 
                               - ↑value: ./is_image/text()
                       variableName: bIsImage
-                    ↓jIfThenElse [steps.IfThenElseStep-1665685010861]: 
+                    ↓jIfThenElse [steps.IfThenElseStep-1734534653556]: 
                       condition: bIsImage == 'true'
-                      ↓jThen [steps.ThenStep-1665685010863]: 
-                        ↓AddImageEnttry [steps.SimpleStep-1665685016539]: 
+                      ↓jThen [steps.ThenStep-1734534653559]: 
+                        ↓AddImageEnttry [steps.SimpleStep-1734534653562]: 
                           expression: |
                             jHtml += "<img class='c8obaserow_image' src=\"" + jURL + "\" ></img>"
                             jValues.push(jURL);
                             
-                      ↓jElse [steps.ElseStep-1665685010865]: 
-                        ↓jSimpleSource [steps.SimpleSourceStep-1665685737366]: 
+                      ↓jElse [steps.ElseStep-1734534653565]: 
+                        ↓jSimpleSource [steps.SimpleSourceStep-1734534653568]: 
                           sourceDefinition: 
                             - xmlizable: 
                               - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                               - com.twinsoft.convertigo.beans.common.XMLVector: 
                                 - java.lang.String: 
-                                  - ↑value: 1665407450731
+                                  - ↑value: 1734534653532
                                 - java.lang.String: 
                                   - ↑value: ./visible_name/text()
                           variableName: jVisibleName
-                        ↓AddFileEntry [steps.SimpleStep-1665685031623]: 
+                        ↓AddFileEntry [steps.SimpleStep-1734534653571]: 
                           expression: |
                             jHtml += "<p class='c8obaserow_file' ><a  src=\"" + jURL + "\" >" + jVisibleName + "</a></p>"
                             jValues.push(jURL);
                             
-              ↓JSON_to_XML [steps.JsonToXmlStep-1667927327885]: 
+              ↓JSON_to_XML [steps.JsonToXmlStep-1734534653574]: 
                 jsonObject: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -532,18 +532,18 @@ comment: |
                       - ↑mode: PLAIN
                       - →→: value
                 output: false
-            ↓jElse [steps.ElseStep-1665406759520]: 
-              ↓JsonSource [steps.JsonSourceStep-1667989605906]: 
+            ↓jElse [steps.ElseStep-1734534653577]: 
+              ↓JsonSource [steps.JsonSourceStep-1734534653580]: 
                 sourceDefinition: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                     - com.twinsoft.convertigo.beans.common.XMLVector: 
                       - java.lang.String: 
-                        - ↑value: 1665403182897
+                        - ↑value: 1734534653508
                       - java.lang.String: 
                         - ↑value: .
                 variableName: jData
-              ↓AddData [steps.SimpleStep-1665857204666]: 
+              ↓AddData [steps.SimpleStep-1734534653583]: 
                 expression: |
                   'function computeHtml() {
                   	if (jData["value"] != undefined) {
@@ -564,7 +564,7 @@ comment: |
                   log.debug("**************" + JSON.stringify(jData));
                   if (jData != null) computeHtml();
                   '
-              ↓JSON_to_XML [steps.JsonToXmlStep-1667927358648]: 
+              ↓JSON_to_XML [steps.JsonToXmlStep-1734534653586]: 
                 jsonObject: 
                   - xmlizable: 
                     - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -578,7 +578,7 @@ comment: |
                       - ↑mode: PLAIN
                       - →→: value
                 output: false
-          ↓Field [steps.JsonFieldStep-1665407340859]: 
+          ↓Field [steps.JsonFieldStep-1734534653589]: 
             key: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -592,7 +592,7 @@ comment: |
                 - SmartType: 
                   - ↑mode: PLAIN
                   - →→: html
-          ↓Field1 [steps.JsonFieldStep-1665407353362]: 
+          ↓Field1 [steps.JsonFieldStep-1734534653592]: 
             key: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -606,7 +606,7 @@ comment: |
                 - SmartType: 
                   - ↑mode: JS
                   - →→: jHtml
-          ↓Field2 [steps.JsonFieldStep-1665689221993]: 
+          ↓Field2 [steps.JsonFieldStep-1734534653595]: 
             key: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -620,14 +620,14 @@ comment: |
                 - SmartType: 
                   - ↑mode: JS
                   - →→: 'jOriginalKeyName ? jOriginalKeyName : jKeyName'
-          ↓Log [steps.LogStep-1666371057521]: 
+          ↓Log [steps.LogStep-1734534653598]: 
             expression: |
               '"***" + jKeyName + " : " + (jKeyName == ''id'' || jKeyName == ''order'') + "**" + jOriginalKeyName
               
               '
             isEnabled: false
             level: WARN
-          ↓jIf [steps.IfStep-1666370491964]: 
+          ↓jIf [steps.IfStep-1734534653601]: 
             condition: |
               jKeyName == 'id'||
               jKeyName == 'order' ||
@@ -635,7 +635,7 @@ comment: |
               	jConfig.hidden.includes(jOriginalKeyName ?jOriginalKeyName:	jKeyName):false
               )
               
-            ↓Field [steps.JsonFieldStep-1666370538855]: 
+            ↓Field [steps.JsonFieldStep-1734534653604]: 
               key: 
                 - xmlizable: 
                   - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -650,9 +650,9 @@ comment: |
                   - SmartType: 
                     - ↑mode: PLAIN
                     - →→: true
-          ↓jIf1 [steps.IfStep-1680617618286]: 
+          ↓jIf1 [steps.IfStep-1734534653607]: 
             condition: model == "true" && "structure" in this
-            ↓ComputeCompletionAndHideForFilters [steps.SimpleStep-1680617788099]: 
+            ↓ComputeCompletionAndHideForFilters [steps.SimpleStep-1734534653610]: 
               expression: |
                 'let cName = jOriginalKeyName ? jOriginalKeyName : jKeyName;
                 let cTargetCompletion = [];
@@ -676,7 +676,7 @@ comment: |
                 	}
                 }
                 '
-            ↓filterCompletion [steps.JsonToXmlStep-1680623987414]: 
+            ↓filterCompletion [steps.JsonToXmlStep-1734534653613]: 
               jsonObject: 
                 - xmlizable: 
                   - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -690,7 +690,7 @@ comment: |
                     - ↑mode: PLAIN
                     - →→: filterCompletion
               output: false
-            ↓filterHide [steps.JsonToXmlStep-1680624024529]: 
+            ↓filterHide [steps.JsonToXmlStep-1734534653616]: 
               jsonObject: 
                 - xmlizable: 
                   - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -704,19 +704,19 @@ comment: |
                     - ↑mode: PLAIN
                     - →→: filterHide
               output: false
-        ↓FinishHtmlEntry [steps.SimpleStep-1665833852150]: 
+        ↓FinishHtmlEntry [steps.SimpleStep-1734534653619]: 
           expression: jHtml += "</div>"
-    ↓jRow [steps.JsonSourceStep-1726918591667]: 
+    ↓jRow [steps.JsonSourceStep-1734534653622]: 
       sourceDefinition: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1665406203249
+              - ↑value: 1734534653505
             - java.lang.String: 
               - ↑value: .
       variableName: jRow
-    ↓ReorderColumns [steps.SimpleStep-1726918802256]: 
+    ↓ReorderColumns [steps.SimpleStep-1734534653625]: 
       expression: |
         'jReorderedRow = {};
         jReorderedRow["id"] = jRow["id"];
@@ -728,7 +728,7 @@ comment: |
           }
         });
         '
-    ↓Object1 [steps.JsonToXmlStep-1726918640824]: 
+    ↓Object1 [steps.JsonToXmlStep-1734534653628]: 
       jsonObject: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -741,54 +741,54 @@ comment: |
           - SmartType: 
             - ↑mode: PLAIN
             - →→: Object
-↓forms_config [variables.RequestableVariable-1665402317348]: 
+↓forms_config [variables.RequestableVariable-1734534653631]: 
   comment: |
     '{
     	"en": {
-            "comment": "Choose a table in Baserow",
-            "displayName": "Configuration"
-        },
-        "fr": {
-            "comment": "Choisissez une table dans Baserow",
-    		"displayName":"Configuration"
-        },
-        "es": {
-            "comment": "Elija una tabla en Baserow",
-            "displayName": "Configuración"
-        },
-        "it": {
-            "comment": "Scegli una tabella in Baserow",
-            "displayName": "Configurazione"
+    		"comment": "Choose a table in Baserow to set your markers",
+    		"displayName": "Markers Configuration"
+    	},
+    	"fr": {
+    		"comment": "Choisissez une table dans Baserow pour définir vos repères",
+    		"displayName": "Configuration des repères"
+    	},
+    	"es": {
+    		"comment": "Elija una tabla en Baserow para establecer sus marcadores",
+    		"displayName": "Configuración de marcadores"
+    	},
+    	"it": {
+    		"comment": "Scegli una tabella in Baserow per impostare i tuoi indicatori",
+    		"displayName": "Configurazione degli indicatori"
     	}
     }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
   required: true
   value: 
-↓forms_tableFilter [variables.RequestableVariable-1665911494442]: 
+↓forms_tableFilter [variables.RequestableVariable-1734534653634]: 
   comment: |
     '{
-        "en": {
-            "comment": "Define a filter to apply to Baserow table",
-            "displayName": "Filter"
-        },
-        "fr": {
-            "comment": "Définir un filtre à appliquer à la table Baserow",
-            "displayName": "Filtre"
-        },
-        "es": {
-            "comment": "Definir un filtro para aplicar a la tabla de Baserow",
-            "displayName": "Filtro"
-        },
-        "it": {
-            "comment": "Definire un filtro da applicare alla tabella di Baserow",
-            "displayName": "Filtro"
-        }
+    	"en": {
+    		"comment": "Set the filters to apply to the Baserow table for markers",
+    		"displayName": "Markers Filters"
+    	},
+    	"fr": {
+    		"comment": "Définir les filtres à appliquer à la table Baserow pour les repères",
+    		"displayName": "Filtres des repères"
+    	},
+    	"es": {
+    		"comment": "Establezca los filtros para aplicar a la tabla de Baserow para los marcadores",
+    		"displayName": "Filtros de marcadores"
+    	},
+    	"it": {
+    		"comment": "Imposta i filtri da applicare alla tabella Baserow per gli indicatori",
+    		"displayName": "Filtri degli indicatori"
+    	}
     }'
   description: filter
-↓model [variables.RequestableVariable-1671813057661]: 
+↓model [variables.RequestableVariable-1734534653637]: 
   comment: If true, just return one line of data so that No Code studio can compte the table model
 ↓TestWithFilters [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1666432854743]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653641]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -796,7 +796,7 @@ comment: |
       	"table_id": "384"
       }
       '
-  ↓forms_tableFilter [variables.TestCaseVariable-1666432865700]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1734534653644]: 
     description: 
     required: true
     value: |
@@ -812,16 +812,16 @@ comment: |
       }
       '
 ↓TestWithFilters1 [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1666806571769]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653648]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: '{"table_id":"110211", "columns":["Last name", "First name", "Photo", "Department"]}'
-  ↓forms_tableFilter [variables.TestCaseVariable-1666806571772]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1734534653651]: 
     description: 
     required: true
     value: '{ "mode": "AND", "filters": [ { "field": "Last name", "op": "contains", "value":"" }, { "field": "Department", "op": "contains", "value":"" }]}'
 ↓TestWithFilters2 [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1669786915409]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653655]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -829,7 +829,7 @@ comment: |
       	"table_id": "118056"
       }
       '
-  ↓forms_tableFilter [variables.TestCaseVariable-1669786915412]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1734534653658]: 
     description: 
     required: true
     value: |
@@ -837,7 +837,7 @@ comment: |
       
       '
 ↓TestWithFiltersAndModel [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1680617453967]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653662]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -845,10 +845,10 @@ comment: |
       	"table_id": "715"
       }
       '
-  ↓model [variables.TestCaseVariable-1680617465191]: 
+  ↓model [variables.TestCaseVariable-1734534653665]: 
     value: true
 ↓TestWithInlcude [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1666430403998]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653669]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -859,23 +859,23 @@ comment: |
       }
       '
 ↓TestWithLinks [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1667890317848]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653673]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: '{"table_id":"109861", "columns":["Last name", "First name", "Photo", "Department"]}'
 ↓TestWithModel [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1671813368531]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653677]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
       '
       {"table_id":416,"columns":["No de Code à barre","Notes","Actif","Transporteur","No Récépissé","No de colis","Date/Heure Saisie","Utilisateur","Dépot","Activité"],"hidden":["Notes","Actif","Utilisateur","Dépot","Activité"]}'
-  ↓forms_tableFilter [variables.TestCaseVariable-1671813384059]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1734534653680]: 
     description: 
-  ↓model [variables.TestCaseVariable-1671813384061]: 
+  ↓model [variables.TestCaseVariable-1734534653683]: 
     value: true
 ↓TestWithView [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1666431067846]: 
+  ↓forms_config [variables.TestCaseVariable-1734534653687]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |

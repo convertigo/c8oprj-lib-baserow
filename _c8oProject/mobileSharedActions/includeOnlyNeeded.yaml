@@ -1,0 +1,22 @@
+↓IncludeOnlyNeeded [ngx.components.UICustomAsyncAction-1734530747528]: 
+  actionValue: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+      - com.twinsoft.convertigo.beans.common.FormatedContent: 
+        →: |
+          		try {
+          			for(let key in page.local.selectedColumns){
+          				let x = page.local.selectedColumns[key];
+          			     if(x.displayValue || x.value || x.value2){
+          		            page.local.selectedColumns[key].selected = true
+          		        }
+          		        else{
+          		            page.local.selectedColumns[key].selected = false;
+          		        }
+          			}
+          		} catch (e) {
+          		
+          		} finally {
+          			return;
+          		}
+          

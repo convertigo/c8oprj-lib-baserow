@@ -206,118 +206,6 @@ title: First page
   beanData: '{"ionBean":"Content","Padding":"plain:ion-no-padding"}'
   comment: Page content
   tagName: ion-content
-  ↓Div [ngx.components.UIDynamicElement-1679059988484]: 
-    beanData: '{"ionBean":"DivTag"}'
-    isEnabled: false
-    tagName: div
-    ↓tag [ngx.components.UIControlDirective-1679051858313]: 
-      directiveName: If
-      directiveSource: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-          - MobileSmartSourceType: script:local.show else ElseBlock_1679052710559
-      ↓Breadcrumbs [ngx.components.UIDynamicElement-1679052772106]: 
-        beanData: '{"ionBean":"Breadcrumbs","IonMode":"plain:ios"}'
-        tagName: ion-breadcrumbs
-        ↓Breadcrumb2 [ngx.components.UIDynamicElement-1679060618517]: 
-          beanData: '{"ionBean":"Breadcrumb"}'
-          tagName: ion-breadcrumb
-          ↓some_text [ngx.components.UIText-1679060618520]: 
-            i18n: true
-            textValue: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                - MobileSmartSourceType: plain:Select a database and table
-          ↓attr [ngx.components.UIControlEvent-1679060618526]: 
-            ↓goHome [ngx.components.UICustomAsyncAction-1679060618529]: 
-              actionValue: 
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
-                  - com.twinsoft.convertigo.beans.common.FormatedContent: 
-                    →: |
-                      		try {
-                      			page.local.show = true;
-                      			page.local.selectedColumns = {};
-                      		} catch (e) {
-                      		
-                      		} finally {
-                      			return;
-                      		}
-                      
-        ↓Breadcrumb [ngx.components.UIDynamicElement-1679052772109]: 
-          beanData: '{"ionBean":"Breadcrumb"}'
-          tagName: ion-breadcrumb
-          ↓some_text [ngx.components.UIText-1679052772112]: 
-            i18n: true
-            textValue: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.baseName","prefix":"","suffix":"","custom":"","useCustom":false}}
-          ↓Icon [ngx.components.UIDynamicElement-1679060609048]: 
-            beanData: |
-              '{
-               "ionBean": "Icon",
-               "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''server''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-               "IconSlot": "plain:start"
-              }'
-            tagName: ion-icon
-        ↓Breadcrumb1 [ngx.components.UIDynamicElement-1679052899478]: 
-          beanData: '{"ionBean":"Breadcrumb"}'
-          tagName: ion-breadcrumb
-          ↓some_text [ngx.components.UIText-1679052899481]: 
-            i18n: true
-            textValue: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.tableName","prefix":"","suffix":"","custom":"","useCustom":false}}
-          ↓Icon [ngx.components.UIDynamicElement-1679060546602]: 
-            beanData: |
-              '{
-               "ionBean": "Icon",
-               "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''menu-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-               "IconSlot": "plain:start"
-              }'
-            tagName: ion-icon
-    ↓tag1 [ngx.components.UIElement-1679052710559]: 
-      identifier: ElseBlock_1679052710559
-      tagName: ng-template
-      ↓Breadcrumbs [ngx.components.UIDynamicElement-1679051748128]: 
-        beanData: '{"ionBean":"Breadcrumbs","IonMode":"plain:ios"}'
-        tagName: ion-breadcrumbs
-        ↓Breadcrumb [ngx.components.UIDynamicElement-1679051748105]: 
-          beanData: '{"ionBean":"Breadcrumb"}'
-          tagName: ion-breadcrumb
-          ↓some_text [ngx.components.UIText-1679051748107]: 
-            i18n: true
-            textValue: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                - MobileSmartSourceType: plain:Select a database and table
-          ↓attr [ngx.components.UIControlEvent-1679060338716]: 
-            ↓goHome [ngx.components.UICustomAsyncAction-1679060346880]: 
-              actionValue: 
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
-                  - com.twinsoft.convertigo.beans.common.FormatedContent: 
-                    →: |
-                      		try {
-                      			page.local.show = true;
-                      			page.local.selectedColumns = {};
-                      		} catch (e) {
-                      		
-                      		} finally {
-                      			return;
-                      		}
-                      
-    ↓Style [ngx.components.UIStyle-1679060018572]: 
-      styleContent: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
-          - com.twinsoft.convertigo.beans.common.FormatedContent: 
-            →: |
-              '	display: flex;
-              	justify-content: center;
-              '
   ↓Grid [ngx.components.UIDynamicElement-1667635898879]: 
     beanData: '{"ionBean":"Grid","Height":"plain:100%"}'
     tagName: ion-grid
@@ -1339,6 +1227,35 @@ title: First page
                                   font-size: 24px;
                                   font-style: normal;
                                   '
+                        ↓Break [ngx.components.UIDynamicElement-1734515923606]: 
+                          beanData: '{"ionBean":"Break"}'
+                          selfClose: true
+                          tagName: br
+                        ↓Text1 [ngx.components.UIText-1734515923609]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.groupName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text4 [ngx.components.UIText-1734515923612]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text2 [ngx.components.UIText-1734515923615]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.baseName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text5 [ngx.components.UIText-1734515923618]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text3 [ngx.components.UIText-1734515923621]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.tableName","prefix":"","suffix":"","custom":"","useCustom":false}}
                       ↓Style [ngx.components.UIStyle-1680694473959]: 
                         styleContent: 
                           - xmlizable: 
@@ -1435,471 +1352,6 @@ title: First page
                 ↓CardContent [ngx.components.UIDynamicElement-1680694473998]: 
                   beanData: '{"ionBean":"CardContent"}'
                   tagName: ion-card-content
-                  ↓GenericItemDisplayValue [ngx.components.UIDynamicElement-1680695909686]: 
-                    beanData: '{"ionBean":"GenericItem"}'
-                    isEnabled: false
-                    tagName: ion-item
-                    ↓Label [ngx.components.UIDynamicElement-1680695909683]: 
-                      beanData: '{"ionBean":"Label"}'
-                      tagName: ion-label
-                      ↓some_text [ngx.components.UIText-1680695909685]: 
-                        i18n: true
-                        textValue: 
-                          - xmlizable: 
-                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                            - MobileSmartSourceType: plain:Display value
-                    ↓SelectContainer [ngx.components.UIDynamicElement-1680695926472]: 
-                      beanData: |
-                        '{
-                         "ionBean": "Select",
-                         "ControlName": "plain:name1680695926472",
-                         "DoubleBinding": "source:{\"filter\":\"Local\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"localObject\":\"local\"}],\"path\":\"?.displayColumn\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                         "Interface": "plain:popover"
-                        }'
-                      tagName: ion-select
-                      ↓Directive [ngx.components.UIControlDirective-1680695966894]: 
-                        directiveIndexName: idx
-                        directiveItemName: column
-                        directiveSource: 
-                          - xmlizable: 
-                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                            - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.formscommon_FieldsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
-                        ↓SelectOption [ngx.components.UIDynamicElement-1680695974741]: 
-                          beanData: '{"ionBean":"SelectOption","Value":"script:column.name"}'
-                          tagName: ion-select-option
-                          ↓GenericItem [ngx.components.UIDynamicElement-1680695988079]: 
-                            beanData: '{"ionBean":"GenericItem"}'
-                            tagName: ion-item
-                            ↓Directive [ngx.components.UIControlDirective-1680695966963]: 
-                              directiveName: Switch
-                              directiveSource: 
-                                - xmlizable: 
-                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                  - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1680695966894}],"path":"?.type","prefix":"","suffix":"","custom":"","useCustom":false}}
-                              isEnabled: false
-                              ↓Directive [ngx.components.UIControlDirective-1680695966966]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'text'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695966969]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''pencil''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive1 [ngx.components.UIControlDirective-1680695966972]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'long_text'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695966975]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''list-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive2 [ngx.components.UIControlDirective-1680695966978]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'formula'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695966981]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''logo-electron''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive3 [ngx.components.UIControlDirective-1680695966984]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'boolean'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695966987]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''contrast''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive4 [ngx.components.UIControlDirective-1680695966990]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'number'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695966993]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''apps-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive5 [ngx.components.UIControlDirective-1680695966996]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'link_row'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695966999]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''link-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive6 [ngx.components.UIControlDirective-1680695967002]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'lookup'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695967005]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''telescope-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive8 [ngx.components.UIControlDirective-1680695967008]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'file'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695967011]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''document-text-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive9 [ngx.components.UIControlDirective-1680695967014]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'date'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695967017]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''calendar-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive10 [ngx.components.UIControlDirective-1680695967020]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'multiple_select'
-                                ↓Icon [ngx.components.UIDynamicElement-1680695967023]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''reorder-four-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive7 [ngx.components.UIControlDirective-1680695967026]: 
-                                directiveName: SwitchDefault
-                                ↓Icon [ngx.components.UIDynamicElement-1680695967029]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''ban''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                            ↓Label [ngx.components.UIDynamicElement-1680695988076]: 
-                              beanData: '{"ionBean":"Label"}'
-                              tagName: ion-label
-                              ↓Text [ngx.components.UIText-1680695994498]: 
-                                textValue: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1680695966894}],"path":"?.name","prefix":"","suffix":"","custom":"","useCustom":false}}
-                      ↓attr [ngx.components.UIControlEvent-1680697471442]: 
-                        attrName: (ngModelChange)
-                        eventName: (ngModelChange)
-                        ↓affectValue [ngx.components.UICustomAsyncAction-1680697471445]: 
-                          actionValue: 
-                            - xmlizable: 
-                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
-                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
-                                →: |
-                                  		try {
-                                  			if(!page.local.diffrentVals){
-                                  				page.local.valueColumn = event;
-                                  			}
-                                  		} catch (e) {
-                                  		
-                                  		} finally {
-                                  			return;
-                                  		}
-                                  
-                  ↓GenericItemDiffrentVals [ngx.components.UIDynamicElement-1680696976410]: 
-                    beanData: '{"ionBean":"GenericItem","Lines":"plain:full"}'
-                    isEnabled: false
-                    tagName: ion-item
-                    ↓CheckBox [ngx.components.UIDynamicElement-1680697025062]: 
-                      beanData: |
-                        '{
-                         "ionBean": "CheckBox",
-                         "ControlName": "plain:name1680697025062",
-                         "DoubleBinding": "script:local.diffrentVals"
-                        }'
-                      tagName: ion-checkbox
-                      ↓slot [ngx.components.UIAttribute-1680697042551]: 
-                        attrName: slot
-                        attrValue: 
-                          - xmlizable: 
-                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                            - MobileSmartSourceType: plain:start
-                      ↓attr [ngx.components.UIControlEvent-1680697417340]: 
-                        attrName: (ngModelChange)
-                        eventName: (ngModelChange)
-                        ↓affectValue [ngx.components.UICustomAsyncAction-1680697432106]: 
-                          actionValue: 
-                            - xmlizable: 
-                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
-                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
-                                →: |
-                                  		try {
-                                  			if(event == false){
-                                  				page.local.valueColumn = page.local.displayColumn;
-                                  			}
-                                  		} catch (e) {
-                                  		
-                                  		} finally {
-                                  			return;
-                                  		}
-                                  
-                    ↓Label [ngx.components.UIDynamicElement-1680696976407]: 
-                      beanData: '{"ionBean":"Label"}'
-                      tagName: ion-label
-                      ↓some_text [ngx.components.UIText-1680696976409]: 
-                        i18n: true
-                        textValue: 
-                          - xmlizable: 
-                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                            - MobileSmartSourceType: plain:Use a different column for the value and the display value
-                  ↓GenericItemValue [ngx.components.UIDynamicElement-1680696113202]: 
-                    beanData: '{"ionBean":"GenericItem","Disabled":"script:local.diffrentVals == false"}'
-                    isEnabled: false
-                    tagName: ion-item
-                    ↓Label [ngx.components.UIDynamicElement-1680696113205]: 
-                      beanData: '{"ionBean":"Label"}'
-                      tagName: ion-label
-                      ↓some_text [ngx.components.UIText-1680696113208]: 
-                        i18n: true
-                        textValue: 
-                          - xmlizable: 
-                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                            - MobileSmartSourceType: plain:Value
-                    ↓SelectContainer [ngx.components.UIDynamicElement-1680696113211]: 
-                      beanData: |
-                        '{
-                         "ionBean": "Select",
-                         "ControlName": "plain:name1680695926472",
-                         "DoubleBinding": "source:{\"filter\":\"Local\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"localObject\":\"local\"}],\"path\":\"?.valueColumn\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                         "Interface": "plain:popover"
-                        }'
-                      tagName: ion-select
-                      ↓Directive [ngx.components.UIControlDirective-1680696113214]: 
-                        directiveIndexName: idx
-                        directiveItemName: column
-                        directiveSource: 
-                          - xmlizable: 
-                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                            - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.formscommon_FieldsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
-                        ↓SelectOption [ngx.components.UIDynamicElement-1680696113217]: 
-                          beanData: '{"ionBean":"SelectOption","Value":"script:JSON.stringify(column)"}'
-                          tagName: ion-select-option
-                          ↓GenericItem [ngx.components.UIDynamicElement-1680696113220]: 
-                            beanData: '{"ionBean":"GenericItem"}'
-                            tagName: ion-item
-                            ↓Directive [ngx.components.UIControlDirective-1680696113223]: 
-                              directiveName: Switch
-                              directiveSource: 
-                                - xmlizable: 
-                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                  - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1680696113214}],"path":"?.type","prefix":"","suffix":"","custom":"","useCustom":false}}
-                              isEnabled: false
-                              ↓Directive [ngx.components.UIControlDirective-1680696113226]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'text'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113229]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''pencil''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive1 [ngx.components.UIControlDirective-1680696113232]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'long_text'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113235]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''list-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive2 [ngx.components.UIControlDirective-1680696113238]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'formula'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113241]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''logo-electron''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive3 [ngx.components.UIControlDirective-1680696113244]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'boolean'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113247]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''contrast''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive4 [ngx.components.UIControlDirective-1680696113250]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'number'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113253]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''apps-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive5 [ngx.components.UIControlDirective-1680696113256]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'link_row'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113259]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''link-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive6 [ngx.components.UIControlDirective-1680696113262]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'lookup'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113265]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''telescope-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive8 [ngx.components.UIControlDirective-1680696113268]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'file'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113271]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''document-text-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive9 [ngx.components.UIControlDirective-1680696113274]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'date'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113277]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''calendar-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive10 [ngx.components.UIControlDirective-1680696113280]: 
-                                directiveName: SwitchCase
-                                directiveSource: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: script:'multiple_select'
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113283]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''reorder-four-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                              ↓Directive7 [ngx.components.UIControlDirective-1680696113286]: 
-                                directiveName: SwitchDefault
-                                ↓Icon [ngx.components.UIDynamicElement-1680696113289]: 
-                                  beanData: |
-                                    '{
-                                     "ionBean": "Icon",
-                                     "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''ban''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
-                                     "IconSlot": "plain:start"
-                                    }'
-                                  tagName: ion-icon
-                            ↓Label [ngx.components.UIDynamicElement-1680696113292]: 
-                              beanData: '{"ionBean":"Label"}'
-                              tagName: ion-label
-                              ↓Text [ngx.components.UIText-1680696113295]: 
-                                textValue: 
-                                  - xmlizable: 
-                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                    - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1680696113214}],"path":"?.name","prefix":"","suffix":"","custom":"","useCustom":false}}
                   ↓RadioGroup [ngx.components.UIDynamicElement-1680708184852]: 
                     beanData: '{"ionBean":"RadioGroup","ControlName":"plain:name1680708184852"}'
                     tagName: ion-radio-group
@@ -3681,15 +3133,1153 @@ title: First page
                                   		event.detail.complete();
                                   		resolve();
                                   '
-  ↓H1 [ngx.components.UIDynamicElement-1727282354563]: 
-    beanData: '{"ionBean":"Heading1"}'
-    isEnabled: false
-    tagName: h1
-    ↓Text [ngx.components.UIText-1727282354553]: 
-      textValue: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-          - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.table_id_int","prefix":"","suffix":"","custom":"","useCustom":false}}
+          ↓Directive3 [ngx.components.UIControlDirective-1734450724839]: 
+            directiveExpression: '''map'''
+            directiveName: SwitchCase
+            ↓GridColSelect [ngx.components.UIDynamicElement-1734528539558]: 
+              beanData: '{"ionBean":"GridCol","Size":"plain:8"}'
+              tagName: ion-col
+              ↓CardContainer [ngx.components.UIDynamicElement-1734528539561]: 
+                beanData: '{"ionBean":"Card"}'
+                tagName: ion-card
+                ↓CardHeader [ngx.components.UIDynamicElement-1734528539564]: 
+                  beanData: '{"ionBean":"CardHeader"}'
+                  tagName: ion-card-header
+                  ↓Div [ngx.components.UIDynamicElement-1734528539567]: 
+                    beanData: '{"ionBean":"DivTag"}'
+                    tagName: div
+                    ↓Style [ngx.components.UIStyle-1734528539570]: 
+                      styleContent: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                          - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                            →: |
+                              '	border-bottom: 1px solid var(--ion-color-dark);
+                              	padding:16px;
+                              '
+                    ↓CardTitle [ngx.components.UIDynamicElement-1734528539573]: 
+                      beanData: '{"ionBean":"CardTitle"}'
+                      tagName: ion-card-title
+                      ↓TextItem [ngx.components.UIDynamicElement-1734528539576]: 
+                        beanData: '{"ionBean":"TextItem"}'
+                        tagName: ion-text
+                        ↓Text [ngx.components.UIText-1734528539579]: 
+                          i18n: true
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:Select Columns
+                        ↓FontStyle [ngx.components.UIFontStyle-1734528539582]: 
+                          fontFamily: Saira
+                          fontSize: 24px
+                          fontStyle: normal
+                          ruleTargets: class1734528539576
+                          styleContent: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                →: |
+                                  'font-family: Saira;
+                                  font-size: 24px;
+                                  font-style: normal;
+                                  '
+                        ↓Break [ngx.components.UIDynamicElement-1734528539585]: 
+                          beanData: '{"ionBean":"Break"}'
+                          selfClose: true
+                          tagName: br
+                        ↓Text1 [ngx.components.UIText-1734528539588]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.groupName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text4 [ngx.components.UIText-1734528539591]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text2 [ngx.components.UIText-1734528539594]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.baseName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text5 [ngx.components.UIText-1734528539597]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text3 [ngx.components.UIText-1734528539600]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.tableName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                      ↓Style [ngx.components.UIStyle-1734528539603]: 
+                        styleContent: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                              →: |
+                                '	text-align:center;
+                                	display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                '
+                      ↓attr [ngx.components.UIAttribute-1734528539606]: 
+                        attrName: '[ngStyle]'
+                        attrValue: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                            - MobileSmartSourceType: 'script:{''min-height'': leftTitle.el.clientHeight + ''px''}'
+                  ↓Style [ngx.components.UIStyle-1734528539609]: 
+                    styleContent: 
+                      - xmlizable: 
+                        - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                        - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                          →: |
+                            '	padding: 0;
+                            '
+                  ↓Div1 [ngx.components.UIDynamicElement-1734528539612]: 
+                    beanData: '{"ionBean":"DivTag"}'
+                    identifier: rightDiv
+                    tagName: div
+                    ↓Style [ngx.components.UIStyle-1734528539615]: 
+                      styleContent: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                          - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                            →: |
+                              'padding: 0 16px;
+                              '
+                    ↓GenericItem [ngx.components.UIDynamicElement-1734528539618]: 
+                      beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                      tagName: ion-item
+                      ↓Icon [ngx.components.UIDynamicElement-1734528539621]: 
+                        beanData: |
+                          '{
+                           "ionBean": "Icon",
+                           "IconName": "plain:information-circle-outline",
+                           "IconSlot": "plain:start"
+                          }'
+                        tagName: ion-icon
+                      ↓Label [ngx.components.UIDynamicElement-1734528539624]: 
+                        beanData: '{"ionBean":"Label"}'
+                        tagName: ion-label
+                        ↓Paragraph [ngx.components.UIDynamicElement-1734528539627]: 
+                          beanData: '{"ionBean":"Paragraph"}'
+                          tagName: p
+                          ↓some_text [ngx.components.UIText-1734528539630]: 
+                            i18n: true
+                            textValue: 
+                              - xmlizable: 
+                                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                - MobileSmartSourceType: plain:notice3
+                        ↓Style [ngx.components.UIStyle-1734528539633]: 
+                          styleContent: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                →: |
+                                  '/**
+                                   * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                   * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                   * They are set using custom property notation, e.g.: --main-color: black;
+                                   * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                   * You can find below your component''s properties you can customize within the page.
+                                   * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                   * For more informations see https://ionicframework.com/docs/theming.
+                                  **/
+                                  //--color	//Color of the label
+                                  '
+                        ↓FontStyle [ngx.components.UIFontStyle-1734528539636]: 
+                          fontStyle: italic
+                          ruleTargets: class1734528539624
+                          styleContent: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                →: |
+                                  'font-style: italic;
+                                  '
+                        ↓class [ngx.components.UIAttribute-1734528539639]: 
+                          attrName: 
+                          attrValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:text-wrap
+                ↓CardContent [ngx.components.UIDynamicElement-1734528539642]: 
+                  beanData: '{"ionBean":"CardContent"}'
+                  tagName: ion-card-content
+                  ↓RadioGroup [ngx.components.UIDynamicElement-1734528539864]: 
+                    beanData: '{"ionBean":"RadioGroup","ControlName":"plain:name1680708184852"}'
+                    tagName: ion-radio-group
+                    ↓ReorderGroup [ngx.components.UIDynamicElement-1734528539867]: 
+                      beanData: '{"ionBean":"ReorderGroup"}'
+                      tagName: ion-reorder-group
+                      ↓Directive [ngx.components.UIControlDirective-1734528539870]: 
+                        directiveIndexName: idx
+                        directiveItemName: column
+                        directiveSource: 
+                          - xmlizable: 
+                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                            - MobileSmartSourceType: source:{"filter":"Sequence","project":"lib_BaseRow","input":"","model":{"data":[{"sequence":"lib_BaseRow.formscommon_FieldsList","marker":""}],"path":"?.array","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓tag [ngx.components.UIControlDirective-1734528539873]: 
+                          directiveName: If
+                          directiveSource: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: script:idx == 0
+                          ↓ListItemHeader [ngx.components.UIDynamicElement-1734528539876]: 
+                            beanData: '{"ionBean":"ListItem"}'
+                            tagName: ion-item
+                            ↓Icon [ngx.components.UIDynamicElement-1734528539879]: 
+                              beanData: |
+                                '{
+                                 "ionBean": "Icon",
+                                 "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''browsers-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                 "IconSlot": "plain:start"
+                                }'
+                              tagName: ion-icon
+                            ↓Label1 [ngx.components.UIDynamicElement-1734528539882]: 
+                              beanData: '{"ionBean":"Label"}'
+                              tagName: ion-label
+                              ↓some_text [ngx.components.UIText-1734528539885]: 
+                                textValue: 
+                                  - xmlizable: 
+                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                    - MobileSmartSourceType: 'plain: '
+                            ↓Grid [ngx.components.UIDynamicElement-1734528539888]: 
+                              beanData: '{"ionBean":"Grid"}'
+                              tagName: ion-grid
+                              ↓GridRow [ngx.components.UIDynamicElement-1734528539891]: 
+                                beanData: '{"ionBean":"GridRow","Height":"plain"}'
+                                tagName: ion-row
+                                ↓GridCol [ngx.components.UIDynamicElement-1734528539894]: 
+                                  beanData: '{"ionBean":"GridCol"}'
+                                  tagName: ion-col
+                                  ↓Attr [ngx.components.UIAttribute-1734528539897]: 
+                                    attrName: 
+                                    attrValue: 
+                                      - xmlizable: 
+                                        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                        - MobileSmartSourceType: plain:no-padding
+                                  ↓GenericItem [ngx.components.UIDynamicElement-1734528539900]: 
+                                    beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                    tagName: ion-item
+                                    ↓CheckBox [ngx.components.UIDynamicElement-1734528539903]: 
+                                      beanData: |
+                                        '{
+                                         "ionBean": "CheckBox",
+                                         "ControlName": "plain:name1667636420064",
+                                         "Checked": "plain:true"
+                                        }'
+                                      isEnabled: false
+                                      tagName: ion-checkbox
+                                      ↓Style [ngx.components.UIStyle-1734528539906]: 
+                                        styleContent: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                              →: |
+                                                '/**
+                                                 * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                                 * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                                 * They are set using custom property notation, e.g.: --main-color: black;
+                                                 * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                                 * You can find below your component''s properties you can customize within the page.
+                                                 * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                                 * For more informations see https://ionicframework.com/docs/theming.
+                                                **/
+                                                //--background	//Background of the checkbox icon
+                                                //--background-checked	//Background of the checkbox icon when checked
+                                                //--border-color	//Border color of the checkbox icon
+                                                //--border-color-checked	//Border color of the checkbox icon when checked
+                                                //--border-radius	//Border radius of the checkbox icon
+                                                //--border-style	//Border style of the checkbox icon
+                                                //--border-width	//Border width of the checkbox icon
+                                                //--checkmark-color	//Color of the checkbox checkmark when checked
+                                                //--checkmark-width	//Stroke width of the checkbox checkmark
+                                                //--size	//Size of the checkbox icon
+                                                //--transition	//Transition of the checkbox icon
+                                                	margin-top: 2px;
+                                                	margin-bottom: 2px;
+                                                
+                                                '
+                                      ↓slot [ngx.components.UIAttribute-1734528539909]: 
+                                        attrName: slot
+                                        attrValue: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                            - MobileSmartSourceType: plain:start
+                                      ↓attr [ngx.components.UIControlEvent-1734528539912]: 
+                                        attrName: (ionChange)
+                                        eventName: ionChange
+                                        ↓selectOrDeselectAll [ngx.components.UICustomAsyncAction-1734528539915]: 
+                                          actionValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                                →: |
+                                                  		try {
+                                                  			for(let i in page.local.selectedColumns){
+                                                  				page.local.selectedColumns[i].selected = event.detail.checked;
+                                                  				if(!(event.detail.checked)){
+                                                  					page.local.selectedColumns[i].displayValue = event.detail.checked;
+                                                  					page.local.selectedColumns[i].value =  event.detail.checked;;
+                                                  				}
+                                                  			}
+                                                  			if(!(event.detail.checked)){
+                                                  				page.local.selectedColumns["id"].value = true;
+                                                  				page.local.selectedColumns["id"].displayValue = true;
+                                                  				page.local.selectedColumns["id"].selected = true;
+                                                  			}
+                                                  		} catch (e) {
+                                                  		
+                                                  		} finally {
+                                                  			return;
+                                                  		}
+                                                  
+                                    ↓Label [ngx.components.UIDynamicElement-1734528539918]: 
+                                      beanData: '{"ionBean":"Label"}'
+                                      tagName: ion-label
+                                      ↓Paragraph [ngx.components.UIDynamicElement-1734528539921]: 
+                                        beanData: '{"ionBean":"Paragraph"}'
+                                        tagName: p
+                                        ↓some_text [ngx.components.UIText-1734528539924]: 
+                                          i18n: true
+                                          textValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                              - MobileSmartSourceType: plain:Label
+                                        ↓Style [ngx.components.UIStyle-1734528539927]: 
+                                          styleContent: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                                →: |
+                                                  	color:black;
+                                                  
+                                ↓GridCol1 [ngx.components.UIDynamicElement-1734528539930]: 
+                                  beanData: '{"ionBean":"GridCol"}'
+                                  tagName: ion-col
+                                  ↓Attr [ngx.components.UIAttribute-1734528539933]: 
+                                    attrName: 
+                                    attrValue: 
+                                      - xmlizable: 
+                                        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                        - MobileSmartSourceType: plain:no-padding
+                                  ↓GenericItem [ngx.components.UIDynamicElement-1734528539936]: 
+                                    beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                    tagName: ion-item
+                                    ↓Label [ngx.components.UIDynamicElement-1734528539939]: 
+                                      beanData: '{"ionBean":"Label"}'
+                                      tagName: ion-label
+                                      ↓Paragraph [ngx.components.UIDynamicElement-1734528539942]: 
+                                        beanData: '{"ionBean":"Paragraph"}'
+                                        tagName: p
+                                        ↓Style [ngx.components.UIStyle-1734528539945]: 
+                                          styleContent: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                                →: |
+                                                  	color:black;
+                                                  
+                                        ↓some_text [ngx.components.UIText-1734528539948]: 
+                                          i18n: true
+                                          textValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                              - MobileSmartSourceType: plain:Latitude
+                                ↓GridCol2 [ngx.components.UIDynamicElement-1734528539951]: 
+                                  beanData: '{"ionBean":"GridCol"}'
+                                  tagName: ion-col
+                                  ↓Attr [ngx.components.UIAttribute-1734528539954]: 
+                                    attrName: 
+                                    attrValue: 
+                                      - xmlizable: 
+                                        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                        - MobileSmartSourceType: plain:no-padding
+                                  ↓GenericItem [ngx.components.UIDynamicElement-1734528539957]: 
+                                    beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                    tagName: ion-item
+                                    ↓Label [ngx.components.UIDynamicElement-1734528539960]: 
+                                      beanData: '{"ionBean":"Label"}'
+                                      tagName: ion-label
+                                      ↓Paragraph [ngx.components.UIDynamicElement-1734528539963]: 
+                                        beanData: '{"ionBean":"Paragraph"}'
+                                        tagName: p
+                                        ↓Style [ngx.components.UIStyle-1734528539966]: 
+                                          styleContent: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                                →: |
+                                                  	color:black;
+                                                  
+                                        ↓some_text [ngx.components.UIText-1734528539969]: 
+                                          i18n: true
+                                          textValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                              - MobileSmartSourceType: plain:Longitude
+                          ↓ListItemIdentifier [ngx.components.UIDynamicElement-1734528539972]: 
+                            beanData: '{"ionBean":"ListItem"}'
+                            tagName: ion-item
+                            ↓Icon [ngx.components.UIDynamicElement-1734528539975]: 
+                              beanData: |
+                                '{
+                                 "ionBean": "Icon",
+                                 "IconName": "plain:cog-outline",
+                                 "IconSlot": "plain:start"
+                                }'
+                              tagName: ion-icon
+                            ↓Label1 [ngx.components.UIDynamicElement-1734528539978]: 
+                              beanData: '{"ionBean":"Label"}'
+                              tagName: ion-label
+                              ↓some_text [ngx.components.UIText-1734528539981]: 
+                                i18n: true
+                                textValue: 
+                                  - xmlizable: 
+                                    - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                    - MobileSmartSourceType: plain:Identifier
+                            ↓Grid [ngx.components.UIDynamicElement-1734528539984]: 
+                              beanData: '{"ionBean":"Grid"}'
+                              tagName: ion-grid
+                              ↓GridRow [ngx.components.UIDynamicElement-1734528539987]: 
+                                beanData: '{"ionBean":"GridRow","Height":"plain"}'
+                                tagName: ion-row
+                                ↓GridColDisplayValue [ngx.components.UIDynamicElement-1734528540014]: 
+                                  beanData: '{"ionBean":"GridCol"}'
+                                  tagName: ion-col
+                                  ↓Attr [ngx.components.UIAttribute-1734528540017]: 
+                                    attrName: 
+                                    attrValue: 
+                                      - xmlizable: 
+                                        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                        - MobileSmartSourceType: plain:no-padding
+                                  ↓GenericItem1 [ngx.components.UIDynamicElement-1734528540020]: 
+                                    beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                    tagName: ion-item
+                                    ↓CheckBox [ngx.components.UIDynamicElement-1734528540023]: 
+                                      beanData: |
+                                        '{
+                                         "ionBean": "CheckBox",
+                                         "ControlName": "plain:name1667636420064",
+                                         "DoubleBinding": "script:local.selectedColumns[''id''].displayValue",
+                                         "IonMode": "plain:ios",
+                                         "Checked": "plain:true"
+                                        }'
+                                      tagName: ion-checkbox
+                                      ↓Style [ngx.components.UIStyle-1734528540026]: 
+                                        styleContent: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                              →: |
+                                                '/**
+                                                 * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                                 * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                                 * They are set using custom property notation, e.g.: --main-color: black;
+                                                 * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                                 * You can find below your component''s properties you can customize within the page.
+                                                 * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                                 * For more informations see https://ionicframework.com/docs/theming.
+                                                **/
+                                                //--background	//Background of the checkbox icon
+                                                //--background-checked	//Background of the checkbox icon when checked
+                                                //--border-color	//Border color of the checkbox icon
+                                                //--border-color-checked	//Border color of the checkbox icon when checked
+                                                //--border-radius	//Border radius of the checkbox icon
+                                                //--border-style	//Border style of the checkbox icon
+                                                //--border-width	//Border width of the checkbox icon
+                                                //--checkmark-color	//Color of the checkbox checkmark when checked
+                                                //--checkmark-width	//Stroke width of the checkbox checkmark
+                                                //--size	//Size of the checkbox icon
+                                                //--transition	//Transition of the checkbox icon
+                                                	margin-top: 2px;
+                                                	margin-bottom: 2px;
+                                                
+                                                '
+                                      ↓slot [ngx.components.UIAttribute-1734528540029]: 
+                                        attrName: slot
+                                        attrValue: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                            - MobileSmartSourceType: plain:start
+                                      ↓attr [ngx.components.UIControlEvent-1734528540032]: 
+                                        attrName: (ngModelChange)
+                                        eventName: (ngModelChange)
+                                        ↓selectOrDeselectAll [ngx.components.UICustomAsyncAction-1734528540035]: 
+                                          actionValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                                →: |
+                                                  		try {
+                                                  				for(let i in page.local.selectedColumns){
+                                                  					if(i == vars.id){
+                                                  						//page.local.selectedColumns[i].displayValue = true;
+                                                  					}
+                                                  					else{
+                                                  						page.local.selectedColumns[i].displayValue = false;
+                                                  					}
+                                                  				}
+                                                  		} catch (e) {
+                                                  		
+                                                  		} finally {
+                                                  			return;
+                                                  		}
+                                                  
+                                          ↓id [ngx.components.UIControlVariable-1734528540038]: 
+                                            varValue: 
+                                              - xmlizable: 
+                                                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                                - MobileSmartSourceType: script:'id'
+                                          ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1734530824354]: 
+                                            beanData: '{"ionBean":"InvokeAction"}'
+                                            stack: lib_BaseRow.Application.NgxApp.includeOnlyNeeded
+                                ↓GridColValue [ngx.components.UIDynamicElement-1734528540041]: 
+                                  beanData: '{"ionBean":"GridCol"}'
+                                  tagName: ion-col
+                                  ↓Attr [ngx.components.UIAttribute-1734528540044]: 
+                                    attrName: 
+                                    attrValue: 
+                                      - xmlizable: 
+                                        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                        - MobileSmartSourceType: plain:no-padding
+                                  ↓GenericItem1 [ngx.components.UIDynamicElement-1734528540047]: 
+                                    beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                    tagName: ion-item
+                                    ↓CheckBox [ngx.components.UIDynamicElement-1734528540050]: 
+                                      beanData: |
+                                        '{
+                                         "ionBean": "CheckBox",
+                                         "ControlName": "plain:name1667636420064",
+                                         "DoubleBinding": "script:local.selectedColumns[''id''].value",
+                                         "IonMode": "plain:ios",
+                                         "Checked": "plain:true"
+                                        }'
+                                      tagName: ion-checkbox
+                                      ↓Style [ngx.components.UIStyle-1734528540053]: 
+                                        styleContent: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                              →: |
+                                                '/**
+                                                 * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                                 * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                                 * They are set using custom property notation, e.g.: --main-color: black;
+                                                 * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                                 * You can find below your component''s properties you can customize within the page.
+                                                 * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                                 * For more informations see https://ionicframework.com/docs/theming.
+                                                **/
+                                                //--background	//Background of the checkbox icon
+                                                //--background-checked	//Background of the checkbox icon when checked
+                                                //--border-color	//Border color of the checkbox icon
+                                                //--border-color-checked	//Border color of the checkbox icon when checked
+                                                //--border-radius	//Border radius of the checkbox icon
+                                                //--border-style	//Border style of the checkbox icon
+                                                //--border-width	//Border width of the checkbox icon
+                                                //--checkmark-color	//Color of the checkbox checkmark when checked
+                                                //--checkmark-width	//Stroke width of the checkbox checkmark
+                                                //--size	//Size of the checkbox icon
+                                                //--transition	//Transition of the checkbox icon
+                                                	margin-top: 2px;
+                                                	margin-bottom: 2px;
+                                                
+                                                '
+                                      ↓slot [ngx.components.UIAttribute-1734528540056]: 
+                                        attrName: slot
+                                        attrValue: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                            - MobileSmartSourceType: plain:start
+                                      ↓attr [ngx.components.UIControlEvent-1734528540059]: 
+                                        attrName: (ngModelChange)
+                                        eventName: (ngModelChange)
+                                        ↓selectOrDeselectAll [ngx.components.UICustomAsyncAction-1734528540062]: 
+                                          actionValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                                →: |
+                                                  		try {
+                                                  				for(let i in page.local.selectedColumns){
+                                                  					if(i == vars.id){
+                                                  						
+                                                  					}
+                                                  					else{
+                                                  						page.local.selectedColumns[i].value = false;
+                                                  					}
+                                                  				}
+                                                  		} catch (e) {
+                                                  		
+                                                  		} finally {
+                                                  			return;
+                                                  		}
+                                                  
+                                          ↓id [ngx.components.UIControlVariable-1734528540065]: 
+                                            varValue: 
+                                              - xmlizable: 
+                                                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                                - MobileSmartSourceType: script:'id'
+                                          ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1734530836075]: 
+                                            beanData: '{"ionBean":"InvokeAction"}'
+                                            stack: lib_BaseRow.Application.NgxApp.includeOnlyNeeded
+                                ↓GridColValue2 [ngx.components.UIDynamicElement-1734530457283]: 
+                                  beanData: '{"ionBean":"GridCol"}'
+                                  tagName: ion-col
+                                  ↓Attr [ngx.components.UIAttribute-1734530457286]: 
+                                    attrName: 
+                                    attrValue: 
+                                      - xmlizable: 
+                                        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                        - MobileSmartSourceType: plain:no-padding
+                                  ↓GenericItem1 [ngx.components.UIDynamicElement-1734530457289]: 
+                                    beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                    tagName: ion-item
+                                    ↓CheckBox [ngx.components.UIDynamicElement-1734530457292]: 
+                                      beanData: |
+                                        '{
+                                         "ionBean": "CheckBox",
+                                         "ControlName": "plain:name1667636420064",
+                                         "DoubleBinding": "script:local.selectedColumns[''id''].value2",
+                                         "IonMode": "plain:ios",
+                                         "Checked": "plain:true"
+                                        }'
+                                      tagName: ion-checkbox
+                                      ↓Style [ngx.components.UIStyle-1734530457295]: 
+                                        styleContent: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                              →: |
+                                                '/**
+                                                 * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                                 * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                                 * They are set using custom property notation, e.g.: --main-color: black;
+                                                 * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                                 * You can find below your component''s properties you can customize within the page.
+                                                 * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                                 * For more informations see https://ionicframework.com/docs/theming.
+                                                **/
+                                                //--background	//Background of the checkbox icon
+                                                //--background-checked	//Background of the checkbox icon when checked
+                                                //--border-color	//Border color of the checkbox icon
+                                                //--border-color-checked	//Border color of the checkbox icon when checked
+                                                //--border-radius	//Border radius of the checkbox icon
+                                                //--border-style	//Border style of the checkbox icon
+                                                //--border-width	//Border width of the checkbox icon
+                                                //--checkmark-color	//Color of the checkbox checkmark when checked
+                                                //--checkmark-width	//Stroke width of the checkbox checkmark
+                                                //--size	//Size of the checkbox icon
+                                                //--transition	//Transition of the checkbox icon
+                                                	margin-top: 2px;
+                                                	margin-bottom: 2px;
+                                                
+                                                '
+                                      ↓slot [ngx.components.UIAttribute-1734530457298]: 
+                                        attrName: slot
+                                        attrValue: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                            - MobileSmartSourceType: plain:start
+                                      ↓attr [ngx.components.UIControlEvent-1734530457301]: 
+                                        attrName: (ngModelChange)
+                                        eventName: (ngModelChange)
+                                        ↓selectOrDeselectAll [ngx.components.UICustomAsyncAction-1734530457304]: 
+                                          actionValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                                →: |
+                                                  		try {
+                                                  				for(let i in page.local.selectedColumns){
+                                                  					if(i == vars.id){
+                                                  						
+                                                  					}
+                                                  					else{
+                                                  						page.local.selectedColumns[i].value = false;
+                                                  					}
+                                                  				}
+                                                  		} catch (e) {
+                                                  		
+                                                  		} finally {
+                                                  			return;
+                                                  		}
+                                                  
+                                          ↓id [ngx.components.UIControlVariable-1734530457307]: 
+                                            varValue: 
+                                              - xmlizable: 
+                                                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                                - MobileSmartSourceType: script:'id'
+                                          ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1734530843891]: 
+                                            beanData: '{"ionBean":"InvokeAction"}'
+                                            stack: lib_BaseRow.Application.NgxApp.includeOnlyNeeded
+                        ↓ListItem [ngx.components.UIDynamicElement-1734528540068]: 
+                          beanData: '{"ionBean":"ListItem"}'
+                          tagName: ion-item
+                          ↓Directive [ngx.components.UIControlDirective-1734528540071]: 
+                            directiveName: Switch
+                            directiveSource: 
+                              - xmlizable: 
+                                - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1734528539870}],"path":"?.type","prefix":"","suffix":"","custom":"","useCustom":false}}
+                            ↓Directive [ngx.components.UIControlDirective-1734528540074]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'text'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540077]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''pencil''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive1 [ngx.components.UIControlDirective-1734528540080]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'long_text'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540083]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''list-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive2 [ngx.components.UIControlDirective-1734528540086]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'formula'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540089]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''logo-electron''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive3 [ngx.components.UIControlDirective-1734528540092]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'boolean'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540095]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''contrast''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive4 [ngx.components.UIControlDirective-1734528540098]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'number'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540101]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''apps-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive5 [ngx.components.UIControlDirective-1734528540104]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'link_row'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540107]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''link-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive6 [ngx.components.UIControlDirective-1734528540110]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'lookup'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540113]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''telescope-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive8 [ngx.components.UIControlDirective-1734528540116]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'file'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540119]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''document-text-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive9 [ngx.components.UIControlDirective-1734528540122]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'date'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540125]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''calendar-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive10 [ngx.components.UIControlDirective-1734528540128]: 
+                              directiveName: SwitchCase
+                              directiveSource: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: script:'multiple_select'
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540131]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''reorder-four-outline''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                            ↓Directive7 [ngx.components.UIControlDirective-1734528540134]: 
+                              directiveName: SwitchDefault
+                              ↓Icon [ngx.components.UIDynamicElement-1734528540137]: 
+                                beanData: |
+                                  '{
+                                   "ionBean": "Icon",
+                                   "IconName": "source:{\"filter\":\"Icon\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"icon\":\"''ban''\"}],\"path\":\"\",\"prefix\":\"\",\"suffix\":\"\",\"custom\":\"\",\"useCustom\":false}}",
+                                   "IconSlot": "plain:start"
+                                  }'
+                                tagName: ion-icon
+                          ↓Label1 [ngx.components.UIDynamicElement-1734528540140]: 
+                            beanData: '{"ionBean":"Label"}'
+                            tagName: ion-label
+                            ↓Text [ngx.components.UIText-1734528540143]: 
+                              textValue: 
+                                - xmlizable: 
+                                  - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                  - MobileSmartSourceType: source:{"filter":"Iteration","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1734528539870}],"path":"?.name","prefix":"","suffix":"","custom":"","useCustom":false}}
+                          ↓Grid [ngx.components.UIDynamicElement-1734528540149]: 
+                            beanData: '{"ionBean":"Grid"}'
+                            tagName: ion-grid
+                            ↓GridRow [ngx.components.UIDynamicElement-1734528540152]: 
+                              beanData: '{"ionBean":"GridRow","Height":"plain"}'
+                              tagName: ion-row
+                              ↓GridColDisplayValue [ngx.components.UIDynamicElement-1734528540182]: 
+                                beanData: '{"ionBean":"GridCol"}'
+                                tagName: ion-col
+                                ↓Attr [ngx.components.UIAttribute-1734528540185]: 
+                                  attrName: 
+                                  attrValue: 
+                                    - xmlizable: 
+                                      - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                      - MobileSmartSourceType: plain:no-padding
+                                ↓GenericItem [ngx.components.UIDynamicElement-1734528540188]: 
+                                  beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                  tagName: ion-item
+                                  ↓CheckBox1 [ngx.components.UIDynamicElement-1734528540191]: 
+                                    beanData: |
+                                      '{
+                                       "ionBean": "CheckBox",
+                                       "ControlName": "plain:name1667636420064",
+                                       "DoubleBinding": "script:local.selectedColumns[column.name].displayValue",
+                                       "IonMode": "plain:ios"
+                                      }'
+                                    tagName: ion-checkbox
+                                    ↓Style [ngx.components.UIStyle-1734528540194]: 
+                                      styleContent: 
+                                        - xmlizable: 
+                                          - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                          - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                            →: |
+                                              '/**
+                                               * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                               * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                               * They are set using custom property notation, e.g.: --main-color: black;
+                                               * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                               * You can find below your component''s properties you can customize within the page.
+                                               * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                               * For more informations see https://ionicframework.com/docs/theming.
+                                              **/
+                                              //--background	//Background of the checkbox icon
+                                              //--background-checked	//Background of the checkbox icon when checked
+                                              //--border-color	//Border color of the checkbox icon
+                                              //--border-color-checked	//Border color of the checkbox icon when checked
+                                              //--border-radius	//Border radius of the checkbox icon
+                                              //--border-style	//Border style of the checkbox icon
+                                              //--border-width	//Border width of the checkbox icon
+                                              //--checkmark-color	//Color of the checkbox checkmark when checked
+                                              //--checkmark-width	//Stroke width of the checkbox checkmark
+                                              //--size	//Size of the checkbox icon
+                                              //--transition	//Transition of the checkbox icon
+                                              	margin-top: 2px;
+                                              	margin-bottom: 2px;
+                                              	--opacity:1 !important;
+                                              '
+                                    ↓slot [ngx.components.UIAttribute-1734528540197]: 
+                                      attrName: slot
+                                      attrValue: 
+                                        - xmlizable: 
+                                          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                          - MobileSmartSourceType: plain:start
+                                    ↓attr [ngx.components.UIControlEvent-1734528540200]: 
+                                      attrName: (ngModelChange)
+                                      eventName: (ngModelChange)
+                                      ↓selectOrDeselectAll [ngx.components.UICustomAsyncAction-1734528540203]: 
+                                        actionValue: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                              →: |
+                                                		try {
+                                                				for(let i in page.local.selectedColumns){
+                                                					if(i == vars.id){
+                                                						//page.local.selectedColumns[i].displayValue = true;
+                                                					}
+                                                					else{
+                                                						page.local.selectedColumns[i].displayValue = false;
+                                                					}
+                                                				}
+                                                		} catch (e) {
+                                                		
+                                                		} finally {
+                                                			return;
+                                                		}
+                                                
+                                        ↓id [ngx.components.UIControlVariable-1734528540206]: 
+                                          varValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                              - MobileSmartSourceType: script:column.name
+                                        ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1734530856677]: 
+                                          beanData: '{"ionBean":"InvokeAction"}'
+                                          stack: lib_BaseRow.Application.NgxApp.includeOnlyNeeded
+                              ↓GridColValue [ngx.components.UIDynamicElement-1734528540209]: 
+                                beanData: '{"ionBean":"GridCol"}'
+                                tagName: ion-col
+                                ↓Attr [ngx.components.UIAttribute-1734528540212]: 
+                                  attrName: 
+                                  attrValue: 
+                                    - xmlizable: 
+                                      - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                      - MobileSmartSourceType: plain:no-padding
+                                ↓GenericItem [ngx.components.UIDynamicElement-1734528540215]: 
+                                  beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                  tagName: ion-item
+                                  ↓CheckBox1 [ngx.components.UIDynamicElement-1734528540218]: 
+                                    beanData: |
+                                      '{
+                                       "ionBean": "CheckBox",
+                                       "ControlName": "plain:name1667636420064",
+                                       "DoubleBinding": "script:local.selectedColumns[column.name].value",
+                                       "IonMode": "plain:ios"
+                                      }'
+                                    tagName: ion-checkbox
+                                    ↓Style [ngx.components.UIStyle-1734528540221]: 
+                                      styleContent: 
+                                        - xmlizable: 
+                                          - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                          - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                            →: |
+                                              '/**
+                                               * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                               * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                               * They are set using custom property notation, e.g.: --main-color: black;
+                                               * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                               * You can find below your component''s properties you can customize within the page.
+                                               * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                               * For more informations see https://ionicframework.com/docs/theming.
+                                              **/
+                                              //--background	//Background of the checkbox icon
+                                              //--background-checked	//Background of the checkbox icon when checked
+                                              //--border-color	//Border color of the checkbox icon
+                                              //--border-color-checked	//Border color of the checkbox icon when checked
+                                              //--border-radius	//Border radius of the checkbox icon
+                                              //--border-style	//Border style of the checkbox icon
+                                              //--border-width	//Border width of the checkbox icon
+                                              //--checkmark-color	//Color of the checkbox checkmark when checked
+                                              //--checkmark-width	//Stroke width of the checkbox checkmark
+                                              //--size	//Size of the checkbox icon
+                                              //--transition	//Transition of the checkbox icon
+                                              	margin-top: 2px;
+                                              	margin-bottom: 2px;
+                                              
+                                              '
+                                    ↓slot [ngx.components.UIAttribute-1734528540224]: 
+                                      attrName: slot
+                                      attrValue: 
+                                        - xmlizable: 
+                                          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                          - MobileSmartSourceType: plain:start
+                                    ↓attr [ngx.components.UIControlEvent-1734528540227]: 
+                                      attrName: (ngModelChange)
+                                      eventName: (ngModelChange)
+                                      ↓selectOrDeselectAll [ngx.components.UICustomAsyncAction-1734528540230]: 
+                                        actionValue: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                              →: |
+                                                		try {
+                                                			for(let i in page.local.selectedColumns){
+                                                				if(i == vars.id){
+                                                					
+                                                				}
+                                                				else{
+                                                					page.local.selectedColumns[i].value = false;
+                                                				}
+                                                			}
+                                                		} catch (e) {
+                                                		
+                                                		} finally {
+                                                			return;
+                                                		}
+                                                
+                                        ↓id [ngx.components.UIControlVariable-1734528540233]: 
+                                          varValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                              - MobileSmartSourceType: script:column.name
+                                        ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1734530863402]: 
+                                          beanData: '{"ionBean":"InvokeAction"}'
+                                          stack: lib_BaseRow.Application.NgxApp.includeOnlyNeeded
+                              ↓GridColValue2 [ngx.components.UIDynamicElement-1734530048865]: 
+                                beanData: '{"ionBean":"GridCol"}'
+                                tagName: ion-col
+                                ↓Attr [ngx.components.UIAttribute-1734530048868]: 
+                                  attrName: 
+                                  attrValue: 
+                                    - xmlizable: 
+                                      - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                      - MobileSmartSourceType: plain:no-padding
+                                ↓GenericItem [ngx.components.UIDynamicElement-1734530048871]: 
+                                  beanData: '{"ionBean":"GenericItem","Lines":"plain:none"}'
+                                  tagName: ion-item
+                                  ↓CheckBox1 [ngx.components.UIDynamicElement-1734530048874]: 
+                                    beanData: |
+                                      '{
+                                       "ionBean": "CheckBox",
+                                       "ControlName": "plain:name1667636420064",
+                                       "DoubleBinding": "script:local.selectedColumns[column.name].value2",
+                                       "IonMode": "plain:ios"
+                                      }'
+                                    tagName: ion-checkbox
+                                    ↓Style [ngx.components.UIStyle-1734530048877]: 
+                                      styleContent: 
+                                        - xmlizable: 
+                                          - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                          - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                            →: |
+                                              '/**
+                                               * Custom properties (sometimes referred to as CSS variables or cascading variables)
+                                               * are entities defined by CSS authors that contain specific values to be reused throughout a document.
+                                               * They are set using custom property notation, e.g.: --main-color: black;
+                                               * and are accessed using the var() function, e.g.: color: var(--main-color);
+                                               * You can find below your component''s properties you can customize within the page.
+                                               * If you''d like to make some customizations for whole app, please see your app Style & Theme components.
+                                               * For more informations see https://ionicframework.com/docs/theming.
+                                              **/
+                                              //--background	//Background of the checkbox icon
+                                              //--background-checked	//Background of the checkbox icon when checked
+                                              //--border-color	//Border color of the checkbox icon
+                                              //--border-color-checked	//Border color of the checkbox icon when checked
+                                              //--border-radius	//Border radius of the checkbox icon
+                                              //--border-style	//Border style of the checkbox icon
+                                              //--border-width	//Border width of the checkbox icon
+                                              //--checkmark-color	//Color of the checkbox checkmark when checked
+                                              //--checkmark-width	//Stroke width of the checkbox checkmark
+                                              //--size	//Size of the checkbox icon
+                                              //--transition	//Transition of the checkbox icon
+                                              	margin-top: 2px;
+                                              	margin-bottom: 2px;
+                                              
+                                              '
+                                    ↓slot [ngx.components.UIAttribute-1734530048880]: 
+                                      attrName: slot
+                                      attrValue: 
+                                        - xmlizable: 
+                                          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                          - MobileSmartSourceType: plain:start
+                                    ↓attr [ngx.components.UIControlEvent-1734530048883]: 
+                                      attrName: (ngModelChange)
+                                      eventName: (ngModelChange)
+                                      ↓selectOrDeselectAll [ngx.components.UICustomAsyncAction-1734530048886]: 
+                                        actionValue: 
+                                          - xmlizable: 
+                                            - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                                            - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                              →: |
+                                                		try {
+                                                			for(let i in page.local.selectedColumns){
+                                                				if(i == vars.id){
+                                                					
+                                                				}
+                                                				else{
+                                                					page.local.selectedColumns[i].value2 = false;
+                                                				}
+                                                			}
+                                                		} catch (e) {
+                                                		
+                                                		} finally {
+                                                			return;
+                                                		}
+                                                
+                                        ↓id [ngx.components.UIControlVariable-1734530048889]: 
+                                          varValue: 
+                                            - xmlizable: 
+                                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                                              - MobileSmartSourceType: script:column.name
+                                        ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1734530870678]: 
+                                          beanData: '{"ionBean":"InvokeAction"}'
+                                          stack: lib_BaseRow.Application.NgxApp.includeOnlyNeeded
+                      ↓Event [ngx.components.UIControlEvent-1734528540236]: 
+                        attrName: (ionItemReorder)
+                        eventName: ionItemReorder
+                        ↓AckReorder [ngx.components.UICustomAction-1734528540239]: 
+                          actionValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+                              - com.twinsoft.convertigo.beans.common.FormatedContent: 
+                                →: |
+                                  '		page.c8o.log.debug(''[Reorder] Dragged from ''+ event.detail.from  +'' to : ''+ event.detail.to);
+                                  		
+                                  		let selectedCols = page.local.selectedColumns;
+                                  	  	const draggedItem = selectedCols[event.detail.from];
+                                  		  	
+                                  		// Reorder the array by moving the item from `from` to `to`
+                                  		selectedCols.splice(event.detail.from, 1); // Remove item from original position
+                                  		selectedCols.splice(event.detail.to, 0, draggedItem); // Insert item at new position
+                                  		
+                                  		page.local.selectedColumns = selectedCols;
+                                  		
+                                  		event.detail.complete();
+                                  		resolve();
+                                  '
 ↓PageEvent [ngx.components.UIPageEvent-1667634909158]: 
   viewEvent: onWillLoad
   ↓CallSequence [ngx.components.UIDynamicAction-1667634917133]: 
@@ -3752,6 +4342,13 @@ title: First page
            "Property": "plain:valueColumn",
            "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.value\",\"custom\":\"\",\"useCustom\":false}}"
           }'
+      ↓SetLocal8 [ngx.components.UIDynamicAction-1734528750521]: 
+        beanData: |
+          '{
+           "ionBean": "SetLocalAction",
+           "Property": "plain:valueColumn2",
+           "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.value2\",\"custom\":\"\",\"useCustom\":false}}"
+          }'
       ↓SetLocal4 [ngx.components.UIDynamicAction-1729087093159]: 
         beanData: |
           '{
@@ -3772,6 +4369,27 @@ title: First page
            "ionBean": "SetLocalAction",
            "Property": "plain:editorNotOwner",
            "Value": "source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.editorNotOwner\",\"custom\":\"\",\"useCustom\":false}}"
+          }'
+      ↓SetLocal5 [ngx.components.UIDynamicAction-1734527109582]: 
+        beanData: |
+          '{
+           "ionBean": "SetLocalAction",
+           "Property": "plain:label",
+           "Value": "script:{}"
+          }'
+      ↓SetLocal6 [ngx.components.UIDynamicAction-1734527147814]: 
+        beanData: |
+          '{
+           "ionBean": "SetLocalAction",
+           "Property": "plain:lat",
+           "Value": "script:{}"
+          }'
+      ↓SetLocal7 [ngx.components.UIDynamicAction-1734527149280]: 
+        beanData: |
+          '{
+           "ionBean": "SetLocalAction",
+           "Property": "plain:lng",
+           "Value": "script:{}"
           }'
       ↓If [ngx.components.UIDynamicAction-1729087093165]: 
         beanData: '{"ionBean":"IfAction","condition":"source:{\"filter\":\"Action\",\"project\":\"lib_BaseRow\",\"input\":\"\",\"model\":{\"data\":[{\"priority\":1729087057370,\"rootEvent\":false,\"pageLocals\":false},{\"priority\":1667634909158,\"rootEvent\":true,\"pageLocals\":false},{\"priority\":1667634917133,\"rootEvent\":false,\"pageLocals\":false}],\"path\":\"?.out\",\"prefix\":\"\",\"suffix\":\"?.table_id\",\"custom\":\"\",\"useCustom\":false}}"}'
@@ -3825,10 +4443,10 @@ title: First page
             				page.local.type = "checkbox_group";
             				page.local.target = "select";
             			}
-            //			else if (page.navParams.data.type == "chart") {
-            //				page.local.type = "chart";
-            //				page.local.target = "chart";
-            //			}
+            			else if (page.navParams.data.type == "map") {
+            				page.local.type = "map";
+            				page.local.target = "map";
+            			}
             		} catch (e) {
             		
             		} finally {
@@ -3924,15 +4542,10 @@ title: First page
                     					if (page.local.selectedColumns[item]["value"]) {
                     						conf.value = item;
                     					}
+                    					if (page.local.selectedColumns[item]["value2"]) {
+                    						conf.value2 = item;
+                    					}
                     				})
-                    				
-                    				
-                    				/*let col1 = JSON.parse(page.local.displayColumn);
-                    				conf.table_id = col1.table_id;
-                    				conf.columns.push(col1.name);
-                    				if(page.local.diffrentVals){
-                    					conf.columns.push(JSON.parse(page.local.valueColumn).name);
-                    				}*/
                     			}
                     			console.log("conf", conf);
                     			conf = await page.callParentFunction("setConfigurationData", JSON.stringify(conf));
