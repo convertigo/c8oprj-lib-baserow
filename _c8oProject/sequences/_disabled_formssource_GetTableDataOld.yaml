@@ -1,0 +1,886 @@
+accessibility: Hidden
+comment: |
+  '{
+      "en": {
+          "displayName": "Get data",
+          "comment": "Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid"
+      },
+      "fr": {
+          "displayName": "Récupérer les données",
+          "comment": "Récupérez les données d''une table Baserow pour une grille de données. Chaque colonne de la table Baserow sera affichée comme la même colonne dans la grille de données"
+      },
+      "es": {
+          "displayName": "Obtener datos",
+          "comment": "Obtenga datos de una tabla de Baserow para una cuadrícula de datos. Cada columna de la tabla de Baserow se mostrará como la misma columna en la cuadrícula de datos"
+      },
+      "it": {
+          "displayName": "Ottenere dati",
+          "comment": "Ottieni dati da una tabella di Baserow per una griglia di dati. Ogni colonna della tabella di Baserow verrà visualizzata come la stessa colonna nella griglia di dati"
+      },
+      "types": ["grid", "chart", "map"]
+  }'
+↓Call_Sequence1 [steps.SequenceStep-1729157466231]: 
+  sourceSequence: lib_BaseRow.formscommon_CheckConfig
+  ↓forms_config [variables.StepVariable-1729157466233]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+↓IfError [steps.IfExistStep-1729157599546]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157466231
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1729157599549]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157466231
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1729157599552]: 
+↓ParseConfig [steps.SimpleStep-1666429506760]: 
+  expression: |
+    'jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+    view_id = jConfig.view_id ? jConfig.view_id : null;
+    let describeStructure = false;
+    let verbsByType = {
+    	text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        long_text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        link_row: [
+            "link_row_has",
+            "link_row_has_not",
+            "link_row_contains",
+            "link_row_not_contains",
+            "empty",
+            "not_empty"
+        ],
+        number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "higher_than",
+            "lower_than",
+            "empty",
+            "not_empty",
+        ],
+        rating : [
+            "equal",
+            "not_equal",
+            "higher_than",
+            "lower_than",
+        ],
+        boolean:[
+            "boolean",
+            "empty",
+            "not_empty",
+        ],
+        date:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        last_modified:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        created_on:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        url:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        email:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        file:[
+            "filename_contains",
+            "has_file_type",
+            "empty",
+            "not_empty"
+        ],
+        single_select:[
+            "single_select_equal",
+            "single_select_not_equal",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        multiple_select:[
+            "multiple_select_has",
+            "multiple_select_has_not",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        phone_number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ]
+    }
+    
+    // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
+    // With the BaseRow API.
+    if (jConfig.columns) {
+    	include_fields ="";
+    	jConfig.columns.forEach(col => include_fields += col +",")
+    	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
+    }
+    
+    // The Filter Expression is provided  directly in the form_fitler variable.
+    filterExpression = forms_tableFilter;
+    
+    // If Forms asks us for a model, just return the 5 First lines, ignoring all filters
+    if (model == "true") {
+    	size = "1";
+    	filterExpression = null;
+    	describeStructure = true;
+    }
+    '
+↓Input_variables [steps.InputVariablesStep-1665402570169]: 
+↓Call_Sequence [steps.SequenceStep-1665402300413]: 
+  sourceSequence: lib_BaseRow.TableGetData
+  ↓exclude [variables.StepVariable-1665402300415]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+    description: exclude
+  ↓include_fields [variables.StepVariable-1665402300421]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+    description: include
+  ↓order_by [variables.StepVariable-1665402300423]: 
+    comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+    description: order_by
+  ↓page [variables.StepVariable-1665402300425]: 
+    comment: Defines which page of rows should be returned.
+    description: page
+  ↓search [variables.StepVariable-1665402300427]: 
+    comment: If provided only rows with data that matches the search query are going to be returned.
+    description: search
+  ↓size [variables.StepVariable-1665402300429]: 
+    comment: Defines how many rows should be returned per page.
+    description: size
+  ↓table_id [variables.StepVariable-1665402300431]: 
+    comment: Returns the rows of the table related to the provided value.
+    description: table_id
+    required: true
+  ↓view_id [variables.StepVariable-1665402300433]: 
+    comment: Includes all the filters and sorts of the provided view.
+    description: view_id
+  ↓filterExpression [variables.StepVariable-1665915671261]: 
+  ↓describeStructure [variables.StepVariable-1680617375032]: 
+↓IfExist [steps.IfExistStep-1665402674584]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1665402300413
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Error_structure [steps.XMLErrorStep-1665402703369]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1665402300413
+            - java.lang.String: 
+              - ↑value: ./document/error/message/text()
+  ↓Return [steps.ReturnStep-1665402714329]: 
+↓myVariable [steps.JsonSourceStep-1680617809832]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1665402300413
+        - java.lang.String: 
+          - ↑value: ./document/structure/object
+  variableName: structure
+↓Array [steps.JsonArrayStep-1665402723840]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: data
+  ↓Iterator [steps.IteratorStep-1665402736681]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1665402300413
+          - java.lang.String: 
+            - ↑value: ./document/results/object
+    ↓Object [steps.JsonObjectStep-1665406203249]: 
+      comment: The data object
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: Object
+      output: false
+      ↓Iterator [steps.IteratorStep-1665403182897]: 
+        comment: Ignore id as this is a technical id not to be displayed
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1665402736681
+              - java.lang.String: 
+                - ↑value: ./*
+        ↓InitHtmEntry [steps.SimpleStep-1665407550205]: 
+          comment: Start a DIV HTML with styling
+          expression: |
+            'jHtml = `
+            <div style=''display:grid; white-space: normal; line-height:normal''>
+              <style>
+              	.c8obaserow_item {
+            		border: solid 1px lighgray;
+            		background-color : lightgray;
+            		border-radius: 10px;
+            		padding-left: 6px;
+            	}
+            	
+              	.c8obaserow_link {
+            		border-radius: 10px;
+                	padding-left: 10px;
+                	padding-top: 4px;
+                	padding-bottom: 4px;
+                	width: fit-content;
+                	padding-right: 10px;
+                	margin-top: 3px; 
+                }
+            
+              	.c8obaserow_image {
+            		width: 100%;
+            		margin-top: 5px;
+            		margin-bottom: 5px;
+            		border-radius: 3px;
+            		box-shadow: 0px 8px 9px -4px rgba(0,0,0,0.73);
+            	}
+              	.c8obaserow_file {
+            		background-color : lightgray;
+            	}
+            </style>
+            `
+            
+            colors = {
+                  "light-green"  :  "#e6fff1",
+                  "light-blue"   :  "#ebf7ff",
+                  "light-orange" :  "#fff6e6", 
+                  "light-red"	 :  "#ffe8e6",
+                  "light-gray"	 :  "#f5f5f5",
+            
+                  "green"  		 :  "#bdffdc",
+                  "blue"   		 :  "#b5dbf5",
+                  "orange" 		 :  "#ffe9c2",
+                  "red"	 		 :  "#ffbfb8",
+                  "gray"	 	 :  "#d9dbde",
+            
+                  "dark-green"   :  "#9bf2c4",
+                  "dark-blue"    :  "#83c3eb",
+                  "dark-orange"  :  "#ffe0ab",
+                  "dark-red"	 :  "#f7a499",
+                  "dark-gray"	 :  "#b4bac2"
+            }
+            
+            '
+        ↓jSimpleSource [steps.SimpleSourceStep-1665875996794]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1665403182897
+                - java.lang.String: 
+                  - ↑value: ./@originalKeyName
+          variableName: jOriginalKeyName
+        ↓jSimpleSource1 [steps.SimpleSourceStep-1665876065904]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1665403182897
+                - java.lang.String: 
+                  - ↑value: name(.)
+          variableName: jKeyName
+        ↓Object [steps.JsonObjectStep-1665407248434]: 
+          comment: Create entry
+          key: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: JS
+                - →→: 'jOriginalKeyName ? jOriginalKeyName : jKeyName'
+          output: false
+          ↓IfExistThenElse [steps.IfExistThenElseStep-1665406758754]: 
+            comment: Handle multivalued 
+            sourceDefinition: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: 1665403182897
+                  - java.lang.String: 
+                    - ↑value: .[@type = 'array']
+            ↓jThen [steps.ThenStep-1665406759518]: 
+              ↓InitValueArray [steps.SimpleStep-1667889960531]: 
+                expression: |
+                  jValues = [];
+                  
+              ↓Iterator [steps.IteratorStep-1665407450731]: 
+                sourceDefinition: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1665403182897
+                      - java.lang.String: 
+                        - ↑value: ./object
+                ↓IfExistThenElse [steps.IfExistThenElseStep-1665684721073]: 
+                  sourceDefinition: 
+                    - xmlizable: 
+                      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                      - com.twinsoft.convertigo.beans.common.XMLVector: 
+                        - java.lang.String: 
+                          - ↑value: 1665407450731
+                        - java.lang.String: 
+                          - ↑value: ./value
+                  ↓jThen [steps.ThenStep-1665684723422]: 
+                    ↓JsonSource [steps.JsonSourceStep-1668099201803]: 
+                      sourceDefinition: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                          - com.twinsoft.convertigo.beans.common.XMLVector: 
+                            - java.lang.String: 
+                              - ↑value: 1665407450731
+                            - java.lang.String: 
+                              - ↑value: .
+                      variableName: jMyEntry
+                    ↓AddEntry [steps.SimpleStep-1665407618555]: 
+                      expression: |
+                        'log.debug("______" + JSON.stringify(jMyEntry))
+                        
+                        if (jMyEntry["value"] != undefined) {
+                        	jHtml +=
+                        	"<div class=\"c8obaserow_link\" style=\"background-color: " + (colors[jMyEntry["color"]] ? colors[jMyEntry["color"]] : ''lightgrey'') +	"\">" + 
+                        		jMyEntry["value"] + 
+                        	"</div>"
+                        } else {
+                        	jHtml += "<p class=''c8obaserow_item'' >" + jMyEntry + "</p>"
+                        }
+                        jValues.push(jMyEntry);
+                        '
+                  ↓jElse [steps.ElseStep-1665684723424]: 
+                    ↓jSimpleSource [steps.SimpleSourceStep-1665685771320]: 
+                      sourceDefinition: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                          - com.twinsoft.convertigo.beans.common.XMLVector: 
+                            - java.lang.String: 
+                              - ↑value: 1665407450731
+                            - java.lang.String: 
+                              - ↑value: ./url/text()
+                      variableName: jURL
+                    ↓isImage [steps.SimpleSourceStep-1665684886493]: 
+                      sourceDefinition: 
+                        - xmlizable: 
+                          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                          - com.twinsoft.convertigo.beans.common.XMLVector: 
+                            - java.lang.String: 
+                              - ↑value: 1665407450731
+                            - java.lang.String: 
+                              - ↑value: ./is_image/text()
+                      variableName: bIsImage
+                    ↓jIfThenElse [steps.IfThenElseStep-1665685010861]: 
+                      condition: bIsImage == 'true'
+                      ↓jThen [steps.ThenStep-1665685010863]: 
+                        ↓AddImageEnttry [steps.SimpleStep-1665685016539]: 
+                          expression: |
+                            jHtml += "<img class='c8obaserow_image' src=\"" + jURL + "\" ></img>"
+                            jValues.push(jURL);
+                            
+                      ↓jElse [steps.ElseStep-1665685010865]: 
+                        ↓jSimpleSource [steps.SimpleSourceStep-1665685737366]: 
+                          sourceDefinition: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                                - java.lang.String: 
+                                  - ↑value: 1665407450731
+                                - java.lang.String: 
+                                  - ↑value: ./visible_name/text()
+                          variableName: jVisibleName
+                        ↓AddFileEntry [steps.SimpleStep-1665685031623]: 
+                          expression: |
+                            jHtml += "<p class='c8obaserow_file' ><a  src=\"" + jURL + "\" >" + jVisibleName + "</a></p>"
+                            jValues.push(jURL);
+                            
+              ↓JSON_to_XML [steps.JsonToXmlStep-1667927327885]: 
+                jsonObject: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: JS
+                      - →→: jValues
+                key: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: PLAIN
+                      - →→: value
+                output: false
+            ↓jElse [steps.ElseStep-1665406759520]: 
+              ↓JsonSource [steps.JsonSourceStep-1667989605906]: 
+                sourceDefinition: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1665403182897
+                      - java.lang.String: 
+                        - ↑value: .
+                variableName: jData
+              ↓AddData [steps.SimpleStep-1665857204666]: 
+                expression: |
+                  'function computeHtml() {
+                  	if (jData["value"] != undefined) {
+                  		log.debug("************** JData has a Value Key");
+                  		if (jData["color"] != undefined) {
+                  			jHtml +=
+                  			"<div class=\"c8obaserow_link\" style=\"background-color: " + colors[jData["color"]] +	"\">" + 
+                  				jData["value"] + 
+                  			"</div>"
+                  		}
+                  		return
+                  	}
+                  	
+                  	log.debug("************** jData is simple string ");
+                  	jHtml += jData;
+                  }	
+                  
+                  log.debug("**************" + JSON.stringify(jData));
+                  if (jData != null) computeHtml();
+                  '
+              ↓JSON_to_XML [steps.JsonToXmlStep-1667927358648]: 
+                jsonObject: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: JS
+                      - →→: jData
+                key: 
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                    - SmartType: 
+                      - ↑mode: PLAIN
+                      - →→: value
+                output: false
+          ↓Field [steps.JsonFieldStep-1665407340859]: 
+            key: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: PLAIN
+                  - →→: type
+            output: false
+            value: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: PLAIN
+                  - →→: html
+          ↓Field1 [steps.JsonFieldStep-1665407353362]: 
+            key: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: PLAIN
+                  - →→: displayValue
+            output: false
+            value: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: JS
+                  - →→: jHtml
+          ↓Field2 [steps.JsonFieldStep-1665689221993]: 
+            key: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: PLAIN
+                  - →→: displayName
+            output: false
+            value: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: JS
+                  - →→: 'jOriginalKeyName ? jOriginalKeyName : jKeyName'
+          ↓Log [steps.LogStep-1666371057521]: 
+            expression: |
+              '"***" + jKeyName + " : " + (jKeyName == ''id'' || jKeyName == ''order'') + "**" + jOriginalKeyName
+              
+              '
+            isEnabled: false
+            level: WARN
+          ↓jIf [steps.IfStep-1666370491964]: 
+            condition: |
+              jKeyName == 'id'||
+              jKeyName == 'order' ||
+              (jConfig.hidden ? 
+              	jConfig.hidden.includes(jOriginalKeyName ?jOriginalKeyName:	jKeyName):false
+              )
+              
+            ↓Field [steps.JsonFieldStep-1666370538855]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: hidden
+              output: false
+              type: bool
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: true
+          ↓jIf1 [steps.IfStep-1680617618286]: 
+            condition: model == "true" && "structure" in this
+            ↓ComputeCompletionAndHideForFilters [steps.SimpleStep-1680617788099]: 
+              expression: |
+                'let cName = jOriginalKeyName ? jOriginalKeyName : jKeyName;
+                let cTargetCompletion = [];
+                let cHideFromFiltering = true;
+                log.warn("cName " + cName);
+                log.warn("jConfig.columns  " + JSON.stringify(jConfig.columns));
+                if(jConfig.columns.indexOf(cName) != -1){
+                	let cTarget = structure.filter((x)=>{
+                		return x.name == cName
+                	})[0];
+                	// if target is formula use it''s formula_type
+                	let cType = cTarget != undefined ? cTarget.type : null;
+                	if(cType == "formula"){
+                		cType = cTarget.formula_type;
+                	}
+                	cTargetCompletion = verbsByType[cType];
+                	cHideFromFiltering = false;
+                	if(cTargetCompletion == undefined){
+                		cTargetCompletion = [];
+                		cHideFromFiltering = true;
+                	}
+                }
+                '
+            ↓filterCompletion [steps.JsonToXmlStep-1680623987414]: 
+              jsonObject: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: JS
+                    - →→: cTargetCompletion
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: filterCompletion
+              output: false
+            ↓filterHide [steps.JsonToXmlStep-1680624024529]: 
+              jsonObject: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: JS
+                    - →→: cHideFromFiltering
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: filterHide
+              output: false
+        ↓FinishHtmlEntry [steps.SimpleStep-1665833852150]: 
+          expression: jHtml += "</div>"
+    ↓jRow [steps.JsonSourceStep-1726918591667]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1665406203249
+            - java.lang.String: 
+              - ↑value: .
+      variableName: jRow
+    ↓ReorderColumns [steps.SimpleStep-1726918802256]: 
+      expression: |
+        'jReorderedRow = {};
+        jReorderedRow["id"] = jRow["id"];
+        jReorderedRow["order"] = jRow["order"];
+        
+        jConfig.columns.forEach((col) => {
+          if (jRow.hasOwnProperty(col)) {
+            jReorderedRow[col] = jRow[col];
+          }
+        });
+        '
+    ↓Object1 [steps.JsonToXmlStep-1726918640824]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: jReorderedRow
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: Object
+↓forms_config [variables.RequestableVariable-1665402317348]: 
+  comment: |
+    '{
+    	"en": {
+            "comment": "Choose a table in Baserow",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table dans Baserow",
+    		"displayName":"Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en Baserow",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in Baserow",
+            "displayName": "Configurazione"
+    	}
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
+  required: true
+  value: 
+↓forms_tableFilter [variables.RequestableVariable-1665911494442]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "Define a filter to apply to Baserow table",
+            "displayName": "Filter"
+        },
+        "fr": {
+            "comment": "Définir un filtre à appliquer à la table Baserow",
+            "displayName": "Filtre"
+        },
+        "es": {
+            "comment": "Definir un filtro para aplicar a la tabla de Baserow",
+            "displayName": "Filtro"
+        },
+        "it": {
+            "comment": "Definire un filtro da applicare alla tabella di Baserow",
+            "displayName": "Filtro"
+        }
+    }'
+  description: filter
+↓model [variables.RequestableVariable-1671813057661]: 
+  comment: If true, just return one line of data so that No Code studio can compte the table model
+↓TestWithFilters [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1666432854743]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "384"
+      }
+      '
+  ↓forms_tableFilter [variables.TestCaseVariable-1666432865700]: 
+    description: 
+    required: true
+    value: |
+      '{
+      	"mode": "AND",
+      	"filters": [
+      		{
+      			"field": "Nom",
+      			"op": "contains",
+      			"value": "Ada"
+      		}
+      	]
+      }
+      '
+↓TestWithFilters1 [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1666806571769]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: '{"table_id":"110211", "columns":["Last name", "First name", "Photo", "Department"]}'
+  ↓forms_tableFilter [variables.TestCaseVariable-1666806571772]: 
+    description: 
+    required: true
+    value: '{ "mode": "AND", "filters": [ { "field": "Last name", "op": "contains", "value":"" }, { "field": "Department", "op": "contains", "value":"" }]}'
+↓TestWithFilters2 [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1669786915409]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "118056"
+      }
+      '
+  ↓forms_tableFilter [variables.TestCaseVariable-1669786915412]: 
+    description: 
+    required: true
+    value: |
+      '{"mode":"AND","filters":[{"field":"name","op":"equal","value":"Fulton Airport"}]}
+      
+      '
+↓TestWithFiltersAndModel [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1680617453967]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "715"
+      }
+      '
+  ↓model [variables.TestCaseVariable-1680617465191]: 
+    value: true
+↓TestWithInlcude [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1666430403998]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "109863",
+      	"columns": ["Name", "Picture", "Position", "SingleSelect", "Phone number", "Email"],
+      	"hidden": ["Name", "Picture", "Position", "SingleSelect", "Phone number", "Email"]
+      }
+      '
+↓TestWithLinks [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1667890317848]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: '{"table_id":"109861", "columns":["Last name", "First name", "Photo", "Department"]}'
+↓TestWithModel [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1671813368531]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '
+      {"table_id":416,"columns":["No de Code à barre","Notes","Actif","Transporteur","No Récépissé","No de colis","Date/Heure Saisie","Utilisateur","Dépot","Activité"],"hidden":["Notes","Actif","Utilisateur","Dépot","Activité"]}'
+  ↓forms_tableFilter [variables.TestCaseVariable-1671813384059]: 
+    description: 
+  ↓model [variables.TestCaseVariable-1671813384061]: 
+    value: true
+↓TestWithView [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1666431067846]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+    value: |
+      '{
+      	"table_id": "351",
+      	"view_id": "1424"
+      }
+      '

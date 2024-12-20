@@ -169,7 +169,7 @@ comment: |
             "displayName": "Configurazione"
         }
     }'
-  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
   required: true
   value: 
 ↓TestBedType [core.TestCase]: 

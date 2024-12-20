@@ -3817,7 +3817,11 @@ title: First page
             			window["t"] = page;
             			page.local.type = "table";
             			page.local.target = "table";
-            			if(page.navParams.data.type == "select" || page.navParams.data.type == "checkbox" || page.navParams.data.type == "radio"){
+            			if(page.navParams.data.target == "table"){
+            				page.local.type = "table";
+            				page.local.target = "table";
+            			}
+            			else if(page.navParams.data.type == "select" || page.navParams.data.type == "checkbox" || page.navParams.data.type == "radio"){
             				page.local.type = "select";
             				page.local.target = "select";
             			}
