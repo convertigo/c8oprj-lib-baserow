@@ -30,7 +30,7 @@ see [documentation](http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd)
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") lib_ExtendedComponents_ui_ngx
 
 
-see [readme](https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx/tree/8.4.0.0#readme)
+see [readme](https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx/tree/3baccc787893e26c44e258b413cac0b79112bbff#readme)
 </p></blockquote></details>
 </p></blockquote></details>
 
@@ -15046,12 +15046,12 @@ Choose a table in Baserow
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetFieldValues</b> : Get all possible values for a given field to feed a Select</summary><blockquote><p>
+<details><summary><b>formssource_GetFieldValues</b> : Retrieve all possible values from a dropdown list</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetFieldValues
 
-Get all possible values for a given field to feed a Select
+Retrieve all possible values from a dropdown list.
 
 <span style="color:DarkGoldenRod">Variables</span>
 

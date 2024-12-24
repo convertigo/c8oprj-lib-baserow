@@ -2,20 +2,20 @@ accessibility: Hidden
 comment: |
   '{
       "en": {
-          "displayName": "Get field values",
-          "comment": "Get all possible values for a given field to feed a Select"
+          "displayName": "Load dropdown values",
+          "comment": "Retrieve all possible values from a dropdown list."
       },
       "fr": {
-          "displayName": "Récupérer les valeurs du champ",
-          "comment": "Récupérez toutes les valeurs possibles pour un champ donné afin d''alimenter un Select"
+          "displayName": "Charger les valeurs d''une liste déroulante",
+          "comment": "Récupérez toutes les valeurs possibles depuis une liste déroulante."
       },
       "es": {
-          "displayName": "Obtener valores del campo",
-          "comment": "Obtenga todos los valores posibles para un campo dado para alimentar un Select"
+          "displayName": "Cargar valores de un desplegable",
+          "comment": "Recupere todos los valores posibles desde una lista desplegable."
       },
       "it": {
-          "displayName": "Ottenere i valori del campo",
-          "comment": "Ottieni tutti i valori possibili per un campo dato per alimentare un Select"
+          "displayName": "Caricare i valori di un menu a discesa",
+          "comment": "Recupera tutti i valori possibili da un menu a discesa."
       },
       "types": ["select", "checkbox", "radio"]
   }'
