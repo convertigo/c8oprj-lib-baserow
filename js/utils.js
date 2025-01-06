@@ -35,52 +35,52 @@ var get_base_array_image_html = (url)=>{
 var get_base_array_link_html = (url, visibleName)=>{
 	return "<p style='background-color : lightgray;' ><a  src=\"" + url + "\" >" + visibleName + "</a></p>"
 }
-var computeAnyType = (element)=>{
+var computeAnyType = (element, nested)=>{
 	var value;
 	var innerHtml = "";
 	if(Array.isArray(element)){
 		value = [];
 		element.forEach((arrayItem)=>{
-			var result = computeAnyType(arrayItem);
+			var result = computeAnyType(arrayItem, true);
 			value.push(result.value);
 			innerHtml += result.innerHtml;
 		});
-		innerHtml += close_html;
+		//innerHtml += close_html;
 	}
 	else if(typeof element == "object"){
 		if(element.value != undefined && typeof element.value == "object"){
-			var result = computeAnyType(element.value);
+			var result = computeAnyType(element.value, true);
 			innerHtml = result.innerHtml;
 			value = result.value;
 		}
 		else if(element.value != undefined){
-			innerHtml = get_base_array_html(element.value, element.color) + close_html;
+			innerHtml = get_base_array_html(element.value, element.color); // + close_html;
 			value = element;
 		}
 		else if(element.name != undefined && element.is_image == undefined && element.url == undefined) {
-			innerHtml = get_base_array_html(element.name, element.color) + close_html;
+			innerHtml = get_base_array_html(element.name, element.color); // + close_html;
 			value = element;
 		}
 		else if(element.url != undefined && element.label != undefined && element.is_image == undefined){
-			innerHtml = get_base_btn_html(element.url, element.label, "light-blue") + close_html;
+			innerHtml = get_base_btn_html(element.url, element.label, "light-blue"); // + close_html;
 			value = element;
 		}
 		else if(element.is_image != undefined){
 			if(element.is_image == true){
-				innerHtml = get_base_array_image_html(element.url) + close_html;
+				innerHtml = get_base_array_image_html(element.url); // + close_html;
 			}
 			else{
-				innerHtml = get_base_array_link_html(element.url, arrayItem.visible_name) + close_html;
+				innerHtml = get_base_array_link_html(element.url, arrayItem.visible_name); // + close_html;
 			}
 			value = element;
 		}
 		else{
-			log.warn("toto");
+			log.warn("type not handled");
 		}
 	}
 	else{
-		innerHtml = element + close_html;
+		innerHtml = element; // + close_html;
 		value = element;
 	}
-	return {innerHtml: innerHtml, value: value};
+	return {innerHtml: innerHtml + (nested ? "" : close_html), value: value};
 }

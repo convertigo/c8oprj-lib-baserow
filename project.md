@@ -12,7 +12,7 @@ This is the Baserow No Code connector for Convertigo. Use this connector to exch
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
 
 
-see [readme](https://github.com/convertigo/C8oForms/tree/hotfix/2.0.4#readme)
+see [readme](https://github.com/convertigo/C8oForms/tree/hotfix/2.0.5#readme)
 </p></blockquote></details>
 
 <details><summary><b>CouchDb_schema</b></summary><blockquote><p>

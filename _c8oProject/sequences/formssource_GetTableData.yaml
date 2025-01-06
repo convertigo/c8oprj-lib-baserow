@@ -316,7 +316,7 @@ comment: |
     		var current = elem[key];
     		if(current != null){
     			obj[key] = {"displayName": key, "type": "html", value:""};
-    			var result = computeAnyType(current);
+    			var result = computeAnyType(current, false);
     			html += result.innerHtml;
     			obj[key].value = result.value;
     			if(key == "id" || key == "order" || (jConfig.hidden ? jConfig.hidden.includes(key) : false)){
