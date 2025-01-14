@@ -10,7 +10,7 @@ accessibility: Private
   sourceTransaction: C8Oforms.c8oforms_fs.GetDocument
   ↓_use_docid [variables.StepVariable-1729157830651]: 
     description: Document ID
-↓formSourceConfig [steps.SimpleSourceStep-1732208590734]: 
+↓formSourceConfig1 [steps.SimpleSourceStep-1736257252570]: 
   output: true
   sourceDefinition: 
     - xmlizable: 
@@ -20,12 +20,54 @@ accessibility: Private
           - ↑value: 1729157830649
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='actions']//forms_config/str/text()
+            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='sourcesMarkers' or name()='sourcesCircles' or name()='actions']//forms_config/str/text()
             
             
   variableName: doc_forms_config
+↓formSourceConfigMarkers [steps.SimpleSourceStep-1732208590734]: 
+  output: true
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157830649
+        - java.lang.String: 
+          - ↑value: |
+            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesMarkers']//forms_config/str/text()
+            
+            
+  variableName: doc_forms_config_markers
+↓formSourceConfig2 [steps.SimpleSourceStep-1736257385246]: 
+  output: true
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157830649
+        - java.lang.String: 
+          - ↑value: |
+            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesCircles']//forms_config/str/text()
+            
+            
+  variableName: doc_forms_config_circles
+↓formSourceConfig3 [steps.SimpleSourceStep-1736260452546]: 
+  output: true
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157830649
+        - java.lang.String: 
+          - ↑value: |
+            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesPolygons']//forms_config/str/text()
+            
+            
+  variableName: doc_forms_config_polygons
 ↓jIf [steps.IfStep-1732208668695]: 
-  condition: forms_config != doc_forms_config
+  condition: forms_config != doc_forms_config && forms_config != doc_forms_config_markers && forms_config != doc_forms_config_circles && forms_config != doc_forms_config_polygons
   ↓Error_structure [steps.XMLErrorStep-1732208675113]: 
     code: 
       - xmlizable: 

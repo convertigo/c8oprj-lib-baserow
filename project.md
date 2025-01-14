@@ -12,7 +12,7 @@ This is the Baserow No Code connector for Convertigo. Use this connector to exch
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") C8Oforms
 
 
-see [readme](https://github.com/convertigo/C8oForms/tree/hotfix/2.0.5#readme)
+see [readme](https://github.com/convertigo/C8oForms/tree/NGX#readme)
 </p></blockquote></details>
 
 <details><summary><b>CouchDb_schema</b></summary><blockquote><p>
@@ -30,7 +30,7 @@ see [documentation](http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd)
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/references/images/ProjectSchemaReference_16x16.png?raw=true "ProjectSchemaReference") lib_ExtendedComponents_ui_ngx
 
 
-see [readme](https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx/tree/3baccc787893e26c44e258b413cac0b79112bbff#readme)
+see [readme](https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx/tree/8.4.0.0#readme)
 </p></blockquote></details>
 </p></blockquote></details>
 
