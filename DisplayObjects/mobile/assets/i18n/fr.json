@@ -25,5 +25,8 @@
  "Value": "Valeur",
  "Identifier": "Identifiant",
  "lines":"Lignes",
- "columns":"Colonnes"
+ "columns":"Colonnes",
+ "maps_markers": "Veuillez sélectionner parmi les éléments suivants les colonnes qui définiront vos repères. Vous devez trier vos colonnes dans l'ordre suivant : libellé, latitude, longitude.",
+ "maps_circles": "Veuillez sélectionner parmi les éléments suivants les colonnes qui définiront vos cercles. Vous devez trier vos colonnes dans l'ordre suivant : libellé, latitude, longitude, rayon en métres.",
+ "maps_polygons": "Veuillez sélectionner parmi les éléments suivants les colonnes qui définiront vos polygones. Vous devez trier vos colonnes dans l'ordre suivant : libellé, latitude, longitude. Pour les colonnes de latitude et longitude, celles-ci devront être des champs rapportés comportant plusieurs valeurs pour latitude et longitude."
 }

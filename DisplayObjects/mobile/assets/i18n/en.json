@@ -25,5 +25,8 @@
  "Action_2": "Action 2",
  "Identifier": "ID",
  "lines":"lines",
- "columns":"Columns"
+ "columns":"Columns",
+ "maps_markers": "Please select from the following elements the columns that will define your markers. You must sort your columns in the following order: label, latitude, longitude.",
+ "maps_circles": "Please select from the following elements the columns that will define your circles. You must sort your columns in the following order: label, latitude, longitude, radius in meters.",
+ "maps_polygons": "Please select from the following elements the columns that will define your polygons. You must sort your columns in the following order: label, latitude, longitude. For the latitude and longitude columns, these must be lookup fields containing multiple latitude and longitude values."
 }

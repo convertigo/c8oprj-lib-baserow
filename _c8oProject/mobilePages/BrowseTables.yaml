@@ -645,7 +645,7 @@ title: First page
                             textValue: 
                               - xmlizable: 
                                 - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-                                - MobileSmartSourceType: plain:notice2
+                                - MobileSmartSourceType: 'script:(this.local.txt_i18n != null ? this.local.txt_i18n : ''notice2'') | translate'
                         ↓Style [ngx.components.UIStyle-1678905330241]: 
                           styleContent: 
                             - xmlizable: 
@@ -3227,6 +3227,9 @@ title: First page
             			page.local.target = "table";
             			if(page.navParams.data.target == "table"){
             				page.local.type = "table";
+            				if(page.navParams.data.type == "maps_markers" || page.navParams.data.type == "maps_circles" || page.navParams.data.type == "maps_polygons"){
+            					page.local.txt_i18n = page.navParams.data.type;
+            				}
             				page.local.target = "table";
             			}
             			else if(page.navParams.data.type == "select" || page.navParams.data.type == "checkbox" || page.navParams.data.type == "radio"){
