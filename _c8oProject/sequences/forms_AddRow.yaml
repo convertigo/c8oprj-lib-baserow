@@ -160,7 +160,7 @@ comment: |
     ↓Call_Transaction [steps.TransactionStep-1680167384799]: 
       comment: read the attachment in the workspace
       output: true
-      sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+      sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
       ↓_use_attname [variables.StepVariable-1680167384802]: 
         description: Attachment name
       ↓_use_docid [variables.StepVariable-1680167384805]: 
@@ -265,7 +265,7 @@ comment: |
       ↓Call_Transaction [steps.TransactionStep-1680611569656]: 
         comment: read the attachment in the workspace
         output: true
-        sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+        sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
         ↓_use_attname [variables.StepVariable-1680611569659]: 
           description: Attachment name
         ↓_use_docid [variables.StepVariable-1680611569662]: 
@@ -451,7 +451,7 @@ comment: |
       ↓Call_Transaction [steps.TransactionStep-1734431536070]: 
         comment: read the attachment in the workspace
         output: true
-        sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+        sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
         ↓_use_attname [variables.StepVariable-1734431536073]: 
           description: Attachment name
         ↓_use_docid [variables.StepVariable-1734431536076]: 
@@ -556,7 +556,7 @@ comment: |
         ↓Call_Transaction [steps.TransactionStep-1734431536121]: 
           comment: read the attachment in the workspace
           output: true
-          sourceTransaction: C8Oforms.c8oforms_response_fs.GetDocumentAttachment
+          sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
           ↓_use_attname [variables.StepVariable-1734431536124]: 
             description: Attachment name
           ↓_use_docid [variables.StepVariable-1734431536127]: 

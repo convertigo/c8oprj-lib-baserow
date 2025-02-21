@@ -7,7 +7,7 @@ accessibility: Private
     owner = jConfig.source_owner;
     
 ↓Call_Transaction [steps.TransactionStep-1729157830649]: 
-  sourceTransaction: C8Oforms.c8oforms_fs.GetDocument
+  sourceTransaction: lib_BaseRow.c8oforms_fs.GetDocument
   ↓_use_docid [variables.StepVariable-1729157830651]: 
     description: Document ID
 ↓formSourceConfig1 [steps.SimpleSourceStep-1736257252570]: 
@@ -82,56 +82,50 @@ accessibility: Private
           - ↑mode: PLAIN
           - →→: forms_config mismatch
   ↓Return [steps.ReturnStep-1732208675116]: 
-↓Call_Sequence1 [steps.SequenceStep-1729157238702]: 
-  sourceSequence: C8Oforms.BaserowAccountGet
-  ↓owner [variables.StepVariable-1729157238705]: 
-↓IfError [steps.IfExistStep-1729157238708]: 
-  condition: IfError
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1729157238702
-        - java.lang.String: 
-          - ↑value: ./document/error
-  ↓Copy [steps.XMLCopyStep-1729157238711]: 
+↓CallSequenceFormsWithoutReferences [steps.SimpleStep-1740150369561]: 
+  expression: |
+    'include("js/common2.js");
+    
+    var callSequenceForms = (callSequence("C8Oforms", "BaserowAccountGet", { owner: owner}))//;.document.res;
+    var password = callSequenceForms.document.password;
+    var email = callSequenceForms.document.email;'
+↓jIf1 [steps.IfStep-1740150694106]: 
+  condition: callSequenceForms.document.error != null
+  ↓object [steps.JsonToXmlStep-1740150774888]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: callSequenceForms.document.error
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+    output: false
+  ↓Copy [steps.XMLCopyStep-1740150730549]: 
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1729157238702
+            - ↑value: 1740150774888
           - java.lang.String: 
-            - ↑value: ./document/error
-  ↓Return [steps.ReturnStep-1729157238714]: 
-↓Call_Sequence2 [steps.SequenceStep-1729157238717]: 
+            - ↑value: .
+  ↓Return [steps.ReturnStep-1740150730552]: 
+↓Call_Sequence3 [steps.SequenceStep-1740150840669]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
-  ↓password [variables.StepVariable-1729157238720]: 
+  ↓password [variables.StepVariable-1740150840672]: 
     comment: The baserow admin password
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1729157238702
-          - java.lang.String: 
-            - ↑value: ./document/password/text()
     value: 
       - ↑ciphered: true
       - ↑traceable: false
       - →→: xd8e180806a1c1d83a6255212121ab827
     visibility: '-1'
-  ↓email [variables.StepVariable-1729157238723]: 
+  ↓email [variables.StepVariable-1740150840675]: 
     comment: The Base row admin email
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1729157238702
-          - java.lang.String: 
-            - ↑value: ./document/email/text()
 ↓forms_config [variables.RequestableVariable-1729157210751]: 
   comment: |
     '{
