@@ -346,8 +346,8 @@ comment: |
     					cHideFromFiltering = true;
     				}
     			}
-    			obj["filterCompletion"] = cTargetCompletion;
-    			obj["filterHide"] = cHideFromFiltering;
+    			obj[key]["filterCompletion"] = cTargetCompletion;
+    			obj[key]["filterHide"] = cHideFromFiltering;
     
     		}
     	}
