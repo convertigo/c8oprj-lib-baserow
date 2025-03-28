@@ -1,4 +1,4 @@
-↑convertigo: 8.1.0.m006
+1↑convertigo: 8.1.0.m006
 ↓lib_BaseRow [core.Project]: 
   comment: |
     '{
@@ -14,7 +14,7 @@
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.1.12
+  version: 1.1.13
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓c8oforms_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_fs.yaml
   ↓c8oforms_response_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_response_fs.yaml
@@ -32,6 +32,7 @@
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
   ↓FieldsListApiKey [sequences.GenericSequence]: 🗏 sequences/FieldsListApiKey.yaml
   ↓forms_AddRow [sequences.GenericSequence]: 🗏 sequences/forms_AddRow.yaml
+  ↓forms_AddRowFromData [sequences.GenericSequence]: 🗏 sequences/forms_AddRowFromData.yaml
   ↓forms_DeleteRow [sequences.GenericSequence]: 🗏 sequences/forms_DeleteRow.yaml
   ↓formscommon_ApplicationsList [sequences.GenericSequence]: 🗏 sequences/formscommon_ApplicationsList.yaml
   ↓formscommon_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formscommon_CheckConfig.yaml

@@ -56,15 +56,19 @@ comment: |
             "not_equal",
             "contains",
             "contains_not",
+    		"contains_word",
+    		"doesnt_contain_word",
             "length_is_lower_than",
             "empty",
             "not_empty"
         ],
         long_text: [
-            "equal",
+    		"equal",
             "not_equal",
             "contains",
             "contains_not",
+    		"contains_word",
+    		"doesnt_contain_word",
             "length_is_lower_than",
             "empty",
             "not_empty"
@@ -83,7 +87,10 @@ comment: |
             "contains",
             "contains_not",
             "higher_than",
-            "lower_than",
+    		"higher_than_or_equal",
+    		"lower_than",
+    		"lower_than_or_equal",
+    		"is_even_and_whole",
             "empty",
             "not_empty",
         ],
@@ -328,17 +335,21 @@ comment: |
     			obj[key] = {"displayName": key, "type": "html", value:null};
     		}
     		if(model == "true" && "structure" in this){
-    			let cTargetCompletion = [];
-    			let cHideFromFiltering = true;
+    			var cTargetCompletion = [];
+    			var cHideFromFiltering = true;
     			if(jConfig.columns.indexOf(key) != -1){
-    				let cTarget = structure.filter((x)=>{
+    				var cTarget = structure.filter((x)=>{
     					return x.name == key
     				})[0];
     				// if target is formula use it''s formula_type
-    				let cType = cTarget != undefined ? cTarget.type : null;
+    				var cType = cTarget != undefined ? cTarget.type : null;
     				if(cType == "formula"){
     					cType = cTarget.formula_type;
     				}
+    				if(cType == "lookup"){
+    					cType = cTarget.formula_type;
+    				}
+    				obj[key]["cType"] = cType;
     				cTargetCompletion = verbsByType[cType];
     				cHideFromFiltering = false;
     				if(cTargetCompletion == undefined){

@@ -81,6 +81,16 @@ comment: Creates a row  in a table
               - ↑value: 1701249332780
             - java.lang.String: 
               - ↑value: ./document/object/error/text()
+  ↓Return [steps.ReturnStep-1743098858589]: 
+↓Copy [steps.XMLCopyStep-1743098612728]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1701249332780
+        - java.lang.String: 
+          - ↑value: ./document/object/*
 ↓data [variables.RequestableVariable-1701249149334]: 
   comment: 'A JSON object with each field name and value, such as: {"items" : [{"field1":"value1", "field2": "value2"}, {"field1":"value1B", "field2": "value2B"}]}'
   required: true
