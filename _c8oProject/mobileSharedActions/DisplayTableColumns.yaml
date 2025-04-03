@@ -18,15 +18,17 @@
             			// order of the columns in the initialSelectedColumns
             			page.local.initialSelectedColumns?.forEach((col, i) => {
             				if (vars.columns.find((item) => item.name == col) != undefined) {
+            					var currentCol = vars.columns.find((item) => item.name == col);
             					page.local.selectedColumns.push({
             						name: col,
             						selected: true,
             						order: i,
-            						id: vars.columns.find((item) => item.name == col).id,
-            						type : vars.columns.find((item) => item.name == col).type,
+            						id: currentCol.id,
+            						type : currentCol.type,
             						hidden: page.local.initialHiddenColumns.indexOf(col) != -1,
-            						table_id: vars.columns.find((item) => item.name == col).table_id
-            					})
+            						table_id: currentCol.table_id,
+            						link_row_table_id: currentCol.link_row_table_id
+            					});
             				}
             			})
             			

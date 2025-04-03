@@ -3302,6 +3302,7 @@ title: First page
                     				form_id: await page.callParentFunction("getFormId"),
                     				source_id: await page.callParentFunction("getSourceId"),
                     				source_owner: await page.callParentFunction("getAuthenticatedUser"),
+                    				link_row_table_id: []
                     			};
                     					
                     			if (page.local.target == "table") {
@@ -3312,6 +3313,11 @@ title: First page
                     					}
                     					if (page.local.selectedColumns[item]["hidden"]) {
                     						conf.hidden.push(page.local.selectedColumns[item]["name"])
+                    					}
+                    					if (page.local.selectedColumns[item]["link_row_table_id"] != undefined) {
+                    						if(!conf.link_row_table_id.includes(page.local.selectedColumns[item]["link_row_table_id"])){
+                    							conf.link_row_table_id.push(page.local.selectedColumns[item]["link_row_table_id"])
+                    						}
                     					}
                     				})
                     			}else if(page.local.target == "select" && page.local.type == "checkbox_group"){
@@ -3324,6 +3330,11 @@ title: First page
                     					if (page.local.selectedColumns[item]["value"]) {
                     						conf.column = item;
                     						conf.columns.push(item);
+                    					}
+                    					if (page.local.selectedColumns[item]["link_row_table_id"] != undefined) {
+                    						if(!conf.link_row_table_id.includes(page.local.selectedColumns[item]["link_row_table_id"])){
+                    							conf.link_row_table_id.push(page.local.selectedColumns[item]["link_row_table_id"])
+                    						}
                     					}
                     				})
                     			} 
@@ -3338,6 +3349,11 @@ title: First page
                     					}
                     					if (page.local.selectedColumns[item]["value"]) {
                     						conf.value = item;
+                    					}
+                    					if (page.local.selectedColumns[item]["link_row_table_id"] != undefined) {
+                    						if(!conf.link_row_table_id.includes(page.local.selectedColumns[item]["link_row_table_id"])){
+                    							conf.link_row_table_id.push(page.local.selectedColumns[item]["link_row_table_id"])
+                    						}
                     					}
                     				})
                     				
