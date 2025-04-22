@@ -1,8 +1,8 @@
 {
  "My_Menu": "Mon menu",
  "First_page": "Première page",
- "Select_the_Baserow_database_and_table_yo": "Sélectionnez la base de données et la table Baserow à partir desquelles vous souhaitez obtenir des données",
- "Baserow_connector": "Connecteur Baserow",
+ "Select_the_Baserow_database_and_table_yo": "Sélectionnez la base de données et la table à partir desquelles vous souhaitez obtenir des données",
+ "Baserow_connector": "Connecteur no-code database",
  "Select_a_database_and_table": "Sélectionnez une base de données et une table",
  "You_aren_t_the_owner_of_this_source__If_": "Vous n'êtes pas le propriétaire de cette source. Si vous validez les paramètres, vous deviendrez le nouveau propriétaire.",
  "Please_select_among_the_following_elemen": "Veuillez sélectionner parmi les éléments suivants une base de données et une table",

@@ -154,19 +154,19 @@ comment: |
   comment: |
     '{
         "en": {
-            "comment": "Choose a table in Baserow",
+            "comment": "Choose a table",
             "displayName": "Configuration"
         },
         "fr": {
-            "comment": "Choisissez une table dans Baserow",
+            "comment": "Choisissez une table",
             "displayName": "Configuration"
         },
         "es": {
-            "comment": "Elija una tabla en Baserow",
+            "comment": "Elija una tabla",
             "displayName": "Configuración"
         },
         "it": {
-            "comment": "Scegli una tabella in Baserow",
+            "comment": "Scegli una tabella",
             "displayName": "Configurazione"
         }
     }'

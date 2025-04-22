@@ -3,20 +3,20 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "Add or update a row in Baserow",
-          "comment": "Add or update a row in a Baserow table. Add columns to fill by pressing the + button, and entering a column name and a value for the column. This operation can be repeated as many times as necessary. If ''Create Columns'' option is enabled, a column will be created when the provided column name does not match any column in the table"
+          "displayName": "Add or update a row in the no-code database",
+          "comment": "Add or update a row in a table. Add columns to fill by pressing the + button, and entering a column name and a value for the column. This operation can be repeated as many times as necessary. If ''Create Columns'' option is enabled, a column will be created when the provided column name does not match any column in the table"
       },
       "fr": {
-          "displayName": "Ajouter ou mettre à jour une ligne dans un Baserow",
-          "comment": "Ajoutez ou mettez à jour une ligne dans une table Baserow. Ajoutez des colonnes a renseigner en pressent le bouton +, et en resignant un nom de colonne et une valeur pour la colonne. Cette opération peut être répété autant que necessaire. Si l''option ''Création de colonnes'' est activée, une colonne sera créée quand le nom de colonne fournis ne corresponds à aucune colonne de la table"
+          "displayName": "Ajouter ou mettre à jour une ligne dans la no-code database",
+          "comment": "Ajoutez ou mettez à jour une ligne dans une table. Ajoutez des colonnes a renseigner en pressent le bouton +, et en resignant un nom de colonne et une valeur pour la colonne. Cette opération peut être répété autant que necessaire. Si l''option ''Création de colonnes'' est activée, une colonne sera créée quand le nom de colonne fournis ne corresponds à aucune colonne de la table"
       },
       "es": {
-          "displayName": "Agregar o actualizar una fila en Baserow",
-          "comment": "Agregue o actualice una fila en una tabla de Baserow. Agregue columnas para completar presionando el botón +, y proporcionando un nombre de columna y un valor para la columna. Esta operación se puede repetir tantas veces como sea necesario. Si la opción ''Crear Columnas'' está activada, se creará una columna cuando el nombre de columna proporcionado no coincida con ninguna columna en la tabla"
+          "displayName": "Agregar o actualizar una fila en la no-code database",
+          "comment": "Agregue o actualice una fila en una tabla. Agregue columnas para completar presionando el botón +, y proporcionando un nombre de columna y un valor para la columna. Esta operación se puede repetir tantas veces como sea necesario. Si la opción ''Crear Columnas'' está activada, se creará una columna cuando el nombre de columna proporcionado no coincida con ninguna columna en la tabla"
       },
       "it": {
-          "displayName": "Aggiungi o aggiorna una riga in Baserow",
-          "comment": "Aggiungi o aggiorna una riga in una tabella Baserow. Aggiungi colonne da compilare premendo il pulsante +, e inserendo un nome di colonna e un valore per la colonna. Questa operazione può essere ripetuta quante volte necessario. Se l''opzione ''Crea Colonne'' è abilitata, verrà creata una colonna quando il nome di colonna fornito non corrisponde a nessuna colonna della tabella"
+          "displayName": "Aggiungi o aggiorna una riga in il no-code database",
+          "comment": "Aggiungi o aggiorna una riga in una tabella. Aggiungi colonne da compilare premendo il pulsante +, e inserendo un nome di colonna e un valore per la colonna. Questa operazione può essere ripetuta quante volte necessario. Se l''opzione ''Crea Colonne'' è abilitata, verrà creata una colonna quando il nome di colonna fornito non corrisponde a nessuna colonna della tabella"
       }
   }'
 ↓Call_Sequence2 [steps.SequenceStep-1743074271016]: 
@@ -713,19 +713,19 @@ comment: |
   comment: |
     '{
         "en": {
-            "comment": "Choose a table in Baserow",
+            "comment": "Choose a table in the no-code database",
             "displayName": "Configuration"
         },
         "fr": {
-            "comment": "Choisissez une table dans Baserow",
+            "comment": "Choisissez une table dans la no-code database",
             "displayName": "Configuration"
         },
         "es": {
-            "comment": "Elija una tabla en Baserow",
+            "comment": "Elija una tabla en la no-code database",
             "displayName": "Configuración"
         },
         "it": {
-            "comment": "Scegli una tabella in Baserow",
+            "comment": "Scegli una tabella in il no-code database",
             "displayName": "Configurazione"
         }
     }'
@@ -775,6 +775,7 @@ comment: |
         }
     }'
   description: boolean
+  value: 
 ↓forms_freeVars [variables.RequestableVariable-1743074328692]: 
   comment: |
     '{

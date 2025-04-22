@@ -3,18 +3,18 @@
   comment: |
     '{
         "en": {
-            "displayName": "Baserow No Code Database",
-            "comment": "This is the Baserow No Code connector for Convertigo. Use this connector to exchange data with Baserow databases."
+            "displayName": "No Code Database",
+            "comment": "This is the no-code database connector for Convertigo. Use this connector to exchange data with no-code databases."
         },
         "fr": {
-            "displayName": "Base de donnée NoCode Baserow ",
-            "comment": "Connecteur aux base de données NoCode Baserow"
+            "displayName": "Base de donnée no-code",
+            "comment": "Connecteur aux base de données no-code"
         }
     }'
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.1.15
+  version: 1.1.16
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓c8oforms_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_fs.yaml
   ↓c8oforms_response_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_response_fs.yaml

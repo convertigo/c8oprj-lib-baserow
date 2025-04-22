@@ -3,19 +3,19 @@ comment: |
   '{
       "en": {
           "displayName": "Get Data",
-          "comment": "Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name."
+          "comment": "Get data from the no-code database table. You will be able to choose the columns for the names to be displayed in the select dropdown list and the column for the values of each name."
       },
       "fr": {
           "displayName": "Récupérer les données",
-          "comment": "Récupérez des données à partir d''une table Baserow. Vous pourrez choisir les colonnes de Baserow pour les noms à afficher dans la liste déroulante et la colonne pour les valeurs de chaque nom."
+          "comment": "Récupérez des données à partir d''une table no-code database. Vous pourrez choisir les colonnes pour les noms à afficher dans la liste déroulante et la colonne pour les valeurs de chaque nom."
       },
       "es": {
           "displayName": "Obtener datos",
-          "comment": "Obtener datos de una tabla de Baserow. Podrá elegir las columnas de Baserow para que los nombres se muestren en la lista desplegable y la columna para los valores de cada nombre."
+          "comment": "Obtener datos de una tabla de no-code database. Podrá elegir las columnas para que los nombres se muestren en la lista desplegable y la columna para los valores de cada nombre."
       },
       "it": {
           "displayName": "Ottenere dati",
-          "comment": "Ottieni dati da una tabella di Baserow. Sarai in grado di scegliere le colonne di Baserow per i nomi da visualizzare nel menu a discesa e la colonna per i valori di ogni nome."
+          "comment": "Ottieni dati da una tabella dil no-code database. Sarai in grado di scegliere le colonne per i nomi da visualizzare nel menu a discesa e la colonna per i valori di ogni nome."
       },
       "types": ["select", "checkbox", "radio", "checkbox_group", "radio_group"]
   }'
@@ -389,19 +389,19 @@ comment: |
   comment: |
     '{
     	"en": {
-            "comment": "Choose a table in Baserow",
+            "comment": "Choose a table",
             "displayName": "Configuration"
         },
         "fr": {
-            "comment": "Choisissez une table dans Baserow",
+            "comment": "Choisissez une table",
     		"displayName":"Configuration"
         },
         "es": {
-            "comment": "Elija una tabla en Baserow",
+            "comment": "Elija una tabla",
             "displayName": "Configuración"
         },
         "it": {
-            "comment": "Scegli una tabella in Baserow",
+            "comment": "Scegli una tabella",
             "displayName": "Configurazione"
     	}
     }'
@@ -412,19 +412,19 @@ comment: |
   comment: |
     '{
         "en": {
-            "comment": "Define a filter to apply to Baserow table",
+            "comment": "Define a filter to apply to a table",
             "displayName": "Filter"
         },
         "fr": {
-            "comment": "Définir un filtre à appliquer à la table Baserow",
+            "comment": "Définir un filtre à appliquer à la table",
             "displayName": "Filtre"
         },
         "es": {
-            "comment": "Definir un filtro para aplicar a la tabla de Baserow",
+            "comment": "Definir un filtro para aplicar a la tabla",
             "displayName": "Filtro"
         },
         "it": {
-            "comment": "Definire un filtro da applicare alla tabella di Baserow",
+            "comment": "Definire un filtro da applicare alla tabella",
             "displayName": "Filtro"
         }
     }'

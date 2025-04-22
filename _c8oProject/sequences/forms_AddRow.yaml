@@ -3,20 +3,20 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "Add or update a row in a Baserow (by matching the form responses)",
-          "comment": "Add or update a row in a Baserow table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the ''Columns creation'' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns in Baserow."
+          "displayName": "Add or update a row in the no-code database (by matching the form responses)",
+          "comment": "Add or update a row in a table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the ''Columns creation'' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns."
       },
       "fr": {
-         "displayName": "Ajouter ou mettre à jour une ligne dans un Baserow (en se calquant sur les réponses du formulaire)",
-          "comment": "Ajoutez ou mettez à jour une ligne dans une table Baserow. Si une colonne de la table a le même nom que l''ID technique d''un champ du formulaire, la donnée sera insérée dans cette colonne. Si l''option ''Création de colonnes'' est activée, une colonne sera créée quand l''ID technique d''un champ ne correspond à aucune colonne du formulaire. Les champs du formulaire peuvent être de n''importe quel type, mais généralement les listes de sélection sont mappées sur les colonnes liées de Baserow."
+         "displayName": "Ajouter ou mettre à jour une ligne dans la no-code database (en se calquant sur les réponses du formulaire)",
+          "comment": "Ajoutez ou mettez à jour une ligne dans une table. Si une colonne de la table a le même nom que l''ID technique d''un champ du formulaire, la donnée sera insérée dans cette colonne. Si l''option ''Création de colonnes'' est activée, une colonne sera créée quand l''ID technique d''un champ ne correspond à aucune colonne du formulaire. Les champs du formulaire peuvent être de n''importe quel type, mais généralement les listes de sélection sont mappées sur les colonnes liées."
       },
       "es": {
-          "displayName": "Agregar o actualizar una fila en un Baserow (coincidiendo con las respuestas del formulario)",
-          "comment": "Agregue o actualice una fila en una tabla de Baserow. Si una columna en la tabla tiene el mismo nombre que el ID técnico de un campo del formulario, los datos se insertarán en esa columna. Si la opción ''Creación de columnas'' está habilitada, se creará una columna cuando el ID técnico de un campo del formulario no coincida con ninguna columna en el formulario. Los campos del formulario pueden ser de cualquier tipo, pero generalmente las listas de selección se asignan a columnas vinculadas en Baserow."
+          "displayName": "Agregar o actualizar una fila en la no-code database (coincidiendo con las respuestas del formulario)",
+          "comment": "Agregue o actualice una fila en una tabla. Si una columna en la tabla tiene el mismo nombre que el ID técnico de un campo del formulario, los datos se insertarán en esa columna. Si la opción ''Creación de columnas'' está habilitada, se creará una columna cuando el ID técnico de un campo del formulario no coincida con ninguna columna en el formulario. Los campos del formulario pueden ser de cualquier tipo, pero generalmente las listas de selección se asignan a columnas vinculadas."
       },
       "it": {
-          "displayName": "Aggiungi o aggiorna una riga in un Baserow (abbinando le risposte del modulo)",
-          "comment": "Aggiungi o aggiorna una riga in una tabella Baserow. Se una colonna della tabella ha lo stesso nome dell''ID tecnico di un campo del modulo, i dati verranno inseriti in quella colonna. Se l''opzione ''Creazione di colonne'' è abilitata, verrà creata una colonna quando l''ID tecnico di un campo del modulo non corrisponde a nessuna colonna del modulo. I campi del modulo possono essere di qualsiasi tipo, ma generalmente le liste di selezione sono mappate su colonne collegate in Baserow."
+          "displayName": "Aggiungi o aggiorna una riga in il no-code database (abbinando le risposte del modulo)",
+          "comment": "Aggiungi o aggiorna una riga in una tabella. Se una colonna della tabella ha lo stesso nome dell''ID tecnico di un campo del modulo, i dati verranno inseriti in quella colonna. Se l''opzione ''Creazione di colonne'' è abilitata, verrà creata una colonna quando l''ID tecnico di un campo del modulo non corrisponde a nessuna colonna del modulo. I campi del modulo possono essere di qualsiasi tipo, ma generalmente le liste di selezione sono mappate su colonne collegate."
       }
   }'
 ↓Call_Sequence2 [steps.SequenceStep-1734427992515]: 
@@ -705,19 +705,19 @@ comment: |
   comment: |
     '{
         "en": {
-            "comment": "Choose a table in Baserow",
+            "comment": "Choose a table in the no-code database",
             "displayName": "Configuration"
         },
         "fr": {
-            "comment": "Choisissez une table dans Baserow",
+            "comment": "Choisissez une table dans la no-code database",
             "displayName": "Configuration"
         },
         "es": {
-            "comment": "Elija una tabla en Baserow",
+            "comment": "Elija una tabla en la no-code database",
             "displayName": "Configuración"
         },
         "it": {
-            "comment": "Scegli una tabella in Baserow",
+            "comment": "Scegli una tabella in il no-code database",
             "displayName": "Configurazione"
         }
     }'

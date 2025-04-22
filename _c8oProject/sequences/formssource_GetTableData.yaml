@@ -3,19 +3,19 @@ comment: |
   '{
       "en": {
           "displayName": "Get data",
-          "comment": "Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid"
+          "comment": "Get data from the no-code database table for a data grid. Each column of the table will be displayed as the same column in the data grid"
       },
       "fr": {
           "displayName": "Récupérer les données",
-          "comment": "Récupérez les données d''une table Baserow pour une grille de données. Chaque colonne de la table Baserow sera affichée comme la même colonne dans la grille de données"
+          "comment": "Récupérez les données d''une table no-code database pour une grille de données. Chaque colonne de la table sera affichée comme la même colonne dans la grille de données"
       },
       "es": {
           "displayName": "Obtener datos",
-          "comment": "Obtenga datos de una tabla de Baserow para una cuadrícula de datos. Cada columna de la tabla de Baserow se mostrará como la misma columna en la cuadrícula de datos"
+          "comment": "Obtenga datos de una tabla de no-code database para una cuadrícula de datos. Cada columna de la tabla se mostrará como la misma columna en la cuadrícula de datos"
       },
       "it": {
           "displayName": "Ottenere dati",
-          "comment": "Ottieni dati da una tabella di Baserow per una griglia di dati. Ogni colonna della tabella di Baserow verrà visualizzata come la stessa colonna nella griglia di dati"
+          "comment": "Ottieni dati da una tabella di no-code database per una griglia di dati. Ogni colonna della tabella verrà visualizzata come la stessa colonna nella griglia di dati"
       },
       "types": ["grid", "chart", "map"]
   }'
@@ -390,19 +390,19 @@ comment: |
   comment: |
     '{
     	"en": {
-            "comment": "Choose a table in Baserow",
+            "comment": "Choose a table",
             "displayName": "Configuration"
         },
         "fr": {
-            "comment": "Choisissez une table dans Baserow",
+            "comment": "Choisissez une table",
     		"displayName":"Configuration"
         },
         "es": {
-            "comment": "Elija una tabla en Baserow",
+            "comment": "Elija una tabla",
             "displayName": "Configuración"
         },
         "it": {
-            "comment": "Scegli una tabella in Baserow",
+            "comment": "Scegli una tabella",
             "displayName": "Configurazione"
     	}
     }'
@@ -413,19 +413,19 @@ comment: |
   comment: |
     '{
         "en": {
-            "comment": "Define a filter to apply to Baserow table",
+            "comment": "Define a filter to apply to a table",
             "displayName": "Filter"
         },
         "fr": {
-            "comment": "Définir un filtre à appliquer à la table Baserow",
+            "comment": "Définir un filtre à appliquer à la table",
             "displayName": "Filtre"
         },
         "es": {
-            "comment": "Definir un filtro para aplicar a la tabla de Baserow",
+            "comment": "Definir un filtro para aplicar a la tabla",
             "displayName": "Filtro"
         },
         "it": {
-            "comment": "Definire un filtro da applicare alla tabella di Baserow",
+            "comment": "Definire un filtro da applicare alla tabella",
             "displayName": "Filtro"
         }
     }'

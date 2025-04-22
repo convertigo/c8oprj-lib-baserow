@@ -3,20 +3,20 @@ authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "Delete row to a Baserow",
-          "comment": "Deletes a data row from a Baserow table"
+          "displayName": "Delete row to the no-code database",
+          "comment": "Deletes a data row from a table"
       },
       "fr": {
-          "displayName": "Supprimer une ligne dans un Baserow",
-          "comment": "Supprime une ligne de données d''une table Baserow"
+          "displayName": "Supprimer une ligne dans la no-code database",
+          "comment": "Supprime une ligne de données d''une table"
       },
       "es": {
-          "displayName": "Eliminar una fila en Baserow",
-          "comment": "Elimina una fila de datos de una tabla de Baserow"
+          "displayName": "Eliminar una fila en la no-code database",
+          "comment": "Elimina una fila de datos de una tabla"
       },
       "it": {
-          "displayName": "Eliminare una riga in Baserow",
-          "comment": "Elimina una riga di dati da una tabella di Baserow"
+          "displayName": "Eliminare una riga in il no-code database",
+          "comment": "Elimina una riga di dati da una tabella"
       }
   }'
 ↓Call_Sequence2 [steps.SequenceStep-1734444235528]: 
@@ -102,19 +102,19 @@ comment: |
   comment: |
     '{
         "en": {
-            "comment": "Choose a table in Baserow",
+            "comment": "Choose a table in the no-code database",
             "displayName": "Configuration"
         },
         "fr": {
-            "comment": "Choisissez une table dans Baserow",
+            "comment": "Choisissez une table de la no-code database",
             "displayName": "Configuration"
         },
         "es": {
-            "comment": "Elija una tabla en Baserow",
+            "comment": "Elija una tabla en la no-code database",
             "displayName": "Configuración"
         },
         "it": {
-            "comment": "Scegli una tabella in Baserow",
+            "comment": "Scegli una tabella in il no-code database",
             "displayName": "Configurazione"
         }
     }'
@@ -143,3 +143,4 @@ comment: |
             "displayName": "Identificatore"
         }
     }'
+  value: 

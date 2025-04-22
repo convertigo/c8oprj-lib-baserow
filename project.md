@@ -1,7 +1,7 @@
 
 # ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/core/images/project_color_16x16.png?raw=true "Project") lib_BaseRow
 
-This is the Baserow No Code connector for Convertigo. Use this connector to exchange data with Baserow databases.
+This is the no-code database connector for Convertigo. Use this connector to exchange data with no-code databases.
 
 <details><summary><span style="color:DarkGoldenRod"><i>References</i></span></summary><blockquote><p>
 
@@ -14945,12 +14945,12 @@ Returns only the fields of the table related to the provided value.
 
 </p></blockquote></details>
 
-<details><summary><b>forms_AddRow</b> : Add or update a row in a Baserow table</summary><blockquote><p>
+<details><summary><b>forms_AddRow</b> : Add or update a row in a table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_AddRow
 
-Add or update a row in a Baserow table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the 'Columns creation' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns in Baserow.
+Add or update a row in a table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the 'Columns creation' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns.
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -14976,7 +14976,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Choose a table in Baserow
+Choose a table in the no-code database
 </td>
 </tr>
 <tr>
@@ -15007,12 +15007,12 @@ The Identifier of the row to update. If not set, the action will add a row. If s
 
 </p></blockquote></details>
 
-<details><summary><b>forms_AddRowFromData</b> : Add or update a row in a Baserow table</summary><blockquote><p>
+<details><summary><b>forms_AddRowFromData</b> : Add or update a row in a table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_AddRowFromData
 
-Add or update a row in a Baserow table. Add columns to fill by pressing the + button, and entering a column name and a value for the column. This operation can be repeated as many times as necessary. If 'Create Columns' option is enabled, a column will be created when the provided column name does not match any column in the table
+Add or update a row in a table. Add columns to fill by pressing the + button, and entering a column name and a value for the column. This operation can be repeated as many times as necessary. If 'Create Columns' option is enabled, a column will be created when the provided column name does not match any column in the table
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -15038,7 +15038,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Choose a table in Baserow
+Choose a table in the no-code database
 </td>
 </tr>
 <tr>
@@ -15077,12 +15077,12 @@ The Identifier of the row to update. If not set, the action will add a row. If s
 
 </p></blockquote></details>
 
-<details><summary><b>forms_DeleteRow</b> : Deletes a data row from a Baserow table</summary><blockquote><p>
+<details><summary><b>forms_DeleteRow</b> : Deletes a data row from a table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") forms_DeleteRow
 
-Deletes a data row from a Baserow table
+Deletes a data row from a table
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -15108,7 +15108,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Choose a table in Baserow
+Choose a table in the no-code database
 </td>
 </tr>
 <tr>
@@ -15222,19 +15222,19 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Choose a table in Baserow
+Choose a table
 </td>
 </tr>
 </table>
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetSelectData</b> : Get data from a Baserow table</summary><blockquote><p>
+<details><summary><b>formssource_GetSelectData</b> : Get data from the no-code database table</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetSelectData
 
-Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+Get data from the no-code database table. You will be able to choose the columns for the names to be displayed in the select dropdown list and the column for the values of each name.
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -15252,7 +15252,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Choose a table in Baserow
+Choose a table
 </td>
 </tr>
 <tr>
@@ -15269,7 +15269,7 @@ Filters
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_Filter
 </td>
 <td>
-Define a filter to apply to Baserow table
+Define a filter to apply to a table
 </td>
 </tr>
 <tr>
@@ -15284,12 +15284,12 @@ If true, just return one line of data so that No Code studio can compte the tabl
 
 </p></blockquote></details>
 
-<details><summary><b>formssource_GetTableData</b> : Get data from a Baserow table for a data grid</summary><blockquote><p>
+<details><summary><b>formssource_GetTableData</b> : Get data from the no-code database table for a data grid</summary><blockquote><p>
 
 
 ## ![](https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/sequences/images/genericsequence_color_16x16.png?raw=true "GenericSequence") formssource_GetTableData
 
-Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
+Get data from the no-code database table for a data grid. Each column of the table will be displayed as the same column in the data grid
 
 <span style="color:DarkGoldenRod">Variables</span>
 
@@ -15307,7 +15307,7 @@ comment
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_config
 </td>
 <td>
-Choose a table in Baserow
+Choose a table
 </td>
 </tr>
 <tr>
@@ -15315,7 +15315,7 @@ Choose a table in Baserow
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableFilter
 </td>
 <td>
-Define a filter to apply to Baserow table
+Define a filter to apply to a table
 </td>
 </tr>
 <tr>
