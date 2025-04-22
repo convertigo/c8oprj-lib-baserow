@@ -139,6 +139,7 @@ comment: |
                 - SmartType: 
                   - ↑mode: PLAIN
                   - →→: value
+            type: number
             value: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
