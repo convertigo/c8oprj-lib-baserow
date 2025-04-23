@@ -98,13 +98,15 @@ comment: |
     		case ''long_text'':
     		case ''number'':
     		case ''date'':
-    		case ''single_select'':
     		case ''boolean'':
     			data[key] = jDoc[key];
     			break;
+    		case ''single_select'':
+    			data[key] = +jDoc[key];
+    			break;
     
     		case ''link_row'':
-    			data[key] = [jDoc[key]];
+    			data[key] = [+jDoc[key]];
     			break;
     
     		case ''file'':

@@ -97,13 +97,14 @@ comment: |
     		case ''long_text'':
     		case ''number'':
     		case ''date'':
-    		case ''single_select'':
     		case ''boolean'':
     			data[key] = jDoc.variable.resp[key].value;
     			break;
-    
+    		case ''single_select'':
+    			data[key] = +jDoc.variable.resp[key].value;
+    			break;
     		case ''link_row'':
-    			data[key] = [jDoc.variable.resp[key].value];
+    			data[key] = [+jDoc.variable.resp[key].value];
     			break;
     
     		case ''file'':
