@@ -8,17 +8,18 @@ comment: |
       },
       "fr": {
           "displayName": "Ajouter ou mettre à jour une ligne dans la no-code database",
-          "comment": "Ajoutez ou mettez à jour une ligne dans une table. Ajoutez des colonnes a renseigner en pressent le bouton +, et en resignant un nom de colonne et une valeur pour la colonne. Cette opération peut être répété autant que necessaire. Si l''option ''Création de colonnes'' est activée, une colonne sera créée quand le nom de colonne fournis ne corresponds à aucune colonne de la table"
+          "comment": "Ajoutez ou mettez à jour une ligne dans une table. Ajoutez des colonnes à renseigner en pressant le bouton +, et en renseignant un nom de colonne et une valeur pour la colonne. Cette opération peut être répétée autant que nécessaire. Si l''option ''Création de colonnes'' est activée, une colonne sera créée quand le nom de colonne fourni ne correspond à aucune colonne de la table"
       },
       "es": {
           "displayName": "Agregar o actualizar una fila en la no-code database",
-          "comment": "Agregue o actualice una fila en una tabla. Agregue columnas para completar presionando el botón +, y proporcionando un nombre de columna y un valor para la columna. Esta operación se puede repetir tantas veces como sea necesario. Si la opción ''Crear Columnas'' está activada, se creará una columna cuando el nombre de columna proporcionado no coincida con ninguna columna en la tabla"
+          "comment": "Agregue o actualice una fila en una tabla. Agregue columnas para completar presionando el botón +, y proporcionando un nombre de columna y un valor para la columna. Esta operación se puede repetir tantas veces como sea necesario. Si la opción ''Crear Columnas'' está activada, se creará una colonna cuando el nombre de columna proporcionado no coincida con ninguna columna en la tabla"
       },
       "it": {
-          "displayName": "Aggiungi o aggiorna una riga in il no-code database",
+          "displayName": "Aggiungi o aggiorna una riga nel no-code database",
           "comment": "Aggiungi o aggiorna una riga in una tabella. Aggiungi colonne da compilare premendo il pulsante +, e inserendo un nome di colonna e un valore per la colonna. Questa operazione può essere ripetuta quante volte necessario. Se l''opzione ''Crea Colonne'' è abilitata, verrà creata una colonna quando il nome di colonna fornito non corrisponde a nessuna colonna della tabella"
       }
-  }'
+  }
+  '
 ↓Call_Sequence2 [steps.SequenceStep-1743074271016]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
   ↓forms_config [variables.StepVariable-1743074271019]: 
