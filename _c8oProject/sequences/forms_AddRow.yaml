@@ -101,7 +101,20 @@ comment: |
     			data[key] = jDoc.variable.resp[key].value;
     			break;
     		case ''single_select'':
-    			data[key] = +jDoc.variable.resp[key].value;
+    			if(isNaN(+jDoc.variable.resp[key].value)){
+    				var search_id = obj.select_options.find((x)=>{
+    					return x.value == jDoc.variable.resp[key].value;
+    				})
+    				if(search_id != null && search_id.id != null){
+    					data[key] = search_id.id;
+    				}
+    				else{
+    					data[key] = +jDoc.variable.resp[key].value;
+    				}
+    			}
+    			else{
+    				data[key] = +jDoc.variable.resp[key].value;
+    			}
     			break;
     		case ''link_row'':
     			data[key] = [+jDoc.variable.resp[key].value];

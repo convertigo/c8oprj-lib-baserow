@@ -90,7 +90,7 @@ comment: |
     for (var key in jDoc) {
     	log.warn("** Key is : [" + key + "] value is : " + jDoc[key])
     	
-    	let obj  = jFields.find((object) => object.name === key )
+    	var obj  = jFields.find((object) => object.name === key )
     	var type = obj ? obj.type : null
     	
     	log.warn("** type is : " + type)
@@ -103,7 +103,20 @@ comment: |
     			data[key] = jDoc[key];
     			break;
     		case ''single_select'':
-    			data[key] = +jDoc[key];
+    			if(isNaN(+jDoc[key])){
+    				var search_id = obj.select_options.find((x)=>{
+    					return x.value == jDoc[key];
+    				})
+    				if(search_id != null && search_id.id != null){
+    					data[key] = search_id.id;
+    				}
+    				else{
+    					data[key] = +jDoc[key];
+    				}
+    			}
+    			else{
+    				data[key] = +jDoc[key];
+    			}
     			break;
     
     		case ''link_row'':
