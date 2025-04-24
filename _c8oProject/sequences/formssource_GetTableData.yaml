@@ -356,7 +356,15 @@ comment: |
     					cTargetCompletion = [];
     					cHideFromFiltering = true;
     				}
+    				if(cTarget.type == "single_select" && obj[key].value == null){
+    					obj[key].value = {
+    						"id": 0,
+    					    "value": "",
+    					    "color": ""
+    					}
+    				}
     			}
+    			
     			obj[key]["filterCompletion"] = cTargetCompletion;
     			obj[key]["filterHide"] = cHideFromFiltering;
     
