@@ -41,7 +41,20 @@ comment: Gets data from a given table
       	filterExpression.filters.forEach(filter => {
       		if (filter.op == "equal" && filter.value.length == 0)
       			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
+      		try{
+      			var def = aFields.find((x)=>{return x.name == filter.field});
+      			if(def && def.type == "single_select" && isNaN(+filter.value)){
+      				var found = def.select_options.find((x)=>{
+      					return x.value == filter.value;
+      				})
+      				if(found){
+      					filter.value = found.id;
+      				}
+      			}
+      		}
+      		catch(e){
       			
+      		}
       		built += "filter__field_" + encodeURIComponent(getFieldId(filter.field)) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
       	});
       	
