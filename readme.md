@@ -20,6 +20,8 @@ For more technical informations : [documentation](./project.md)
 
 - [Installation](#installation)
 - [Sequences](#sequences)
+    - [_disabled_formssource_GetSelectDataOld](#_disabled_formssource_getselectdataold)
+    - [_disabled_formssource_GetTableDataOld](#_disabled_formssource_gettabledataold)
     - [AdminLogin](#adminlogin)
     - [AdminUserCreate](#adminusercreate)
     - [AdminUserDelete](#adminuserdelete)
@@ -31,6 +33,7 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [FieldsListApiKey](#fieldslistapikey)
     - [forms_AddRow](#forms_addrow)
+    - [forms_AddRowFromData](#forms_addrowfromdata)
     - [forms_DeleteRow](#forms_deleterow)
     - [formscommon_ApplicationsList](#formscommon_applicationslist)
     - [formscommon_CheckConfig](#formscommon_checkconfig)
@@ -45,6 +48,7 @@ For more technical informations : [documentation](./project.md)
     - [TableBulkExportWaitFInished](#tablebulkexportwaitfinished)
     - [TableBulkImportFromCSV](#tablebulkimportfromcsv)
     - [TableBulkUpdateFromCSV](#tablebulkupdatefromcsv)
+    - [TableCreateColumn](#tablecreatecolumn)
     - [TableCreateRow](#tablecreaterow)
     - [TableCreateRowApiKey](#tablecreaterowapikey)
     - [TableCreateRows](#tablecreaterows)
@@ -92,6 +96,52 @@ For more technical informations : [documentation](./project.md)
 
 
 ## Sequences
+
+### _disabled_formssource_GetSelectDataOld
+
+Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in Baserow</td>
+</tr>
+<tr>
+<td>forms_filter</td><td>Filters
+</td>
+</tr>
+<tr>
+<td>forms_Filter</td><td>Define a filter to apply to Baserow table</td>
+</tr>
+<tr>
+<td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
+</tr>
+</table>
+
+### _disabled_formssource_GetTableDataOld
+
+Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in Baserow</td>
+</tr>
+<tr>
+<td>forms_tableFilter</td><td>Define a filter to apply to Baserow table</td>
+</tr>
+<tr>
+<td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
+</tr>
+</table>
 
 ### AdminLogin
 
@@ -239,7 +289,7 @@ Lists all the fields in a baserow table
 
 ### forms_AddRow
 
-Add or update a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns.
+Add or update a row in a table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the 'Columns creation' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns.
 
 **variables**
 
@@ -251,7 +301,40 @@ Add or update a row to a Baserow table. Each column of the table must have the s
 <td>doc</td><td></td>
 </tr>
 <tr>
-<td>forms_config</td><td>Choose a table in Baserow</td>
+<td>forms_config</td><td>Choose a table in the no-code database</td>
+</tr>
+<tr>
+<td>forms_createColumn</td><td>Create a column if a field identifier does not match any column in the table</td>
+</tr>
+<tr>
+<td>forms_id</td><td>The Identifier of the row to update. If not set, the action will add a row. If set, all row's columns identified by the 'technicalID' will be updated</td>
+</tr>
+<tr>
+<td>originalDoc</td><td></td>
+</tr>
+</table>
+
+### forms_AddRowFromData
+
+Add or update a row in a table. Add columns to fill by pressing the + button, and entering a column name and a value for the column. This operation can be repeated as many times as necessary. If 'Create Columns' option is enabled, a column will be created when the provided column name does not match any column in the table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>doc</td><td></td>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in the no-code database</td>
+</tr>
+<tr>
+<td>forms_createColumn</td><td>Create a column if a field identifier does not match any column in the table</td>
+</tr>
+<tr>
+<td>forms_freeVars</td><td>Enter a column name and a value to associate with it</td>
 </tr>
 <tr>
 <td>forms_id</td><td>The Identifier of the row to update. If not set, the action will add a row. If set, all row's columns identified by the 'technicalID' will be updated</td>
@@ -263,7 +346,7 @@ Add or update a row to a Baserow table. Each column of the table must have the s
 
 ### forms_DeleteRow
 
-Deletes a data row from a Baserow table
+Deletes a data row from a table
 
 **variables**
 
@@ -275,7 +358,7 @@ Deletes a data row from a Baserow table
 <td>doc</td><td></td>
 </tr>
 <tr>
-<td>forms_config</td><td>Choose a table in Baserow</td>
+<td>forms_config</td><td>Choose a table in the no-code database</td>
 </tr>
 <tr>
 <td>forms_id</td><td>The Identifier of the row to delete</td>
@@ -317,7 +400,7 @@ Lists all applications (databases) in baserow
 
 ### formssource_GetFieldValues
 
-Get all possible values for a given field to feed a Select
+Retrieve all possible values from a dropdown list.
 
 **variables**
 
@@ -326,13 +409,13 @@ Get all possible values for a given field to feed a Select
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Choose a table in Baserow</td>
+<td>forms_config</td><td>Choose a table</td>
 </tr>
 </table>
 
 ### formssource_GetSelectData
 
-Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+Get data from the no-code database table. You will be able to choose the columns for the names to be displayed in the select dropdown list and the column for the values of each name.
 
 **variables**
 
@@ -341,14 +424,14 @@ Get data from a Baserow table. You will be able to choose the Baserow columns fo
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Choose a table in Baserow</td>
+<td>forms_config</td><td>Choose a table</td>
 </tr>
 <tr>
 <td>forms_filter</td><td>Filters
 </td>
 </tr>
 <tr>
-<td>forms_Filter</td><td>Define a filter to apply to Baserow table</td>
+<td>forms_Filter</td><td>Define a filter to apply to a table</td>
 </tr>
 <tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
@@ -357,7 +440,7 @@ Get data from a Baserow table. You will be able to choose the Baserow columns fo
 
 ### formssource_GetTableData
 
-Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
+Get data from the no-code database table for a data grid. Each column of the table will be displayed as the same column in the data grid
 
 **variables**
 
@@ -366,10 +449,10 @@ Get data from a Baserow table for a data grid. Each column of the Baserow table 
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Choose a table in Baserow</td>
+<td>forms_config</td><td>Choose a table</td>
 </tr>
 <tr>
-<td>forms_tableFilter</td><td>Define a filter to apply to Baserow table</td>
+<td>forms_tableFilter</td><td>Define a filter to apply to a table</td>
 </tr>
 <tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
@@ -533,6 +616,24 @@ Updates or inserts data in a Table from a CSV file. Given a list of column names
 </tr>
 <tr>
 <td>uniqueFields</td><td>List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be only one field)</td>
+</tr>
+</table>
+
+### TableCreateColumn
+
+Creates a row  in a table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>data</td><td>A JSON object with each field name and value</td>
+</tr>
+<tr>
+<td>table_id</td><td>Insert row in this table_id</td>
 </tr>
 </table>
 
