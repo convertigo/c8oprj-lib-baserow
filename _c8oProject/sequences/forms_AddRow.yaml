@@ -83,6 +83,7 @@ comment: |
   expression: |
     '// convert XML to JSON doc
     var jDoc = JSON.parse('''' + com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson(doc, true, true));
+    
     var columnToBeCreated = [];
     data = {}
     for (var key in jDoc.variable.resp) {

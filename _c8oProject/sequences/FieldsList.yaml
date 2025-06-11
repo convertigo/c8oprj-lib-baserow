@@ -1,6 +1,5 @@
 accessibility: Private
 comment: Lists all the fields in a baserow table
-responseExpiryDate: absolute,60
 ↓Call_Sequence [steps.SequenceStep-1667802514338]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Call_Transaction [steps.TransactionStep-1665297256060]: 
