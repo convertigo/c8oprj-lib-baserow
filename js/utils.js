@@ -96,7 +96,7 @@ var computeAnyType = (element, nested)=>{
 				innerHtml = get_base_array_image_html(element.url); // + close_html;
 			}
 			else{
-				innerHtml = get_base_array_link_html(element.url, arrayItem.visible_name); // + close_html;
+				innerHtml = get_base_array_link_html(element.url, element.visible_name); // + close_html;
 			}
 			value = element;
 		}
