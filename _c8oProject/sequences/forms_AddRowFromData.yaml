@@ -341,7 +341,6 @@ comment: |
             }
             
             var filesToDelete = [];
-            debugger;
             var _use_attname = item;
             var _use_docid = _jDoc.variable._id;
             

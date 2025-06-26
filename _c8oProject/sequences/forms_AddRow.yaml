@@ -315,7 +315,7 @@ comment: |
     ↓jIterator [steps.SimpleIteratorStep-1680611652986]: 
       expression: jDoc.variable.resp[respItem].value
       ↓jIf [steps.IfStep-1748338956991]: 
-        condition: item + '' != '[object Object]'
+        condition: item + '' != '[object Object]' && item != undefined && item != ''
         ↓getAttachmentName [steps.SimpleStep-1680611569653]: 
           comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
           expression: |
@@ -687,7 +687,7 @@ comment: |
             var ty = typeof item;
             toto ="aa"
         ↓jIf [steps.IfStep-1748360671157]: 
-          condition: item + '' != '[object Object]'
+          condition: item + '' != '[object Object]' && item != undefined && item != ''
           ↓getAttachmentName [steps.SimpleStep-1748360671160]: 
             comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
             expression: |
