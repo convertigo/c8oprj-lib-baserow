@@ -107,49 +107,61 @@ comment: |
                 - ↑value: 1680099603348
               - java.lang.String: 
                 - ↑value: ./select_options/object
-        ↓Object [steps.JsonObjectStep-1680099603351]: 
-          comment: The data object
-          key: 
+        ↓myVariable [steps.SimpleSourceStep-1751290472627]: 
+          sourceDefinition: 
             - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-              - SmartType: 
-                - ↑mode: PLAIN
-                - →→: item
-          ↓Field [steps.JsonFieldStep-1680099603354]: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1680108958192
+                - java.lang.String: 
+                  - ↑value: ./value/text()
+          variableName: val
+        ↓jIf [steps.IfStep-1751290338455]: 
+          condition: (forms_filter == undefined || forms_filter == "") || (val.indexOf(forms_filter) != -1)
+          ↓Object [steps.JsonObjectStep-1680099603351]: 
+            comment: The data object
             key: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
                 - SmartType: 
                   - ↑mode: PLAIN
-                  - →→: displayValue
-            value: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                - SmartType: 
-                  - ↑mode: SOURCE
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: 1680108958192
-                    - java.lang.String: 
-                      - ↑value: ./value/text()
-          ↓Field1 [steps.JsonFieldStep-1680099603357]: 
-            key: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                - SmartType: 
-                  - ↑mode: PLAIN
-                  - →→: value
-            type: number
-            value: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                - SmartType: 
-                  - ↑mode: SOURCE
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: 1680108958192
-                    - java.lang.String: 
-                      - ↑value: ./id/text()
+                  - →→: item
+            ↓Field [steps.JsonFieldStep-1680099603354]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: displayValue
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: SOURCE
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1680108958192
+                      - java.lang.String: 
+                        - ↑value: ./value/text()
+            ↓Field1 [steps.JsonFieldStep-1680099603357]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: value
+              type: number
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: SOURCE
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1680108958192
+                      - java.lang.String: 
+                        - ↑value: ./id/text()
 ↓forms_config [variables.RequestableVariable-1680099603360]: 
   comment: |
     '{
@@ -171,6 +183,13 @@ comment: |
         }
     }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
+  required: true
+  value: 
+↓forms_filter [variables.RequestableVariable-1751290326266]: 
+  comment: |
+    Filters
+    
+  description: 
   required: true
   value: 
 ↓TestBedType [core.TestCase]: 

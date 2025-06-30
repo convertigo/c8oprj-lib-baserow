@@ -62,7 +62,7 @@ comment: |
     
     log.warn("form_filter is :" + forms_filter.length)
     
-    if (forms_filter.length > 3)  					// This is the full text search API filed for baserow
+    if (forms_filter.length > 0)  					// This is the full text search API filed for baserow
     	search= forms_filter 
     
     let describeStructure = false;

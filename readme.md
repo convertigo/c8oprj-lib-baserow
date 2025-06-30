@@ -411,6 +411,10 @@ Retrieve all possible values from a dropdown list.
 <tr>
 <td>forms_config</td><td>Choose a table</td>
 </tr>
+<tr>
+<td>forms_filter</td><td>Filters
+</td>
+</tr>
 </table>
 
 ### formssource_GetSelectData
