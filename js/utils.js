@@ -52,14 +52,14 @@ var get_base_array_html = (value, color)=>{
 }
 var get_base_btn_html = (url, label, color)=>{
 	return "<div style=\"background-color: " + (color && colors[color] ? colors[color] : 'lightgrey') + ";border-radius: 10px; padding-left: 10px; padding-top: 4px; padding-bottom: 4px; width: fit-content; padding-right: 10px; margin-top: 3px; cursor:pointer\">" + 
-		"<a  src=\"" + url + "\" >" + label + "</a>"+
+		"<a  href=\"" + url + "\" target=\"_blank\">" + label + "</a>"+
 	"</div>";
 }
 var get_base_array_image_html = (url)=>{
 	return "<img style='width: 100%; margin-top: 5px; margin-bottom: 5px; border-radius: 3px; box-shadow: 0px 8px 9px -4px rgba(0,0,0,0.73);' src=\"" + url + "\" ></img>";
 }
 var get_base_array_link_html = (url, visibleName)=>{
-	return "<p style='background-color : lightgray;' ><a  src=\"" + url + "\" >" + visibleName + "</a></p>"
+	return "<p style='background-color : lightgray;' ><a  href=\"" + url + "\" target=\"_blank\">" + visibleName + "</a></p>"
 }
 var computeAnyType = (element, nested)=>{
 	var value;
