@@ -14,7 +14,7 @@
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.1.33
+  version: 1.1.34
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓c8oforms_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_fs.yaml
   ↓c8oforms_response_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_response_fs.yaml
@@ -68,7 +68,7 @@
   ↓CouchDb_schema [references.ImportXsdSchemaReference]: 
     urlpath: http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd
   ↓lib_ExtendedComponents_ui_ngx_reference [references.ProjectSchemaReference]: 
-    projectName: lib_ExtendedComponents_ui_ngx=https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx.git:branch=v8.4.0.20
+    projectName: lib_ExtendedComponents_ui_ngx=https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx.git:branch=v8.4.0.21
   ↓project [references.ProjectSchemaReference]: 
     projectName: mobilebuilder_tpl_8_4_0_ngx=https://github.com/convertigo/c8oprj-mobilebuilder-tpl/archive/mobilebuilder_tpl_8_4_0_ngx.zip
   ↓Application [core.MobileApplication]: 
