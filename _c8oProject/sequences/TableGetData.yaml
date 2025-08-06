@@ -26,46 +26,125 @@ comment: Gets data from a given table
   ↓BuildFilters [steps.SimpleStep-1665925720838]: 
     comment: Build the filters according to the API specs
     expression: |
-      'log.warn(JSON.stringify(aFields));
-      function getFieldId (fieldName) {
-      	fieldId = aFields.find( elt =>  elt.name == fieldName);
-      	return (fieldId ? fieldId.id:''unknown_field'');
+      '//log.warn(JSON.stringify(aFields));
+      //function getFieldId (fieldName) {
+      //	fieldId = aFields.find( elt =>  elt.name == fieldName);
+      //	return (fieldId ? fieldId.id:''unknown_field'');
+      //}
+      //
+      //bFieldError = false;
+      //if (filterExpression) {
+      //
+      //	filterExpression = JSON.parse(filterExpression);
+      //	filter_type = filterExpression.mode;
+      //	built ='''';
+      //	filterExpression.filters.forEach(filter => {
+      //		if (filter.op == "equal" && filter.value.length == 0)
+      //			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
+      //		try{
+      //			var def = aFields.find((x)=>{return x.name == filter.field});
+      //			if(def && def.type == "single_select" && isNaN(+filter.value)){
+      //				var found = def.select_options.find((x)=>{
+      //					return x.value == filter.value;
+      //				})
+      //				if(found){
+      //					filter.value = found.id;
+      //				}
+      //			}
+      //		}
+      //		catch(e){
+      //			
+      //		}
+      //		built += "filter__field_" + encodeURIComponent(getFieldId(filter.field)) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
+      //	});
+      //	
+      //	filterExpression = built;
+      //	if (built.indexOf("unknown_field") != -1)
+      //		bFieldError = true;
+      //		
+      //	log.warn("Built filter expression is : " + filterExpression);
+      //}
+      //
+      
+      log.warn("Building")
+      log.warn(JSON.stringify(aFields));
+      
+      function getFieldId(fieldName) {
+      	var field = aFields.find(function(elt) {
+      		return elt.name == fieldName;
+      	});
+      	return (field && field.id ? field.id : null);
       }
       
       bFieldError = false;
-      if (filterExpression) {
       
+      if (filterExpression) {
       	filterExpression = JSON.parse(filterExpression);
       	filter_type = filterExpression.mode;
-      	built ='''';
-      	filterExpression.filters.forEach(filter => {
-      		if (filter.op == "equal" && filter.value.length == 0)
-      			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
-      		try{
-      			var def = aFields.find((x)=>{return x.name == filter.field});
-      			if(def && def.type == "single_select" && isNaN(+filter.value)){
-      				var found = def.select_options.find((x)=>{
-      					return x.value == filter.value;
-      				})
-      				if(found){
-      					filter.value = found.id;
-      				}
-      			}
-      		}
-      		catch(e){
-      			
-      		}
-      		built += "filter__field_" + encodeURIComponent(getFieldId(filter.field)) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
-      	});
-      	
-      	filterExpression = built;
-      	if (built.indexOf("unknown_field") != -1)
-      		bFieldError = true;
-      		
-      	log.warn("Built filter expression is : " + filterExpression);
-      }
+      	built = '''';
       
-      '
+      	function buildFiltersFromGroup(group) {
+      		if (!group || !group.filters || !group.mode) {
+      			log.warn("⚠️ Groupe invalide ignoré : " + JSON.stringify(group));
+      			return '''';
+      		}
+      
+      		var result = '''';
+      		for (var i = 0; i < group.filters.length; i++) {
+      			var filter = group.filters[i];
+      
+      			// Si sous-groupe, appel récursif
+      			if (filter.mode && filter.filters) {
+      				result += buildFiltersFromGroup(filter);
+      				continue;
+      			}
+      
+      			// Si égal à vide
+      			if (filter.op == "equal" && typeof filter.value === "string" && filter.value.length == 0) {
+      				filter.value = "__empty";
+      			}
+      
+      			try {
+      				var def = aFields.find(function(x) {
+      					return x.name == filter.field;
+      				});
+      
+      				if (def && def.type == "single_select" && isNaN(+filter.value)) {
+      					if (def.select_options && def.select_options.length > 0) {
+      						for (var k = 0; k < def.select_options.length; k++) {
+      							if (def.select_options[k].value == filter.value) {
+      								filter.value = def.select_options[k].id;
+      								break;
+      							}
+      						}
+      					}
+      				}
+      			} catch (e) {
+      				log.warn("Erreur dans le mapping select : " + e.message);
+      			}
+      
+      			var fieldId = getFieldId(filter.field);
+      
+      			if (!fieldId || !filter.op || typeof filter.value === "undefined") {
+      				log.warn("⚠️ Filtre ignoré : " + JSON.stringify(filter));
+      				continue;
+      			}
+      
+      			result += "filter__field_" + encodeURIComponent(fieldId) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
+      		}
+      		return result;
+      	}
+      
+      	built = buildFiltersFromGroup(filterExpression);
+      	filterExpression = built;
+      
+      	if (built.indexOf("field_null") !== -1) {
+      		log.warn("❌ Champ inconnu détecté dans les filtres.");
+      		bFieldError = true;
+      	}
+      
+      	log.warn("Built filter expression is : " + filterExpression);
+      }'
   ↓jIf [steps.IfStep-1669878598760]: 
     condition: bFieldError
     ↓Error_structure [steps.XMLErrorStep-1669878613440]: 
