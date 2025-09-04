@@ -88,6 +88,23 @@ comment: |
     data = {}
     debugger;
     for (var key in jDoc.variable.resp) {
+    	if(typeof jDoc.variable.resp[key].value != "string" && jDoc.variable.resp[key].value == null && jDoc.variable.resp[key].type != null){
+    		switch(jDoc.variable.resp[key].type){
+    			case "checkbox":
+    				var children = jDoc.variable.resp[key].children;
+    				var val = "";
+    				for(var child of children){
+    					if(child.selected){
+    						val += child.value + ", "
+    					}
+    				}
+    				if(val.length > 0){
+    					val = val.substring(0, val.length -2);
+    				}
+    				jDoc.variable.resp[key].value = val;
+    				break;
+    		}
+    	}
     	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
     	
     	var obj  = jFields.find((object) => object.name === key )
@@ -143,7 +160,12 @@ comment: |
     				}
     				else{
     					columnToBeCreated.push({name: key, type: "text"});
-    					data[key] = jDoc.variable.resp[key].value;
+    					if(typeof jDoc.variable.resp[key] == "string"){
+    						data[key] = jDoc.variable.resp[key];
+    					}
+    					else{
+    						data[key] = jDoc.variable.resp[key].value;
+    					}
     				}
     			}
     			else{
@@ -477,6 +499,23 @@ comment: |
       var columnToBeCreated = [];
       data = {}
       for (var key in jDoc.variable.resp) {
+      	if(typeof jDoc.variable.resp[key].value != "string" && jDoc.variable.resp[key].value == null && jDoc.variable.resp[key].type != null){
+      		switch(jDoc.variable.resp[key].type){
+      			case "checkbox":
+      				var children = jDoc.variable.resp[key].children;
+      				var val = "";
+      				for(var child of children){
+      					if(child.selected){
+      						val += child.value + ", "
+      					}
+      				}
+      				if(val.length > 0){
+      					val = val.substring(0, val.length -2);
+      				}
+      				jDoc.variable.resp[key].value = val;
+      				break;
+      		}
+      	}
       	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
       	
       	let obj  = jFields.find((object) => object.name === key )
@@ -530,7 +569,12 @@ comment: |
       				}
       				else{
       					columnToBeCreated.push({name: key, type: "text"});
-      					data[key] = jDoc.variable.resp[key].value;
+      					if(typeof jDoc.variable.resp[key] == "string"){
+      						data[key] = jDoc.variable.resp[key];
+      					}
+      					else{
+      						data[key] = jDoc.variable.resp[key].value;
+      					}
       				}
       			}
       			else{
