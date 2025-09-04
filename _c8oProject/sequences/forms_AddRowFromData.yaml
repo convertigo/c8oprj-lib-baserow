@@ -140,7 +140,12 @@ comment: |
     					}
     					else{
     						columnToBeCreated.push({name: key, type: "text"});
-    						data[key] = jDoc[key].value;
+    						if(typeof jDoc[key] == "string"){
+    							data[key] = jDoc[key];
+    						}
+    						else{
+    							data[key] = jDoc[key].value;
+    						}
     					}
     			}
     			else{
@@ -529,7 +534,12 @@ comment: |
       					}
       					else{
       						columnToBeCreated.push({name: key, type: "text"});
-      						data[key] = jDoc[key].value;
+      						if(typeof jDoc[key] == "string"){
+      							data[key] = jDoc[key];
+      						}
+      						else{
+      							data[key] = jDoc[key].value;
+      						}
       					}
       			}
       			else{
