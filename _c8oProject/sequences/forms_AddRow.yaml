@@ -123,7 +123,7 @@ comment: |
     		case ''duration'':
     		case ''password'':
     		case ''url'':
-    			data[key] = jDoc.variable.resp[key].value;
+    			data[key] = typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value);
     			break;
     		case ''single_select'':
     			if(isNaN(+jDoc.variable.resp[key].value)){
@@ -164,7 +164,7 @@ comment: |
     						data[key] = jDoc.variable.resp[key];
     					}
     					else{
-    						data[key] = jDoc.variable.resp[key].value;
+    						data[key] = typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value);
     					}
     				}
     			}
@@ -534,7 +534,7 @@ comment: |
       		case ''duration'':
       		case ''password'':
       		case ''url'':
-      			data[key] = jDoc.variable.resp[key].value;
+      			data[key] = typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value);
       			break;
       		case ''single_select'':
       			if(isNaN(+jDoc.variable.resp[key].value)){
@@ -573,7 +573,7 @@ comment: |
       						data[key] = jDoc.variable.resp[key];
       					}
       					else{
-      						data[key] = jDoc.variable.resp[key].value;
+      						data[key] = typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value);
       					}
       				}
       			}
