@@ -106,7 +106,7 @@ comment: |
     		case ''duration'':
     		case ''password'':
     		case ''url'':
-    			data[key] = typeof jDoc[key] != "object" ? Doc[key] : JSON.stringify(Doc[key]);
+    			data[key] = typeof jDoc[key] != "object" ? jDoc[key] : JSON.stringify(jDoc[key]);
     			break;
     		case ''single_select'':
     			if(isNaN(+jDoc[key])){
@@ -500,7 +500,7 @@ comment: |
       		case ''duration'':
       		case ''password'':
       		case ''url'':
-      			data[key] = typeof jDoc[key] != "object" ? Doc[key] : JSON.stringify(Doc[key]);
+      			data[key] = typeof jDoc[key] != "object" ? jDoc[key] : JSON.stringify(jDoc[key]);
       			break;
       		case ''single_select'':
       			if(isNaN(+jDoc[key])){
