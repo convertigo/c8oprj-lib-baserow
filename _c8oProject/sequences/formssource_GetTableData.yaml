@@ -233,12 +233,16 @@ comment: |
     // The Filter Expression is provided  directly in the form_fitler variable.
     filterExpression = forms_tableFilter;
     
+    order_by = forms_tableSort
+    
     // If Forms asks us for a model, just return the 5 First lines, ignoring all filters
     if (model == "true") {
     	size = "1";
     	filterExpression = null;
+    	order_by = null;
     	describeStructure = true;
     }
+    
     '
 ↓Input_variables [steps.InputVariablesStep-1734686735723]: 
 ↓Call_Sequence [steps.SequenceStep-1734686735726]: 
@@ -438,6 +442,28 @@ comment: |
         }
     }'
   description: filter
+↓forms_tableSort [variables.RequestableVariable-1758271352839]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "Define a sort order to apply to a table",
+            "displayName": "Sort"
+        },
+        "fr": {
+            "comment": "Définir un ordre de tri à appliquer à la table",
+            "displayName": "Tri"
+        },
+        "es": {
+            "comment": "Definir un orden de clasificación para aplicar a la tabla",
+            "displayName": "Ordenar"
+        },
+        "it": {
+            "comment": "Definire un ordine di ordinamento da applicare alla tabella",
+            "displayName": "Ordina"
+        }
+    }
+    '
+  description: sort
 ↓model [variables.RequestableVariable-1734686735918]: 
   comment: If true, just return one line of data so that No Code studio can compte the table model
 ↓TestWithFilters [core.TestCase]: 
