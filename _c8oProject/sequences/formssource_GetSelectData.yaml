@@ -49,193 +49,176 @@ comment: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
+    let describeStructure = false;
+    let verbsByType = {
+    	text: [
+    		"equal", "not_equal", "contains", "contains_not",
+    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
+    		"empty", "not_empty"
+    	],
+    	long_text: [
+    		"equal", "not_equal", "contains", "contains_not",
+    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
+    		"empty", "not_empty"
+    	],
+    	url: [
+    		"equal", "not_equal", "contains", "contains_not",
+    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
+    		"empty", "not_empty"
+    	],
+    	email: [
+    		"equal", "not_equal", "contains", "contains_not",
+    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
+    		"empty", "not_empty"
+    	],
+    	phone_number: [
+    		"equal", "not_equal", "contains", "contains_not",
+    		"length_is_lower_than", "empty", "not_empty"
+    	],
     
+    	// Nombre (inclut "Nombre" et "Compteur")
+    	number: [
+    		"equal", "not_equal", "contains", "contains_not",
+    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
+    		"is_even_and_whole", "empty", "not_empty"
+    	],
+    
+    	// Classement (tel qu’affiché dans ton Redoc : type number, mais sans empty/not_empty/contains)
+    	ranking_number: [
+    		"equal", "not_equal",
+    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal"
+    	],
+    
+    	// Durée
+    	duration: [
+    		"equal", "not_equal",
+    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
+    		"empty", "not_empty"
+    	],
+    
+    	// Booléen
+    	boolean: ["boolean", "empty", "not_empty"],
+    
+    	// Date
+    	date: [
+    		"date_is", "date_is_not",
+    		"date_is_before", "date_is_on_or_before",
+    		"date_is_after", "date_is_on_or_after",
+    		"date_is_within",
+    		"date_equal", "date_not_equal",
+    		"date_equals_today", "date_before_today", "date_after_today",
+    		"date_within_days", "date_within_weeks", "date_within_months",
+    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
+    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
+    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
+    		"contains", "contains_not", "empty", "not_empty"
+    	],
+    
+    	// Dernière modification (date-like)
+    	last_modified: [
+    		"date_is", "date_is_not",
+    		"date_is_before", "date_is_on_or_before",
+    		"date_is_after", "date_is_on_or_after",
+    		"date_is_within",
+    		"date_equal", "date_not_equal",
+    		"date_equals_today", "date_before_today", "date_after_today",
+    		"date_within_days", "date_within_weeks", "date_within_months",
+    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
+    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
+    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
+    		"contains", "contains_not", "empty", "not_empty"
+    	],
+    
+    	// Créé le (date-like)
+    	created_on: [
+    		"date_is", "date_is_not",
+    		"date_is_before", "date_is_on_or_before",
+    		"date_is_after", "date_is_on_or_after",
+    		"date_is_within",
+    		"date_equal", "date_not_equal",
+    		"date_equals_today", "date_before_today", "date_after_today",
+    		"date_within_days", "date_within_weeks", "date_within_months",
+    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
+    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
+    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
+    		"contains", "contains_not", "empty", "not_empty"
+    	],
+    
+    	// Dernière modif. par / Créé par (utilisateur)
+    	last_modified_by: ["user_is", "user_is_not"],
+    	created_by: ["user_is", "user_is_not"],
+    
+    	// Fichier
+    	file: ["filename_contains", "has_file_type", "files_lower_than", "empty", "not_empty"],
+    
+    	// Sélection simple
+    	single_select: [
+    		"contains", "contains_not", "contains_word", "doesnt_contain_word",
+    		"single_select_equal", "single_select_not_equal",
+    		"single_select_is_any_of", "single_select_is_none_of",
+    		"empty", "not_empty"
+    	],
+    
+    	// Sélection multiple
+    	multiple_select: [
+    		"contains", "contains_not", "contains_word", "doesnt_contain_word",
+    		"multiple_select_has", "multiple_select_has_not",
+    		"empty", "not_empty"
+    	],
+    
+    	// Collaborateurs (multiple)
+    	multiple_collaborators: [
+    		"multiple_collaborators_has", "multiple_collaborators_has_not", "empty", "not_empty"
+    	],
+    
+    	// UUID
+    	uuid: ["equal", "not_equal"],
+    
+    	// Numérotation auto
+    	autonumber: [
+    		"equal", "not_equal", "contains", "contains_not",
+    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
+    		"is_even_and_whole"
+    	],
+    	link_row: [
+    		"link_row_has",
+    		"link_row_has_not",
+    		"link_row_contains",
+    		"link_row_not_contains",
+    		"empty",
+    		"not_empty"
+    	],
+    	rating: [
+    		"equal",
+    		"not_equal",
+    		"higher_than",
+    		"higher_than_or_equal",
+    		"lower_than",
+    		"lower_than_or_equal"
+    	],
+    }
+    
+    // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
+    // With the BaseRow API.
     if (jConfig.columns) {
-    	include_fields ="";
-    	jConfig.columns.forEach(col => include_fields += col +",")
+    	include_fields = "";
+    	jConfig.columns.forEach(col => include_fields += col + ",")
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
+    
     var displayValue = jConfig.displayValue != undefined ? jConfig.displayValue: jConfig.column;
     var value = jConfig.value != undefined ? jConfig.value : jConfig.line;
     
     filterExpression = forms_Filter;					// This is the Constructed Fiter API for baserow.
     
-    log.warn("form_filter is :" + forms_filter.length)
-    
-    if (forms_filter.length > 0)  					// This is the full text search API filed for baserow
-    	search= forms_filter 
-    
-    let describeStructure = false;
+    order_by = forms_tableSort
     
     if (model == "true") {
     	log.warn("Forms Model True")
     	size = "1";
     	filterExpression = null;
     	describeStructure = true;
-    }
-    let verbsByType = {
-    	text: [
-            "equal",
-            "not_equal",
-            "contains",
-            "contains_not",
-            "length_is_lower_than",
-            "empty",
-            "not_empty"
-        ],
-        long_text: [
-            "equal",
-            "not_equal",
-            "contains",
-            "contains_not",
-            "length_is_lower_than",
-            "empty",
-            "not_empty"
-        ],
-        link_row: [
-            "link_row_has",
-            "link_row_has_not",
-            "link_row_contains",
-            "link_row_not_contains",
-            "empty",
-            "not_empty"
-        ],
-        number: [
-            "equal",
-            "not_equal",
-            "contains",
-            "contains_not",
-            "higher_than",
-            "lower_than",
-            "empty",
-            "not_empty",
-        ],
-        rating : [
-            "equal",
-            "not_equal",
-            "higher_than",
-            "lower_than",
-        ],
-        boolean:[
-            "boolean",
-            "empty",
-            "not_empty",
-        ],
-        date:[
-            "date_equal",
-            "date_equal",
-            "date_not_equal",
-            "date_equals_today",
-            "date_before_today",
-            "date_after_today",
-            "date_equals_days_ago",
-            "date_equals_months_ago",
-            "date_equals_years_ago",
-            "date_equals_week",
-            "date_equals_month",
-            "date_equals_month",
-            "date_equals_year",
-            "date_equals_day_of_month",
-            "date_before",
-            "date_after",
-            "contains",
-            "contains_not",
-            "empty",
-            "not_empty"
-        ],
-        last_modified:[
-            "date_equal",
-            "date_equal",
-            "date_not_equal",
-            "date_equals_today",
-            "date_before_today",
-            "date_after_today",
-            "date_equals_days_ago",
-            "date_equals_months_ago",
-            "date_equals_years_ago",
-            "date_equals_week",
-            "date_equals_month",
-            "date_equals_month",
-            "date_equals_year",
-            "date_equals_day_of_month",
-            "date_before",
-            "date_after",
-            "contains",
-            "contains_not",
-            "empty",
-            "not_empty"
-        ],
-        created_on:[
-            "date_equal",
-            "date_equal",
-            "date_not_equal",
-            "date_equals_today",
-            "date_before_today",
-            "date_after_today",
-            "date_equals_days_ago",
-            "date_equals_months_ago",
-            "date_equals_years_ago",
-            "date_equals_week",
-            "date_equals_month",
-            "date_equals_month",
-            "date_equals_year",
-            "date_equals_day_of_month",
-            "date_before",
-            "date_after",
-            "contains",
-            "contains_not",
-            "empty",
-            "not_empty"
-        ],
-        url:[
-            "equal",
-            "not_equal",
-            "contains",
-            "contains_not",
-            "length_is_lower_than",
-            "empty",
-            "not_empty"
-        ],
-        email:[
-            "equal",
-            "not_equal",
-            "contains",
-            "contains_not",
-            "length_is_lower_than",
-            "empty",
-            "not_empty"
-        ],
-        file:[
-            "filename_contains",
-            "has_file_type",
-            "empty",
-            "not_empty"
-        ],
-        single_select:[
-            "single_select_equal",
-            "single_select_not_equal",
-            "contains",
-            "contains_not",
-            "empty",
-            "not_empty"
-        ],
-        multiple_select:[
-            "multiple_select_has",
-            "multiple_select_has_not",
-            "contains",
-            "contains_not",
-            "empty",
-            "not_empty"
-        ],
-        phone_number: [
-            "equal",
-            "not_equal",
-            "contains",
-            "contains_not",
-            "length_is_lower_than",
-            "empty",
-            "not_empty"
-        ]
+    	order_by = null;
     }
     
     
@@ -289,7 +272,7 @@ comment: |
         - java.lang.String: 
           - ↑value: 1666717386561
         - java.lang.String: 
-          - ↑value: ./document/results/object
+          - ↑value: ./document/results
   variableName: res
 ↓myVariable [steps.JsonSourceStep-1680699208395]: 
   sourceDefinition: 
@@ -311,8 +294,8 @@ comment: |
     	if (jConfig.displayValue) {
     		res = res.map((x) => {
     			return {
-    				displayValue: base_html + computeAnyType(x[displayValue]).innerHtml,
-    				value: computeAnyType(x[value]).value,
+    				displayValue: base_html + computeAnyType(x[displayValue] != null ? x[displayValue] : "").innerHtml,
+    				value: computeAnyType(x[value] != null ? x[value] : "").value,
     				type: "html"
     			}
     		})
@@ -326,11 +309,10 @@ comment: |
     		})
     
     	}
-    }
-    else {
-    	res = [];
-    }
-    '
+    	else {
+    		res = [];
+    	}
+    }'
 ↓object [steps.JsonToXmlStep-1680712764673]: 
   jsonObject: 
     - xmlizable: 
@@ -348,23 +330,50 @@ comment: |
   condition: model == "true" && "structure" in this
   ↓Sequence_JS [steps.SimpleStep-1680699255296]: 
     expression: |
-      'let data = [{}];
+      'include("js/utils.js");
+      var data = [{}];
       structure.forEach((e)=>{
       	if(jConfig.columns.indexOf(e.name) != -1){
       		e.filterHide = false;
       		// if target is formula use it''s formula_type
-      		var cType = e.type;
-      		if(cType == "formula"){
-      			cType = e.formula_type;
+      		var cTarget = structure.filter((x) => {
+      			return x.name == e.name
+      		})[0];
+      		// if target is formula use it''s formula_type
+      		var cType = cTarget != undefined ? cTarget.array_formula_type != null ? cTarget.array_formula_type : cTarget.type : null;
+      		if (cType == "formula") {
+      			cType = cTarget.formula_type;
       		}
-      		e.filterCompletion = verbsByType[cType];
-      		if(e.filterCompletion == null){
-      			e.filterCompletion = [];
+      		if (cType == "lookup") {
+      			cType = cTarget.formula_type;
       		}
+      		if (cType == "rollup") {
+      			cType = cTarget.formula_type;
+      		}
+      		if (cType == "count") {
+      			cType = cTarget.formula_type;
+      		}
+      		cTargetCompletion = verbsByType[cType];
+      		cHideFromFiltering = false;
+      		if (cTargetCompletion == undefined) {
+      			cTargetCompletion = [];
+      			cHideFromFiltering = true;
+      		}
+      		if (cTarget != null && cTarget.type == "single_select" && e.value == null) {
+      			e.value = {
+      				"id": 0,
+      				"value": "",
+      				"color": ""
+      			}
+      		}
+      		e["filterCompletion"] = cTargetCompletion;
+      		e["filterHide"] = cHideFromFiltering;
+      		e["sortHide"] = cHideFromFiltering || cType == "file" || cType == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select");
       		data[0][e.name] = e;
       	}
-      	
-      })'
+      })
+      
+      	'
   ↓data [steps.JsonToXmlStep-1680699661741]: 
     jsonObject: 
       - xmlizable: 
@@ -433,6 +442,28 @@ comment: |
   value: 
 ↓model [variables.RequestableVariable-1680688774991]: 
   comment: If true, just return one line of data so that No Code studio can compte the table model
+↓forms_tableSort [variables.RequestableVariable-1758530362488]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "Define a sort order to apply to a table",
+            "displayName": "Sort"
+        },
+        "fr": {
+            "comment": "Définir un ordre de tri à appliquer à la table",
+            "displayName": "Tri"
+        },
+        "es": {
+            "comment": "Definir un orden de clasificación para aplicar a la tabla",
+            "displayName": "Ordenar"
+        },
+        "it": {
+            "comment": "Definire un ordine di ordinamento da applicare alla tabella",
+            "displayName": "Ordina"
+        }
+    }
+    '
+  description: sort
 ↓TestWithFilter [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666717673009]: 
     comment: The Table ID you want to get data from

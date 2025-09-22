@@ -438,6 +438,9 @@ Get data from the no-code database table. You will be able to choose the columns
 <td>forms_Filter</td><td>Define a filter to apply to a table</td>
 </tr>
 <tr>
+<td>forms_tableSort</td><td>Define a sort order to apply to a table</td>
+</tr>
+<tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
 </tr>
 </table>

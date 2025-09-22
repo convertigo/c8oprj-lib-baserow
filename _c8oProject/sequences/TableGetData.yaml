@@ -11,25 +11,28 @@ comment: Gets data from a given table
     required: true
     value: 
 ↓jIf2 [steps.IfStep-1758277009819]: 
-  condition: 'order_by ? order_by.length != 0: false'
+  condition: order_by != null
   ↓BuildFilters [steps.SimpleStep-1758277009825]: 
     comment: Build the filters according to the API specs
     expression: |
-      'log.warn("order_by equalsss " + order_by);
-      var toto = "atat";
-      order_by = JSON.parse(order_by);
-      let result = "";
-      for(let item of order_by.sorts){
-      	result += (item.order == "asc" ? "" : "-") + item.name + ","
-      } 
-      result = result.substring(0, result.length - 1);
-      if(result.length > 0){
-      	order_by = result;
+      'try{
+      	order_by = JSON.parse(order_by);
+      	let result = "";
+      	for(let item of order_by.sorts){
+      		result += (item.order == "asc" ? "" : "-") + item.name + ","
+      	} 
+      	result = result.substring(0, result.length - 1);
+      	if(result.length > 0){
+      		order_by = result;
+      	}
+      	else{
+      		order_by = null;
+      	}
       }
-      else{
+      catch(e){
       	order_by = null;
       }
-      log.warn("built order by equals : " + order_by)'
+      '
 ↓jIf [steps.IfStep-1666632106805]: 
   condition: 'filterExpression ? filterExpression.length != 0: false'
   ↓JsonSource [steps.JsonSourceStep-1665925437972]: 
