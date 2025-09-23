@@ -1,0 +1,74 @@
+accessibility: Private
+comment: Updates a row in a table 
+↓Input_variables [steps.InputVariablesStep-1726234883405]: 
+↓Call_Sequence [steps.SequenceStep-1726214347583]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Call_Transaction [steps.TransactionStep-1726214296530]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___PATCH
+  ↓__body [variables.StepVariable-1726214296533]: 
+    required: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1726234883405
+          - java.lang.String: 
+            - ↑value: ./data/text()
+  ↓row_id [variables.StepVariable-1726214296536]: 
+    comment: Updates the row related to the value.
+    description: row_id
+    required: true
+  ↓table_id [variables.StepVariable-1726214296539]: 
+    comment: Updates the row in the table related to the value.
+    description: table_id
+    required: true
+  ↓user_field_names [variables.StepVariable-1726214296542]: 
+    comment: A flag query parameter which if provided this endpoint will expect and return the user specified field names instead of internal Baserow field names (field_123 etc).
+    description: user_field_names
+    value: true
+  ↓__header_Authorization [variables.StepVariable-1726214296545]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1726214347583
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+↓Copy [steps.XMLCopyStep-1726214296548]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1726214296530
+        - java.lang.String: 
+          - ↑value: ./document/object/*
+↓table_id [variables.RequestableVariable-1726214296551]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓row_id [variables.RequestableVariable-1726214296557]: 
+  comment: Insert row in this table_id
+  description: table_id
+  required: true
+↓data [variables.RequestableVariable-1726214296560]: 
+↓TestModifyNameAndTitle [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1726235022321]: 
+    description: table_id
+    required: true
+    value: 1641
+  ↓data [variables.TestCaseVariable-1726235022324]: 
+    required: true
+    value: |
+      '{
+          "Last name": "KKKK",
+          "Title": [
+              1,2,3,4
+          ]
+      }'
+  ↓row_id [variables.TestCaseVariable-1726235204987]: 
+    description: table_id
+    required: true
+    value: 1

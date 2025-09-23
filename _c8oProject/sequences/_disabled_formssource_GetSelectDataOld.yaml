@@ -1,0 +1,530 @@
+accessibility: Hidden
+comment: |
+  '{
+      "en": {
+          "displayName": "Get Data",
+          "comment": "Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name."
+      },
+      "fr": {
+          "displayName": "Récupérer les données",
+          "comment": "Récupérez des données à partir d''une table Baserow. Vous pourrez choisir les colonnes de Baserow pour les noms à afficher dans la liste déroulante et la colonne pour les valeurs de chaque nom."
+      },
+      "es": {
+          "displayName": "Obtener datos",
+          "comment": "Obtener datos de una tabla de Baserow. Podrá elegir las columnas de Baserow para que los nombres se muestren en la lista desplegable y la columna para los valores de cada nombre."
+      },
+      "it": {
+          "displayName": "Ottenere dati",
+          "comment": "Ottieni dati da una tabella di Baserow. Sarai in grado di scegliere le colonne di Baserow per i nomi da visualizzare nel menu a discesa e la colonna per i valori di ogni nome."
+      },
+      "types": ["select", "checkbox", "radio", "checkbox_group", "radio_group"]
+  }'
+↓Call_Sequence2 [steps.SequenceStep-1734701111116]: 
+  sourceSequence: lib_BaseRow.formscommon_CheckConfig
+  ↓forms_config [variables.StepVariable-1734701111119]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+↓IfError [steps.IfExistStep-1734701111122]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734701111116
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1734701111125]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1734701111116
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1734701111128]: 
+↓ParseConfig [steps.SimpleStep-1734701111131]: 
+  expression: |
+    'jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+    view_id = jConfig.view_id ? jConfig.view_id : null;
+    
+    if (jConfig.columns) {
+    	include_fields ="";
+    	jConfig.columns.forEach(col => include_fields += col +",")
+    	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
+    }
+    var displayValue = jConfig.displayValue != undefined ? jConfig.displayValue: jConfig.column;
+    var value = jConfig.value != undefined ? jConfig.value : jConfig.line;
+    
+    filterExpression = forms_Filter;					// This is the Constructed Fiter API for baserow.
+    
+    log.warn("form_filter is :" + forms_filter.length)
+    
+    if (forms_filter.length > 3)  					// This is the full text search API filed for baserow
+    	search= forms_filter 
+    
+    let describeStructure = false;
+    
+    if (model == "true") {
+    	log.warn("Forms Model True")
+    	size = "1";
+    	filterExpression = null;
+    	describeStructure = true;
+    }
+    let verbsByType = {
+    	text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        long_text: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        link_row: [
+            "link_row_has",
+            "link_row_has_not",
+            "link_row_contains",
+            "link_row_not_contains",
+            "empty",
+            "not_empty"
+        ],
+        number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "higher_than",
+            "lower_than",
+            "empty",
+            "not_empty",
+        ],
+        rating : [
+            "equal",
+            "not_equal",
+            "higher_than",
+            "lower_than",
+        ],
+        boolean:[
+            "boolean",
+            "empty",
+            "not_empty",
+        ],
+        date:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        last_modified:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        created_on:[
+            "date_equal",
+            "date_equal",
+            "date_not_equal",
+            "date_equals_today",
+            "date_before_today",
+            "date_after_today",
+            "date_equals_days_ago",
+            "date_equals_months_ago",
+            "date_equals_years_ago",
+            "date_equals_week",
+            "date_equals_month",
+            "date_equals_month",
+            "date_equals_year",
+            "date_equals_day_of_month",
+            "date_before",
+            "date_after",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        url:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        email:[
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ],
+        file:[
+            "filename_contains",
+            "has_file_type",
+            "empty",
+            "not_empty"
+        ],
+        single_select:[
+            "single_select_equal",
+            "single_select_not_equal",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        multiple_select:[
+            "multiple_select_has",
+            "multiple_select_has_not",
+            "contains",
+            "contains_not",
+            "empty",
+            "not_empty"
+        ],
+        phone_number: [
+            "equal",
+            "not_equal",
+            "contains",
+            "contains_not",
+            "length_is_lower_than",
+            "empty",
+            "not_empty"
+        ]
+    }
+    
+    
+    '
+↓Input_variables [steps.InputVariablesStep-1734701111134]: 
+↓Call_Sequence1 [steps.SequenceStep-1734701111137]: 
+  sourceSequence: lib_BaseRow.TableGetData
+  ↓exclude [variables.StepVariable-1734701111140]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+    description: exclude
+  ↓include_fields [variables.StepVariable-1734701111143]: 
+    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+    description: include
+  ↓order_by [variables.StepVariable-1734701111146]: 
+    comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+    description: order_by
+  ↓page [variables.StepVariable-1734701111149]: 
+    comment: Defines which page of rows should be returned.
+    description: page
+  ↓search [variables.StepVariable-1734701111152]: 
+    comment: If provided only rows with data that matches the search query are going to be returned.
+    description: search
+  ↓size [variables.StepVariable-1734701111155]: 
+    comment: Defines how many rows should be returned per page.
+    description: size
+  ↓table_id [variables.StepVariable-1734701111158]: 
+    comment: Returns the rows of the table related to the provided value.
+    description: table_id
+    required: true
+  ↓view_id [variables.StepVariable-1734701111161]: 
+    comment: Includes all the filters and sorts of the provided view.
+    description: view_id
+  ↓filterExpression [variables.StepVariable-1734701111164]: 
+  ↓describeStructure [variables.StepVariable-1734701111167]: 
+↓IfExist [steps.IfExistStep-1734701111170]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734701111137
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Error_structure [steps.XMLErrorStep-1734701111173]: 
+  ↓Return [steps.ReturnStep-1734701111176]: 
+↓myVariable1 [steps.JsonSourceStep-1734701111179]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734701111137
+        - java.lang.String: 
+          - ↑value: ./document/results/object
+  variableName: res
+↓myVariable [steps.JsonSourceStep-1734701111182]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734701111137
+        - java.lang.String: 
+          - ↑value: ./document/structure/object
+  variableName: structure
+↓computeValue [steps.SimpleStep-1734701111185]: 
+  expression: |
+    'if ("res" in this) {
+    	if (!(Array.isArray(res))) {
+    		res = [res];
+    	}
+    	if (jConfig.displayValue) {
+    		res = res.map((x) => {
+    			return {
+    				displayValue: x[displayValue],
+    				value: x[value]
+    			}
+    		})
+    	}
+    	else if (jConfig.column) {
+    		res = res.map((x) => {
+    			return {
+    				column: x[displayValue],
+    				line: x[value]
+    			}
+    		})
+    
+    	}
+    }
+    else {
+    	res = [];
+    }
+    
+    // Now fiter is done on the backend using the search API, so no use for the next lines...
+    /*
+    if(forms_filter != undefined && forms_filter != ""){
+    	res = res.filter((z)=>{
+    		return z.displayValue.toLowerCase().indexOf(forms_filter.toLowerCase()) != -1;
+    	})
+    }
+    */'
+↓object [steps.JsonToXmlStep-1734701111188]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: res
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: value
+↓jIf [steps.IfStep-1734701111191]: 
+  condition: model == "true" && "structure" in this
+  ↓Sequence_JS [steps.SimpleStep-1734701111194]: 
+    expression: |
+      'let data = [{}];
+      structure.forEach((e)=>{
+      	if(jConfig.columns.indexOf(e.name) != -1){
+      		e.filterHide = false;
+      		// if target is formula use it''s formula_type
+      		var cType = e.type;
+      		if(cType == "formula"){
+      			cType = e.formula_type;
+      		}
+      		e.filterCompletion = verbsByType[cType];
+      		if(e.filterCompletion == null){
+      			e.filterCompletion = [];
+      		}
+      		data[0][e.name] = e;
+      	}
+      	
+      })'
+  ↓data [steps.JsonToXmlStep-1734701111197]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: data
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: data
+↓forms_filter [variables.RequestableVariable-1734701111200]: 
+  comment: |
+    Filters
+    
+  description: 
+  required: true
+  value: 
+↓forms_config [variables.RequestableVariable-1734701111203]: 
+  comment: |
+    '{
+    	"en": {
+            "comment": "Choose a table in Baserow",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table dans Baserow",
+    		"displayName":"Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en Baserow",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in Baserow",
+            "displayName": "Configurazione"
+    	}
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/select
+  required: true
+  value: 
+↓forms_Filter [variables.RequestableVariable-1734701111206]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "Define a filter to apply to Baserow table",
+            "displayName": "Filter"
+        },
+        "fr": {
+            "comment": "Définir un filtre à appliquer à la table Baserow",
+            "displayName": "Filtre"
+        },
+        "es": {
+            "comment": "Definir un filtro para aplicar a la tabla de Baserow",
+            "displayName": "Filtro"
+        },
+        "it": {
+            "comment": "Definire un filtro da applicare alla tabella di Baserow",
+            "displayName": "Filtro"
+        }
+    }'
+  description: filter
+  required: true
+  value: 
+↓model [variables.RequestableVariable-1734701111209]: 
+  comment: If true, just return one line of data so that No Code studio can compte the table model
+↓TestWithFilter [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1734701111213]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "77",
+      	"columns": ["Number"]
+      }
+      '
+  ↓forms_tableFilter [variables.TestCaseVariable-1734701111216]: 
+    description: 
+    required: true
+    value: 100
+↓TestWithLinkedFileds [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1734701111220]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "661",
+      	"columns": ["Code", "Customer name"]
+      }
+      '
+↓TestWithLinkedFiledsAndOneCol [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1734701111224]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "661",
+      	"columns": ["Customer name"]
+      }
+      '
+↓TestWithNoFilter [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1734701111228]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Number"]
+      }
+      '
+↓TestWithNoFilterWith2Cols [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1734701111232]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Number", "Accommodates"]
+      }
+      '
+↓TestWithNoFilterWithCustomFilter [core.TestCase]: 
+  ↓forms_config [variables.TestCaseVariable-1734701111236]: 
+    comment: The Table ID you want to get data from
+    description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
+    required: true
+    value: |
+      '{
+      	"table_id": "660",
+      	"columns": ["Number", "Accommodates"]
+      }
+      '
+  ↓forms_tableFilter [variables.TestCaseVariable-1734701111239]: 
+    description: 
+    required: true
+    value: 
+  ↓forms_Filter [variables.TestCaseVariable-1734701111242]: 
+    description: 
+    required: true
+    value: |
+      '{
+      	"mode": "AND",  
+      	"filters": [
+      		{
+      			"field": "Number",  
+      			"op": "contains",	
+      			"value": "100"	
+      		}
+      	]
+      }
+      '

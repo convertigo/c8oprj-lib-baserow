@@ -1,26 +1,29 @@
-↑convertigo: 8.1.0.m006
+↑convertigo: 8.4.0.m006
 ↓lib_BaseRow [core.Project]: 
   comment: |
     '{
         "en": {
-            "displayName": "Baserow No Code Database",
-            "comment": "This is the Baserow No Code connector for Convertigo. Use this connector to exchange data with Baserow databases."
+            "displayName": "No Code Database",
+            "comment": "This is the no-code database connector for Convertigo. Use this connector to exchange data with no-code databases."
         },
         "fr": {
-            "displayName": "Base de donnée NoCode Baserow ",
-            "comment": "Connecteur aux base de données NoCode Baserow"
+            "displayName": "Base de donnée no-code",
+            "comment": "Connecteur aux base de données no-code"
         }
     }'
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.0.29
+  version: 1.1.42
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
+  ↓c8oforms_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_fs.yaml
+  ↓c8oforms_response_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_response_fs.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
+  ↓_disabled_formssource_GetSelectDataOld [sequences.GenericSequence]: 🗏 sequences/_disabled_formssource_GetSelectDataOld.yaml
+  ↓_disabled_formssource_GetTableDataOld [sequences.GenericSequence]: 🗏 sequences/_disabled_formssource_GetTableDataOld.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
   ↓AdminUserCreate [sequences.GenericSequence]: 🗏 sequences/AdminUserCreate.yaml
   ↓AdminUserDelete [sequences.GenericSequence]: 🗏 sequences/AdminUserDelete.yaml
-  ↓ApplicationsList [sequences.GenericSequence]: 🗏 sequences/ApplicationsList.yaml
   ↓AssetFileUpload [sequences.GenericSequence]: 🗏 sequences/AssetFileUpload.yaml
   ↓ClearTableIdCache [sequences.GenericSequence-1703166628211]: 🗏 sequences/ClearTableIdCache.yaml
   ↓DatabaseTokenCreate [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenCreate.yaml
@@ -29,6 +32,11 @@
   ↓FieldsList [sequences.GenericSequence]: 🗏 sequences/FieldsList.yaml
   ↓FieldsListApiKey [sequences.GenericSequence]: 🗏 sequences/FieldsListApiKey.yaml
   ↓forms_AddRow [sequences.GenericSequence]: 🗏 sequences/forms_AddRow.yaml
+  ↓forms_AddRowFromData [sequences.GenericSequence]: 🗏 sequences/forms_AddRowFromData.yaml
+  ↓forms_DeleteRow [sequences.GenericSequence]: 🗏 sequences/forms_DeleteRow.yaml
+  ↓formscommon_ApplicationsList [sequences.GenericSequence]: 🗏 sequences/formscommon_ApplicationsList.yaml
+  ↓formscommon_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formscommon_CheckConfig.yaml
+  ↓formscommon_FieldsList [sequences.GenericSequence-1729515070603]: 🗏 sequences/formscommon_FieldsList.yaml
   ↓formssource_GetFieldValues [sequences.GenericSequence]: 🗏 sequences/formssource_GetFieldValues.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
@@ -39,6 +47,7 @@
   ↓TableBulkExportWaitFInished [sequences.GenericSequence]: 🗏 sequences/TableBulkExportWaitFInished.yaml
   ↓TableBulkImportFromCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkImportFromCSV.yaml
   ↓TableBulkUpdateFromCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkUpdateFromCSV.yaml
+  ↓TableCreateColumn [sequences.GenericSequence]: 🗏 sequences/TableCreateColumn.yaml
   ↓TableCreateRow [sequences.GenericSequence]: 🗏 sequences/TableCreateRow.yaml
   ↓TableCreateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableCreateRowApiKey.yaml
   ↓TableCreateRows [sequences.GenericSequence]: 🗏 sequences/TableCreateRows.yaml
@@ -53,17 +62,15 @@
   ↓TableGetRowByIdApiKey [sequences.GenericSequence]: 🗏 sequences/TableGetRowByIdApiKey.yaml
   ↓TableGetViews [sequences.GenericSequence]: 🗏 sequences/TableGetViews.yaml
   ↓TableReadRow [sequences.GenericSequence]: 🗏 sequences/TableReadRow.yaml
+  ↓TableUpdateRow [sequences.GenericSequence]: 🗏 sequences/TableUpdateRow.yaml
   ↓TableUpdateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableUpdateRowApiKey.yaml
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
-  ↓C8Oforms_reference [references.ProjectSchemaReference]: 
-    projectName: C8Oforms
   ↓CouchDb_schema [references.ImportXsdSchemaReference]: 
     urlpath: http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd
   ↓lib_ExtendedComponents_ui_ngx_reference [references.ProjectSchemaReference]: 
-    projectName: lib_ExtendedComponents_ui_ngx=https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx.git:branch=8.1.0.0
-  ↓Project_reference [references.ProjectSchemaReference]: 
-    comment: ngx builder template
-    projectName: mobilebuilder_tpl_8_1_0_ngx=https://github.com/convertigo/c8oprj-mobilebuilder-tpl/archive/mobilebuilder_tpl_8_1_0_ngx.zip
+    projectName: lib_ExtendedComponents_ui_ngx=https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx.git:branch=v8.4.0.21
+  ↓project [references.ProjectSchemaReference]: 
+    projectName: mobilebuilder_tpl_8_4_0_ngx=https://github.com/convertigo/c8oprj-mobilebuilder-tpl/archive/mobilebuilder_tpl_8_4_0_ngx.zip
   ↓Application [core.MobileApplication]: 
     comment: Describes the mobile application global properties
     splashRemoveMode: beforeUpdate

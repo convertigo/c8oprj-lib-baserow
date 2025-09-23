@@ -1,7 +1,5 @@
-accessibility: Hidden
-authenticatedContextRequired: true
+accessibility: Private
 comment: Lists all the fields in a baserow table
-responseExpiryDate: absolute,60
 ↓Call_Sequence [steps.SequenceStep-1667802514338]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
 ↓Call_Transaction [steps.TransactionStep-1665297256060]: 
@@ -19,7 +17,6 @@ responseExpiryDate: absolute,60
     comment: Returns only the fields of the table related to the provided value.
     description: table_id
     required: true
-    value: 
 ↓Copy [steps.XMLCopyStep-1665297256066]: 
   sourceDefinition: 
     - xmlizable: 
@@ -38,7 +35,7 @@ responseExpiryDate: absolute,60
   ↓table_id [variables.TestCaseVariable-1665298068600]: 
     description: table_id
     required: true
-    value: 191
+    value: 109
 ↓TestOK1 [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1665917990559]: 
     description: table_id

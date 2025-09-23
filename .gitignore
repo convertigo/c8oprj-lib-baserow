@@ -21,3 +21,6 @@
 /oas3/
 
 /build/
+.DS_Store
+/attachments/**
+!/attachments/.gitkeep

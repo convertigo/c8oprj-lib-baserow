@@ -1,0 +1,9 @@
+databaseName: c8oforms_response_fs
+↓GetDocumentAttachment [transactions.couchdb.GetDocumentAttachmentTransaction]: 
+  ↑default: true
+  ↓_use_attname [variables.RequestableVariable-1740149879519]: 
+    description: Attachment name
+  ↓_use_docid [variables.RequestableVariable-1740149879522]: 
+    description: Document ID
+  ↓_use_attpath [variables.RequestableVariable-1740149879525]: 
+    description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>

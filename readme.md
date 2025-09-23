@@ -20,10 +20,11 @@ For more technical informations : [documentation](./project.md)
 
 - [Installation](#installation)
 - [Sequences](#sequences)
+    - [_disabled_formssource_GetSelectDataOld](#_disabled_formssource_getselectdataold)
+    - [_disabled_formssource_GetTableDataOld](#_disabled_formssource_gettabledataold)
     - [AdminLogin](#adminlogin)
     - [AdminUserCreate](#adminusercreate)
     - [AdminUserDelete](#adminuserdelete)
-    - [ApplicationsList](#applicationslist)
     - [AssetFileUpload](#assetfileupload)
     - [ClearTableIdCache](#cleartableidcache)
     - [DatabaseTokenCreate](#databasetokencreate)
@@ -32,6 +33,11 @@ For more technical informations : [documentation](./project.md)
     - [FieldsList](#fieldslist)
     - [FieldsListApiKey](#fieldslistapikey)
     - [forms_AddRow](#forms_addrow)
+    - [forms_AddRowFromData](#forms_addrowfromdata)
+    - [forms_DeleteRow](#forms_deleterow)
+    - [formscommon_ApplicationsList](#formscommon_applicationslist)
+    - [formscommon_CheckConfig](#formscommon_checkconfig)
+    - [formscommon_FieldsList](#formscommon_fieldslist)
     - [formssource_GetFieldValues](#formssource_getfieldvalues)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
@@ -42,6 +48,7 @@ For more technical informations : [documentation](./project.md)
     - [TableBulkExportWaitFInished](#tablebulkexportwaitfinished)
     - [TableBulkImportFromCSV](#tablebulkimportfromcsv)
     - [TableBulkUpdateFromCSV](#tablebulkupdatefromcsv)
+    - [TableCreateColumn](#tablecreatecolumn)
     - [TableCreateRow](#tablecreaterow)
     - [TableCreateRowApiKey](#tablecreaterowapikey)
     - [TableCreateRows](#tablecreaterows)
@@ -56,9 +63,12 @@ For more technical informations : [documentation](./project.md)
     - [TableGetRowByIdApiKey](#tablegetrowbyidapikey)
     - [TableGetViews](#tablegetviews)
     - [TableReadRow](#tablereadrow)
+    - [TableUpdateRow](#tableupdaterow)
     - [TableUpdateRowApiKey](#tableupdaterowapikey)
     - [TokenGetOrRefresh](#tokengetorrefresh)
 - [Mobile Library](#mobile-library)
+    - [Shared Actions](#shared-actions)
+        - [DisplayTableColumns](#displaytablecolumns)
     - [Shared Components](#shared-components)
         - [BaseRowGrid](#baserowgrid)
 
@@ -72,13 +82,13 @@ For more technical informations : [documentation](./project.md)
      <tr><td>To contribute</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow.git:branch=master
+     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow.git:branch=8.4.x
      ```
      </td></tr>
      <tr><td>To simply use</td><td>
 
      ```
-     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow/archive/master.zip
+     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow/archive/8.4.x.zip
      ```
      </td></tr>
     </table>
@@ -86,6 +96,52 @@ For more technical informations : [documentation](./project.md)
 
 
 ## Sequences
+
+### _disabled_formssource_GetSelectDataOld
+
+Get data from a Baserow table. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in Baserow</td>
+</tr>
+<tr>
+<td>forms_filter</td><td>Filters
+</td>
+</tr>
+<tr>
+<td>forms_Filter</td><td>Define a filter to apply to Baserow table</td>
+</tr>
+<tr>
+<td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
+</tr>
+</table>
+
+### _disabled_formssource_GetTableDataOld
+
+Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in Baserow</td>
+</tr>
+<tr>
+<td>forms_tableFilter</td><td>Define a filter to apply to Baserow table</td>
+</tr>
+<tr>
+<td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
+</tr>
+</table>
 
 ### AdminLogin
 
@@ -119,9 +175,6 @@ Create a user
 <td>email</td><td></td>
 </tr>
 <tr>
-<td>language</td><td></td>
-</tr>
-<tr>
 <td>name</td><td></td>
 </tr>
 <tr>
@@ -143,10 +196,6 @@ Delete a User
 <td>user_id</td><td>The id of the user to delete</td>
 </tr>
 </table>
-
-### ApplicationsList
-
-Lists all applications (databases) in baserow
 
 ### AssetFileUpload
 
@@ -240,7 +289,7 @@ Lists all the fields in a baserow table
 
 ### forms_AddRow
 
-Add a row to a Baserow table. Each column of the table must have the same name as the technicalID of a field on the form. Forms fields can be any type, but usually select lists are mapped on Baserow Linked Columns.
+Add or update a row in a table. If a column in the table has the same name as the technical ID of a form field, the data will be inserted into that column. If the 'Columns creation' option is enabled, a column will be created when the technical ID of a form field does not match any column in the form. Form fields can be of any type, but typically, selection lists are mapped to linked columns.
 
 **variables**
 
@@ -252,16 +301,78 @@ Add a row to a Baserow table. Each column of the table must have the same name a
 <td>doc</td><td></td>
 </tr>
 <tr>
-<td>forms_config</td><td>Creates a row in a table with a given configuration</td>
+<td>forms_config</td><td>Choose a table in the no-code database</td>
+</tr>
+<tr>
+<td>forms_createColumn</td><td>Create a column if a field identifier does not match any column in the table</td>
+</tr>
+<tr>
+<td>forms_id</td><td>The Identifier of the row to update. If not set, the action will add a row. If set, all row's columns identified by the 'technicalID' will be updated</td>
 </tr>
 <tr>
 <td>originalDoc</td><td></td>
 </tr>
 </table>
 
-### formssource_GetFieldValues
+### forms_AddRowFromData
 
-Get all possible values for a given field to feed a Select
+Add or update a row in a table. Add columns to fill by pressing the + button, and entering a column name and a value for the column. This operation can be repeated as many times as necessary. If 'Create Columns' option is enabled, a column will be created when the provided column name does not match any column in the table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>doc</td><td></td>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in the no-code database</td>
+</tr>
+<tr>
+<td>forms_createColumn</td><td>Create a column if a field identifier does not match any column in the table</td>
+</tr>
+<tr>
+<td>forms_freeVars</td><td>Enter a column name and a value to associate with it</td>
+</tr>
+<tr>
+<td>forms_id</td><td>The Identifier of the row to update. If not set, the action will add a row. If set, all row's columns identified by the 'technicalID' will be updated</td>
+</tr>
+<tr>
+<td>originalDoc</td><td></td>
+</tr>
+</table>
+
+### forms_DeleteRow
+
+Deletes a data row from a table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>doc</td><td></td>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table in the no-code database</td>
+</tr>
+<tr>
+<td>forms_id</td><td>The Identifier of the row to delete</td>
+</tr>
+<tr>
+<td>originalDoc</td><td></td>
+</tr>
+</table>
+
+### formscommon_ApplicationsList
+
+Lists all applications (databases) in baserow
+
+### formscommon_CheckConfig
 
 **variables**
 
@@ -274,9 +385,7 @@ Get all possible values for a given field to feed a Select
 </tr>
 </table>
 
-### formssource_GetSelectData
-
-Get data from a Baserow table as options for a Select component. You will be able to choose the Baserow columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+### formscommon_FieldsList
 
 **variables**
 
@@ -285,15 +394,51 @@ Get data from a Baserow table as options for a Select component. You will be abl
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item</td>
+<td>forms_config</td><td>Choose a table in Baserow</td>
+</tr>
+</table>
+
+### formssource_GetFieldValues
+
+Retrieve all possible values from a dropdown list.
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table</td>
+</tr>
+<tr>
+<td>forms_filter</td><td>Filters
+</td>
+</tr>
+</table>
+
+### formssource_GetSelectData
+
+Get data from the no-code database table. You will be able to choose the columns for the names to be displayed in the select dropdown list and the column for the values of each name.
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>Choose a table</td>
 </tr>
 <tr>
 <td>forms_filter</td><td>Filters
 </td>
 </tr>
 <tr>
-<td>forms_Filter</td><td>A custom filter following  JSON styntax
-</td>
+<td>forms_Filter</td><td>Define a filter to apply to a table</td>
+</tr>
+<tr>
+<td>forms_tableSort</td><td>Define a sort order to apply to a table</td>
 </tr>
 <tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
@@ -302,7 +447,7 @@ Get data from a Baserow table as options for a Select component. You will be abl
 
 ### formssource_GetTableData
 
-Get data from a Baserow table for a data grid. Each column of the Baserow table will be displayed as the same column in the data grid
+Get data from the no-code database table for a data grid. Each column of the table will be displayed as the same column in the data grid
 
 **variables**
 
@@ -311,11 +456,13 @@ Get data from a Baserow table for a data grid. Each column of the Baserow table 
 <th>name</th><th>comment</th>
 </tr>
 <tr>
-<td>forms_config</td><td>Returns the rows of the table with a given configuration</td>
+<td>forms_config</td><td>Choose a table</td>
 </tr>
 <tr>
-<td>forms_tableFilter</td><td>Filters
-</td>
+<td>forms_tableFilter</td><td>Define a filter to apply to a table</td>
+</tr>
+<tr>
+<td>forms_tableSort</td><td>Define a sort order to apply to a table</td>
 </tr>
 <tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
@@ -479,6 +626,24 @@ Updates or inserts data in a Table from a CSV file. Given a list of column names
 </tr>
 <tr>
 <td>uniqueFields</td><td>List of fields name  representing an unique line in the CSV identifying the line to be updated in the table. (Can be only one field)</td>
+</tr>
+</table>
+
+### TableCreateColumn
+
+Creates a row  in a table
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>data</td><td>A JSON object with each field name and value</td>
+</tr>
+<tr>
+<td>table_id</td><td>Insert row in this table_id</td>
 </tr>
 </table>
 
@@ -934,6 +1099,27 @@ Reads a row from a  from a given table
 </tr>
 </table>
 
+### TableUpdateRow
+
+Updates a row in a table 
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>data</td><td></td>
+</tr>
+<tr>
+<td>row_id</td><td>Insert row in this table_id</td>
+</tr>
+<tr>
+<td>table_id</td><td>Insert row in this table_id</td>
+</tr>
+</table>
+
 ### TableUpdateRowApiKey
 
 Updates a row in a table ising apikey instead of credentials
@@ -962,15 +1148,53 @@ Updates a row in a table ising apikey instead of credentials
 
 Gets a token or refresh it if the token is expired the Token will be placed in the current user session
 
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>email</td><td>The Base row admin email</td>
+</tr>
+<tr>
+<td>password</td><td>The baserow admin password</td>
+</tr>
+</table>
+
 ## Mobile Library
 
 Describes the mobile application global properties
+
+### Shared Actions
+
+#### DisplayTableColumns
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td></td>
+</tr>
+</table>
 
 ### Shared Components
 
 #### BaseRowGrid
 
-Provides an infinite paginated Grid that can be fed by data from a BaseRow No Code database.
+Provides an infinite paginated data Grid that can be fed by data from a BaseRow No Code database. The data grid supports pagination or infinite scroll.
+
+## Setting grid height
+
+By default the height property is set to 'auto'. This means that the grid height will automatically be adjusted to the height of its content. In paginated mode (pagination = true) this will be height of the number of lines in page. You can explicitly set the height a CSS measure unit such a 400px or 300pt. You can set the height to a % of the its container height such as 100%
+
+When using infinite scroll mode (pagination=false) never use height='auto' if the grid is inserted in a scrollable component such as **Content**. If you do so the grid will try to adjust its height with an infinite height and crash. To prevent this set the height to a fixed size in PX or have its container's height constrained.
+
+
+
 
 **variables**
 
@@ -985,17 +1209,13 @@ Provides an infinite paginated Grid that can be fed by data from a BaseRow No Co
 <td>ariaLabel</td><td></td>
 </tr>
 <tr>
-<td>autoSizeColumns</td><td></td>
+<td>autoSizeColumns</td><td>If true, columns will sized to fit their content</td>
 </tr>
 <tr>
-<td>class</td><td>One of the themes provided here :
-
-https://www.ag-grid.com/javascript-grid-themes-provided/
-
-Also be shure to add the theme in the Theme object as :
-
-@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.scss";
-
+<td>dataSource</td><td>The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
+<pre>MyProject.Hotel_BookingsRoomsList</pre>
+<pre>.Hotel_BookingsRoomsList</pre>
+Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
 
 
 </td>
@@ -1004,7 +1224,7 @@ Also be shure to add the theme in the Theme object as :
 <td>defaultColDef</td><td>default is {hide: false, editable: true, sortable: true, resizable: true, filter: true, checkboxSelection: false, singleClickEdit: false}</td>
 </tr>
 <tr>
-<td>Filters</td><td>An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
+<td>filters</td><td>An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
 
 <pre>
 {
@@ -1039,20 +1259,13 @@ Will fill the grid with all records where column *Type* *Contains* to *small_air
 <td>id</td><td>An Optional ID</td>
 </tr>
 <tr>
-<td>ListSequenceName</td><td>The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
-
-<pre>MyProject.Hotel_BookingsRoomsList</pre>
-
-Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
-
-
-</td>
-</tr>
-<tr>
 <td>overlayLoadingTemplate</td><td></td>
 </tr>
 <tr>
 <td>overlayNoRowsTemplate</td><td></td>
+</tr>
+<tr>
+<td>pagination</td><td>true : paginate, false : infinitescroll (Warning! do not use height='auto' in this case)</td>
 </tr>
 <tr>
 <td>paginationPageSize</td><td>integer: 10 by default</td>
@@ -1067,20 +1280,21 @@ Where *MyProject* is the name of the project holding the Sequence and *Hotel_Boo
 <td>rowSelection</td><td>string: 'single' (default) or 'multiple'</td>
 </tr>
 <tr>
-<td>Search</td><td>Will only return data that matches this search whatever the column is 
+<td>search</td><td>Will only return data that matches this search whatever the column is. This is a dynamic variable meaning that if modified bounded to search field for example each time the search changes the grid will be refreshed with the new search.
+
 </td>
 </tr>
 <tr>
-<td>suppressCellSelection</td><td></td>
+<td>suppressCellSelection</td><td>Enables or not cell selection</td>
 </tr>
 <tr>
-<td>suppressRowClickSelection</td><td></td>
+<td>suppressRowClickSelection</td><td>Enables or not row selection</td>
 </tr>
 <tr>
 <td>width</td><td>width value in % or px</td>
 </tr>
 <tr>
-<td>wrapperClass</td><td>Height of the row in pixels as a string</td>
+<td>wrapperClass</td><td>A class name for the grid container</td>
 </tr>
 </table>
 

@@ -1,4 +1,53 @@
-comment: Provides an infinite paginated Grid that can be fed by data from a BaseRow No Code database.
+comment: |
+  'Provides an infinite paginated data Grid that can be fed by data from a BaseRow No Code database. The data grid supports pagination or infinite scroll.
+  
+  ## Setting grid height
+  
+  By default the height property is set to ''auto''. This means that the grid height will automatically be adjusted to the height of its content. In paginated mode (pagination = true) this will be height of the number of lines in page. You can explicitly set the height a CSS measure unit such a 400px or 300pt. You can set the height to a % of the its container height such as 100%
+  
+  When using infinite scroll mode (pagination=false) never use height=''auto'' if the grid is inserted in a scrollable component such as **Content**. If you do so the grid will try to adjust its height with an infinite height and crash. To prevent this set the height to a fixed size in PX or have its container''s height constrained.
+  
+  
+  '
+scriptContent: 
+  - xmlizable: 
+    - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
+    - com.twinsoft.convertigo.beans.common.FormatedContent: 
+      →: |
+        /*Begin_c8o_CompImport*/
+        /*End_c8o_CompImport*/
+        /*Begin_c8o_CompDeclaration*/
+        	/*End_c8o_CompDeclaration*/
+        /*Begin_c8o_CompConstructor*/
+        		/*End_c8o_CompConstructor*/
+        /*Begin_c8o_CompInitialization*/
+        		/*End_c8o_CompInitialization*/
+        /*Begin_c8o_CompFinalization*/
+        		/*End_c8o_CompFinalization*/
+        /*Begin_c8o_CompChanges*/
+        		// Check new Search value
+        		if (changes.search != undefined && changes.search.currentValue != undefined && changes.search.previousValue != undefined) {
+        			// get the agGrid instance api
+        			if (this.lib_extendedcomponents_ui_ngx_aggrid != undefined) {
+        				let api = this.lib_extendedcomponents_ui_ngx_aggrid.api;
+        				api.refreshInfiniteCache();
+        			}
+        		}
+        		
+        		/*End_c8o_CompChanges*/
+        /*Begin_c8o_CompDoCheck*/
+        		/*End_c8o_CompDoCheck*/
+        /*Begin_c8o_CompAfterContentInit*/
+        		/*End_c8o_CompAfterContentInit*/
+        /*Begin_c8o_CompAfterContentChecked*/
+        		/*End_c8o_CompAfterContentChecked*/
+        /*Begin_c8o_CompAfterViewInit*/
+        		/*End_c8o_CompAfterViewInit*/
+        /*Begin_c8o_CompAfterViewChecked*/
+        		/*End_c8o_CompAfterViewChecked*/
+        /*Begin_c8o_CompFunction*/
+        	/*End_c8o_CompFunction*/
+        
 ↓tag [ngx.components.UIUseShared-1682233502820]: 
   sharedcomponent: lib_ExtendedComponents_ui_ngx.MobileApplication.Application.agGrid
   ↓pagination [ngx.components.UIUseVariable-1682233502823]: 
@@ -6,7 +55,7 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
     varValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: script:true
+        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.pagination","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓paginationPageSize [ngx.components.UIUseVariable-1682233502826]: 
     comment: 'integer: 10 by default'
     varValue: 
@@ -31,18 +80,6 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
         - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.defaultColDef","prefix":"","suffix":"","custom":"","useCustom":false}}
-  ↓columnDefs [ngx.components.UIUseVariable-1682233502838]: 
-    comment: 'Array of columnDef {headerName: ''headerName'', field: ''fieldName''} objects'
-    varValue: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: source:{"filter":"Local","project":"lib_ExtendedComponents_ui_ngx","input":"","model":{"data":[{"localObject":"local"}],"path":"?.dataDef","prefix":"","suffix":"?.columnDefs","custom":"","useCustom":false}}
-  ↓rowData [ngx.components.UIUseVariable-1682233502841]: 
-    comment: 'Array of row { fieldName1: ''value1'', fieldName2: ''value2'', fieldName3: true, ...} objects'
-    varValue: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: source:{"filter":"Local","project":"lib_ExtendedComponents_ui_ngx","input":"","model":{"data":[{"localObject":"local"}],"path":"?.dataDef","prefix":"","suffix":"?.rowData","custom":"","useCustom":false}}
   ↓width [ngx.components.UIUseVariable-1682233502844]: 
     comment: width value in % or px
     varValue: 
@@ -55,23 +92,6 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
         - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.height","prefix":"","suffix":"","custom":"","useCustom":false}}
-  ↓class [ngx.components.UIUseVariable-1682233502850]: 
-    comment: |
-      'One of the themes provided here :
-      
-      https://www.ag-grid.com/javascript-grid-themes-provided/
-      
-      Also be shure to add the theme in the Theme object as :
-      
-      @import "../../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.scss";
-      
-      
-      
-      '
-    varValue: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-        - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.class","prefix":"","suffix":"","custom":"","useCustom":false}}
   ↓id [ngx.components.UIUseVariable-1682233502853]: 
     comment: An Optional ID
     varValue: 
@@ -188,17 +208,65 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
               		let size = vars.limit
               		let brPage = 1 + vars.skip / vars.limit
               		page.c8o.log.warn(''size is : '' + size  + '' Page is : '' + brPage)
+              
+              		/* Build baserow filters based on agGrid filters avilable in vars.params.filterModel. Each filter is an object with the following properties: 
+              		 		filterModel {
+              					columnName1 {
+              						filterType: ''text''
+              			            type: ''contains''
+              						filter: ''text to filter1''
+              					} 
+              					columnName2 {
+              						filterType: ''text''
+              			            type: ''equals''
+              						filter: ''text to filter2''
+              					}
+              				}
+              				
+              				
+              				We have to build baserow filters in this format:
+              				{
+              					"filter_type": "AND",
+              					"filters": [
+              						{"field": "columnName1", "type": "contains", "value": "text to filter1"},
+              						{"field": "columnName2", "type": "equal", "value": "text to filter2"}
+              					]
+              				}
+              		*/
               		
+              		let brFilters = null;
+              		if (vars.params.filterModel) {
+              			let filters = []
+              			Object.keys(vars.params.filterModel).forEach((key) => {
+              				let filter = vars.params.filterModel[key]
+              				let filterObj = {
+              					field: key,
+              					type: filter.type,
+              					value: filter.filter
+              				}
+              				filters.push(filterObj)
+              			})
+              
+              			brFilters = {
+              				filter_type: ''AND'',
+              				filters: filters
+              			}
+              		}
+              				
               		let args = {
               			size: size,
               			page: brPage, 
-              			search: vars.search ? vars.search: null 
+              			search: vars.search ? vars.search: null ,
+              			// filters: JSON.stringify(brFilters) 				// TODO : As of today list sequences do not support filters so this will not work
               		}
               		
               		if (vars.filters)
               			Object.assign(args, vars.filters)
+              			
               		
-              		page.c8o.callJsonObject(vars.requestable, args)
+              		let rq = vars.requestable;
+              		
+              		page.c8o.callJsonObject(rq, args)
               		.async()
               		.then((response : any)=> {
               			if (response.object.error) {
@@ -208,41 +276,68 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
               			
               			let colDefs = [];
               			let rowData = [];
-              			let keys = Object.keys(response.object.results[0])
-              			for (let i=0; i < keys.length ; i++) {
-              				if (keys[i] != ''order'')
-              					colDefs.push({
-              						headerName: keys[i],
-              						field: keys[i]
-              					})
-              			}
               			
-              			for (let i = 0; i < response.object.results.length; i ++) {
-              				let row = {};
-              				for (let j = 0; j < keys.length; j++) {
-              					if (keys[j] != ''order'') {
-              						//console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
-              						
-              						if (typeof response.object.results[i][keys[j]] == ''object'') {
-              							if (Array.isArray(response.object.results[i][keys[j]])) {
-              								let text = ""
-              								for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
-              									if (response.object.results[i][keys[j]][k])
-              										text += response.object.results[i][keys[j]][k].value + '', '' 
-              								}
-              								row[keys[j]] = text;
-              							} else {
-              								if (response.object.results[i][keys[j]])
-              									row[keys[j]] = response.object.results[i][keys[j]].value
+              			if (response.object.count != 0) {
+              				let keys = Object.keys(response.object.results[0])
+              				for (let i=0; i < keys.length ; i++) {
+              					if (keys[i] != ''order'')
+              						if (Array.isArray(response.object.results[0][keys[i]])) {
+              							// console.log(''Array found in header'')
+              							let obj = response.object.results[0][keys[i]][0]
+              							if (obj?.url)  {
+              								//  console.log(''Array Image Column found in header'')
+              								colDefs.push({
+              									headerName: keys[i],
+              									field: keys[i],
+              									cellRenderer: window[''brCellRenderer'']
+              								})
               							}
               						} else {
-              							row[keys[j]] = response.object.results[i][keys[j]]
+              							colDefs.push({
+              								headerName: keys[i],
+              								field: keys[i],
+              								/*	TODO: as of today sequence list does not support filters so we disable it
+              								filter: ''agTextColumnFilter'',
+              								filterParams: {
+              									suppressAndOrCondition: true,
+              								}
+              								*/
+              							})
+              						}
+              				}
+              				
+              				for (let i = 0; i < response.object.results.length; i ++) {
+              					let row = {};
+              					for (let j = 0; j < keys.length; j++) {
+              						if (keys[j] != ''order'') {
+              							//console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
+              							
+              							if (typeof response.object.results[i][keys[j]] == ''object'') {
+              								if (Array.isArray(response.object.results[i][keys[j]])) {
+              									if (response.object.results[i][keys[j]][0]?.url) {
+              										row[keys[j]] = response.object.results[i][keys[j]]
+              									} else {
+              										let text = ""
+              										for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
+              											if (response.object.results[i][keys[j]][k])
+              												text += response.object.results[i][keys[j]][k].value + '', ''
+              											
+              											row[keys[j]] = text;
+              										}
+              									}
+              								} else {
+              									if (response.object.results[i][keys[j]])
+              										row[keys[j]] = response.object.results[i][keys[j]].value
+              								}
+              							} else {
+              								row[keys[j]] = response.object.results[i][keys[j]]
+              							}
               						}
               					}
+              					rowData.push(row);
               				}
-              				rowData.push(row);
               			}
-              	
+              				
               			let output = {
               				ColDef: colDefs,
               				RowData : rowData,
@@ -256,7 +351,7 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
         varValue: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-            - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.ListSequenceName","prefix":"","suffix":"","custom":"","useCustom":false}}
+            - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.dataSource","prefix":"","suffix":"","custom":"","useCustom":false}}
       ↓InvokeSharedAction [ngx.components.UIDynamicInvoke-1682850406387]: 
         beanData: '{"ionBean":"InvokeAction"}'
         stack: lib_ExtendedComponents_ui_ngx.MobileApplication.Application.agGridUpdateRows
@@ -292,111 +387,63 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
         varValue: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-            - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.Search","prefix":"","suffix":"","custom":"","useCustom":false}}
+            - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.search","prefix":"","suffix":"","custom":"","useCustom":false}}
       ↓filters [ngx.components.UIControlVariable-1682960943468]: 
         varValue: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-            - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.Filters","prefix":"","suffix":"","custom":"","useCustom":false}}
+            - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682233502817,"regular":true}],"path":"?.filters","prefix":"","suffix":"","custom":"","useCustom":false}}
+      ↓params [ngx.components.UIControlVariable-1719937229335]: 
+        varValue: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+            - MobileSmartSourceType: source:{"filter":"Action","project":"lib_BaseRow","input":"","model":{"data":[{"priority":1682327850655,"rootEvent":true,"pageLocals":false}],"path":"?.out","prefix":"","suffix":"","custom":"","useCustom":false}}
 ↓SharedComponent_Event [ngx.components.UISharedComponentEvent-1682233502889]: 
-  ↓BuildDataDefs [ngx.components.UICustomAction-1682233502892]: 
+  ↓SetupCellRenderer [ngx.components.UICustomAction-1719849580882]: 
     actionValue: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.FormatedContent
         - com.twinsoft.convertigo.beans.common.FormatedContent: 
           →: |
             '		page.c8o.log.debug(''[MB] ''+ props.actionFunction +'': ''+ props.actionName);
-            		
-            		page.c8o.callJsonObject(vars.Requestable, {
-            			size: vars.limit,
-            			page: 1
-            		})
-            		.async()
-            		.then((response : any)=> {
-            			// page.c8o.log.warn(''OUtput'' +  JSON.stringify(response));
-            			
-            			let colDefs = [];
-            			let rowData = [];
-            			let keys = Object.keys(response.object.results[0])
-            			for (let i=0; i < keys.length ; i++) {
-            				if (keys[i] != ''order'')
-            					colDefs.push({
-            						headerName: keys[i],
-            						field: keys[i]
-            					})
-            			}
-            			
-            			for (let i = 0; i < response.object.results.length; i ++) {
-            				let row = {};
-            				for (let j = 0; j < keys.length; j++) {
-            					if (keys[j] != ''order'') {
-            						console.log(keys[j] + '' is : '' + typeof response.object.results[i][keys[j]]);
-            						
-            						if (typeof response.object.results[i][keys[j]] == ''object'') {
-            							if (Array.isArray(response.object.results[i][keys[j]])) {
-            								let text = ""
-            								for (let k=0; k < response.object.results[i][keys[j]].length; k++) {
-            									if (response.object.results[i][keys[j]][k])
-            										text += response.object.results[i][keys[j]][k].value + '', '' 
-            								}
-            								row[keys[j]] = text;
-            							} else {
-            								if (response.object.results[i][keys[j]])
-            									row[keys[j]] = response.object.results[i][keys[j]].value
-            							}
-            						} else {
-            							row[keys[j]] = response.object.results[i][keys[j]]
-            						}
-            					}
+            		window[''brCellRenderer''] = function(data) {
+            			// data is an array of objects, each object contains the url of the image and the name of the image to be displayed on the same row. The name must be displayed when hovers the image.
+            			// build a lits of img tags and span tags with the src being the url of the image and the text being the name of the image using th template syntax
+            			// return the html string
+            			let html = '''';
+            			let value = data.value;
+            			if (value instanceof Array) {
+            				
+            				for (let i = 0; i < value.length; i++) {
+            					html += ''<img src="'' + value[i].thumbnails.tiny.url +
+            							''" title="'' + value[i].name + 
+            							''" style="height: 20px; border: solid 1px grey; border-radius: 4px; margin-right: 4px "/>'';
             				}
-            				rowData.push(row);
+            				// now create a dom object from the html string
+            				let div = document.createElement(''div'');
+            				div.innerHTML = html;
+            				// return the dom object
+            				return div;
             			}
-            	
-            			let output = {
-            				ColDef: colDefs,
-            				RowData : rowData
-            			}
+            		}
             			
-            			// page.c8o.log.warn(''OUtput'' +  JSON.stringify(output));
-            			
-            			resolve(output);
-            
-            			});		
+            		resolve();
             '
-    isEnabled: false
-    ↓Data [ngx.components.UIControlVariable-1682233502895]: 
-      varValue: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-          - MobileSmartSourceType: script:out
-    ↓SetLocal [ngx.components.UIDynamicAction-1682233502898]: 
-      beanData: |
-        '{
-         "ionBean": "SetLocalAction",
-         "Property": "plain:dataDef",
-         "Value": "script:out"
-        }'
-      tagName: SetLocal
-    ↓Requestable [ngx.components.UIControlVariable-1682233502901]: 
-      varValue: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
-          - MobileSmartSourceType: source:{"filter":"Shared","project":"lib_ExtendedComponents_ui_ngx","input":"","model":{"data":[{"priority":1681812168270,"regular":true}],"path":"?.ListSequenceName","prefix":"","suffix":"","custom":"","useCustom":false}}
-↓ListSequenceName [ngx.components.UICompVariable-1682233502904]: 
+↓dataSource [ngx.components.UICompVariable-1682233502904]: 
   comment: |
     The BaseRow CRUD "List" sequence name imported from the NoCode View. For example :
-    
     <pre>MyProject.Hotel_BookingsRoomsList</pre>
-    
+    <pre>.Hotel_BookingsRoomsList</pre>
     Where *MyProject* is the name of the project holding the Sequence and *Hotel_BookingsRoomsList* is the name of the Sequence in this project.
     
     
     
-↓Search [ngx.components.UICompVariable-1682931994842]: 
+↓search [ngx.components.UICompVariable-1682931994842]: 
   comment: |
-    Will only return data that matches this search whatever the column is 
+    Will only return data that matches this search whatever the column is. This is a dynamic variable meaning that if modified bounded to search field for example each time the search changes the grid will be refreshed with the new search.
     
-↓Filters [ngx.components.UICompVariable-1682960960466]: 
+    
+↓filters [ngx.components.UICompVariable-1682960960466]: 
   comment: |
     'An JSON object containing the filter to apply to a BaseRow filtered view where each filter is the exact name of the filter variable attached to a filtered list sequence :
     
@@ -428,6 +475,9 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
 ↓paginationPageSize [ngx.components.UICompVariable-1683005576432]: 
   comment: 'integer: 10 by default'
   value: 10
+↓pagination [ngx.components.UICompVariable-1719507598536]: 
+  comment: 'true : paginate, false : infinitescroll (Warning! do not use height=''auto'' in this case)'
+  value: true
 ↓rowSelection [ngx.components.UICompVariable-1683005576435]: 
   comment: 'string: ''single'' (default) or ''multiple'''
   value: '''single'''
@@ -443,25 +493,13 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
 ↓height [ngx.components.UICompVariable-1683005576447]: 
   comment: height is 'auto' or value in % or px
   value: '''auto'''
-↓class [ngx.components.UICompVariable-1683005576450]: 
-  comment: |
-    'One of the themes provided here :
-    
-    https://www.ag-grid.com/javascript-grid-themes-provided/
-    
-    Also be shure to add the theme in the Theme object as :
-    
-    @import "../../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.scss";
-    
-    
-    
-    '
-  value: '''ag-theme-balham'''
 ↓id [ngx.components.UICompVariable-1683005576453]: 
   comment: An Optional ID
 ↓suppressCellSelection [ngx.components.UICompVariable-1683005576456]: 
+  comment: Enables or not cell selection
   value: false
 ↓suppressRowClickSelection [ngx.components.UICompVariable-1683005576459]: 
+  comment: Enables or not row selection
   value: false
 ↓overlayLoadingTemplate [ngx.components.UICompVariable-1683005576462]: 
 ↓overlayNoRowsTemplate [ngx.components.UICompVariable-1683005576465]: 
@@ -469,8 +507,9 @@ comment: Provides an infinite paginated Grid that can be fed by data from a Base
   comment: Height of the row in pixels as a string
   value: '''25'''
 ↓wrapperClass [ngx.components.UICompVariable-1683005576471]: 
-  comment: Height of the row in pixels as a string
+  comment: A class name for the grid container
 ↓autoSizeColumns [ngx.components.UICompVariable-1683005576474]: 
+  comment: If true, columns will sized to fit their content
   value: true
 ↓accessibility [ngx.components.UICompVariable-1683005576477]: 
   comment: 'boolean: true (default) or false'

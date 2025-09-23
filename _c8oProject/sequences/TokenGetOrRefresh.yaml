@@ -1,18 +1,56 @@
 accessibility: Private
 comment: Gets a token or refresh it if the token is expired the Token will be placed in the current user session
-↓GetTokenFromSession [steps.SessionGetStep-1666701028415]: 
-  key: token
-  output: false
-↓IfExist [steps.IfExistThenElseStep-1666701028418]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1666701028415
-        - java.lang.String: 
-          - ↑value: ./expression/text()
-  ↓jThen [steps.ThenStep-1666701028421]: 
+↓owner [steps.SimpleStep-1729093479669]: 
+  expression: |
+    'email += "";
+    password += "";
+    
+    var token_owner = context.httpSession.getAttribute("token_owner");
+    if (token_owner == null) {
+    	token_owner = "owner";
+    } else {
+    	token_owner += "";
+    }
+    
+    if (password || email) {
+    	owner = "" + org.apache.commons.codec.digest.DigestUtils.md5Hex("owner:" + email + ":" + password);
+    	if (token_owner != owner) {
+    		context.httpSession.setAttribute("token_for_" + token_owner, context.httpSession.getAttribute("token"));
+    		context.httpSession.setAttribute("token_timestamp_for_" + token_owner, context.httpSession.getAttribute("token_timestamp"));
+    		var exToken = context.httpSession.getAttribute("token_for_" + owner);
+    		if (exToken != null) {
+    			var exTokenTS = context.httpSession.getAttribute("token_timestamp_for_" + owner);
+    			context.httpSession.setAttribute("token_owner", owner);
+    			context.httpSession.setAttribute("token", exToken);
+    			context.httpSession.setAttribute("token_timestamp", exTokenTS);
+    			token_owner = owner;
+    			log.info("swap token for this account: " + email);
+    		} else {
+    			log.info("no previous token for this account: " + email);
+    		}
+    	} else {
+    		log.info("reuse token for this account: " + email);
+    	}
+    } else {
+    	owner = "owner";
+    	log.info("use previous token");
+    }
+    '
+↓jIf [steps.IfStep-1729518676568]: 
+  condition: token_owner == owner || owner == "owner"
+  ↓GetTokenFromSession [steps.SessionGetStep-1666701028415]: 
+    key: token
+    output: false
+  ↓IfExist [steps.IfExistStep-1729093759252]: 
+    condition: IfExist
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1666701028415
+          - java.lang.String: 
+            - ↑value: ./expression/text()
     ↓Log [steps.LogStep-1666701028424]: 
       expression: '"Token exists in session"'
       level: WARN
@@ -32,130 +70,101 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
     ↓Log1 [steps.LogStep-1667559305817]: 
       expression: '"Token age (ms): " + (new Date().getTime() - jTimeStamp * 1)'
       level: WARN
-    ↓jIfThenElse [steps.IfThenElseStep-1666973283508]: 
-      condition: new Date().getTime() - jTimeStamp * 1 > 58000
-      ↓jThen [steps.ThenStep-1666973283510]: 
-        ↓Log [steps.LogStep-1666701356793]: 
-          expression: '"Token Must be refreshed"'
-          level: WARN
-        ↓SetTimeStampInSession [steps.SessionSetStep-1666701356799]: 
-          expression: 
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-              - SmartType: 
-                - ↑mode: JS
-                - →→: new Date().getTime()
-          key: token_timestamp
-        ↓Call_Sequence1 [steps.SequenceStep-1666701356796]: 
-          sourceSequence: lib_BaseRow.AdminLogin
-        ↓GetTokenFromSession [steps.SessionGetStep-1666976095512]: 
-          key: token
-          output: false
-        ↓Concat [steps.XMLConcatStep-1666701028436]: 
-          nodeName: Bearer
-          sourcesDefinition: 
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: description
-                    - xmlizable: 
-                      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                      - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: JWT
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: ''
-                    - xmlizable: 
-                      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                      - com.twinsoft.convertigo.beans.common.XMLVector: 
-                        - java.lang.String: 
-                          - ↑value: 1666976095512
-                        - java.lang.String: 
-                          - ↑value: ./expression/text()
-                    - java.lang.String: 
-                      - ↑value: ''
-      ↓jElse [steps.ElseStep-1666973283512]: 
-        ↓Concat [steps.XMLConcatStep-1666973297154]: 
-          nodeName: Bearer
-          sourcesDefinition: 
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: description
-                    - xmlizable: 
-                      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                      - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: JWT
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: ''
-                    - xmlizable: 
-                      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                      - com.twinsoft.convertigo.beans.common.XMLVector: 
-                        - java.lang.String: 
-                          - ↑value: 1666701028415
-                        - java.lang.String: 
-                          - ↑value: ./expression/text()
-                    - java.lang.String: 
-                      - ↑value: ''
-  ↓jElse [steps.ElseStep-1666701028427]: 
-    ↓Log [steps.LogStep-1666701028430]: 
-      expression: '"Token doese not exist in session"'
-      level: WARN
-    ↓SetTimeStampInSession [steps.SessionSetStep-1666701070175]: 
-      expression: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-          - SmartType: 
-            - ↑mode: JS
-            - →→: new Date().getTime()
-      key: token_timestamp
-    ↓Call_Sequence1 [steps.SequenceStep-1666701028433]: 
-      sourceSequence: lib_BaseRow.AdminLogin
-    ↓GetTokenFromSession [steps.SessionGetStep-1666973397656]: 
-      key: token
-      output: false
-    ↓Concat [steps.XMLConcatStep-1666973304575]: 
-      nodeName: Bearer
-      sourcesDefinition: 
+    ↓jIf [steps.IfStep-1729093826484]: 
+      condition: new Date().getTime() - jTimeStamp * 1 <= 58000
+      ↓Concat [steps.XMLConcatStep-1666973297154]: 
+        nodeName: Bearer
+        sourcesDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: description
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: JWT
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: ''
+                  - xmlizable: 
+                    - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1666701028415
+                      - java.lang.String: 
+                        - ↑value: ./expression/text()
+                  - java.lang.String: 
+                    - ↑value: ''
+      ↓Return [steps.ReturnStep-1729093844301]: 
+↓Log [steps.LogStep-1666701028430]: 
+  expression: '"Token does not exist in session"'
+  level: WARN
+↓SetTokenOwnerInSession [steps.SessionSetStep-1729093941070]: 
+  expression: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: owner
+  key: token_owner
+↓Call_Sequence1 [steps.SequenceStep-1666701028433]: 
+  sourceSequence: lib_BaseRow.AdminLogin
+  ↓password [variables.StepVariable-1729092062943]: 
+    comment: The baserow admin password
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xd8e180806a1c1d83a6255212121ab827
+    visibility: '-1'
+  ↓email [variables.StepVariable-1729092062945]: 
+    comment: The Base row admin email
+↓GetTokenFromSession [steps.SessionGetStep-1666973397656]: 
+  key: token
+  output: false
+↓Concat [steps.XMLConcatStep-1666973304575]: 
+  nodeName: Bearer
+  sourcesDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: description
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: JWT
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: ''
             - xmlizable: 
               - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
               - com.twinsoft.convertigo.beans.common.XMLVector: 
                 - java.lang.String: 
-                  - ↑value: description
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - ↑value: 1666973397656
                 - java.lang.String: 
-                  - ↑value: JWT
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - java.lang.String: 
-                  - ↑value: ''
-                - xmlizable: 
-                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: 1666973397656
-                    - java.lang.String: 
-                      - ↑value: ./expression/text()
-                - java.lang.String: 
-                  - ↑value: ''
+                  - ↑value: ./expression/text()
+            - java.lang.String: 
+              - ↑value: ''
+↓password [variables.RequestableVariable-1729092065618]: 
+  comment: The baserow admin password
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xd8e180806a1c1d83a6255212121ab827
+  visibility: '-1'
+↓email [variables.RequestableVariable-1729092065620]: 
+  comment: The Base row admin email
+  value: 

@@ -1,0 +1,67 @@
+accessibility: Hidden
+authenticatedContextRequired: true
+comment: Lists all applications (databases) in baserow
+↓CallSequenceFormsWithoutReferences [steps.SimpleStep-1740153353545]: 
+  expression: |
+    include("js/common2.js");
+    
+    var callSequenceForms = (callSequence("C8Oforms", "BaserowAccountGet", {}))//;.document.res;
+    var password = callSequenceForms.document.password;
+    var email = callSequenceForms.document.email;
+↓jIf1 [steps.IfStep-1740153387925]: 
+  condition: callSequenceForms.document.error != undefined
+  ↓object [steps.JsonToXmlStep-1740153387928]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: callSequenceForms.document.error
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+    output: false
+  ↓Copy [steps.XMLCopyStep-1740153387931]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1740153387928
+          - java.lang.String: 
+            - ↑value: .
+  ↓Return [steps.ReturnStep-1740153387934]: 
+↓Call_Sequence2 [steps.SequenceStep-1740153412517]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefresh
+  ↓password [variables.StepVariable-1740153412520]: 
+    comment: The baserow admin password
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xd8e180806a1c1d83a6255212121ab827
+    visibility: '-1'
+  ↓email [variables.StepVariable-1740153412523]: 
+    comment: The Base row admin email
+↓Call_Transaction [steps.TransactionStep-1665210509901]: 
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_applications__GET
+  ↓__header_Authorization [variables.StepVariable-1665211142280]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1740153412517
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+↓Copy [steps.XMLCopyStep-1665295585596]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1665210509901
+        - java.lang.String: 
+          - ↑value: ./document/array

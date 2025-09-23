@@ -10,6 +10,29 @@ comment: Gets data from a given table
     description: table_id
     required: true
     value: 
+↓jIf2 [steps.IfStep-1758277009819]: 
+  condition: order_by != null
+  ↓BuildFilters [steps.SimpleStep-1758277009825]: 
+    comment: Build the filters according to the API specs
+    expression: |
+      'try{
+      	order_by = JSON.parse(order_by);
+      	let result = "";
+      	for(let item of order_by.sorts){
+      		result += (item.order == "asc" ? "" : "-") + item.name + ","
+      	} 
+      	result = result.substring(0, result.length - 1);
+      	if(result.length > 0){
+      		order_by = result;
+      	}
+      	else{
+      		order_by = null;
+      	}
+      }
+      catch(e){
+      	order_by = null;
+      }
+      '
 ↓jIf [steps.IfStep-1666632106805]: 
   condition: 'filterExpression ? filterExpression.length != 0: false'
   ↓JsonSource [steps.JsonSourceStep-1665925437972]: 
@@ -26,31 +49,146 @@ comment: Gets data from a given table
   ↓BuildFilters [steps.SimpleStep-1665925720838]: 
     comment: Build the filters according to the API specs
     expression: |
-      'log.warn(JSON.stringify(aFields));
-      function getFieldId (fieldName) {
-      	fieldId = aFields.find( elt =>  elt.name == fieldName);
-      	return (fieldId ? fieldId.id:''unknown_field'');
+      'function buildAdvancedStructureOnly(filterExpression) {
+      	// Parse si string
+      	var root = (typeof filterExpression === ''string'')
+      		? JSON.parse(filterExpression)
+      		: filterExpression;
+      
+      	function isEmpty(v) { return v === '''' || v === null || v === undefined; }
+      
+      	// Un filtre feuille minimal: {field, op, value} -> {field, type, value}
+      	function buildSimpleFilter(f) {
+      		var value = f.value;
+      		if (f.op === ''equal'' && isEmpty(value)) value = ''__empty''; // ta règle de sûreté
+      		return { field: f.field, type: f.op, value: value };
+      	}
+      
+      	// Conversion récursive -> { filter_type, filters:[], (groups:[]) }
+      	var MAX_DEPTH = 50;
+      	function toAdvanced(node, depth) {
+      		if (!node) return { filter_type: ''AND'', filters: [] };
+      		if (depth > MAX_DEPTH) return { filter_type: ''AND'', filters: [] };
+      
+      		var filterType = (node.mode ? node.mode : ''AND'').toUpperCase();
+      		var out = { filter_type: filterType, filters: [] };
+      
+      		if (!node.filters || !node.filters.length) return out;
+      
+      		var i, item, child, built;
+      		for (i = 0; i < node.filters.length; i++) {
+      			item = node.filters[i];
+      
+      			// Sous-groupe si l''item possède sa propre liste "filters"
+      			if (item && item.filters && item.filters.length !== undefined) {
+      				child = toAdvanced(item, depth + 1);
+      				// On n''ajoute que s''il a du contenu
+      				var childHasFilters = child.filters && child.filters.length > 0;
+      				var childHasGroups = child.groups && child.groups.length > 0;
+      				if (childHasFilters || childHasGroups) {
+      					if (!out.groups) out.groups = [];
+      					out.groups.push(child);
+      				}
+      			} else {
+      				// Filtre feuille
+      				built = buildSimpleFilter(item);
+      				out.filters.push(built);
+      			}
+      		}
+      		// Si aucun sous-groupe valide, pas de propriété groups
+      		return out;
+      	}
+      
+      	// Compte et détection de groupes
+      	function analyzeGroups(node) {
+      		var any = false, top = false, count = 0;
+      
+      		if (node.groups && node.groups.length) {
+      			top = true;
+      			any = true;
+      			count += node.groups.length;
+      
+      			// Descendre
+      			var i;
+      			for (i = 0; i < node.groups.length; i++) {
+      				var sub = analyzeGroups(node.groups[i]);
+      				if (sub.any) any = true;
+      				count += sub.count; // ajoute les groupes descendants
+      			}
+      		}
+      		return { any: any, top: top, count: count };
+      	}
+      
+      	var built = toAdvanced(root, 0);
+      	var analysis = analyzeGroups(built);
+      
+      	return {
+      		built: built,
+      		hasGroups: analysis.any,
+      		hasGroupsTopLevel: analysis.top,
+      		groupsCount: analysis.count
+      	};
       }
       
+      filters = JSON.parse(filterExpression);
       bFieldError = false;
-      if (filterExpression) {
+      var res = buildAdvancedStructureOnly(filters);
       
-      	filterExpression = JSON.parse(filterExpression);
-      	filter_type = filterExpression.mode;
-      	built ='''';
-      	filterExpression.filters.forEach(filter => {
-      		if (filter.op == "equal" && filter.value.length == 0)
-      			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
-      			
-      		built += "filter__field_" + encodeURIComponent(getFieldId(filter.field)) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
-      	});
-      	
-      	filterExpression = built;
-      	if (built.indexOf("unknown_field") != -1)
-      		bFieldError = true;
-      		
-      	log.warn(filterExpression);
+      // JSON reconstruit (sans renommer les fields)
+      log.warn(''STRUCT = '' + JSON.stringify(res.built));
+      log.warn(''hasGroups='' + res.hasGroups + ''  topLevel='' + res.hasGroupsTopLevel + ''  groupsCount='' + res.groupsCount);
+      
+      // use new syntax, that needs to set include_fields to null and filterExpression to "" and use filters
+      if(res.hasGroups){
+      	filters = JSON.stringify(res.built);
+      	filterExpression = "";
+      	include_fields = null
       }
+      // otherwise use old syntax
+      else{
+      	filters = null;
+      	function getFieldId (fieldName) {
+      		fieldId = aFields.find( elt =>  elt.name == fieldName);
+      		return (fieldId ? fieldId.id:''unknown_field'');
+      	}
+      	
+      	bFieldError = false;
+      	if (filterExpression) {
+      	
+      		filterExpression = JSON.parse(filterExpression);
+      		filter_type = filterExpression.mode;
+      		built ='''';
+      		filterExpression.filters.forEach(filter => {
+      			if (filter.op == "equal" && filter.value.length == 0)
+      				filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
+      			try{
+      				var def = aFields.find((x)=>{return x.name == filter.field});
+      				if(def && def.type == "single_select" && isNaN(+filter.value)){
+      					var found = def.select_options.find((x)=>{
+      						return x.value == filter.value;
+      					})
+      					if(found){
+      						filter.value = found.id;
+      					}
+      				}
+      			}
+      			catch(e){
+      				
+      			}
+      			built += "filter__field_" + encodeURIComponent(getFieldId(filter.field)) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
+      		});
+      		
+      		filterExpression = built;
+      		if (built.indexOf("unknown_field") != -1)
+      			bFieldError = true;
+      			
+      		log.warn("Built filter expression is : " + filterExpression);
+      	}
+      }
+      
+      
+      
+      
       
       '
   ↓jIf [steps.IfStep-1669878598760]: 
@@ -128,6 +266,7 @@ comment: Gets data from a given table
     description: view_id
   ↓filterExpression [variables.StepVariable-1665915588657]: 
     value: 
+  ↓filters [variables.StepVariable-1758212178434]: 
 ↓Copy [steps.XMLCopyStep-1665320785560]: 
   sourceDefinition: 
     - xmlizable: 

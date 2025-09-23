@@ -1,25 +1,49 @@
 accessibility: Hidden
-authenticatedContextRequired: true
 comment: |
   '{
       "en": {
-          "displayName": "GetFieldValues",
-          "comment": "Get all possible values for a given field to feed a Select"
+          "displayName": "Load dropdown values",
+          "comment": "Retrieve all possible values from a dropdown list."
       },
       "fr": {
-          "displayName": "GetFieldValues",
-          "comment": "Obtenez toutes les valeurs possibles pour un champ donné pour alimenter un Sélecteur"
-      },
-      "it": {
-          "displayName": "GetFieldValues",
-          "comment": "Ottieni tutti i valori possibili per un determinato campo per alimentare un Selettore"
+          "displayName": "Charger les valeurs d''une liste déroulante",
+          "comment": "Récupérez toutes les valeurs possibles depuis une liste déroulante."
       },
       "es": {
-          "displayName": "GetFieldValues",
-          "comment": "Obtén todos los valores posibles para un campo dado para alimentar un Select"
+          "displayName": "Cargar valores de un desplegable",
+          "comment": "Recupere todos los valores posibles desde una lista desplegable."
       },
-      "types": ["select"]
+      "it": {
+          "displayName": "Caricare i valori di un menu a discesa",
+          "comment": "Recupera tutti i valori possibili da un menu a discesa."
+      },
+      "types": ["select", "checkbox", "radio"]
   }'
+↓Call_Sequence2 [steps.SequenceStep-1729157637689]: 
+  sourceSequence: lib_BaseRow.formscommon_CheckConfig
+  ↓forms_config [variables.StepVariable-1729157637692]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+↓IfError [steps.IfExistStep-1729157637695]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729157637689
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1729157637698]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157637689
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1729157637701]: 
 ↓ParseConfig [steps.SimpleStep-1680099603300]: 
   expression: |
     jConfig = JSON.parse(forms_config);
@@ -83,59 +107,89 @@ comment: |
                 - ↑value: 1680099603348
               - java.lang.String: 
                 - ↑value: ./select_options/object
-        ↓Object [steps.JsonObjectStep-1680099603351]: 
-          comment: The data object
-          key: 
+        ↓myVariable [steps.SimpleSourceStep-1751290472627]: 
+          sourceDefinition: 
             - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-              - SmartType: 
-                - ↑mode: PLAIN
-                - →→: item
-          ↓Field [steps.JsonFieldStep-1680099603354]: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1680108958192
+                - java.lang.String: 
+                  - ↑value: ./value/text()
+          variableName: val
+        ↓jIf [steps.IfStep-1751290338455]: 
+          condition: (forms_filter == undefined || forms_filter == "") || (val.indexOf(forms_filter) != -1)
+          ↓Object [steps.JsonObjectStep-1680099603351]: 
+            comment: The data object
             key: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
                 - SmartType: 
                   - ↑mode: PLAIN
-                  - →→: displayValue
-            value: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                - SmartType: 
-                  - ↑mode: SOURCE
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: 1680108958192
-                    - java.lang.String: 
-                      - ↑value: ./value/text()
-          ↓Field1 [steps.JsonFieldStep-1680099603357]: 
-            key: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                - SmartType: 
-                  - ↑mode: PLAIN
-                  - →→: value
-            value: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-                - SmartType: 
-                  - ↑mode: SOURCE
-                  - com.twinsoft.convertigo.beans.common.XMLVector: 
-                    - java.lang.String: 
-                      - ↑value: 1680108958192
-                    - java.lang.String: 
-                      - ↑value: ./id/text()
+                  - →→: item
+            ↓Field [steps.JsonFieldStep-1680099603354]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: displayValue
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: SOURCE
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1680108958192
+                      - java.lang.String: 
+                        - ↑value: ./value/text()
+            ↓Field1 [steps.JsonFieldStep-1680099603357]: 
+              key: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: PLAIN
+                    - →→: value
+              type: number
+              value: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                  - SmartType: 
+                    - ↑mode: SOURCE
+                    - com.twinsoft.convertigo.beans.common.XMLVector: 
+                      - java.lang.String: 
+                        - ↑value: 1680108958192
+                      - java.lang.String: 
+                        - ↑value: ./id/text()
 ↓forms_config [variables.RequestableVariable-1680099603360]: 
   comment: |
     '{
-    	"en": {
-    		"comment":"Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item",
-    		"displayName":"Configuration"
-    	}
-    }
+        "en": {
+            "comment": "Choose a table",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table",
+            "displayName": "Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella",
+            "displayName": "Configurazione"
+        }
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
+  required: true
+  value: 
+↓forms_filter [variables.RequestableVariable-1751290326266]: 
+  comment: |
+    Filters
     
-    '
-  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  description: 
   required: true
   value: 
 ↓TestBedType [core.TestCase]: 

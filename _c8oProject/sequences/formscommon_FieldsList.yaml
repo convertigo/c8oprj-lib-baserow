@@ -1,0 +1,102 @@
+accessibility: Hidden
+↓ParseConfig [steps.SimpleStep-1729516153011]: 
+  expression: |
+    'jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+    editor = "" + (jConfig.editor ? jConfig.editor : "");
+    '
+↓ifEditor [steps.IfThenElseStep-1729524566880]: 
+  condition: editor != ""
+  ↓jThen [steps.ThenStep-1729524568082]: 
+    ↓authenticatedUserID [steps.GetAuthenticatedUserStep-1729524599905]: 
+      output: false
+    ↓IfExistThenElse [steps.IfExistThenElseStep-1729524626413]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1729524599905
+            - java.lang.String: 
+              - ↑value: .[. = '{{{ editor }}}']
+      ↓jThen [steps.ThenStep-1729524627641]: 
+      ↓jElse [steps.ElseStep-1729524627643]: 
+        ↓badEditor [steps.XMLErrorStep-1729524695020]: 
+          code: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: PLAIN
+                - →→: 9
+          message: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: PLAIN
+                - →→: bad editor
+        ↓Return [steps.ReturnStep-1729524716474]: 
+  ↓jElse [steps.ElseStep-1729524568084]: 
+    ↓Call_Sequence2 [steps.SequenceStep-1729516092076]: 
+      sourceSequence: lib_BaseRow.formscommon_CheckConfig
+      ↓forms_config [variables.StepVariable-1729516092079]: 
+        description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+        required: true
+    ↓IfError [steps.IfExistStep-1729516092082]: 
+      condition: IfError
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1729516092076
+            - java.lang.String: 
+              - ↑value: ./document/error
+      ↓Copy [steps.XMLCopyStep-1729516092085]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1729516092076
+              - java.lang.String: 
+                - ↑value: ./document/error
+      ↓Return [steps.ReturnStep-1729516092088]: 
+↓Call_Sequence [steps.SequenceStep-1729515103812]: 
+  sourceSequence: lib_BaseRow.FieldsList
+  ↓table_id [variables.StepVariable-1729515103814]: 
+    comment: Returns only the fields of the table related to the provided value.
+    description: table_id
+    required: true
+    value: 
+↓Copy [steps.XMLCopyStep-1729515122166]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1729515103812
+        - java.lang.String: 
+          - ↑value: ./document/*
+↓forms_config [variables.RequestableVariable-1729516077599]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "Choose a table in Baserow",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table dans Baserow",
+            "displayName": "Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en Baserow",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in Baserow",
+            "displayName": "Configurazione"
+        }
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  required: true
+  value: 

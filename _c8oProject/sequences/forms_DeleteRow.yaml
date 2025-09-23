@@ -1,0 +1,146 @@
+accessibility: Hidden
+authenticatedContextRequired: true
+comment: |
+  '{
+      "en": {
+          "displayName": "Delete row to the no-code database",
+          "comment": "Deletes a data row from a table"
+      },
+      "fr": {
+          "displayName": "Supprimer une ligne dans la no-code database",
+          "comment": "Supprime une ligne de données d''une table"
+      },
+      "es": {
+          "displayName": "Eliminar una fila en la no-code database",
+          "comment": "Elimina una fila de datos de una tabla"
+      },
+      "it": {
+          "displayName": "Eliminare una riga in il no-code database",
+          "comment": "Elimina una riga di dati da una tabella"
+      }
+  }'
+↓Call_Sequence2 [steps.SequenceStep-1734444235528]: 
+  sourceSequence: lib_BaseRow.formscommon_CheckConfig
+  ↓forms_config [variables.StepVariable-1734444235531]: 
+    description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+    required: true
+↓IfError [steps.IfExistStep-1734444235534]: 
+  condition: IfError
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734444235528
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1734444235537]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1734444235528
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1734444235540]: 
+↓ParseConfig [steps.SimpleStep-1734444235543]: 
+  expression: |
+    jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+↓jIfThenElse [steps.IfThenElseStep-1726474061274]: 
+  condition: forms_id != '' && forms_id != null && forms_id != undefined
+  ↓jThen [steps.ThenStep-1726474061277]: 
+    ↓MakeRowID [steps.SimpleStep-1726474061280]: 
+      expression: |
+        row_id = forms_id
+        
+        
+    ↓Call_Sequence [steps.SequenceStep-1726474061283]: 
+      comment: Delet row from BR table
+      sourceSequence: lib_BaseRow.TableDeleteRow
+      ↓table_id [variables.StepVariable-1726474302036]: 
+        comment: Returns the rows of the table related to the provided value.
+        description: table_id
+        required: true
+        value: 
+      ↓row_id [variables.StepVariable-1726474302038]: 
+        comment: Deletes the row related to the value.
+        description: row_id
+        required: true
+        value: 
+    ↓IfExist [steps.IfExistStep-1726474061295]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1726474061283
+            - java.lang.String: 
+              - ↑value: ./document/transaction/document/error
+      ↓Error_structure [steps.XMLErrorStep-1726474061298]: 
+        message: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1726474061283
+                - java.lang.String: 
+                  - ↑value: ./document/transaction/document/error/message/text()
+      ↓Return [steps.ReturnStep-1726474061301]: 
+  ↓jElse [steps.ElseStep-1726474061304]: 
+    ↓Error_structure [steps.XMLErrorStep-1726474339162]: 
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: A row id is mandatory for DeleteRow Action
+↓forms_config [variables.RequestableVariable-1726474061328]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "Choose a table in the no-code database",
+            "displayName": "Configuration"
+        },
+        "fr": {
+            "comment": "Choisissez une table de la no-code database",
+            "displayName": "Configuration"
+        },
+        "es": {
+            "comment": "Elija una tabla en la no-code database",
+            "displayName": "Configuración"
+        },
+        "it": {
+            "comment": "Scegli una tabella in il no-code database",
+            "displayName": "Configurazione"
+        }
+    }'
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables?noCols=true
+  required: true
+  value: 
+↓doc [variables.RequestableVariable-1726474061331]: 
+↓originalDoc [variables.RequestableVariable-1726474061334]: 
+↓forms_id [variables.RequestableVariable-1726474061337]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "The Identifier of the row to delete",
+            "displayName": "Identifier"
+        },
+        "fr": {
+            "comment": "L''identifiant de la ligne à supprimer",
+            "displayName": "Identifiant"
+        },
+        "es": {
+            "comment": "El identificador de la fila a eliminar",
+            "displayName": "Identificador"
+        },
+        "it": {
+            "comment": "L''identificatore della riga da eliminare",
+            "displayName": "Identificatore"
+        }
+    }'
+  value: 
