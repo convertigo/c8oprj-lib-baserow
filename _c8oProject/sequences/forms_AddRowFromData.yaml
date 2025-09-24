@@ -59,6 +59,8 @@ comment: |
     	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
     }
     
+    var theApp = com.twinsoft.convertigo.engine.Engine.theApp;
+    var fsclient = theApp.couchDbManager.getFullSyncClient();
     '
 ↓Input_variables [steps.InputVariablesStep-1743074271034]: 
 ↓Call_Sequence1 [steps.SequenceStep-1743074271037]: 
@@ -195,31 +197,34 @@ comment: |
         var dir = context.getProjectDirectory()+"/attachments/";
         mkdir(dir, dirName);
         var _use_attpath = dir + dirName + "/"+ _use_attname;
-        filesToDelete.push(_use_attpath)
+        filesToDelete.push(_use_attpath);
         
-        
-        
+        attfile = new File(_use_attpath);
         '
       output: true
-    ↓Call_Transaction [steps.TransactionStep-1743074271058]: 
-      comment: read the attachment in the workspace
-      output: true
-      sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
-      ↓_use_attname [variables.StepVariable-1743074271061]: 
-        description: Attachment name
-      ↓_use_docid [variables.StepVariable-1743074271064]: 
-        description: Document ID
-      ↓_use_attpath [variables.StepVariable-1743074271067]: 
-        description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+    ↓doc [steps.JsonToXmlStep-1758703253057]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: JSON.parse(fsclient.getDocumentAttachment("c8oforms_response_fs", _use_docid, _use_attname, null, attfile).toString())
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: doc
+      output: false
     ↓jSimpleSource1 [steps.SimpleSourceStep-1743074271070]: 
       sourceDefinition: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1743074271058
+              - ↑value: 1758703253057
             - java.lang.String: 
-              - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+              - ↑value: .//_c8oMeta/headers/Content_Type/text()
       variableName: contentType
     ↓reName [steps.SimpleStep-1749632588734]: 
       expression: |
@@ -360,31 +365,34 @@ comment: |
             var dir = context.getProjectDirectory()+"/attachments/";
             mkdir(dir, dirName);
             var _use_attpath = dir + dirName + "/" + _use_attname.split("_C80C80_")[1];
-            filesToDelete.push(_use_attpath)
+            filesToDelete.push(_use_attpath);
             
-            
-            
+            attfile = new File(_use_attpath);
             '
           output: true
-        ↓Call_Transaction [steps.TransactionStep-1743074271109]: 
-          comment: read the attachment in the workspace
-          output: true
-          sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
-          ↓_use_attname [variables.StepVariable-1743074271112]: 
-            description: Attachment name
-          ↓_use_docid [variables.StepVariable-1743074271115]: 
-            description: Document ID
-          ↓_use_attpath [variables.StepVariable-1743074271118]: 
-            description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+        ↓doc [steps.JsonToXmlStep-1758703315154]: 
+          jsonObject: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: JS
+                - →→: JSON.parse(fsclient.getDocumentAttachment("c8oforms_response_fs", _use_docid, _use_attname, null, attfile).toString())
+          key: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: PLAIN
+                - →→: doc
+          output: false
         ↓jSimpleSource1 [steps.SimpleSourceStep-1743074271121]: 
           sourceDefinition: 
             - xmlizable: 
               - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
               - com.twinsoft.convertigo.beans.common.XMLVector: 
                 - java.lang.String: 
-                  - ↑value: 1743074271109
+                  - ↑value: 1758703315154
                 - java.lang.String: 
-                  - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+                  - ↑value: .//_c8oMeta/headers/Content_Type/text()
           variableName: contentType
         ↓element [steps.ElementStep-1743074271124]: 
           expression: _use_attpath
@@ -589,31 +597,34 @@ comment: |
           var dir = context.getProjectDirectory()+"/attachments/";
           mkdir(dir, dirName);
           var _use_attpath = dir + dirName + "/"+ _use_attname;
-          filesToDelete.push(_use_attpath)
+          filesToDelete.push(_use_attpath);
           
-          
-          
+          attfile = new File(_use_attpath);
           '
         output: true
-      ↓Call_Transaction [steps.TransactionStep-1749638089846]: 
-        comment: read the attachment in the workspace
-        output: true
-        sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
-        ↓_use_attname [variables.StepVariable-1749638089849]: 
-          description: Attachment name
-        ↓_use_docid [variables.StepVariable-1749638089852]: 
-          description: Document ID
-        ↓_use_attpath [variables.StepVariable-1749638089855]: 
-          description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+      ↓doc [steps.JsonToXmlStep-1758703404041]: 
+        jsonObject: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: JSON.parse(fsclient.getDocumentAttachment("c8oforms_response_fs", _use_docid, _use_attname, null, attfile).toString())
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: doc
+        output: false
       ↓jSimpleSource1 [steps.SimpleSourceStep-1749638089858]: 
         sourceDefinition: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
             - com.twinsoft.convertigo.beans.common.XMLVector: 
               - java.lang.String: 
-                - ↑value: 1749638089846
+                - ↑value: 1758703404041
               - java.lang.String: 
-                - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+                - ↑value: .//_c8oMeta/headers/Content_Type/text()
         variableName: contentType
       ↓reName [steps.SimpleStep-1749638089861]: 
         expression: |
@@ -754,31 +765,34 @@ comment: |
               var dir = context.getProjectDirectory()+"/attachments/";
               mkdir(dir, dirName);
               var _use_attpath = dir + dirName + "/" + _use_attname.split("_C80C80_")[1];
-              filesToDelete.push(_use_attpath)
+              filesToDelete.push(_use_attpath);
               
-              
-              
+              attfile = new File(_use_attpath);
               '
             output: true
-          ↓Call_Transaction [steps.TransactionStep-1749638089906]: 
-            comment: read the attachment in the workspace
-            output: true
-            sourceTransaction: lib_BaseRow.c8oforms_response_fs.GetDocumentAttachment
-            ↓_use_attname [variables.StepVariable-1749638089909]: 
-              description: Attachment name
-            ↓_use_docid [variables.StepVariable-1749638089912]: 
-              description: Document ID
-            ↓_use_attpath [variables.StepVariable-1749638089915]: 
-              description: Attachment path  This path is either absolute or relative to Convertigo environment. Relative paths starting with:<br/><br/>• <span class="computer">./</span> are relative to Convertigo workspace,<br/>• <span class="computer">.//</span> are relative to current project folder. <br/><br/>
+          ↓doc [steps.JsonToXmlStep-1758703440284]: 
+            jsonObject: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: JS
+                  - →→: JSON.parse(fsclient.getDocumentAttachment("c8oforms_response_fs", _use_docid, _use_attname, null, attfile).toString())
+            key: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+                - SmartType: 
+                  - ↑mode: PLAIN
+                  - →→: doc
+            output: false
           ↓jSimpleSource1 [steps.SimpleSourceStep-1749638089918]: 
             sourceDefinition: 
               - xmlizable: 
                 - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
                 - com.twinsoft.convertigo.beans.common.XMLVector: 
                   - java.lang.String: 
-                    - ↑value: 1749638089906
+                    - ↑value: 1758703440284
                   - java.lang.String: 
-                    - ↑value: ./document/couchdb_output/_c8oMeta/headers/Content_Type/text()
+                    - ↑value: .//_c8oMeta/headers/Content_Type/text()
             variableName: contentType
           ↓element [steps.ElementStep-1749638089921]: 
             expression: _use_attpath

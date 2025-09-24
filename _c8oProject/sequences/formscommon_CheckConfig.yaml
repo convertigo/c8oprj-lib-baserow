@@ -6,63 +6,72 @@ accessibility: Private
     source_id = "" + jConfig.source_id;
     owner = jConfig.source_owner;
     
-↓Call_Transaction [steps.TransactionStep-1729157830649]: 
-  sourceTransaction: lib_BaseRow.c8oforms_fs.GetDocument
-  ↓_use_docid [variables.StepVariable-1729157830651]: 
-    description: Document ID
+    var theApp = com.twinsoft.convertigo.engine.Engine.theApp;
+    var fsclient = theApp.couchDbManager.getFullSyncClient();
+    
+↓doc [steps.JsonToXmlStep-1758640482728]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: JSON.parse(fsclient.getDocument("c8oforms_fs", _use_docid).toString())
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: doc
+  output: false
 ↓formSourceConfig1 [steps.SimpleSourceStep-1736257252570]: 
-  output: true
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1729157830649
+          - ↑value: 1758640482728
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='sourcesMarkers' or name()='sourcesCircles' or name()='actions']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='sourcesMarkers' or name()='sourcesCircles' or name()='actions']//forms_config/str/text()
             
             
   variableName: doc_forms_config
 ↓formSourceConfigMarkers [steps.SimpleSourceStep-1732208590734]: 
-  output: true
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1729157830649
+          - ↑value: 1758640482728
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesMarkers']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sourcesMarkers']//forms_config/str/text()
             
             
   variableName: doc_forms_config_markers
 ↓formSourceConfig2 [steps.SimpleSourceStep-1736257385246]: 
-  output: true
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1729157830649
+          - ↑value: 1758640482728
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesCircles']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sourcesCircles']//forms_config/str/text()
             
             
   variableName: doc_forms_config_circles
 ↓formSourceConfig3 [steps.SimpleSourceStep-1736260452546]: 
-  output: true
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1729157830649
+          - ↑value: 1758640482728
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesPolygons']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sourcesPolygons']//forms_config/str/text()
             
             
   variableName: doc_forms_config_polygons
@@ -126,6 +135,23 @@ accessibility: Private
     visibility: '-1'
   ↓email [variables.StepVariable-1740150840675]: 
     comment: The Base row admin email
+↓success [steps.JsonFieldStep-1758639451021]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: success
+  value: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: SOURCE
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1740150840669
+          - java.lang.String: 
+            - ↑value: string-length(./document/Bearer/text()) > 5
 ↓forms_config [variables.RequestableVariable-1729157210751]: 
   comment: |
     '{

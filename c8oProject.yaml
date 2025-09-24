@@ -14,10 +14,8 @@
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.1.42
+  version: 1.1.43
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
-  ↓c8oforms_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_fs.yaml
-  ↓c8oforms_response_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_response_fs.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
   ↓_disabled_formssource_GetSelectDataOld [sequences.GenericSequence]: 🗏 sequences/_disabled_formssource_GetSelectDataOld.yaml
   ↓_disabled_formssource_GetTableDataOld [sequences.GenericSequence]: 🗏 sequences/_disabled_formssource_GetTableDataOld.yaml
