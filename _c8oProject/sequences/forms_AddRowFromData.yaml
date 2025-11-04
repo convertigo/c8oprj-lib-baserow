@@ -125,7 +125,11 @@ comment: |
     			}
     			break;
     		case ''link_row'':
-    			data[key] = [+jDoc[key]];
+    			data[key] = jDoc[key].split('','').map(function(v) {
+    				const trimmed = v.trim();
+    				const num = Number(trimmed);
+    				return isNaN(num) ? trimmed : num;
+    			});
     			break;
     
     		case ''file'':
@@ -155,10 +159,7 @@ comment: |
     		default: 
     			log.warn("** type: " + type + " is not yet handled")
     	}
-    }
-    var toto = "tito";
-    
-    '
+    }'
 ↓jIterator [steps.SimpleIteratorStep-1743074271049]: 
   comment: Handle Attachements
   expression: Object.keys(jDoc)
@@ -519,7 +520,11 @@ comment: |
       			}
       			break;
       		case ''link_row'':
-      			data[key] = [+jDoc[key]];
+      			data[key] = jDoc[key].split('','').map(function(v) {
+      				const trimmed = v.trim();
+      				const num = Number(trimmed);
+      				return isNaN(num) ? trimmed : num;
+      			});
       			break;
       
       		case ''file'':
@@ -549,10 +554,7 @@ comment: |
       		default: 
       			log.warn("** type: " + type + " is not yet handled")
       	}
-      }
-      var toto = "tito";
-      
-      '
+      }'
   ↓jIterator2 [steps.SimpleIteratorStep-1749638089837]: 
     comment: Handle Attachements
     expression: Object.keys(jDoc)
