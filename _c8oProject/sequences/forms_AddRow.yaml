@@ -145,7 +145,7 @@ comment: |
     			log.warn("** key: multiple_select TODO")
     			break;
     		case ''link_row'':
-    			data[key] = jDoc.variable.resp[key].value.split('','').map(function(v) {
+    			data[key] = (""+jDoc.variable.resp[key].value).split('','').map(function(v) {
     				const trimmed = v.trim();
     				const num = Number(trimmed);
     				return isNaN(num) ? trimmed : num;
@@ -558,7 +558,7 @@ comment: |
       			break;
       
       		case ''link_row'':
-      			data[key] = jDoc.variable.resp[key].value.split('','').map(function(v) {
+      			data[key] = (""+jDoc.variable.resp[key].value).split('','').map(function(v) {
       				const trimmed = v.trim();
       				const num = Number(trimmed);
       				return isNaN(num) ? trimmed : num;
