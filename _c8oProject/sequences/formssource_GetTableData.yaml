@@ -335,6 +335,9 @@ comment: |
     			obj[key] = {"displayName": key, "type": "html", value:null};
     		}
     		if(model == "true" && "structure" in this){
+    			if(!Array.isArray(structure)){
+    				structure = [structure];
+    			}
     			var cTargetCompletion = [];
     			var cHideFromFiltering = true;
     			if(jConfig.columns.indexOf(key) != -1){

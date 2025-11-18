@@ -349,22 +349,28 @@ comment: |
   ↓Sequence_JS [steps.SimpleStep-1680699255296]: 
     expression: |
       'let data = [{}];
-      structure.forEach((e)=>{
-      	if(jConfig.columns.indexOf(e.name) != -1){
-      		e.filterHide = false;
-      		// if target is formula use it''s formula_type
-      		var cType = e.type;
-      		if(cType == "formula"){
-      			cType = e.formula_type;
-      		}
-      		e.filterCompletion = verbsByType[cType];
-      		if(e.filterCompletion == null){
-      			e.filterCompletion = [];
-      		}
-      		data[0][e.name] = e;
+      if("structure" in this){
+      	if(!Array.isArray(structure)){
+      		structure = [structure];
       	}
-      	
-      })'
+      	structure.forEach((e)=>{
+      		if(jConfig.columns.indexOf(e.name) != -1){
+      			e.filterHide = false;
+      			// if target is formula use it''s formula_type
+      			var cType = e.type;
+      			if(cType == "formula"){
+      				cType = e.formula_type;
+      			}
+      			e.filterCompletion = verbsByType[cType];
+      			if(e.filterCompletion == null){
+      				e.filterCompletion = [];
+      			}
+      			data[0][e.name] = e;
+      		}
+      		
+      	})
+      }
+      '
   ↓data [steps.JsonToXmlStep-1680699661741]: 
     jsonObject: 
       - xmlizable: 
