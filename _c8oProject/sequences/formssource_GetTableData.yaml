@@ -334,44 +334,6 @@ comment: |
     		else{
     			obj[key] = {"displayName": key, "type": "html", value:null};
     		}
-    		if(model == "true" && "structure" in this){
-    			if(!Array.isArray(structure)){
-    				structure = [structure];
-    			}
-    			var cTargetCompletion = [];
-    			var cHideFromFiltering = true;
-    			if(jConfig.columns.indexOf(key) != -1){
-    				var cTarget = structure.filter((x)=>{
-    					return x.name == key
-    				})[0];
-    				// if target is formula use it''s formula_type
-    				var cType = cTarget != undefined ? cTarget.type : null;
-    				if(cType == "formula"){
-    					cType = cTarget.formula_type;
-    				}
-    				if(cType == "lookup"){
-    					cType = cTarget.formula_type;
-    				}
-    				obj[key]["cType"] = cType;
-    				cTargetCompletion = verbsByType[cType];
-    				cHideFromFiltering = false;
-    				if(cTargetCompletion == undefined){
-    					cTargetCompletion = [];
-    					cHideFromFiltering = true;
-    				}
-    				if(cTarget.type == "single_select" && obj[key].value == null){
-    					obj[key].value = {
-    						"id": 0,
-    					    "value": "",
-    					    "color": ""
-    					}
-    				}
-    			}
-    			
-    			obj[key]["filterCompletion"] = cTargetCompletion;
-    			obj[key]["filterHide"] = cHideFromFiltering;
-    
-    		}
     	}
     	jReorderedRow = {};
     	jReorderedRow["id"] = obj["id"];
@@ -383,7 +345,51 @@ comment: |
     	});
     	data.push(jReorderedRow);
     }
-    '
+    if(model == "true" && "structure" in this){
+    	data = [{}];
+    	
+    	if(!Array.isArray(structure)){
+    		structure = [structure];
+    	}
+    	structure.forEach((key)=>{
+    		
+    		var cTargetCompletion = [];
+    		var cHideFromFiltering = true;
+    		if(jConfig.columns.indexOf(key.name) != -1){
+    			var cTarget = structure.filter((x)=>{
+    				return x.name == key.name
+    			})[0];
+    			
+    			// if target is formula use it''s formula_type
+    			var cType = cTarget != undefined ? cTarget.type : null;
+    			if(cType == "formula"){
+    				cType = cTarget.formula_type;
+    			}
+    			if(cType == "lookup"){
+    				cType = cTarget.formula_type;
+    			}
+    			key["cType"] = cType;
+    			cTargetCompletion = verbsByType[cType];
+    			cHideFromFiltering = false;
+    			if(cTargetCompletion == undefined){
+    				cTargetCompletion = [];
+    				cHideFromFiltering = true;
+    			}
+    			if(cTarget.type == "single_select" && key.value == null){
+    				key.value = {
+    					"id": 0,
+    				    "value": "",
+    				    "color": ""
+    				}
+    			}
+    		}
+    		
+    		key["filterCompletion"] = cTargetCompletion;
+    		key["filterHide"] = cHideFromFiltering;
+    		data[0][key.name] = key;
+    	
+    	});
+    }'
 ↓object [steps.JsonToXmlStep-1734686735780]: 
   jsonObject: 
     - xmlizable: 
