@@ -49,7 +49,7 @@ comment: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
-    let describeStructure = false;
+    let describeStructure = true;
     let verbsByType = {
     	text: [
             "equal",
@@ -315,6 +315,7 @@ comment: |
   expression: |
     'include("js/utils.js");
     var data = [];
+    var colDef = null;
     
     for (var elem of results) {
     	var obj = {};
@@ -389,7 +390,7 @@ comment: |
     	data.push(jReorderedRow);
     }
     
-    if (model == "true" && "structure" in this && data.length === 0) {
+    if ("structure" in this && data.length === 0) {
     	if (!Array.isArray(structure)) {
     		structure = [structure];
     	}
@@ -456,8 +457,14 @@ comment: |
     			filterHide: cHideFromFiltering
     		};
     	});
-    
-    	data.push(row);
+    	if(model == "true"){
+    		data.push(row);
+    	}
+    	else{
+    		colDef = [];
+    		colDef.push(row);
+    	}
+    	
     }
     '
 ↓object [steps.JsonToXmlStep-1734686735780]: 
@@ -473,6 +480,19 @@ comment: |
       - SmartType: 
         - ↑mode: PLAIN
         - →→: data
+↓object1 [steps.JsonToXmlStep-1764688665809]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: colDef
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: colDef
 ↓forms_config [variables.RequestableVariable-1734686735912]: 
   comment: |
     '{
