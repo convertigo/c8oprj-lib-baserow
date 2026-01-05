@@ -5,9 +5,16 @@ comment: Lists all applications (databases) in baserow
   expression: |
     include("js/common2.js");
     
+    log.warn("disable logs, calling C8Oforms.BaserowAccountGet");
+    org.apache.log4j.MDC.put("nolog", true);
+    log.debug("logs disabled");
+    
     var callSequenceForms = (callSequence("C8Oforms", "BaserowAccountGet", {}))//;.document.res;
     var password = callSequenceForms.document.password;
     var email = callSequenceForms.document.email;
+    
+    org.apache.log4j.MDC.remove("nolog");
+    log.warn("re-enable logs, after C8Oforms.BaserowAccountGet");
 ↓jIf1 [steps.IfStep-1740153387925]: 
   condition: callSequenceForms.document.error != undefined
   ↓object [steps.JsonToXmlStep-1740153387928]: 

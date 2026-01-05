@@ -1881,6 +1881,11 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
   subDir: /api/user/token-auth/
   ↓__body [variables.RequestableHttpVariable-1664964075425]: 
     httpMethod: POST
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xd8e180806a1c1d83a6255212121ab827
+    visibility: '-1'
 ↓_api_auth_provider_login_options__GET [transactions.JsonHttpTransaction]: 
   comment: Lists the available login options for the configured authentication providers.
   httpInfo: true
