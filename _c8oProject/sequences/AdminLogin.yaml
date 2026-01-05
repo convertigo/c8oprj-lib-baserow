@@ -55,6 +55,11 @@ comment: Establishes a session with Baserow. Must be called before any other API
             - ↑value: 1664964135915
           - java.lang.String: 
             - ↑value: ./*
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xd8e180806a1c1d83a6255212121ab827
+    visibility: '-1'
 ↓IfExist [steps.IfExistStep-1665210744299]: 
   sourceDefinition: 
     - xmlizable: 

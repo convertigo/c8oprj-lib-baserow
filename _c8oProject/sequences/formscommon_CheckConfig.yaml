@@ -95,9 +95,17 @@ accessibility: Private
   expression: |
     'include("js/common2.js");
     
+    log.warn("disable logs, calling C8Oforms.BaserowAccountGet");
+    org.apache.log4j.MDC.put("nolog", true);
+    log.debug("logs disabled");
+    
     var callSequenceForms = (callSequence("C8Oforms", "BaserowAccountGet", { owner: owner}))//;.document.res;
     var password = callSequenceForms.document.password;
-    var email = callSequenceForms.document.email;'
+    var email = callSequenceForms.document.email;
+    
+    org.apache.log4j.MDC.remove("nolog");
+    log.warn("re-enable logs, after C8Oforms.BaserowAccountGet");
+    '
 ↓jIf1 [steps.IfStep-1740150694106]: 
   condition: callSequenceForms.document.error != null
   ↓object [steps.JsonToXmlStep-1740150774888]: 
