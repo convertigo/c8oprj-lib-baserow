@@ -50,153 +50,6 @@ comment: |
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
     let describeStructure = true;
-    let verbsByType = {
-    	text: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	long_text: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	url: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	email: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	phone_number: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"length_is_lower_than", "empty", "not_empty"
-    	],
-    
-    	// Nombre (inclut "Nombre" et "Compteur")
-    	number: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
-    		"is_even_and_whole", "empty", "not_empty"
-    	],
-    
-    	// Classement (tel qu’affiché dans ton Redoc : type number, mais sans empty/not_empty/contains)
-    	ranking_number: [
-    		"equal", "not_equal",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal"
-    	],
-    
-    	// Durée
-    	duration: [
-    		"equal", "not_equal",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
-    		"empty", "not_empty"
-    	],
-    
-    	// Booléen
-    	boolean: ["boolean", "empty", "not_empty"],
-    
-    	// Date
-    	date: [
-    		"date_is", "date_is_not",
-    		"date_is_before", "date_is_on_or_before",
-    		"date_is_after", "date_is_on_or_after",
-    		"date_is_within",
-    		"date_equal", "date_not_equal",
-    		"date_equals_today", "date_before_today", "date_after_today",
-    		"date_within_days", "date_within_weeks", "date_within_months",
-    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
-    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
-    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
-    		"contains", "contains_not", "empty", "not_empty"
-    	],
-    
-    	// Dernière modification (date-like)
-    	last_modified: [
-    		"date_is", "date_is_not",
-    		"date_is_before", "date_is_on_or_before",
-    		"date_is_after", "date_is_on_or_after",
-    		"date_is_within",
-    		"date_equal", "date_not_equal",
-    		"date_equals_today", "date_before_today", "date_after_today",
-    		"date_within_days", "date_within_weeks", "date_within_months",
-    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
-    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
-    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
-    		"contains", "contains_not", "empty", "not_empty"
-    	],
-    
-    	// Créé le (date-like)
-    	created_on: [
-    		"date_is", "date_is_not",
-    		"date_is_before", "date_is_on_or_before",
-    		"date_is_after", "date_is_on_or_after",
-    		"date_is_within",
-    		"date_equal", "date_not_equal",
-    		"date_equals_today", "date_before_today", "date_after_today",
-    		"date_within_days", "date_within_weeks", "date_within_months",
-    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
-    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
-    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
-    		"contains", "contains_not", "empty", "not_empty"
-    	],
-    
-    	// Dernière modif. par / Créé par (utilisateur)
-    	last_modified_by: ["user_is", "user_is_not"],
-    	created_by: ["user_is", "user_is_not"],
-    
-    	// Fichier
-    	file: ["filename_contains", "has_file_type", "files_lower_than", "empty", "not_empty"],
-    
-    	// Sélection simple
-    	single_select: [
-    		"contains", "contains_not", "contains_word", "doesnt_contain_word",
-    		"single_select_equal", "single_select_not_equal",
-    		"single_select_is_any_of", "single_select_is_none_of",
-    		"empty", "not_empty"
-    	],
-    
-    	// Sélection multiple
-    	multiple_select: [
-    		"contains", "contains_not", "contains_word", "doesnt_contain_word",
-    		"multiple_select_has", "multiple_select_has_not",
-    		"empty", "not_empty"
-    	],
-    
-    	// Collaborateurs (multiple)
-    	multiple_collaborators: [
-    		"multiple_collaborators_has", "multiple_collaborators_has_not", "empty", "not_empty"
-    	],
-    
-    	// UUID
-    	uuid: ["equal", "not_equal"],
-    
-    	// Numérotation auto
-    	autonumber: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
-    		"is_even_and_whole"
-    	],
-    	link_row: [
-    		"link_row_has",
-    		"link_row_has_not",
-    		"link_row_contains",
-    		"link_row_not_contains",
-    		"empty",
-    		"not_empty"
-    	],
-    	rating: [
-    		"equal",
-    		"not_equal",
-    		"higher_than",
-    		"higher_than_or_equal",
-    		"lower_than",
-    		"lower_than_or_equal"
-    	],
-    }
     
     // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
     // With the BaseRow API.
@@ -294,6 +147,7 @@ comment: |
 ↓ComputeData [steps.SimpleStep-1734686735777]: 
   expression: |
     'include("js/utils.js");
+    include("js/getFilter.js");
     var data = [];
     var colDef = null;
     
@@ -330,22 +184,9 @@ comment: |
     				var cTarget = structure.filter((x) => {
     					return x.name == key;
     				})[0];
-    				// if target is formula use it''s formula_type
-    				var cType = cTarget != undefined ? cTarget.array_formula_type != null ? cTarget.array_formula_type : cTarget.type : null;
-    				if(cType == "formula"){
-    					cType = cTarget.formula_type;
-    				}
-    				if (cType == "lookup") {
-    					cType = cTarget.formula_type;
-    				}
-    				if(cType == "rollup"){
-    					cType = cTarget.formula_type;
-    				}
-    				if(cType == "count"){
-    					cType = cTarget.formula_type;
-    				}
-    				obj[key]["cType"] = cType;
-    				cTargetCompletion = verbsByType[cType];
+    				var result = getBrFilterType(cTarget)
+    				obj[key]["cType"] = result.type;
+    				cTargetCompletion = result.value;
     				cHideFromFiltering = false;
     				if (cTargetCompletion == undefined) {
     					cTargetCompletion = [];
@@ -362,7 +203,7 @@ comment: |
     
     			obj[key]["filterCompletion"] = cTargetCompletion;
     			obj[key]["filterHide"] = cHideFromFiltering;
-    			obj[key]["sortHide"] = cHideFromFiltering || cType == "file" || cType == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select")
+    			obj[key]["sortHide"] = cHideFromFiltering || result.type == "file" || result.type == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select")
     
     		}
     	}
@@ -409,20 +250,22 @@ comment: |
     		if (jConfig.columns.indexOf(field.name) === -1) {
     			return;
     		}
-    		var cType = field.type;
-    		if (cType === "formula" || cType === "lookup") {
-    			cType = field.formula_type;
+    		var result = getBrFilterType(field);
+    		
+    		var cType = result.type;
+    		var cTargetCompletion = result.value;
+    		var cHideFromFiltering = false;
+    		if (cTargetCompletion == undefined) {
+    			cTargetCompletion = [];
+    			cHideFromFiltering = true;
     		}
     
-    		var cTargetCompletion = verbsByType[cType] || [];
-    		var cHideFromFiltering = !verbsByType[cType];
-    
     		var value = "";
-    		if (field.type === "single_select") {
+    		if (result.type === "single_select") {
     			value = { id: 0, value: "", color: "" };
-    		} else if (cType === "boolean") {
+    		} else if (result.type === "boolean") {
     			value = false;
-    		} else if (cType === "link_row" || cType === "array") {
+    		} else if (result.isArray) {
     			value = [];
     		} else {
     			value = "";
