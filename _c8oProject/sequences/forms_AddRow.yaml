@@ -145,7 +145,11 @@ comment: |
     			log.warn("** key: multiple_select TODO")
     			break;
     		case ''link_row'':
-    			data[key] = [+jDoc.variable.resp[key].value];
+    			data[key] = (""+jDoc.variable.resp[key].value).split('','').map(function(v) {
+    				const trimmed = v.trim();
+    				const num = Number(trimmed);
+    				return isNaN(num) ? trimmed : num;
+    			});
     			break;
     
     		case ''file'':
@@ -554,7 +558,11 @@ comment: |
       			break;
       
       		case ''link_row'':
-      			data[key] = [jDoc.variable.resp[key].value];
+      			data[key] = (""+jDoc.variable.resp[key].value).split('','').map(function(v) {
+      				const trimmed = v.trim();
+      				const num = Number(trimmed);
+      				return isNaN(num) ? trimmed : num;
+      			});
       			break;
       
       		case ''file'':
@@ -758,9 +766,7 @@ comment: |
       ↓jIterator [steps.SimpleIteratorStep-1748360671151]: 
         expression: jDoc.variable.resp[respItem].value
         ↓Sequence_JS [steps.SimpleStep-1748360671154]: 
-          expression: |
-            var ty = typeof item;
-            toto ="aa"
+          expression: var ty = typeof item;
         ↓jIf [steps.IfStep-1748360671157]: 
           condition: item + '' != '[object Object]' && item != undefined && item != ''
           ↓getAttachmentName [steps.SimpleStep-1748360671160]: 

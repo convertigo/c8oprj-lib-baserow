@@ -331,6 +331,11 @@ comment: |
   ↓Sequence_JS [steps.SimpleStep-1680699255296]: 
     expression: |
       'include("js/utils.js");
+      let data = [{}];
+      if("structure" in this){
+      	if(!Array.isArray(structure)){
+      		structure = [structure];
+      	}
       var data = [{}];
       structure.forEach((e)=>{
       	if(jConfig.columns.indexOf(e.name) != -1){
@@ -370,8 +375,8 @@ comment: |
       		e["filterHide"] = cHideFromFiltering;
       		e["sortHide"] = cHideFromFiltering || cType == "file" || cType == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select");
       		data[0][e.name] = e;
-      	}
       })
+      }
       
       	'
   ↓data [steps.JsonToXmlStep-1680699661741]: 
