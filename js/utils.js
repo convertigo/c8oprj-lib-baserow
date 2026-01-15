@@ -43,7 +43,7 @@ var colors = {
     "deep-dark-orange": "#ffc744",
     "white": "#fff"
   }
-var base_html = "<div style='display:flex; white-space: normal; align-items:center'>";
+var base_html = "<div style='display:flex; white-space: normal; align-items:center; flex-wrap: wrap'>";
 var close_html = '</div>';
 var get_base_array_html = (value, color)=>{
 	return "<div style=\"background-color: " + (color && colors[color] ? colors[color] : 'lightgrey') + ";border-radius: 10px; padding-left: 10px; padding-top: 4px; padding-bottom: 4px; width: fit-content; padding-right: 10px; margin-top: 3px;\">" + 
