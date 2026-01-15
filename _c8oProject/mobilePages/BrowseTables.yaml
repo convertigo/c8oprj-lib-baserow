@@ -1227,6 +1227,35 @@ title: First page
                                   font-size: 24px;
                                   font-style: normal;
                                   '
+                        ↓Break [ngx.components.UIDynamicElement-1768484869256]: 
+                          beanData: '{"ionBean":"Break"}'
+                          selfClose: true
+                          tagName: br
+                        ↓Text1 [ngx.components.UIText-1768484869259]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.groupName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text4 [ngx.components.UIText-1768484869262]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text2 [ngx.components.UIText-1768484869265]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.baseName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text5 [ngx.components.UIText-1768484869268]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text3 [ngx.components.UIText-1768484869271]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.tableName","prefix":"","suffix":"","custom":"","useCustom":false}}
                       ↓Style [ngx.components.UIStyle-1680694473959]: 
                         styleContent: 
                           - xmlizable: 
@@ -2326,6 +2355,35 @@ title: First page
                                   font-size: 24px;
                                   font-style: normal;
                                   '
+                        ↓Break [ngx.components.UIDynamicElement-1768484874610]: 
+                          beanData: '{"ionBean":"Break"}'
+                          selfClose: true
+                          tagName: br
+                        ↓Text1 [ngx.components.UIText-1768484874613]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.groupName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text4 [ngx.components.UIText-1768484874616]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text2 [ngx.components.UIText-1768484874619]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.baseName","prefix":"","suffix":"","custom":"","useCustom":false}}
+                        ↓Text5 [ngx.components.UIText-1768484874622]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: plain:~>
+                        ↓Text3 [ngx.components.UIText-1768484874625]: 
+                          textValue: 
+                            - xmlizable: 
+                              - ↑classname: com.twinsoft.convertigo.beans.ngx.components.MobileSmartSourceType
+                              - MobileSmartSourceType: source:{"filter":"Local","project":"lib_BaseRow","input":"","model":{"data":[{"localObject":"local"}],"path":"?.tableName","prefix":"","suffix":"","custom":"","useCustom":false}}
                       ↓Style [ngx.components.UIStyle-1730218495572]: 
                         styleContent: 
                           - xmlizable: 
