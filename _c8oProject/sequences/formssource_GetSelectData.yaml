@@ -145,12 +145,24 @@ comment: |
     		res = [res];
     	}
     	if (jConfig.displayValue) {
-    		res = res.map((x) => {
-    			return {
-    				displayValue: base_html + computeAnyType(x[displayValue] != null ? x[displayValue] : "").innerHtml,
-    				value: computeAnyType(x[value] != null ? x[value] : "").value,
-    				type: "html"
-    			}
+    		res = res
+    				.filter((x)=>{
+    					try{
+    						if((forms_filter == undefined || forms_filter == "") || (x[displayValue].toLowerCase().indexOf(forms_filter.toLowerCase()) != -1)){
+    							return true
+    						}
+    					}
+    					catch(e){
+    						
+    					}
+    					return false;
+    				})
+    				.map((x) => {
+    					return {
+    						displayValue: base_html + computeAnyType(x[displayValue] != null ? x[displayValue] : "").innerHtml,
+    						value: computeAnyType(x[value] != null ? x[value] : "").value,
+    						type: "html"
+    				}
     		})
     	}
     	else if (jConfig.column) {
@@ -165,7 +177,8 @@ comment: |
     	else {
     		res = [];
     	}
-    }'
+    }
+    var toto =" titi"'
 ↓object [steps.JsonToXmlStep-1680712764673]: 
   jsonObject: 
     - xmlizable: 
