@@ -74,8 +74,10 @@ comment: |
     	order_by = null;
     }
     
-    
-    '
+    var search = forms_filter
+    if(search == ""){
+    	search = null;
+    }'
 ↓Input_variables [steps.InputVariablesStep-1666100090915]: 
 ↓Call_Sequence1 [steps.SequenceStep-1666717386561]: 
   sourceSequence: lib_BaseRow.TableGetData
@@ -97,6 +99,7 @@ comment: |
   ↓size [variables.StepVariable-1666717386579]: 
     comment: Defines how many rows should be returned per page.
     description: size
+    value: ${lib_BaseRow.sourcepagesize=200}
   ↓table_id [variables.StepVariable-1666717386582]: 
     comment: Returns the rows of the table related to the provided value.
     description: table_id
@@ -146,17 +149,6 @@ comment: |
     	}
     	if (jConfig.displayValue) {
     		res = res
-    				.filter((x)=>{
-    					try{
-    						if((forms_filter == undefined || forms_filter == "") || (x[displayValue].toLowerCase().indexOf(forms_filter.toLowerCase()) != -1)){
-    							return true
-    						}
-    					}
-    					catch(e){
-    						
-    					}
-    					return false;
-    				})
     				.map((x) => {
     					return {
     						displayValue: base_html + computeAnyType(x[displayValue] != null ? x[displayValue] : "").innerHtml,
@@ -177,8 +169,7 @@ comment: |
     	else {
     		res = [];
     	}
-    }
-    var toto =" titi"'
+    }'
 ↓object [steps.JsonToXmlStep-1680712764673]: 
   jsonObject: 
     - xmlizable: 

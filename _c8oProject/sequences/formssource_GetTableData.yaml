@@ -94,6 +94,7 @@ comment: |
   ↓size [variables.StepVariable-1734686735744]: 
     comment: Defines how many rows should be returned per page.
     description: size
+    value: ${lib_BaseRow.sourcepagesize=200}
   ↓table_id [variables.StepVariable-1734686735747]: 
     comment: Returns the rows of the table related to the provided value.
     description: table_id
