@@ -64,7 +64,43 @@ comment: |
     
     filterExpression = forms_Filter;					// This is the Constructed Fiter API for baserow.
     
-    order_by = forms_tableSort
+    order_by = forms_tableSort;
+    distinctColumns = [];
+    if (forms_tableDistinct != null) {
+    	var rawDistinctColumns = ("" + forms_tableDistinct).split(",");
+    	var distinctColumnsMap = {};
+    	var includeFieldsMap = {};
+    	if (include_fields != null && include_fields != "") {
+    		var rawIncludeFields = include_fields.split(",");
+    		for (var iIncludeField = 0; iIncludeField < rawIncludeFields.length; iIncludeField++) {
+    			var currentIncludeField = rawIncludeFields[iIncludeField].replace(/^\s+|\s+$/g, "");
+    			if (currentIncludeField != "") {
+    				includeFieldsMap[currentIncludeField] = true;
+    			}
+    		}
+    	}
+    	for (var iDistinctColumn = 0; iDistinctColumn < rawDistinctColumns.length; iDistinctColumn++) {
+    		var currentDistinctColumn = rawDistinctColumns[iDistinctColumn].replace(/^\s+|\s+$/g, "");
+    		if (currentDistinctColumn != "" && distinctColumnsMap[currentDistinctColumn] !== true) {
+    			distinctColumns.push(currentDistinctColumn);
+    			distinctColumnsMap[currentDistinctColumn] = true;
+    			if (include_fields != null) {
+    				if (include_fields == "") {
+    					include_fields = currentDistinctColumn;
+    					includeFieldsMap[currentDistinctColumn] = true;
+    				}
+    				else if (includeFieldsMap[currentDistinctColumn] !== true) {
+    					include_fields += "," + currentDistinctColumn;
+    					includeFieldsMap[currentDistinctColumn] = true;
+    				}
+    			}
+    		}
+    	}
+    }
+    if (distinctColumns.length == 0) {
+    	distinctColumns = null;
+    }
+    page = "1";
     
     if (model == "true") {
     	log.warn("Forms Model True")
@@ -130,6 +166,16 @@ comment: |
         - java.lang.String: 
           - ↑value: ./document/results
   variableName: res
+↓next_page [steps.SimpleSourceStep-1774519269956]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1666717386561
+        - java.lang.String: 
+          - ↑value: ./document/next/text()
+  variableName: next_page
 ↓myVariable [steps.JsonSourceStep-1680699208395]: 
   sourceDefinition: 
     - xmlizable: 
@@ -140,12 +186,141 @@ comment: |
         - java.lang.String: 
           - ↑value: ./document/structure/object
   variableName: structure
+↓InitPagination [steps.SimpleStep-1774519269974]: 
+  expression: |
+    'all_res = [];
+    fetched_pages = {};
+    fetched_pages["" + page] = true;
+    
+    if ("res" in this && res != null) {
+    	if (Array.isArray(res)) {
+    		for (var iRes = 0; iRes < res.length; iRes++) {
+    			all_res.push(res[iRes]);
+    		}
+    	} else {
+    		all_res.push(res);
+    	}
+    }
+    
+    res = all_res;
+    '
+↓FetchNextPages [steps.WhileStep-1774519269994]: 
+  condition: model != "true" && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
+  ↓SetPage [steps.SimpleStep-1774519269996]: 
+    expression: |
+      page = "" + next_page;
+      fetched_pages[page] = true;
+      
+  ↓Call_SequenceLoop [steps.SequenceStep-1774519269998]: 
+    sourceSequence: lib_BaseRow.TableGetData
+    ↓exclude [variables.StepVariable-1774519270000]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+      description: exclude
+    ↓include_fields [variables.StepVariable-1774519270002]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+      description: include
+    ↓order_by [variables.StepVariable-1774519270004]: 
+      comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+      description: order_by
+    ↓page [variables.StepVariable-1774519270006]: 
+      comment: Defines which page of rows should be returned.
+      description: page
+    ↓search [variables.StepVariable-1774519270008]: 
+      comment: If provided only rows with data that matches the search query are going to be returned.
+      description: search
+    ↓size [variables.StepVariable-1774519270010]: 
+      comment: Defines how many rows should be returned per page.
+      description: size
+      value: ${lib_BaseRow.sourcepagesize=200}
+    ↓table_id [variables.StepVariable-1774519270012]: 
+      comment: Returns the rows of the table related to the provided value.
+      description: table_id
+      required: true
+    ↓view_id [variables.StepVariable-1774519270014]: 
+      comment: Includes all the filters and sorts of the provided view.
+      description: view_id
+    ↓filterExpression [variables.StepVariable-1774519270016]: 
+    ↓describeStructure [variables.StepVariable-1774519270018]: 
+  ↓IfExist1 [steps.IfExistStep-1774519270020]: 
+    condition: IfExist1
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1774519269998
+          - java.lang.String: 
+            - ↑value: ./document/error
+    ↓Error_structure [steps.XMLCopyStep-1774519270022]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1774519269998
+            - java.lang.String: 
+              - ↑value: ./document/error
+    ↓Return [steps.ReturnStep-1774519270024]: 
+  ↓page_results [steps.JsonSourceStep-1774519270026]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1774519269998
+          - java.lang.String: 
+            - ↑value: ./document/results
+    variableName: page_results
+  ↓next_page [steps.SimpleSourceStep-1774519270028]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1774519269998
+          - java.lang.String: 
+            - ↑value: ./document/next/text()
+    variableName: next_page
+  ↓AppendResults [steps.SimpleStep-1774519270030]: 
+    expression: |
+      'if (page_results != null) {
+      	if (Array.isArray(page_results)) {
+      		for (var iPage = 0; iPage < page_results.length; iPage++) {
+      			all_res.push(page_results[iPage]);
+      		}
+      	} else {
+      		all_res.push(page_results);
+      	}
+      }
+      
+      res = all_res;
+      '
 ↓computeValue [steps.SimpleStep-1680712348539]: 
   expression: |
     'include("js/utils.js");
     if ("res" in this) {
     	if (!(Array.isArray(res))) {
     		res = [res];
+    	}
+    	if (distinctColumns != null) {
+    		var distinctRes = [];
+    		var distinctRows = {};
+    		for (var iDistinct = 0; iDistinct < res.length; iDistinct++) {
+    			var item = res[iDistinct];
+    			var signature = [];
+    			for (var iDistinctColumn = 0; iDistinctColumn < distinctColumns.length; iDistinctColumn++) {
+    				var distinctColumn = distinctColumns[iDistinctColumn];
+    				var distinctValue = item != null && item.hasOwnProperty(distinctColumn) ? item[distinctColumn] : null;
+    				signature.push(distinctColumn + "=" + JSON.stringify(distinctValue));
+    			}
+    			signature = signature.join("|");
+    			if (distinctRows[signature] === true) {
+    				continue;
+    			}
+    			distinctRows[signature] = true;
+    			distinctRes.push(item);
+    		}
+    		res = distinctRes;
     	}
     	if (jConfig.displayValue) {
     		res = res
@@ -317,6 +492,28 @@ comment: |
     }
     '
   description: sort
+↓forms_tableDistinct [variables.RequestableVariable-1774519270032]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "<b>Optional.</b><br/>Enter one or more column names separated by commas to remove duplicates.<br/><b>Example:</b> <code>Country,City</code><br/><b>Result:</b> only the first row found for each combination of values is kept.<br/><b>Use this field when you want one line per unique combination.</b>",
+            "displayName": "Distinct column"
+        },
+        "fr": {
+            "comment": "<b>Optionnel.</b><br/>Saisissez un ou plusieurs noms de colonnes séparés par des virgules pour supprimer les doublons.<br/><b>Exemple :</b> <code>Country,City</code><br/><b>Résultat :</b> seule la première ligne trouvée pour chaque combinaison de valeurs est conservée.<br/><b>Utilisez ce champ si vous voulez une ligne par combinaison unique.</b>",
+            "displayName": "Colonne distincte"
+        },
+        "es": {
+            "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para eliminar duplicados.<br/><b>Ejemplo:</b> <code>Country,City</code><br/><b>Resultado:</b> solo se conserva la primera fila encontrada para cada combinación de valores.<br/><b>Use este campo si desea una línea por combinación única.</b>",
+            "displayName": "Columna distinct"
+        },
+        "it": {
+            "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per rimuovere i duplicati.<br/><b>Esempio:</b> <code>Country,City</code><br/><b>Risultato:</b> viene mantenuta solo la prima riga trovata per ogni combinazione di valori.<br/><b>Usa questo campo se vuoi una riga per ogni combinazione unica.</b>",
+            "displayName": "Colonna distinct"
+        }
+    }
+    '
+  description: distinct_column
 ↓TestWithFilter [core.TestCase]: 
   ↓forms_config [variables.TestCaseVariable-1666717673009]: 
     comment: The Table ID you want to get data from
