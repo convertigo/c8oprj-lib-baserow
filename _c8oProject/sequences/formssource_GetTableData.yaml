@@ -50,6 +50,7 @@ comment: |
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
     let describeStructure = true;
+    var hasConfiguredColumns = jConfig.columns != null;
     
     // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
     // With the BaseRow API.
@@ -66,6 +67,33 @@ comment: |
     if (jConfig.columns == null) {
     	jConfig.columns = [];
     }
+    if (jConfig.hidden == null) {
+    	jConfig.hidden = [];
+    }
+    var appendUniqueColumn = function(targetColumns, targetColumnsMap, currentColumn) {
+    	if (currentColumn == null) {
+    		return;
+    	}
+    	currentColumn = ("" + currentColumn).replace(/^\s+|\s+$/g, "");
+    	if (currentColumn != "" && targetColumnsMap[currentColumn] !== true) {
+    		targetColumns.push(currentColumn);
+    		targetColumnsMap[currentColumn] = true;
+    	}
+    };
+    var buildModelColumns = function() {
+    	if (hasConfiguredColumns !== true) {
+    		return null;
+    	}
+    	var columns = [];
+    	var columnsMap = {};
+    	for (var iConfiguredColumn = 0; iConfiguredColumn < jConfig.columns.length; iConfiguredColumn++) {
+    		appendUniqueColumn(columns, columnsMap, jConfig.columns[iConfiguredColumn]);
+    	}
+    	for (var iHiddenColumn = 0; iHiddenColumn < jConfig.hidden.length; iHiddenColumn++) {
+    		appendUniqueColumn(columns, columnsMap, jConfig.hidden[iHiddenColumn]);
+    	}
+    	return columns;
+    };
     var includeFieldsMap = {};
     var ensureIncludedField = function(currentField) {
     	if (include_fields != null && currentField != null && currentField != "") {
@@ -164,13 +192,22 @@ comment: |
     displayColumns = groupByColumns != null ? groupByColumns : jConfig.columns;
     page = "1";
     
-    // If Forms asks us for a model, just return the 5 First lines, ignoring all filters
+    // If Forms asks us for a model, return one raw line with all configured visible and hidden columns so filters can be computed.
     if (model == "true") {
+    	var modelColumns = buildModelColumns();
     	size = "1";
     	filterExpression = null;
     	order_by = null;
     	describeStructure = true;
+    	include_fields = modelColumns != null ? modelColumns.join(",") : null;
+    	distinctColumns = null;
+    	groupByColumns = null;
+    	aggregationSpecs = null;
+    	displayColumns = modelColumns;
     }
+    var shouldExposeColumn = function(columnName) {
+    	return displayColumns == null || displayColumns.indexOf(columnName) != -1;
+    };
     
     '
 ↓Input_variables [steps.InputVariablesStep-1734686735723]: 
@@ -541,24 +578,31 @@ comment: |
     			}
     			var cTargetCompletion = [];
     			var cHideFromFiltering = true;
-    			if (displayColumns.indexOf(key) != -1) {
-    				var cTarget = structure.filter((x) => {
+    			var cTarget = null;
+    			var result = {
+    				type: null,
+    				value: undefined
+    			};
+    			if (shouldExposeColumn(key)) {
+    				cTarget = structure.filter((x) => {
     					return x.name == key;
     				})[0];
-    				var result = getBrFilterType(cTarget)
-    				obj[key]["cType"] = result.type;
-    				cTargetCompletion = result.value;
-    				cHideFromFiltering = false;
-    				if (cTargetCompletion == undefined) {
-    					cTargetCompletion = [];
-    					cHideFromFiltering = true;
-    				}
-    				if (cTarget.type == "single_select" && obj[key].value == null) {
-    					obj[key].value = {
-    						id: 0,
-    						value: "",
-    						color: ""
-    					};
+    				if (cTarget != null) {
+    					result = getBrFilterType(cTarget)
+    					obj[key]["cType"] = result.type;
+    					cTargetCompletion = result.value;
+    					cHideFromFiltering = false;
+    					if (cTargetCompletion == undefined) {
+    						cTargetCompletion = [];
+    						cHideFromFiltering = true;
+    					}
+    					if (cTarget.type == "single_select" && obj[key].value == null) {
+    						obj[key].value = {
+    							id: 0,
+    							value: "",
+    							color: ""
+    						};
+    					}
     				}
     			}
     
@@ -572,11 +616,31 @@ comment: |
     	var jReorderedRow = {};
     	jReorderedRow["id"] = obj["id"];
     	jReorderedRow["order"] = obj["order"];
-    	displayColumns.forEach((col) => {
-    		if (obj.hasOwnProperty(col)) {
-    			jReorderedRow[col] = obj[col];
+    	if (displayColumns == null) {
+    		if ("structure" in this) {
+    			if (!Array.isArray(structure)) {
+    				structure = [structure];
+    			}
+    			for (var iStructureField = 0; iStructureField < structure.length; iStructureField++) {
+    				var structureFieldName = structure[iStructureField].name;
+    				if (obj.hasOwnProperty(structureFieldName)) {
+    					jReorderedRow[structureFieldName] = obj[structureFieldName];
+    				}
+    			}
     		}
-    	});
+    		for (var currentRowKey in obj) {
+    			if (obj.hasOwnProperty(currentRowKey) && !jReorderedRow.hasOwnProperty(currentRowKey)) {
+    				jReorderedRow[currentRowKey] = obj[currentRowKey];
+    			}
+    		}
+    	}
+    	else {
+    		displayColumns.forEach((col) => {
+    			if (obj.hasOwnProperty(col)) {
+    				jReorderedRow[col] = obj[col];
+    			}
+    		});
+    	}
     	if (groupByColumns != null) {
     		var groupSignature = buildSignature(obj, groupByColumns);
     		var groupedRow = groupedRows[groupSignature];
@@ -637,7 +701,7 @@ comment: |
     	};
     
     	structure.forEach((field) => {
-    		if (displayColumns.indexOf(field.name) === -1) {
+    		if (!shouldExposeColumn(field.name)) {
     			return;
     		}
     		var result = getBrFilterType(field);
