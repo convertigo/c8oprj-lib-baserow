@@ -83,6 +83,29 @@ jobs:
             -Pconvertigo.deploy.user=$C8O_USER \
             -Pconvertigo.deploy.password=$C8O_PASSWORD
 
+      - name: Replace Convertigo 8.4 version in generated CAR files
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          for car in build/*.car; do
+            car_abs="$PWD/$car"
+            tmpdir="$(mktemp -d)"
+            unzip -q "$car" -d "$tmpdir"
+
+            while IFS= read -r -d '' project_file; do
+              sed -i 's/^\([[:space:]]*[↑]*convertigo:[[:space:]]*\)8\.4\./\18.3./' "$project_file"
+            done < <(find "$tmpdir" -type f -name "c8oProject.yaml" -print0)
+
+            (
+              cd "$tmpdir"
+              rm -f "$car_abs"
+              zip -qr "$car_abs" .
+            )
+
+            rm -rf "$tmpdir"
+          done
+
       - name: Save application project
         uses: actions/upload-artifact@v4
         with:
