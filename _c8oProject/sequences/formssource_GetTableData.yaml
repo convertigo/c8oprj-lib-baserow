@@ -192,18 +192,22 @@ comment: |
     displayColumns = groupByColumns != null ? groupByColumns : jConfig.columns;
     page = "1";
     
-    // If Forms asks us for a model, return one raw line with all configured visible and hidden columns so filters can be computed.
+    // If Forms asks us for a model, keep the grouped shape when Group by is used.
     if (model == "true") {
     	var modelColumns = buildModelColumns();
     	size = "1";
     	filterExpression = null;
     	order_by = null;
     	describeStructure = true;
-    	include_fields = modelColumns != null ? modelColumns.join(",") : null;
     	distinctColumns = null;
-    	groupByColumns = null;
-    	aggregationSpecs = null;
-    	displayColumns = modelColumns;
+    	if (groupByColumns == null) {
+    		include_fields = modelColumns != null ? modelColumns.join(",") : null;
+    		aggregationSpecs = null;
+    		displayColumns = modelColumns;
+    	}
+    	else {
+    		displayColumns = groupByColumns;
+    	}
     }
     var shouldExposeColumn = function(columnName) {
     	return displayColumns == null || displayColumns.indexOf(columnName) != -1;
