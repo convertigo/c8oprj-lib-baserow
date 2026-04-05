@@ -206,7 +206,18 @@ comment: |
     		displayColumns = modelColumns;
     	}
     	else {
-    		displayColumns = groupByColumns;
+    		var groupedModelColumns = [];
+    		var groupedModelColumnsMap = {};
+    		for (var iGroupModelColumn = 0; iGroupModelColumn < groupByColumns.length; iGroupModelColumn++) {
+    			appendUniqueColumn(groupedModelColumns, groupedModelColumnsMap, groupByColumns[iGroupModelColumn]);
+    		}
+    		if (modelColumns != null) {
+    			for (var iModelColumn = 0; iModelColumn < modelColumns.length; iModelColumn++) {
+    				ensureIncludedField(modelColumns[iModelColumn]);
+    				appendUniqueColumn(groupedModelColumns, groupedModelColumnsMap, modelColumns[iModelColumn]);
+    			}
+    		}
+    		displayColumns = groupedModelColumns;
     	}
     }
     var shouldExposeColumn = function(columnName) {
