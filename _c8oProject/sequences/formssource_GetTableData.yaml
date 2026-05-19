@@ -158,9 +158,23 @@ comment: |
     	for (var key in elem) {
     		var html = "" + base_html;
     		var current = elem[key];
+    		var currentType = null;
+    		if ("structure" in this) {
+    			if (!Array.isArray(structure)) {
+    				structure = [structure];
+    			}
+    			if (jConfig.columns.indexOf(key) != -1) {
+    				var cTargetForType = structure.filter((x) => {
+    					return x.name == key;
+    				})[0];
+    				if (cTargetForType != undefined) {
+    					currentType = getBrFilterType(cTargetForType).type;
+    				}
+    			}
+    		}
     		if (current != null) {
     			obj[key] = { displayName: key, type: "html", value: "" };
-    			var result = computeAnyType(current, false);
+    			var result = computeAnyType(current, false, currentType);
     			html += result.innerHtml;
     			obj[key].value = result.value;
     			if (

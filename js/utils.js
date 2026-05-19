@@ -61,13 +61,33 @@ var get_base_array_image_html = (url)=>{
 var get_base_array_link_html = (url, visibleName)=>{
 	return "<p style='background-color : lightgray;' ><a  href=\"" + url + "\" target=\"_blank\" download=\""+visibleName+"\">" + visibleName + "</a></p>"
 }
-var computeAnyType = (element, nested)=>{
+var escape_base_html = (value)=>{
+	return String(value)
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+var normalize_base_url = (url)=>{
+	if (/^(https?:\/\/|mailto:|tel:)/i.test(url)) {
+		return url;
+	}
+	return "https://" + url;
+}
+var get_base_url_html = (url)=>{
+	url = String(url == undefined || url == null ? "" : url).trim();
+	if (url.length == 0) {
+		return "";
+	}
+	return "<a href=\"" + escape_base_html(normalize_base_url(url)) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + escape_base_html(url) + "</a>";
+}
+var computeAnyType = (element, nested, type)=>{
 	var value;
 	var innerHtml = "";
 	if(Array.isArray(element)){
 		value = [];
 		element.forEach((arrayItem)=>{
-			var result = computeAnyType(arrayItem, true);
+			var result = computeAnyType(arrayItem, true, type);
 			value.push(result.value);
 			innerHtml += result.innerHtml;
 		});
@@ -75,12 +95,12 @@ var computeAnyType = (element, nested)=>{
 	}
 	else if(typeof element == "object"){
 		if(element.value != undefined && typeof element.value == "object"){
-			var result = computeAnyType(element.value, true);
+			var result = computeAnyType(element.value, true, type);
 			innerHtml = result.innerHtml;
 			value = result.value;
 		}
 		else if(element.value != undefined){
-			innerHtml = get_base_array_html(element.value, element.color); // + close_html;
+			innerHtml = type == "url" ? get_base_url_html(element.value) : get_base_array_html(element.value, element.color); // + close_html;
 			value = element;
 		}
 		else if(element.name != undefined && element.is_image == undefined && element.url == undefined) {
@@ -105,7 +125,7 @@ var computeAnyType = (element, nested)=>{
 		}
 	}
 	else{
-		innerHtml = element; // + close_html;
+		innerHtml = type == "url" ? get_base_url_html(element) : element; // + close_html;
 		value = element;
 	}
 	return {innerHtml: innerHtml + (nested ? "" : close_html), value: value};
