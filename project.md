@@ -14578,6 +14578,14 @@ The Base row admin email
 The baserow admin password
 </td>
 </tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;use_refresh
+</td>
+<td>
+Use the refresh_token stored in the HTTP session before falling back to username/password login.
+</td>
+</tr>
 </table>
 
 </p></blockquote></details>
@@ -15186,6 +15194,20 @@ Define a filter to apply to a table
 </tr>
 <tr>
 <td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableDistinct
+</td>
+<td>
+<b>Optional.</b><br/>Enter one or more column names separated by commas to remove duplicates.<br/><b>Example:</b> 
+
+```
+Country,City
+```
+
+<br/><b>Result:</b> only the first row found for each combination of values is kept.<br/><b>Use this field when you want one line per unique combination.</b>
+</td>
+</tr>
+<tr>
+<td>
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableSort
 </td>
 <td>
@@ -15232,10 +15254,118 @@ Choose a table
 </tr>
 <tr>
 <td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableAggregations
+</td>
+<td>
+<b>Optional.</b><br/>Use this field only with <b>Group by</b>.<br/>Enter one or more aggregations separated by commas.<br/><b>Examples:</b> 
+
+```
+count
+```
+
+, 
+
+```
+sum:Amount
+```
+
+, 
+
+```
+avg:Amount
+```
+
+, 
+
+```
+min:Date
+```
+
+, 
+
+```
+max:Score
+```
+
+<br/><b>Recommended use:</b><ul><li>
+
+```
+count
+```
+
+ for any grouped data</li><li>
+
+```
+sum
+```
+
+ and 
+
+```
+avg
+```
+
+ only for numeric columns</li><li>
+
+```
+min
+```
+
+ and 
+
+```
+max
+```
+
+ for simple single-value columns</li></ul><b>Not supported:</b> files, linked rows, multiple selections, or other multi-value columns.<br/><b>If this field is empty, 
+
+```
+count
+```
+
+ is used by default.</b>
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableDistinct
+</td>
+<td>
+<b>Optional.</b><br/>Enter one or more column names separated by commas to remove duplicates.<br/><b>Example:</b> 
+
+```
+Country,City
+```
+
+<br/><b>Result:</b> only the first row found for each combination of values is kept.<br/><b>Use this field when you want one line per unique combination.</b>
+</td>
+</tr>
+<tr>
+<td>
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableFilter
 </td>
 <td>
 Define a filter to apply to a table
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_tableGroupBy
+</td>
+<td>
+<b>Optional.</b><br/>Enter one or more column names separated by commas to group the rows.<br/><b>Example:</b> 
+
+```
+Service,Region
+```
+
+<br/><b>Result:</b> one row per combination of values, with the aggregation columns defined below.<br/><b>If Aggregations is empty, a 
+
+```
+count
+```
+
+ column is returned by default.</b><br/><b>If this field is filled in, Distinct is ignored.</b>
 </td>
 </tr>
 <tr>

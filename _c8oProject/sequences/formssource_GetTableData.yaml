@@ -49,154 +49,8 @@ comment: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
-    let describeStructure = false;
-    let verbsByType = {
-    	text: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	long_text: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	url: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	email: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"contains_word", "doesnt_contain_word", "length_is_lower_than",
-    		"empty", "not_empty"
-    	],
-    	phone_number: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"length_is_lower_than", "empty", "not_empty"
-    	],
-    
-    	// Nombre (inclut "Nombre" et "Compteur")
-    	number: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
-    		"is_even_and_whole", "empty", "not_empty"
-    	],
-    
-    	// Classement (tel qu’affiché dans ton Redoc : type number, mais sans empty/not_empty/contains)
-    	ranking_number: [
-    		"equal", "not_equal",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal"
-    	],
-    
-    	// Durée
-    	duration: [
-    		"equal", "not_equal",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
-    		"empty", "not_empty"
-    	],
-    
-    	// Booléen
-    	boolean: ["boolean", "empty", "not_empty"],
-    
-    	// Date
-    	date: [
-    		"date_is", "date_is_not",
-    		"date_is_before", "date_is_on_or_before",
-    		"date_is_after", "date_is_on_or_after",
-    		"date_is_within",
-    		"date_equal", "date_not_equal",
-    		"date_equals_today", "date_before_today", "date_after_today",
-    		"date_within_days", "date_within_weeks", "date_within_months",
-    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
-    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
-    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
-    		"contains", "contains_not", "empty", "not_empty"
-    	],
-    
-    	// Dernière modification (date-like)
-    	last_modified: [
-    		"date_is", "date_is_not",
-    		"date_is_before", "date_is_on_or_before",
-    		"date_is_after", "date_is_on_or_after",
-    		"date_is_within",
-    		"date_equal", "date_not_equal",
-    		"date_equals_today", "date_before_today", "date_after_today",
-    		"date_within_days", "date_within_weeks", "date_within_months",
-    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
-    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
-    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
-    		"contains", "contains_not", "empty", "not_empty"
-    	],
-    
-    	// Créé le (date-like)
-    	created_on: [
-    		"date_is", "date_is_not",
-    		"date_is_before", "date_is_on_or_before",
-    		"date_is_after", "date_is_on_or_after",
-    		"date_is_within",
-    		"date_equal", "date_not_equal",
-    		"date_equals_today", "date_before_today", "date_after_today",
-    		"date_within_days", "date_within_weeks", "date_within_months",
-    		"date_equals_days_ago", "date_equals_months_ago", "date_equals_years_ago",
-    		"date_equals_week", "date_equals_month", "date_equals_year", "date_equals_day_of_month",
-    		"date_before", "date_before_or_equal", "date_after", "date_after_or_equal", "date_after_days_ago",
-    		"contains", "contains_not", "empty", "not_empty"
-    	],
-    
-    	// Dernière modif. par / Créé par (utilisateur)
-    	last_modified_by: ["user_is", "user_is_not"],
-    	created_by: ["user_is", "user_is_not"],
-    
-    	// Fichier
-    	file: ["filename_contains", "has_file_type", "files_lower_than", "empty", "not_empty"],
-    
-    	// Sélection simple
-    	single_select: [
-    		"contains", "contains_not", "contains_word", "doesnt_contain_word",
-    		"single_select_equal", "single_select_not_equal",
-    		"single_select_is_any_of", "single_select_is_none_of",
-    		"empty", "not_empty"
-    	],
-    
-    	// Sélection multiple
-    	multiple_select: [
-    		"contains", "contains_not", "contains_word", "doesnt_contain_word",
-    		"multiple_select_has", "multiple_select_has_not",
-    		"empty", "not_empty"
-    	],
-    
-    	// Collaborateurs (multiple)
-    	multiple_collaborators: [
-    		"multiple_collaborators_has", "multiple_collaborators_has_not", "empty", "not_empty"
-    	],
-    
-    	// UUID
-    	uuid: ["equal", "not_equal"],
-    
-    	// Numérotation auto
-    	autonumber: [
-    		"equal", "not_equal", "contains", "contains_not",
-    		"higher_than", "higher_than_or_equal", "lower_than", "lower_than_or_equal",
-    		"is_even_and_whole"
-    	],
-    	link_row: [
-    		"link_row_has",
-    		"link_row_has_not",
-    		"link_row_contains",
-    		"link_row_not_contains",
-    		"empty",
-    		"not_empty"
-    	],
-    	rating: [
-    		"equal",
-    		"not_equal",
-    		"higher_than",
-    		"higher_than_or_equal",
-    		"lower_than",
-    		"lower_than_or_equal"
-    	],
-    }
+    let describeStructure = true;
+    var hasConfiguredColumns = jConfig.columns != null;
     
     // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
     // With the BaseRow API.
@@ -209,19 +63,171 @@ comment: |
     // The Filter Expression is provided  directly in the form_fitler variable.
     filterExpression = forms_tableFilter;
     
-    order_by = forms_tableSort
+    order_by = forms_tableSort;
+    if (jConfig.columns == null) {
+    	jConfig.columns = [];
+    }
+    if (jConfig.hidden == null) {
+    	jConfig.hidden = [];
+    }
+    var appendUniqueColumn = function(targetColumns, targetColumnsMap, currentColumn) {
+    	if (currentColumn == null) {
+    		return;
+    	}
+    	currentColumn = ("" + currentColumn).replace(/^\s+|\s+$/g, "");
+    	if (currentColumn != "" && targetColumnsMap[currentColumn] !== true) {
+    		targetColumns.push(currentColumn);
+    		targetColumnsMap[currentColumn] = true;
+    	}
+    };
+    var buildModelColumns = function() {
+    	if (hasConfiguredColumns !== true) {
+    		return null;
+    	}
+    	var columns = [];
+    	var columnsMap = {};
+    	for (var iConfiguredColumn = 0; iConfiguredColumn < jConfig.columns.length; iConfiguredColumn++) {
+    		appendUniqueColumn(columns, columnsMap, jConfig.columns[iConfiguredColumn]);
+    	}
+    	for (var iHiddenColumn = 0; iHiddenColumn < jConfig.hidden.length; iHiddenColumn++) {
+    		appendUniqueColumn(columns, columnsMap, jConfig.hidden[iHiddenColumn]);
+    	}
+    	return columns;
+    };
+    var includeFieldsMap = {};
+    var ensureIncludedField = function(currentField) {
+    	if (include_fields != null && currentField != null && currentField != "") {
+    		if (include_fields == "") {
+    			include_fields = currentField;
+    		}
+    		else if (includeFieldsMap[currentField] !== true) {
+    			include_fields += "," + currentField;
+    		}
+    		includeFieldsMap[currentField] = true;
+    	}
+    };
+    if (include_fields != null && include_fields != "") {
+    	var rawIncludeFields = include_fields.split(",");
+    	for (var iIncludeField = 0; iIncludeField < rawIncludeFields.length; iIncludeField++) {
+    		var currentIncludeField = rawIncludeFields[iIncludeField].replace(/^\s+|\s+$/g, "");
+    		if (currentIncludeField != "") {
+    			includeFieldsMap[currentIncludeField] = true;
+    		}
+    	}
+    }
+    var parseColumnNames = function(rawColumns) {
+    	var columns = [];
+    	var columnsMap = {};
+    	if (rawColumns != null) {
+    		var rawColumnsArray = ("" + rawColumns).split(",");
+    		for (var iColumn = 0; iColumn < rawColumnsArray.length; iColumn++) {
+    			var currentColumn = rawColumnsArray[iColumn].replace(/^\s+|\s+$/g, "");
+    			if (currentColumn != "" && columnsMap[currentColumn] !== true) {
+    				columns.push(currentColumn);
+    				columnsMap[currentColumn] = true;
+    				ensureIncludedField(currentColumn);
+    			}
+    		}
+    	}
+    	if (columns.length == 0) {
+    		return null;
+    	}
+    	return columns;
+    };
+    var parseAggregationSpecs = function(rawAggregations) {
+    	var aggregations = [];
+    	var aggregationMap = {};
+    	if (rawAggregations != null) {
+    		var rawAggregationsArray = ("" + rawAggregations).split(",");
+    		for (var iAggregation = 0; iAggregation < rawAggregationsArray.length; iAggregation++) {
+    			var currentAggregation = rawAggregationsArray[iAggregation].replace(/^\s+|\s+$/g, "");
+    			if (currentAggregation == "") {
+    				continue;
+    			}
+    			var separatorIndex = currentAggregation.indexOf(":");
+    			var aggregationType = separatorIndex == -1 ? currentAggregation.toLowerCase() : currentAggregation.substring(0, separatorIndex).replace(/^\s+|\s+$/g, "").toLowerCase();
+    			var aggregationColumn = separatorIndex == -1 ? null : currentAggregation.substring(separatorIndex + 1).replace(/^\s+|\s+$/g, "");
+    			if (["count", "sum", "avg", "min", "max"].indexOf(aggregationType) == -1) {
+    				continue;
+    			}
+    			if (aggregationType != "count" && (aggregationColumn == null || aggregationColumn == "")) {
+    				continue;
+    			}
+    			var aggregationSignature = aggregationType == "count" ? "count" : aggregationType + ":" + aggregationColumn;
+    			if (aggregationMap[aggregationSignature] === true) {
+    				continue;
+    			}
+    			if (aggregationColumn != null) {
+    				ensureIncludedField(aggregationColumn);
+    			}
+    			aggregations.push({
+    				type: aggregationType,
+    				column: aggregationColumn,
+    				key: aggregationType == "count" ? "count" : aggregationType + "_" + aggregationColumn
+    			});
+    			aggregationMap[aggregationSignature] = true;
+    		}
+    	}
+    	if (aggregations.length == 0) {
+    		return null;
+    	}
+    	return aggregations;
+    };
+    groupByColumns = parseColumnNames(forms_tableGroupBy);
+    distinctColumns = parseColumnNames(forms_tableDistinct);
+    aggregationSpecs = parseAggregationSpecs(forms_tableAggregations);
+    if (groupByColumns != null) {
+    	distinctColumns = null;
+    	if (aggregationSpecs == null) {
+    		aggregationSpecs = [{
+    			type: "count",
+    			column: null,
+    			key: "count"
+    		}];
+    	}
+    }
+    else {
+    	aggregationSpecs = null;
+    }
+    displayColumns = groupByColumns != null ? groupByColumns : jConfig.columns;
+    page = "1";
     
-    // If Forms asks us for a model, just return the 5 First lines, ignoring all filters
+    // If Forms asks us for a model, keep the grouped shape when Group by is used.
     if (model == "true") {
+    	var modelColumns = buildModelColumns();
     	size = "1";
     	filterExpression = null;
     	order_by = null;
     	describeStructure = true;
+    	distinctColumns = null;
+    	if (groupByColumns == null) {
+    		include_fields = modelColumns != null ? modelColumns.join(",") : null;
+    		aggregationSpecs = null;
+    		displayColumns = modelColumns;
+    	}
+    	else {
+    		var groupedModelColumns = [];
+    		var groupedModelColumnsMap = {};
+    		for (var iGroupModelColumn = 0; iGroupModelColumn < groupByColumns.length; iGroupModelColumn++) {
+    			appendUniqueColumn(groupedModelColumns, groupedModelColumnsMap, groupByColumns[iGroupModelColumn]);
+    		}
+    		if (modelColumns != null) {
+    			for (var iModelColumn = 0; iModelColumn < modelColumns.length; iModelColumn++) {
+    				ensureIncludedField(modelColumns[iModelColumn]);
+    				appendUniqueColumn(groupedModelColumns, groupedModelColumnsMap, modelColumns[iModelColumn]);
+    			}
+    		}
+    		displayColumns = groupedModelColumns;
+    	}
     }
+    var shouldExposeColumn = function(columnName) {
+    	return displayColumns == null || displayColumns.indexOf(columnName) != -1;
+    };
     
     '
 ↓Input_variables [steps.InputVariablesStep-1734686735723]: 
 ↓Call_Sequence [steps.SequenceStep-1734686735726]: 
+  output: true
   sourceSequence: lib_BaseRow.TableGetData
   ↓exclude [variables.StepVariable-1734686735729]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
@@ -241,6 +247,7 @@ comment: |
   ↓size [variables.StepVariable-1734686735744]: 
     comment: Defines how many rows should be returned per page.
     description: size
+    value: ${lib_BaseRow.sourcepagesize=200}
   ↓table_id [variables.StepVariable-1734686735747]: 
     comment: Returns the rows of the table related to the provided value.
     description: table_id
@@ -259,17 +266,15 @@ comment: |
           - ↑value: 1734686735726
         - java.lang.String: 
           - ↑value: ./document/error
-  ↓Error_structure [steps.XMLErrorStep-1734686735762]: 
-    message: 
+  ↓Error_structure [steps.XMLCopyStep-1774516933834]: 
+    sourceDefinition: 
       - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-        - SmartType: 
-          - ↑mode: SOURCE
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: 1734686735726
-            - java.lang.String: 
-              - ↑value: ./document/error/message/text()
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1734686735726
+          - java.lang.String: 
+            - ↑value: ./document/error
   ↓Return [steps.ReturnStep-1734686735765]: 
 ↓myVariable [steps.JsonSourceStep-1734686735768]: 
   sourceDefinition: 
@@ -291,83 +296,515 @@ comment: |
         - java.lang.String: 
           - ↑value: ./document/results
   variableName: results
+↓next_page [steps.SimpleSourceStep-1774516723630]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734686735726
+        - java.lang.String: 
+          - ↑value: ./document/next/text()
+  variableName: next_page
+↓InitPagination [steps.SimpleStep-1774516723657]: 
+  expression: |
+    'all_results = [];
+    fetched_pages = {};
+    fetched_pages["" + page] = true;
+    
+    if (results != null) {
+    	if (Array.isArray(results)) {
+    		for (var i = 0; i < results.length; i++) {
+    			all_results.push(results[i]);
+    		}
+    	} else {
+    		all_results.push(results);
+    	}
+    }
+    
+    results = all_results;
+    '
+↓FetchNextPages [steps.WhileStep-1774516723692]: 
+  condition: model != "true" && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
+  ↓SetPage [steps.SimpleStep-1774516723694]: 
+    expression: |
+      page = "" + next_page;
+      fetched_pages[page] = true;
+      
+  ↓Call_Sequence2 [steps.SequenceStep-1774516723696]: 
+    sourceSequence: lib_BaseRow.TableGetData
+    ↓exclude [variables.StepVariable-1774516723698]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+      description: exclude
+    ↓include_fields [variables.StepVariable-1774516723700]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+      description: include
+    ↓order_by [variables.StepVariable-1774516723702]: 
+      comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+      description: order_by
+    ↓page [variables.StepVariable-1774516723704]: 
+      comment: Defines which page of rows should be returned.
+      description: page
+    ↓search [variables.StepVariable-1774516723706]: 
+      comment: If provided only rows with data that matches the search query are going to be returned.
+      description: search
+    ↓size [variables.StepVariable-1774516723708]: 
+      comment: Defines how many rows should be returned per page.
+      description: size
+      value: ${lib_BaseRow.sourcepagesize=200}
+    ↓table_id [variables.StepVariable-1774516723710]: 
+      comment: Returns the rows of the table related to the provided value.
+      description: table_id
+      required: true
+    ↓view_id [variables.StepVariable-1774516723712]: 
+      comment: Includes all the filters and sorts of the provided view.
+      description: view_id
+    ↓filterExpression [variables.StepVariable-1774516723714]: 
+    ↓describeStructure [variables.StepVariable-1774516723716]: 
+  ↓IfExist1 [steps.IfExistStep-1774516723718]: 
+    condition: IfExist1
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1774516723696
+          - java.lang.String: 
+            - ↑value: ./document/error
+    ↓Error_structure [steps.XMLCopyStep-1774516933882]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1774516723696
+            - java.lang.String: 
+              - ↑value: ./document/error
+    ↓Return [steps.ReturnStep-1774516723722]: 
+  ↓page_results [steps.JsonSourceStep-1774516723724]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1774516723696
+          - java.lang.String: 
+            - ↑value: ./document/results
+    variableName: page_results
+  ↓next_page [steps.SimpleSourceStep-1774516723726]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1774516723696
+          - java.lang.String: 
+            - ↑value: ./document/next/text()
+    variableName: next_page
+  ↓AppendResults [steps.SimpleStep-1774516723728]: 
+    expression: |
+      'if (page_results != null) {
+      	if (Array.isArray(page_results)) {
+      		for (var i = 0; i < page_results.length; i++) {
+      			all_results.push(page_results[i]);
+      		}
+      	} else {
+      		all_results.push(page_results);
+      	}
+      }
+      
+      results = all_results;
+      '
 ↓ComputeData [steps.SimpleStep-1734686735777]: 
   expression: |
     'include("js/utils.js");
+    include("js/getFilter.js");
     var data = [];
-    for(var elem of results){
+    var colDef = null;
+    var aggregationError = null;
+    var distinctRows = {};
+    var groupedRows = {};
+    var groupedStates = {};
+    var buildSignature = function(cells, columns) {
+    	var signature = [];
+    	for (var iSignature = 0; iSignature < columns.length; iSignature++) {
+    		var currentColumn = columns[iSignature];
+    		var currentCell = cells.hasOwnProperty(currentColumn) ? cells[currentColumn] : null;
+    		var currentValue = currentCell != null ? currentCell.value : null;
+    		signature.push(currentColumn + "=" + JSON.stringify(currentValue));
+    	}
+    	return signature.join("|");
+    };
+    var buildAggregateCell = function(aggregationSpec, aggregationValue) {
+    	var displayValue = aggregationValue == null ? "" : aggregationValue;
+    	return {
+    		displayName: aggregationSpec.key,
+    		type: "html",
+    		value: aggregationValue,
+    		displayValue: base_html + displayValue + close_html,
+    		cType: aggregationSpec.type == "min" || aggregationSpec.type == "max" ? "text" : "number",
+    		filterCompletion: [],
+    		filterHide: true,
+    		sortHide: false
+    	};
+    };
+    var getAggregationSourceValue = function(cell) {
+    	if (cell == null || cell.value == null) {
+    		return null;
+    	}
+    	var sourceValue = cell.value;
+    	if (Array.isArray(sourceValue)) {
+    		return null;
+    	}
+    	if (typeof sourceValue == "object") {
+    		if (sourceValue.value != null && typeof sourceValue.value != "object") {
+    			return sourceValue.value;
+    		}
+    		if (sourceValue.name != null && typeof sourceValue.name != "object") {
+    			return sourceValue.name;
+    		}
+    		return null;
+    	}
+    	return sourceValue;
+    };
+    var getNumericValue = function(sourceValue) {
+    	if (typeof sourceValue == "number") {
+    		return isFinite(sourceValue) ? sourceValue : null;
+    	}
+    	if (typeof sourceValue == "string" && sourceValue != "") {
+    		var numericValue = parseFloat(sourceValue.replace(",", "."));
+    		return isNaN(numericValue) ? null : numericValue;
+    	}
+    	return null;
+    };
+    var updateAggregationState = function(aggregationState, aggregationSpec, sourceCell) {
+    	if (aggregationSpec.type == "count") {
+    		aggregationState.value = (aggregationState.value == null ? 0 : aggregationState.value) + 1;
+    		return;
+    	}
+    	var sourceValue = getAggregationSourceValue(sourceCell);
+    	if (sourceValue == null) {
+    		return;
+    	}
+    	if (aggregationSpec.type == "sum" || aggregationSpec.type == "avg") {
+    		var numericValue = getNumericValue(sourceValue);
+    		if (numericValue == null) {
+    			return;
+    		}
+    		aggregationState.sum = (aggregationState.sum == null ? 0 : aggregationState.sum) + numericValue;
+    		aggregationState.count = (aggregationState.count == null ? 0 : aggregationState.count) + 1;
+    		aggregationState.value = aggregationSpec.type == "sum" ? aggregationState.sum : aggregationState.sum / aggregationState.count;
+    		return;
+    	}
+    	if (aggregationState.value == null) {
+    		aggregationState.value = sourceValue;
+    		aggregationState.numericValue = getNumericValue(sourceValue);
+    		return;
+    	}
+    	var currentNumericValue = getNumericValue(sourceValue);
+    	if (aggregationState.numericValue != null && currentNumericValue != null) {
+    		var shouldReplace = aggregationSpec.type == "min" ? currentNumericValue < aggregationState.numericValue : currentNumericValue > aggregationState.numericValue;
+    		if (shouldReplace) {
+    			aggregationState.value = sourceValue;
+    			aggregationState.numericValue = currentNumericValue;
+    		}
+    		return;
+    	}
+    	var currentStringValue = "" + sourceValue;
+    	var savedStringValue = "" + aggregationState.value;
+    	var shouldReplaceByString = aggregationSpec.type == "min" ? currentStringValue < savedStringValue : currentStringValue > savedStringValue;
+    	if (shouldReplaceByString) {
+    		aggregationState.value = sourceValue;
+    		aggregationState.numericValue = currentNumericValue;
+    	}
+    };
+    if (aggregationSpecs != null && "structure" in this) {
+    	if (!Array.isArray(structure)) {
+    		structure = [structure];
+    	}
+    	var aggregationColumnInfo = {};
+    	var numericAggregationTypes = {
+    		autonumber: true,
+    		duration: true,
+    		number: true,
+    		rating: true
+    	};
+    	var unsupportedAggregationTypes = {
+    		file: true,
+    		link_row: true,
+    		multiple_collaborators: true,
+    		multiple_select: true
+    	};
+    	for (var iStructureField = 0; iStructureField < structure.length; iStructureField++) {
+    		var currentStructureField = structure[iStructureField];
+    		aggregationColumnInfo[currentStructureField.name] = {
+    			field: currentStructureField,
+    			filterType: getBrFilterType(currentStructureField)
+    		};
+    	}
+    	for (var iAggregationValidation = 0; iAggregationValidation < aggregationSpecs.length; iAggregationValidation++) {
+    		var currentAggregationSpec = aggregationSpecs[iAggregationValidation];
+    		if (currentAggregationSpec.type == "count") {
+    			continue;
+    		}
+    		var currentAggregationInfo = aggregationColumnInfo[currentAggregationSpec.column];
+    		if (currentAggregationInfo == null) {
+    			aggregationError = "The aggregation column ''" + currentAggregationSpec.column + "'' was not found in the table structure.";
+    			break;
+    		}
+    		var currentAggregationType = currentAggregationInfo.filterType.type;
+    		if (currentAggregationInfo.filterType.isArray === true || unsupportedAggregationTypes[currentAggregationType] === true) {
+    			aggregationError = "The aggregation ''" + currentAggregationSpec.type + "'' is not supported on column ''" + currentAggregationSpec.column + "'' of type ''" + currentAggregationType + "''.";
+    			break;
+    		}
+    		if ((currentAggregationSpec.type == "sum" || currentAggregationSpec.type == "avg") && numericAggregationTypes[currentAggregationType] !== true) {
+    			aggregationError = "The aggregation ''" + currentAggregationSpec.type + "'' is only supported on numeric columns. Column ''" + currentAggregationSpec.column + "'' is of type ''" + currentAggregationType + "''.";
+    			break;
+    		}
+    	}
+    }
+    if (aggregationError == null) {
+    	for (var elem of results) {
     	var obj = {};
     	var cpt = 0;
-    	for(var key in elem){
+    	for (var key in elem) {
     		var html = "" + base_html;
     		var current = elem[key];
-    		if(current != null){
-    			obj[key] = {"displayName": key, "type": "html", value:""};
-    			var result = computeAnyType(current, false);
+    		var currentType = null;
+    		if ("structure" in this) {
+    			if (!Array.isArray(structure)) {
+    				structure = [structure];
+    			}
+    			if (shouldExposeColumn(key)) {
+    				var cTargetForType = structure.filter((x) => {
+    					return x.name == key;
+    				})[0];
+    				if (cTargetForType != undefined) {
+    					currentType = getBrFilterType(cTargetForType).type;
+    				}
+    			}
+    		}
+    		if (current != null) {
+    			obj[key] = { displayName: key, type: "html", value: "" };
+    			var result = computeAnyType(current, false, currentType);
     			html += result.innerHtml;
     			obj[key].value = result.value;
-    			if(key == "id" || key == "order" || (jConfig.hidden ? jConfig.hidden.includes(key) : false)){
+    			if (
+    				key == "id" ||
+    				key == "order" ||
+    				(jConfig.hidden ? jConfig.hidden.includes(key) : false)
+    			) {
     				obj[key].hidden = true;
     			}
     			obj[key].displayValue = html;
+    		} else {
+    			obj[key] = { displayName: key, type: "html", value: null };
     		}
-    		else{
-    			obj[key] = {"displayName": key, "type": "html", value:null};
-    		}
-    		if(model == "true" && "structure" in this){
+    
+    		if (model == "true" && "structure" in this) {
+    			if (!Array.isArray(structure)) {
+    				structure = [structure];
+    			}
     			var cTargetCompletion = [];
     			var cHideFromFiltering = true;
-    			if(jConfig.columns.indexOf(key) != -1){
-    				var cTarget = structure.filter((x)=>{
-    					return x.name == key
+    			var cTarget = null;
+    			var result = {
+    				type: null,
+    				value: undefined
+    			};
+    			if (shouldExposeColumn(key)) {
+    				cTarget = structure.filter((x) => {
+    					return x.name == key;
     				})[0];
-    				// if target is formula use it''s formula_type
-    				var cType = cTarget != undefined ? cTarget.array_formula_type != null ? cTarget.array_formula_type : cTarget.type : null;
-    				if(cType == "formula"){
-    					cType = cTarget.formula_type;
-    				}
-    				if(cType == "lookup"){
-    					cType = cTarget.formula_type;
-    				}
-    				if(cType == "rollup"){
-    					cType = cTarget.formula_type;
-    				}
-    				if(cType == "count"){
-    					cType = cTarget.formula_type;
-    				}
-    				obj[key]["cType"] = cType;
-    				cTargetCompletion = verbsByType[cType];
-    				cHideFromFiltering = false;
-    				if(cTargetCompletion == undefined){
-    					cTargetCompletion = [];
-    					cHideFromFiltering = true;
-    				}
-    				if(cTarget.type == "single_select" && obj[key].value == null){
-    					obj[key].value = {
-    						"id": 0,
-    					    "value": "",
-    					    "color": ""
+    				if (cTarget != null) {
+    					result = getBrFilterType(cTarget)
+    					obj[key]["cType"] = result.type;
+    					cTargetCompletion = result.value;
+    					cHideFromFiltering = false;
+    					if (cTargetCompletion == undefined) {
+    						cTargetCompletion = [];
+    						cHideFromFiltering = true;
+    					}
+    					if (cTarget.type == "single_select" && obj[key].value == null) {
+    						obj[key].value = {
+    							id: 0,
+    							value: "",
+    							color: ""
+    						};
     					}
     				}
     			}
-    			
+    
     			obj[key]["filterCompletion"] = cTargetCompletion;
     			obj[key]["filterHide"] = cHideFromFiltering;
-    			obj[key]["sortHide"] = cHideFromFiltering || cType == "file" || cType == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select")
+    			obj[key]["sortHide"] = cHideFromFiltering || result.type == "file" || result.type == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select")
     
     		}
     	}
-    	jReorderedRow = {};
+    
+    	var jReorderedRow = {};
     	jReorderedRow["id"] = obj["id"];
     	jReorderedRow["order"] = obj["order"];
-    	jConfig.columns.forEach((col) => {
-    	  if (obj.hasOwnProperty(col)) {
-    	    jReorderedRow[col] = obj[col];
-    	  }
-    	});
+    	if (displayColumns == null) {
+    		if ("structure" in this) {
+    			if (!Array.isArray(structure)) {
+    				structure = [structure];
+    			}
+    			for (var iStructureField = 0; iStructureField < structure.length; iStructureField++) {
+    				var structureFieldName = structure[iStructureField].name;
+    				if (obj.hasOwnProperty(structureFieldName)) {
+    					jReorderedRow[structureFieldName] = obj[structureFieldName];
+    				}
+    			}
+    		}
+    		for (var currentRowKey in obj) {
+    			if (obj.hasOwnProperty(currentRowKey) && !jReorderedRow.hasOwnProperty(currentRowKey)) {
+    				jReorderedRow[currentRowKey] = obj[currentRowKey];
+    			}
+    		}
+    	}
+    	else {
+    		displayColumns.forEach((col) => {
+    			if (obj.hasOwnProperty(col)) {
+    				jReorderedRow[col] = obj[col];
+    			}
+    		});
+    	}
+    	if (groupByColumns != null) {
+    		var groupSignature = buildSignature(obj, groupByColumns);
+    		var groupedRow = groupedRows[groupSignature];
+    		if (groupedRow == null) {
+    			groupedRow = jReorderedRow;
+    			groupedRows[groupSignature] = groupedRow;
+    			groupedStates[groupSignature] = {};
+    			data.push(groupedRow);
+    		}
+    		for (var iAggregationSpec = 0; iAggregationSpec < aggregationSpecs.length; iAggregationSpec++) {
+    			var aggregationSpec = aggregationSpecs[iAggregationSpec];
+    			var aggregationState = groupedStates[groupSignature][aggregationSpec.key];
+    			if (aggregationState == null) {
+    				aggregationState = {};
+    				groupedStates[groupSignature][aggregationSpec.key] = aggregationState;
+    			}
+    			var aggregationSourceCell = aggregationSpec.column != null && obj.hasOwnProperty(aggregationSpec.column) ? obj[aggregationSpec.column] : null;
+    			updateAggregationState(aggregationState, aggregationSpec, aggregationSourceCell);
+    			groupedRow[aggregationSpec.key] = buildAggregateCell(aggregationSpec, aggregationState.value);
+    		}
+    		continue;
+    	}
+    	else if (distinctColumns != null) {
+    		var distinctSignature = buildSignature(obj, distinctColumns);
+    		if (distinctRows[distinctSignature] === true) {
+    			continue;
+    		}
+    		distinctRows[distinctSignature] = true;
+    	}
     	data.push(jReorderedRow);
+    	}
+    	
+    	if ("structure" in this && data.length === 0) {
+    	if (!Array.isArray(structure)) {
+    		structure = [structure];
+    	}
+    
+    	var row = {};
+    
+    	row["id"] = {
+    		displayName: "id",
+    		type: "html",
+    		value: "",
+    		hidden: true,
+    		displayValue: "<div style=''display:flex; white-space: normal; align-items:center''></div>",
+    		filterCompletion: [],
+    		filterHide: true
+    	};
+    
+    	row["order"] = {
+    		displayName: "order",
+    		type: "html",
+    		value: "",
+    		hidden: true,
+    		displayValue: "<div style=''display:flex; white-space: normal; align-items:center''></div>",
+    		filterCompletion: [],
+    		filterHide: true
+    	};
+    
+    	structure.forEach((field) => {
+    		if (!shouldExposeColumn(field.name)) {
+    			return;
+    		}
+    		var result = getBrFilterType(field);
+    		
+    		var cType = result.type;
+    		var cTargetCompletion = result.value;
+    		var cHideFromFiltering = false;
+    		if (cTargetCompletion == undefined) {
+    			cTargetCompletion = [];
+    			cHideFromFiltering = true;
+    		}
+    
+    		var value = "";
+    		if (result.type === "single_select") {
+    			value = { id: 0, value: "", color: "" };
+    		} else if (result.type === "boolean") {
+    			value = false;
+    		} else if (result.isArray) {
+    			value = [];
+    		} else {
+    			value = "";
+    		}
+    
+    		row[field.name] = {
+    			displayName: field.name,
+    			type: "html",
+    			value: value,
+    			displayValue:
+    				"<div style=''display:flex; white-space: normal; align-items:center''>" +
+    				(typeof value === "string" ||
+    				typeof value === "number" ||
+    				typeof value === "boolean"
+    					? value
+    					: "") +
+    				"</div>",
+    			cType: cType,
+    			filterCompletion: cTargetCompletion,
+    			filterHide: cHideFromFiltering
+    		};
+    	});
+    	if (aggregationSpecs != null) {
+    		for (var iAggregationModel = 0; iAggregationModel < aggregationSpecs.length; iAggregationModel++) {
+    			var aggregationModelSpec = aggregationSpecs[iAggregationModel];
+    			row[aggregationModelSpec.key] = buildAggregateCell(aggregationModelSpec, aggregationModelSpec.type == "count" ? 0 : null);
+    		}
+    	}
+    	if(model == "true"){
+    		data.push(row);
+    	}
+    	else{
+    		colDef = [];
+    		colDef.push(row);
+    	}
+    	
+    	}
     }
     '
+↓IfAggregationError [steps.IfStep-1774525107793]: 
+  condition: aggregationError != null
+  ↓Error_structure [steps.XMLErrorStep-1774525107795]: 
+    code: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 101
+    comment: Invalid aggregation/column combination
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: aggregationError
+  ↓Return [steps.ReturnStep-1774525107797]: 
 ↓object [steps.JsonToXmlStep-1734686735780]: 
   jsonObject: 
     - xmlizable: 
@@ -381,6 +818,19 @@ comment: |
       - SmartType: 
         - ↑mode: PLAIN
         - →→: data
+↓object1 [steps.JsonToXmlStep-1764688665809]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: colDef
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: colDef
 ↓forms_config [variables.RequestableVariable-1734686735912]: 
   comment: |
     '{
@@ -447,6 +897,72 @@ comment: |
     }
     '
   description: sort
+↓forms_tableDistinct [variables.RequestableVariable-1774517457754]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "<b>Optional.</b><br/>Enter one or more column names separated by commas to remove duplicates.<br/><b>Example:</b> <code>Country,City</code><br/><b>Result:</b> only the first row found for each combination of values is kept.<br/><b>Use this field when you want one line per unique combination.</b>",
+            "displayName": "Distinct column"
+        },
+        "fr": {
+            "comment": "<b>Optionnel.</b><br/>Saisissez un ou plusieurs noms de colonnes séparés par des virgules pour supprimer les doublons.<br/><b>Exemple :</b> <code>Country,City</code><br/><b>Résultat :</b> seule la première ligne trouvée pour chaque combinaison de valeurs est conservée.<br/><b>Utilisez ce champ si vous voulez une ligne par combinaison unique.</b>",
+            "displayName": "Colonne distincte"
+        },
+        "es": {
+            "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para eliminar duplicados.<br/><b>Ejemplo:</b> <code>Country,City</code><br/><b>Resultado:</b> solo se conserva la primera fila encontrada para cada combinación de valores.<br/><b>Use este campo si desea una línea por combinación única.</b>",
+            "displayName": "Columna distinct"
+        },
+        "it": {
+            "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per rimuovere i duplicati.<br/><b>Esempio:</b> <code>Country,City</code><br/><b>Risultato:</b> viene mantenuta solo la prima riga trovata per ogni combinazione di valori.<br/><b>Usa questo campo se vuoi una riga per ogni combinazione unica.</b>",
+            "displayName": "Colonna distinct"
+        }
+    }
+    '
+  description: distinct_column
+↓forms_tableGroupBy [variables.RequestableVariable-1774521531521]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "<b>Optional.</b><br/>Enter one or more column names separated by commas to group the rows.<br/><b>Example:</b> <code>Service,Region</code><br/><b>Result:</b> one row per combination of values, with the aggregation columns defined below.<br/><b>If Aggregations is empty, a <code>count</code> column is returned by default.</b><br/><b>If this field is filled in, Distinct is ignored.</b>",
+            "displayName": "Group by"
+        },
+        "fr": {
+            "comment": "<b>Optionnel.</b><br/>Saisissez un ou plusieurs noms de colonnes séparés par des virgules pour regrouper les lignes.<br/><b>Exemple :</b> <code>Service,Region</code><br/><b>Résultat :</b> une ligne par combinaison de valeurs, avec les colonnes d''agrégation définies ci-dessous.<br/><b>Si Agrégations est vide, une colonne <code>count</code> est renvoyée par défaut.</b><br/><b>Si ce champ est renseigné, Distinct est ignoré.</b>",
+            "displayName": "Group by"
+        },
+        "es": {
+            "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para agrupar las filas.<br/><b>Ejemplo:</b> <code>Service,Region</code><br/><b>Resultado:</b> una línea por combinación de valores, con las columnas de agregación definidas a continuación.<br/><b>Si Aggregations está vacío, se devolverá una columna <code>count</code> por defecto.</b><br/><b>Si este campo se completa, Distinct se ignorará.</b>",
+            "displayName": "Group by"
+        },
+        "it": {
+            "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per raggruppare le righe.<br/><b>Esempio:</b> <code>Service,Region</code><br/><b>Risultato:</b> una riga per ogni combinazione di valori, con le colonne di aggregazione definite qui sotto.<br/><b>Se Aggregations è vuoto, viene restituita per impostazione predefinita una colonna <code>count</code>.</b><br/><b>Se questo campo è valorizzato, Distinct viene ignorato.</b>",
+            "displayName": "Group by"
+        }
+    }
+    '
+  description: group_by_columns
+↓forms_tableAggregations [variables.RequestableVariable-1774522992483]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "<b>Optional.</b><br/>Use this field only with <b>Group by</b>.<br/>Enter one or more aggregations separated by commas.<br/><b>Examples:</b> <code>count</code>, <code>sum:Amount</code>, <code>avg:Amount</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Recommended use:</b><ul><li><code>count</code> for any grouped data</li><li><code>sum</code> and <code>avg</code> only for numeric columns</li><li><code>min</code> and <code>max</code> for simple single-value columns</li></ul><b>Not supported:</b> files, linked rows, multiple selections, or other multi-value columns.<br/><b>If this field is empty, <code>count</code> is used by default.</b>",
+            "displayName": "Aggregations"
+        },
+        "fr": {
+            "comment": "<b>Optionnel.</b><br/>Utilisez ce champ uniquement avec <b>Group by</b>.<br/>Saisissez une ou plusieurs agrégations séparées par des virgules.<br/><b>Exemples :</b> <code>count</code>, <code>sum:Montant</code>, <code>avg:Montant</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Usage recommandé :</b><ul><li><code>count</code> pour n''importe quel regroupement</li><li><code>sum</code> et <code>avg</code> uniquement pour les colonnes numériques</li><li><code>min</code> et <code>max</code> pour les colonnes simples à valeur unique</li></ul><b>Non supporté :</b> fichiers, linked rows, sélections multiples et autres colonnes multi-valuées.<br/><b>Si ce champ est vide, <code>count</code> est utilisé par défaut.</b>",
+            "displayName": "Agrégations"
+        },
+        "es": {
+            "comment": "<b>Opcional.</b><br/>Use este campo solo con <b>Group by</b>.<br/>Introduzca una o varias agregaciones separadas por comas.<br/><b>Ejemplos:</b> <code>count</code>, <code>sum:Amount</code>, <code>avg:Amount</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Uso recomendado:</b><ul><li><code>count</code> para cualquier agrupación</li><li><code>sum</code> y <code>avg</code> solo para columnas numéricas</li><li><code>min</code> y <code>max</code> para columnas simples de valor único</li></ul><b>No soportado:</b> archivos, filas enlazadas, selecciones múltiples u otras columnas multivalor.<br/><b>Si este campo está vacío, se utiliza <code>count</code> por defecto.</b>",
+            "displayName": "Aggregations"
+        },
+        "it": {
+            "comment": "<b>Opzionale.</b><br/>Usa questo campo solo con <b>Group by</b>.<br/>Inserisci una o più aggregazioni separate da virgole.<br/><b>Esempi:</b> <code>count</code>, <code>sum:Amount</code>, <code>avg:Amount</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Uso consigliato:</b><ul><li><code>count</code> per qualsiasi raggruppamento</li><li><code>sum</code> e <code>avg</code> solo per colonne numeriche</li><li><code>min</code> e <code>max</code> per colonne semplici a valore singolo</li></ul><b>Non supportato:</b> file, linked row, selezioni multiple o altre colonne multi-valore.<br/><b>Se il campo è vuoto, viene usato <code>count</code> per impostazione predefinita.</b>",
+            "displayName": "Aggregations"
+        }
+    }
+    '
+  description: group_by_aggregations
 ↓model [variables.RequestableVariable-1734686735918]: 
   comment: If true, just return one line of data so that No Code studio can compte the table model
 ↓TestWithFilters [core.TestCase]: 

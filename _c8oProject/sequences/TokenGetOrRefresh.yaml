@@ -5,6 +5,8 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
     'email += "";
     password += "";
     
+    include("js/jwt.js");
+    
     var token_owner = context.httpSession.getAttribute("token_owner");
     if (token_owner == null) {
     	token_owner = "owner";
@@ -17,15 +19,25 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
     	if (token_owner != owner) {
     		context.httpSession.setAttribute("token_for_" + token_owner, context.httpSession.getAttribute("token"));
     		context.httpSession.setAttribute("token_timestamp_for_" + token_owner, context.httpSession.getAttribute("token_timestamp"));
+    		context.httpSession.setAttribute("refresh_token_for_" + token_owner, context.httpSession.getAttribute("refresh_token"));
     		var exToken = context.httpSession.getAttribute("token_for_" + owner);
     		if (exToken != null) {
     			var exTokenTS = context.httpSession.getAttribute("token_timestamp_for_" + owner);
+    			var exRefreshToken = context.httpSession.getAttribute("refresh_token_for_" + owner);
     			context.httpSession.setAttribute("token_owner", owner);
     			context.httpSession.setAttribute("token", exToken);
     			context.httpSession.setAttribute("token_timestamp", exTokenTS);
+    			if (exRefreshToken != null) {
+    				context.httpSession.setAttribute("refresh_token", exRefreshToken);
+    			} else {
+    				context.httpSession.removeAttribute("refresh_token");
+    			}
     			token_owner = owner;
     			log.info("swap token for this account: " + email);
     		} else {
+    			context.httpSession.removeAttribute("token");
+    			context.httpSession.removeAttribute("token_timestamp");
+    			context.httpSession.removeAttribute("refresh_token");
     			log.info("no previous token for this account: " + email);
     		}
     	} else {
@@ -34,8 +46,7 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
     } else {
     	owner = "owner";
     	log.info("use previous token");
-    }
-    '
+    }'
 ↓jIf [steps.IfStep-1729518676568]: 
   condition: token_owner == owner || owner == "owner"
   ↓GetTokenFromSession [steps.SessionGetStep-1666701028415]: 
@@ -71,7 +82,7 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
       expression: '"Token age (ms): " + (new Date().getTime() - jTimeStamp * 1)'
       level: WARN
     ↓jIf [steps.IfStep-1729093826484]: 
-      condition: new Date().getTime() - jTimeStamp * 1 <= 58000
+      condition: isTokenStillValid(context.httpSession.getAttribute("token"), jTimeStamp, true)
       ↓Concat [steps.XMLConcatStep-1666973297154]: 
         nodeName: Bearer
         sourcesDefinition: 
@@ -125,6 +136,8 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
     visibility: '-1'
   ↓email [variables.StepVariable-1729092062945]: 
     comment: The Base row admin email
+  ↓use_refresh [variables.StepVariable-1779265184671]: 
+    value: true
 ↓GetTokenFromSession [steps.SessionGetStep-1666973397656]: 
   key: token
   output: false
