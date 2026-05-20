@@ -1,3 +1,5 @@
+include("js/jwt.js");
+
 const api = JavaImporter(
 	java.util.Collections,
 	java.util.HashMap,
@@ -52,15 +54,15 @@ with (api) {
 		if (table_id == null) {
 			log.trace("no table_id found for: " + table_id_key);
 			const __header_Authorization = "JWT " + getAuthToken();
-			let doc = call(".._api_applications__GET", {__header_Authorization});
-			let node = xpath.selectSingleNode(doc, '/document/array/object[name="' + database + '" and workspace/name="'+ application + '"]/id/text()');
+			let applicationsResponse = call(".._api_applications__GET", {__header_Authorization});
+			let node = xpath.selectSingleNode(applicationsResponse, '/document/array/object[name="' + database + '" and workspace/name="'+ application + '"]/id/text()');
 			if (!node) {
 				log.debug("database id not found");
 				return;
 			}
 			const database_id = node.getNodeValue();
-			doc = call(".._api_database_tables_database__database_id___GET", {__header_Authorization, database_id});
-			node = xpath.selectSingleNode(doc, '/document/array/object[name="' + table + '"]/id/text()');
+			let tablesResponse = call(".._api_database_tables_database__database_id___GET", {__header_Authorization, database_id});
+			node = xpath.selectSingleNode(tablesResponse, '/document/array/object[name="' + table + '"]/id/text()');
 			if (!node) {
 				log.debug("table '" + table + "' not found in database id '" + database_id + "'");
 				return;
@@ -78,7 +80,7 @@ with (api) {
 		let token = context.httpSession.getAttribute("token");
 		if (token) {
 			const ts = context.httpSession.getAttribute("token_timestamp");
-			if (now - ts * 1 > 58000) {
+			if (!isTokenStillValid(token, ts)) {
 				token = null;
 			}
 		}
@@ -86,10 +88,13 @@ with (api) {
 			context.httpSession.setAttribute("token_timestamp", now);
 			const username = Engine.theApp.databaseObjectsManager.symbolsGetValue("lib_baserow.adminuser");
 			const password = Engine.theApp.databaseObjectsManager.symbolsGetValue("lib_baserow.password.secret");
-			const doc = call(".._api_Auth", {"__body": JSON.stringify({
+			const authResponse = call(".._api_Auth", {"__body": JSON.stringify({
 				username, password
 			})});
-			const ntoken = xpath.selectSingleNode(doc, '/document/object/token/text()');
+			let ntoken = xpath.selectSingleNode(authResponse, '/document/object/token/text()');
+			if (!ntoken) {
+				ntoken = xpath.selectSingleNode(authResponse, '/document/object/access_token/text()');
+			}
 			if (ntoken) {
 				context.httpSession.setAttribute("token_timestamp", now);
 				context.httpSession.setAttribute("token", token = ntoken.getNodeValue());
