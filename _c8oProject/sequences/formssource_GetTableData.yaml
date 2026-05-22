@@ -571,6 +571,7 @@ comment: |
     		var html = "" + base_html;
     		var current = elem[key];
     		var currentType = null;
+    		var isHiddenColumn = key == "id" || key == "order" || (jConfig.hidden ? jConfig.hidden.includes(key) : false);
     		if ("structure" in this) {
     			if (!Array.isArray(structure)) {
     				structure = [structure];
@@ -589,16 +590,12 @@ comment: |
     			var result = computeAnyType(current, false, currentType);
     			html += result.innerHtml;
     			obj[key].value = result.value;
-    			if (
-    				key == "id" ||
-    				key == "order" ||
-    				(jConfig.hidden ? jConfig.hidden.includes(key) : false)
-    			) {
-    				obj[key].hidden = true;
-    			}
     			obj[key].displayValue = html;
     		} else {
     			obj[key] = { displayName: key, type: "html", value: null };
+    		}
+    		if (isHiddenColumn) {
+    			obj[key].hidden = true;
     		}
     
     		if (model == "true" && "structure" in this) {
