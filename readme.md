@@ -159,6 +159,9 @@ Establishes a session with Baserow. Must be called before any other API
 <tr>
 <td>password</td><td>The baserow admin password</td>
 </tr>
+<tr>
+<td>use_refresh</td><td>Use the refresh_token stored in the HTTP session before falling back to username/password login.</td>
+</tr>
 </table>
 
 ### AdminUserCreate
@@ -438,6 +441,15 @@ Get data from the no-code database table. You will be able to choose the columns
 <td>forms_Filter</td><td>Define a filter to apply to a table</td>
 </tr>
 <tr>
+<td>forms_tableDistinct</td><td><b>Optional.</b><br/>Enter one or more column names separated by commas to remove duplicates.<br/><b>Example:</b> 
+
+```
+Country,City
+```
+
+<br/><b>Result:</b> only the first row found for each combination of values is kept.<br/><b>Use this field when you want one line per unique combination.</b></td>
+</tr>
+<tr>
 <td>forms_tableSort</td><td>Define a sort order to apply to a table</td>
 </tr>
 <tr>
@@ -459,7 +471,100 @@ Get data from the no-code database table for a data grid. Each column of the tab
 <td>forms_config</td><td>Choose a table</td>
 </tr>
 <tr>
+<td>forms_tableAggregations</td><td><b>Optional.</b><br/>Use this field only with <b>Group by</b>.<br/>Enter one or more aggregations separated by commas.<br/><b>Examples:</b> 
+
+```
+count
+```
+
+, 
+
+```
+sum:Amount
+```
+
+, 
+
+```
+avg:Amount
+```
+
+, 
+
+```
+min:Date
+```
+
+, 
+
+```
+max:Score
+```
+
+<br/><b>Recommended use:</b><ul><li>
+
+```
+count
+```
+
+ for any grouped data</li><li>
+
+```
+sum
+```
+
+ and 
+
+```
+avg
+```
+
+ only for numeric columns</li><li>
+
+```
+min
+```
+
+ and 
+
+```
+max
+```
+
+ for simple single-value columns</li></ul><b>Not supported:</b> files, linked rows, multiple selections, or other multi-value columns.<br/><b>If this field is empty, 
+
+```
+count
+```
+
+ is used by default.</b></td>
+</tr>
+<tr>
+<td>forms_tableDistinct</td><td><b>Optional.</b><br/>Enter one or more column names separated by commas to remove duplicates.<br/><b>Example:</b> 
+
+```
+Country,City
+```
+
+<br/><b>Result:</b> only the first row found for each combination of values is kept.<br/><b>Use this field when you want one line per unique combination.</b></td>
+</tr>
+<tr>
 <td>forms_tableFilter</td><td>Define a filter to apply to a table</td>
+</tr>
+<tr>
+<td>forms_tableGroupBy</td><td><b>Optional.</b><br/>Enter one or more column names separated by commas to group the rows.<br/><b>Example:</b> 
+
+```
+Service,Region
+```
+
+<br/><b>Result:</b> one row per combination of values, with the aggregation columns defined below.<br/><b>If Aggregations is empty, a 
+
+```
+count
+```
+
+ column is returned by default.</b><br/><b>If this field is filled in, Distinct is ignored.</b></td>
 </tr>
 <tr>
 <td>forms_tableSort</td><td>Define a sort order to apply to a table</td>
