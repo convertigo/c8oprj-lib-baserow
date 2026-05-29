@@ -505,11 +505,11 @@ comment: |
         },
         "es": {
             "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para eliminar duplicados.<br/><b>Ejemplo:</b> <code>Country,City</code><br/><b>Resultado:</b> solo se conserva la primera fila encontrada para cada combinación de valores.<br/><b>Use este campo si desea una línea por combinación única.</b>",
-            "displayName": "Columna distinct"
+            "displayName": "Columna distinta"
         },
         "it": {
             "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per rimuovere i duplicati.<br/><b>Esempio:</b> <code>Country,City</code><br/><b>Risultato:</b> viene mantenuta solo la prima riga trovata per ogni combinazione di valori.<br/><b>Usa questo campo se vuoi una riga per ogni combinazione unica.</b>",
-            "displayName": "Colonna distinct"
+            "displayName": "Colonna distinta"
         }
     }
     '

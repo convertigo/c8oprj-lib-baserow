@@ -907,11 +907,11 @@ comment: |
         },
         "es": {
             "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para eliminar duplicados.<br/><b>Ejemplo:</b> <code>Country,City</code><br/><b>Resultado:</b> solo se conserva la primera fila encontrada para cada combinación de valores.<br/><b>Use este campo si desea una línea por combinación única.</b>",
-            "displayName": "Columna distinct"
+            "displayName": "Columna distinta"
         },
         "it": {
             "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per rimuovere i duplicati.<br/><b>Esempio:</b> <code>Country,City</code><br/><b>Risultato:</b> viene mantenuta solo la prima riga trovata per ogni combinazione di valori.<br/><b>Usa questo campo se vuoi una riga per ogni combinazione unica.</b>",
-            "displayName": "Colonna distinct"
+            "displayName": "Colonna distinta"
         }
     }
     '
@@ -924,16 +924,16 @@ comment: |
             "displayName": "Group by"
         },
         "fr": {
-            "comment": "<b>Optionnel.</b><br/>Saisissez un ou plusieurs noms de colonnes séparés par des virgules pour regrouper les lignes.<br/><b>Exemple :</b> <code>Service,Region</code><br/><b>Résultat :</b> une ligne par combinaison de valeurs, avec les colonnes d''agrégation définies ci-dessous.<br/><b>Si Agrégations est vide, une colonne <code>count</code> est renvoyée par défaut.</b><br/><b>Si ce champ est renseigné, Distinct est ignoré.</b>",
-            "displayName": "Group by"
+            "comment": "<b>Optionnel.</b><br/>Saisissez un ou plusieurs noms de colonnes séparés par des virgules pour regrouper les lignes.<br/><b>Exemple :</b> <code>Service,Région</code><br/><b>Résultat :</b> une ligne par combinaison de valeurs, avec les colonnes d''agrégation définies ci-dessous.<br/><b>Si Agrégations est vide, une colonne <code>count</code> est renvoyée par défaut.</b><br/><b>Si ce champ est renseigné, Colonne distincte est ignoré.</b>",
+            "displayName": "Regrouper par"
         },
         "es": {
-            "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para agrupar las filas.<br/><b>Ejemplo:</b> <code>Service,Region</code><br/><b>Resultado:</b> una línea por combinación de valores, con las columnas de agregación definidas a continuación.<br/><b>Si Aggregations está vacío, se devolverá una columna <code>count</code> por defecto.</b><br/><b>Si este campo se completa, Distinct se ignorará.</b>",
-            "displayName": "Group by"
+            "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para agrupar las filas.<br/><b>Ejemplo:</b> <code>Servicio,Región</code><br/><b>Resultado:</b> una línea por combinación de valores, con las columnas de agregación definidas a continuación.<br/><b>Si Agregaciones está vacío, se devolverá una columna <code>count</code> por defecto.</b><br/><b>Si este campo se completa, Columna distinta se ignorará.</b>",
+            "displayName": "Agrupar por"
         },
         "it": {
-            "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per raggruppare le righe.<br/><b>Esempio:</b> <code>Service,Region</code><br/><b>Risultato:</b> una riga per ogni combinazione di valori, con le colonne di aggregazione definite qui sotto.<br/><b>Se Aggregations è vuoto, viene restituita per impostazione predefinita una colonna <code>count</code>.</b><br/><b>Se questo campo è valorizzato, Distinct viene ignorato.</b>",
-            "displayName": "Group by"
+            "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per raggruppare le righe.<br/><b>Esempio:</b> <code>Servizio,Regione</code><br/><b>Risultato:</b> una riga per ogni combinazione di valori, con le colonne di aggregazione definite qui sotto.<br/><b>Se Aggregazioni è vuoto, viene restituita per impostazione predefinita una colonna <code>count</code>.</b><br/><b>Se questo campo è valorizzato, Colonna distinta viene ignorato.</b>",
+            "displayName": "Raggruppa per"
         }
     }
     '
@@ -946,16 +946,16 @@ comment: |
             "displayName": "Aggregations"
         },
         "fr": {
-            "comment": "<b>Optionnel.</b><br/>Utilisez ce champ uniquement avec <b>Group by</b>.<br/>Saisissez une ou plusieurs agrégations séparées par des virgules.<br/><b>Exemples :</b> <code>count</code>, <code>sum:Montant</code>, <code>avg:Montant</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Usage recommandé :</b><ul><li><code>count</code> pour n''importe quel regroupement</li><li><code>sum</code> et <code>avg</code> uniquement pour les colonnes numériques</li><li><code>min</code> et <code>max</code> pour les colonnes simples à valeur unique</li></ul><b>Non supporté :</b> fichiers, linked rows, sélections multiples et autres colonnes multi-valuées.<br/><b>Si ce champ est vide, <code>count</code> est utilisé par défaut.</b>",
+            "comment": "<b>Optionnel.</b><br/>Utilisez ce champ uniquement avec <b>Regrouper par</b>.<br/>Saisissez une ou plusieurs agrégations séparées par des virgules.<br/><b>Exemples :</b> <code>count</code>, <code>sum:Montant</code>, <code>avg:Montant</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Usage recommandé :</b><ul><li><code>count</code> pour n''importe quel regroupement</li><li><code>sum</code> et <code>avg</code> uniquement pour les colonnes numériques</li><li><code>min</code> et <code>max</code> pour les colonnes simples à valeur unique</li></ul><b>Non supporté :</b> fichiers, lignes liées, sélections multiples et autres colonnes multi-valuées.<br/><b>Si ce champ est vide, <code>count</code> est utilisé par défaut.</b>",
             "displayName": "Agrégations"
         },
         "es": {
-            "comment": "<b>Opcional.</b><br/>Use este campo solo con <b>Group by</b>.<br/>Introduzca una o varias agregaciones separadas por comas.<br/><b>Ejemplos:</b> <code>count</code>, <code>sum:Amount</code>, <code>avg:Amount</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Uso recomendado:</b><ul><li><code>count</code> para cualquier agrupación</li><li><code>sum</code> y <code>avg</code> solo para columnas numéricas</li><li><code>min</code> y <code>max</code> para columnas simples de valor único</li></ul><b>No soportado:</b> archivos, filas enlazadas, selecciones múltiples u otras columnas multivalor.<br/><b>Si este campo está vacío, se utiliza <code>count</code> por defecto.</b>",
-            "displayName": "Aggregations"
+            "comment": "<b>Opcional.</b><br/>Use este campo solo con <b>Agrupar por</b>.<br/>Introduzca una o varias agregaciones separadas por comas.<br/><b>Ejemplos:</b> <code>count</code>, <code>sum:Importe</code>, <code>avg:Importe</code>, <code>min:Fecha</code>, <code>max:Puntuación</code><br/><b>Uso recomendado:</b><ul><li><code>count</code> para cualquier agrupación</li><li><code>sum</code> y <code>avg</code> solo para columnas numéricas</li><li><code>min</code> y <code>max</code> para columnas simples de valor único</li></ul><b>No soportado:</b> archivos, filas enlazadas, selecciones múltiples u otras columnas multivalor.<br/><b>Si este campo está vacío, se utiliza <code>count</code> por defecto.</b>",
+            "displayName": "Agregaciones"
         },
         "it": {
-            "comment": "<b>Opzionale.</b><br/>Usa questo campo solo con <b>Group by</b>.<br/>Inserisci una o più aggregazioni separate da virgole.<br/><b>Esempi:</b> <code>count</code>, <code>sum:Amount</code>, <code>avg:Amount</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Uso consigliato:</b><ul><li><code>count</code> per qualsiasi raggruppamento</li><li><code>sum</code> e <code>avg</code> solo per colonne numeriche</li><li><code>min</code> e <code>max</code> per colonne semplici a valore singolo</li></ul><b>Non supportato:</b> file, linked row, selezioni multiple o altre colonne multi-valore.<br/><b>Se il campo è vuoto, viene usato <code>count</code> per impostazione predefinita.</b>",
-            "displayName": "Aggregations"
+            "comment": "<b>Opzionale.</b><br/>Usa questo campo solo con <b>Raggruppa per</b>.<br/>Inserisci una o più aggregazioni separate da virgole.<br/><b>Esempi:</b> <code>count</code>, <code>sum:Importo</code>, <code>avg:Importo</code>, <code>min:Data</code>, <code>max:Punteggio</code><br/><b>Uso consigliato:</b><ul><li><code>count</code> per qualsiasi raggruppamento</li><li><code>sum</code> e <code>avg</code> solo per colonne numeriche</li><li><code>min</code> e <code>max</code> per colonne semplici a valore singolo</li></ul><b>Non supportato:</b> file, righe collegate, selezioni multiple o altre colonne multi-valore.<br/><b>Se il campo è vuoto, viene usato <code>count</code> per impostazione predefinita.</b>",
+            "displayName": "Aggregazioni"
         }
     }
     '
