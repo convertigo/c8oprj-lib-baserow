@@ -453,6 +453,9 @@ Country,City
 <td>forms_tableSort</td><td>Define a sort order to apply to a table</td>
 </tr>
 <tr>
+<td>max_search_results</td><td>Maximum number of Baserow rows scanned by this source.</td>
+</tr>
+<tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>
 </tr>
 </table>
@@ -568,6 +571,9 @@ count
 </tr>
 <tr>
 <td>forms_tableSort</td><td>Define a sort order to apply to a table</td>
+</tr>
+<tr>
+<td>max_search_results</td><td>Maximum number of Baserow rows scanned by this source.</td>
 </tr>
 <tr>
 <td>model</td><td>If true, just return one line of data so that No Code studio can compte the table model</td>

@@ -220,6 +220,21 @@ comment: |
     		displayColumns = groupedModelColumns;
     	}
     }
+    var normalizeMaxSearchResults = function(value) {
+        var parsed = parseInt(value, 10);
+        if (isNaN(parsed) || parsed <= 0) {
+            parsed = 1000;
+        }
+        return parsed;
+    };
+    max_search_results = normalizeMaxSearchResults(max_search_results);
+    source_page_size = parseInt(typeof size == "undefined" ? "${lib_BaseRow.sourcepagesize=200}" : size, 10);
+    if (isNaN(source_page_size) || source_page_size <= 0) {
+        source_page_size = 200;
+    }
+    if (model != "true") {
+        size = "" + Math.min(source_page_size, max_search_results);
+    }
     var shouldExposeColumn = function(columnName) {
     	return displayColumns == null || displayColumns.indexOf(columnName) != -1;
     };
@@ -314,10 +329,10 @@ comment: |
     
     if (results != null) {
     	if (Array.isArray(results)) {
-    		for (var i = 0; i < results.length; i++) {
+            for (var i = 0; i < results.length && all_results.length < max_search_results; i++) {
     			all_results.push(results[i]);
     		}
-    	} else {
+        } else if (all_results.length < max_search_results) {
     		all_results.push(results);
     	}
     }
@@ -325,11 +340,12 @@ comment: |
     results = all_results;
     '
 ↓FetchNextPages [steps.WhileStep-1774516723692]: 
-  condition: model != "true" && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
+  condition: model != "true" && all_results.length < max_search_results && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
   ↓SetPage [steps.SimpleStep-1774516723694]: 
     expression: |
       page = "" + next_page;
       fetched_pages[page] = true;
+      size = "" + Math.min(source_page_size, max_search_results - all_results.length);
       
   ↓Call_Sequence2 [steps.SequenceStep-1774516723696]: 
     sourceSequence: lib_BaseRow.TableGetData
@@ -405,10 +421,10 @@ comment: |
     expression: |
       'if (page_results != null) {
       	if (Array.isArray(page_results)) {
-      		for (var i = 0; i < page_results.length; i++) {
+            for (var i = 0; i < page_results.length && all_results.length < max_search_results; i++) {
       			all_results.push(page_results[i]);
       		}
-      	} else {
+        } else if (all_results.length < max_search_results) {
       		all_results.push(page_results);
       	}
       }
@@ -828,6 +844,9 @@ comment: |
       - SmartType: 
         - ↑mode: PLAIN
         - →→: colDef
+↓max_search_results [variables.RequestableVariable-1780076000000]: 
+  comment: Maximum number of Baserow rows scanned by this source.
+  value: ${C8O_FORMS_BASEROW_MAX_SEARCH_RESULTS=1000}
 ↓forms_config [variables.RequestableVariable-1734686735912]: 
   comment: |
     '{

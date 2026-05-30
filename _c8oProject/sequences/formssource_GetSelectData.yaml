@@ -109,6 +109,21 @@ comment: |
     	describeStructure = true;
     	order_by = null;
     }
+    var normalizeMaxSearchResults = function(value) {
+        var parsed = parseInt(value, 10);
+        if (isNaN(parsed) || parsed <= 0) {
+            parsed = 1000;
+        }
+        return parsed;
+    };
+    max_search_results = normalizeMaxSearchResults(max_search_results);
+    source_page_size = parseInt(typeof size == "undefined" ? "${lib_BaseRow.sourcepagesize=200}" : size, 10);
+    if (isNaN(source_page_size) || source_page_size <= 0) {
+        source_page_size = 200;
+    }
+    if (model != "true") {
+        size = "" + Math.min(source_page_size, max_search_results);
+    }
     
     var search = forms_filter
     if(search == ""){
@@ -194,10 +209,10 @@ comment: |
     
     if ("res" in this && res != null) {
     	if (Array.isArray(res)) {
-    		for (var iRes = 0; iRes < res.length; iRes++) {
+            for (var iRes = 0; iRes < res.length && all_res.length < max_search_results; iRes++) {
     			all_res.push(res[iRes]);
     		}
-    	} else {
+        } else if (all_res.length < max_search_results) {
     		all_res.push(res);
     	}
     }
@@ -205,11 +220,12 @@ comment: |
     res = all_res;
     '
 ↓FetchNextPages [steps.WhileStep-1774519269994]: 
-  condition: model != "true" && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
+  condition: model != "true" && all_res.length < max_search_results && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
   ↓SetPage [steps.SimpleStep-1774519269996]: 
     expression: |
       page = "" + next_page;
       fetched_pages[page] = true;
+      size = "" + Math.min(source_page_size, max_search_results - all_res.length);
       
   ↓Call_SequenceLoop [steps.SequenceStep-1774519269998]: 
     sourceSequence: lib_BaseRow.TableGetData
@@ -285,10 +301,10 @@ comment: |
     expression: |
       'if (page_results != null) {
       	if (Array.isArray(page_results)) {
-      		for (var iPage = 0; iPage < page_results.length; iPage++) {
+            for (var iPage = 0; iPage < page_results.length && all_res.length < max_search_results; iPage++) {
       			all_res.push(page_results[iPage]);
       		}
-      	} else {
+        } else if (all_res.length < max_search_results) {
       		all_res.push(page_results);
       	}
       }
@@ -415,6 +431,9 @@ comment: |
         - SmartType: 
           - ↑mode: PLAIN
           - →→: data
+↓max_search_results [variables.RequestableVariable-1780076000001]: 
+  comment: Maximum number of Baserow rows scanned by this source.
+  value: ${C8O_FORMS_BASEROW_MAX_SEARCH_RESULTS=1000}
 ↓forms_filter [variables.RequestableVariable-1666100091071]: 
   comment: |
     Filters
