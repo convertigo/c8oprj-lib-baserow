@@ -87,6 +87,86 @@ comment: |
     var columnToBeCreated = [];
     data = {}
     debugger;
+    function normalizeMultipleSelectValue(rawValue, fieldDef) {
+    	var values = [];
+    	function pushRaw(value) {
+    		if (value == null) {
+    			return;
+    		}
+    		if (typeof value == "string") {
+    			var trimmed = value.trim();
+    			if (trimmed == "") {
+    				return;
+    			}
+    			if (trimmed.charAt(0) == "[") {
+    				try {
+    					var parsed = JSON.parse(trimmed);
+    					if (Array.isArray(parsed)) {
+    						for (var i = 0; i < parsed.length; i++) {
+    							pushRaw(parsed[i]);
+    						}
+    						return;
+    					}
+    				}
+    				catch (e) {
+    					log.warn("Unable to parse multiple_select JSON value for " + trimmed);
+    				}
+    			}
+    			if (trimmed.indexOf(",") != -1) {
+    				var parts = trimmed.split(",");
+    				for (var p = 0; p < parts.length; p++) {
+    					pushRaw(parts[p]);
+    				}
+    				return;
+    			}
+    			values.push(trimmed);
+    			return;
+    		}
+    		if (typeof value == "object") {
+    			if (value.id != null) {
+    				values.push(value.id);
+    				return;
+    			}
+    			if (value.value != null) {
+    				pushRaw(value.value);
+    				return;
+    			}
+    		}
+    		values.push(value);
+    	}
+    	if (Array.isArray(rawValue)) {
+    		for (var a = 0; a < rawValue.length; a++) {
+    			pushRaw(rawValue[a]);
+    		}
+    	}
+    	else {
+    		pushRaw(rawValue);
+    	}
+    	var resolved = [];
+    	var seen = {};
+    	for (var v = 0; v < values.length; v++) {
+    		var current = values[v];
+    		var mapped = current;
+    		var currentKey = "" + current;
+    		if (fieldDef != null && Array.isArray(fieldDef.select_options) && isNaN(+current)) {
+    			var option = fieldDef.select_options.find(function(x) {
+    				return x != null && (("" + x.value) == currentKey || ("" + x.id) == currentKey);
+    			});
+    			if (option != null && option.id != null) {
+    				mapped = option.id;
+    			}
+    		}
+    		else if (!isNaN(+current)) {
+    			mapped = +current;
+    		}
+    		var mappedKey = "" + mapped;
+    		if (mappedKey != "" && !seen[mappedKey]) {
+    			seen[mappedKey] = true;
+    			resolved.push(mapped);
+    		}
+    	}
+    	return resolved;
+    }
     for (var key in jDoc.variable.resp) {
     	if(typeof jDoc.variable.resp[key].value != "string" && jDoc.variable.resp[key].value == null && jDoc.variable.resp[key].type != null){
     		switch(jDoc.variable.resp[key].type){
@@ -142,7 +222,7 @@ comment: |
     			}
     			break;
     		case ''multiple_select'':
-    			log.warn("** key: multiple_select TODO")
+    			data[key] = normalizeMultipleSelectValue(jDoc.variable.resp[key].value, obj);
     			break;
     		case ''link_row'':
     			data[key] = (""+jDoc.variable.resp[key].value).split('','').map(function(v) {
@@ -502,6 +582,86 @@ comment: |
       var jDoc = JSON.parse('''' + com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson(doc, true, true));
       var columnToBeCreated = [];
       data = {}
+      function normalizeMultipleSelectValue(rawValue, fieldDef) {
+      	var values = [];
+      	function pushRaw(value) {
+      		if (value == null) {
+      			return;
+      		}
+      		if (typeof value == "string") {
+      			var trimmed = value.trim();
+      			if (trimmed == "") {
+      				return;
+      			}
+      			if (trimmed.charAt(0) == "[") {
+      				try {
+      					var parsed = JSON.parse(trimmed);
+      					if (Array.isArray(parsed)) {
+      						for (var i = 0; i < parsed.length; i++) {
+      							pushRaw(parsed[i]);
+      						}
+      						return;
+      					}
+      				}
+      				catch (e) {
+      					log.warn("Unable to parse multiple_select JSON value for " + trimmed);
+      				}
+      			}
+      			if (trimmed.indexOf(",") != -1) {
+      				var parts = trimmed.split(",");
+      				for (var p = 0; p < parts.length; p++) {
+      					pushRaw(parts[p]);
+      				}
+      				return;
+      			}
+      			values.push(trimmed);
+      			return;
+      		}
+      		if (typeof value == "object") {
+      			if (value.id != null) {
+      				values.push(value.id);
+      				return;
+      			}
+      			if (value.value != null) {
+      				pushRaw(value.value);
+      				return;
+      			}
+      		}
+      		values.push(value);
+      	}
+      	if (Array.isArray(rawValue)) {
+      		for (var a = 0; a < rawValue.length; a++) {
+      			pushRaw(rawValue[a]);
+      		}
+      	}
+      	else {
+      		pushRaw(rawValue);
+      	}
+      	var resolved = [];
+      	var seen = {};
+      	for (var v = 0; v < values.length; v++) {
+      		var current = values[v];
+      		var mapped = current;
+      		var currentKey = "" + current;
+      		if (fieldDef != null && Array.isArray(fieldDef.select_options) && isNaN(+current)) {
+      			var option = fieldDef.select_options.find(function(x) {
+      				return x != null && (("" + x.value) == currentKey || ("" + x.id) == currentKey);
+      			});
+      			if (option != null && option.id != null) {
+      				mapped = option.id;
+      			}
+      		}
+      		else if (!isNaN(+current)) {
+      			mapped = +current;
+      		}
+      		var mappedKey = "" + mapped;
+      		if (mappedKey != "" && !seen[mappedKey]) {
+      			seen[mappedKey] = true;
+      			resolved.push(mapped);
+      		}
+      	}
+      	return resolved;
+      }
       for (var key in jDoc.variable.resp) {
       	if(typeof jDoc.variable.resp[key].value != "string" && jDoc.variable.resp[key].value == null && jDoc.variable.resp[key].type != null){
       		switch(jDoc.variable.resp[key].type){
@@ -555,6 +715,9 @@ comment: |
       			else{
       				data[key] = +jDoc.variable.resp[key].value;
       			}
+      			break;
+      		case ''multiple_select'':
+      			data[key] = normalizeMultipleSelectValue(jDoc.variable.resp[key].value, obj);
       			break;
       
       		case ''link_row'':
