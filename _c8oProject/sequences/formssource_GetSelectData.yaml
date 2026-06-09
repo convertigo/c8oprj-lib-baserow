@@ -50,17 +50,54 @@ comment: |
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
     let describeStructure = false;
-    
-    // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
-    // With the BaseRow API.
-    if (jConfig.columns) {
-    	include_fields = "";
-    	jConfig.columns.forEach(col => include_fields += col + ",")
-    	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
-    }
-    
     var displayValue = jConfig.displayValue != undefined ? jConfig.displayValue: jConfig.column;
     var value = jConfig.value != undefined ? jConfig.value : jConfig.line;
+    
+    var appendUniqueColumn = function(targetColumns, targetColumnsMap, currentColumn) {
+    	if (currentColumn == null) {
+    		return;
+    	}
+    	currentColumn = ("" + currentColumn).replace(/^\s+|\s+$/g, "");
+    	if (currentColumn != "" && targetColumnsMap[currentColumn] !== true) {
+    		targetColumns.push(currentColumn);
+    		targetColumnsMap[currentColumn] = true;
+    	}
+    };
+    var includeColumns = [];
+    var includeColumnsMap = {};
+    appendUniqueColumn(includeColumns, includeColumnsMap, displayValue);
+    appendUniqueColumn(includeColumns, includeColumnsMap, value);
+    
+    var filterColumns = [];
+    var filterColumnsMap = {};
+    var collectFilterColumns = function(filterNode) {
+    	if (filterNode == null) {
+    		return;
+    	}
+    	if (filterNode.field != null) {
+    		appendUniqueColumn(filterColumns, filterColumnsMap, filterNode.field);
+    	}
+    	if (filterNode.filters != null && filterNode.filters.length != null) {
+    		for (var iFilter = 0; iFilter < filterNode.filters.length; iFilter++) {
+    			collectFilterColumns(filterNode.filters[iFilter]);
+    		}
+    	}
+    };
+    if (forms_Filter != null && ("" + forms_Filter) != "") {
+    	try {
+    		collectFilterColumns(JSON.parse("" + forms_Filter));
+    	}
+    	catch (e) {
+    	}
+    }
+    for (var iFilterColumn = 0; iFilterColumn < filterColumns.length; iFilterColumn++) {
+    	appendUniqueColumn(includeColumns, includeColumnsMap, filterColumns[iFilterColumn]);
+    }
+    
+    // Fetch only fields required to build the select values, plus fields used by filters/distinct.
+    if (includeColumns.length > 0) {
+    	include_fields = includeColumns.join(",");
+    }
     
     filterExpression = forms_Filter;					// This is the Constructed Fiter API for baserow.
     
@@ -108,6 +145,7 @@ comment: |
     	filterExpression = null;
     	describeStructure = true;
     	order_by = null;
+    	include_fields = null;
     }
     var normalizeMaxSearchResults = function(value) {
         var parsed = parseInt(value, 10);
@@ -387,7 +425,6 @@ comment: |
       	}
       
       	structure.forEach((e)=>{
-      		if(jConfig.columns.indexOf(e.name) != -1){
       			e.filterHide = false;
       			// if target is formula use it''s formula_type
       			var cTarget = structure.filter((x) => {
@@ -413,7 +450,6 @@ comment: |
       			e["filterHide"] = cHideFromFiltering;
       			e["sortHide"] = cHideFromFiltering || cType == "file" || cType == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select");
       			data[0][e.name] = e;
-      		}
       	})
       }
       
