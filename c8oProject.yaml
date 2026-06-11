@@ -14,7 +14,7 @@
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.3.0
+  version: 1.3.1
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
   ↓_disabled_formssource_GetSelectDataOld [sequences.GenericSequence]: 🗏 sequences/_disabled_formssource_GetSelectDataOld.yaml
