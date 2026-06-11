@@ -50,17 +50,54 @@ comment: |
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
     let describeStructure = false;
-    
-    // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
-    // With the BaseRow API.
-    if (jConfig.columns) {
-    	include_fields = "";
-    	jConfig.columns.forEach(col => include_fields += col + ",")
-    	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
-    }
-    
     var displayValue = jConfig.displayValue != undefined ? jConfig.displayValue: jConfig.column;
     var value = jConfig.value != undefined ? jConfig.value : jConfig.line;
+    
+    var appendUniqueColumn = function(targetColumns, targetColumnsMap, currentColumn) {
+    	if (currentColumn == null) {
+    		return;
+    	}
+    	currentColumn = ("" + currentColumn).replace(/^\s+|\s+$/g, "");
+    	if (currentColumn != "" && targetColumnsMap[currentColumn] !== true) {
+    		targetColumns.push(currentColumn);
+    		targetColumnsMap[currentColumn] = true;
+    	}
+    };
+    var includeColumns = [];
+    var includeColumnsMap = {};
+    appendUniqueColumn(includeColumns, includeColumnsMap, displayValue);
+    appendUniqueColumn(includeColumns, includeColumnsMap, value);
+    
+    var filterColumns = [];
+    var filterColumnsMap = {};
+    var collectFilterColumns = function(filterNode) {
+    	if (filterNode == null) {
+    		return;
+    	}
+    	if (filterNode.field != null) {
+    		appendUniqueColumn(filterColumns, filterColumnsMap, filterNode.field);
+    	}
+    	if (filterNode.filters != null && filterNode.filters.length != null) {
+    		for (var iFilter = 0; iFilter < filterNode.filters.length; iFilter++) {
+    			collectFilterColumns(filterNode.filters[iFilter]);
+    		}
+    	}
+    };
+    if (forms_Filter != null && ("" + forms_Filter) != "") {
+    	try {
+    		collectFilterColumns(JSON.parse("" + forms_Filter));
+    	}
+    	catch (e) {
+    	}
+    }
+    for (var iFilterColumn = 0; iFilterColumn < filterColumns.length; iFilterColumn++) {
+    	appendUniqueColumn(includeColumns, includeColumnsMap, filterColumns[iFilterColumn]);
+    }
+    
+    // Fetch only fields required to build the select values, plus fields used by filters/distinct.
+    if (includeColumns.length > 0) {
+    	include_fields = includeColumns.join(",");
+    }
     
     filterExpression = forms_Filter;					// This is the Constructed Fiter API for baserow.
     
@@ -108,6 +145,22 @@ comment: |
     	filterExpression = null;
     	describeStructure = true;
     	order_by = null;
+    	include_fields = null;
+    }
+    var normalizeMaxSearchResults = function(value) {
+        var parsed = parseInt(value, 10);
+        if (isNaN(parsed) || parsed <= 0) {
+            parsed = 1000;
+        }
+        return parsed;
+    };
+    max_search_results = normalizeMaxSearchResults(max_search_results);
+    source_page_size = parseInt(typeof size == "undefined" ? "${lib_BaseRow.sourcepagesize=200}" : size, 10);
+    if (isNaN(source_page_size) || source_page_size <= 0) {
+        source_page_size = 200;
+    }
+    if (model != "true") {
+        size = "" + Math.min(source_page_size, max_search_results);
     }
     
     var search = forms_filter
@@ -194,10 +247,10 @@ comment: |
     
     if ("res" in this && res != null) {
     	if (Array.isArray(res)) {
-    		for (var iRes = 0; iRes < res.length; iRes++) {
+            for (var iRes = 0; iRes < res.length && all_res.length < max_search_results; iRes++) {
     			all_res.push(res[iRes]);
     		}
-    	} else {
+        } else if (all_res.length < max_search_results) {
     		all_res.push(res);
     	}
     }
@@ -205,11 +258,12 @@ comment: |
     res = all_res;
     '
 ↓FetchNextPages [steps.WhileStep-1774519269994]: 
-  condition: model != "true" && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
+  condition: model != "true" && all_res.length < max_search_results && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
   ↓SetPage [steps.SimpleStep-1774519269996]: 
     expression: |
       page = "" + next_page;
       fetched_pages[page] = true;
+      size = "" + Math.min(source_page_size, max_search_results - all_res.length);
       
   ↓Call_SequenceLoop [steps.SequenceStep-1774519269998]: 
     sourceSequence: lib_BaseRow.TableGetData
@@ -285,10 +339,10 @@ comment: |
     expression: |
       'if (page_results != null) {
       	if (Array.isArray(page_results)) {
-      		for (var iPage = 0; iPage < page_results.length; iPage++) {
+            for (var iPage = 0; iPage < page_results.length && all_res.length < max_search_results; iPage++) {
       			all_res.push(page_results[iPage]);
       		}
-      	} else {
+        } else if (all_res.length < max_search_results) {
       		all_res.push(page_results);
       	}
       }
@@ -371,7 +425,6 @@ comment: |
       	}
       
       	structure.forEach((e)=>{
-      		if(jConfig.columns.indexOf(e.name) != -1){
       			e.filterHide = false;
       			// if target is formula use it''s formula_type
       			var cTarget = structure.filter((x) => {
@@ -397,7 +450,6 @@ comment: |
       			e["filterHide"] = cHideFromFiltering;
       			e["sortHide"] = cHideFromFiltering || cType == "file" || cType == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select");
       			data[0][e.name] = e;
-      		}
       	})
       }
       
@@ -415,6 +467,9 @@ comment: |
         - SmartType: 
           - ↑mode: PLAIN
           - →→: data
+↓max_search_results [variables.RequestableVariable-1780076000001]: 
+  comment: Maximum number of Baserow rows scanned by this source.
+  value: ${C8O_FORMS_BASEROW_MAX_SEARCH_RESULTS=1000}
 ↓forms_filter [variables.RequestableVariable-1666100091071]: 
   comment: |
     Filters
@@ -505,11 +560,11 @@ comment: |
         },
         "es": {
             "comment": "<b>Opcional.</b><br/>Introduzca uno o varios nombres de columnas separados por comas para eliminar duplicados.<br/><b>Ejemplo:</b> <code>Country,City</code><br/><b>Resultado:</b> solo se conserva la primera fila encontrada para cada combinación de valores.<br/><b>Use este campo si desea una línea por combinación única.</b>",
-            "displayName": "Columna distinct"
+            "displayName": "Columna distinta"
         },
         "it": {
             "comment": "<b>Opzionale.</b><br/>Inserisci uno o più nomi di colonne separati da virgole per rimuovere i duplicati.<br/><b>Esempio:</b> <code>Country,City</code><br/><b>Risultato:</b> viene mantenuta solo la prima riga trovata per ogni combinazione di valori.<br/><b>Usa questo campo se vuoi una riga per ogni combinazione unica.</b>",
-            "displayName": "Colonna distinct"
+            "displayName": "Colonna distinta"
         }
     }
     '

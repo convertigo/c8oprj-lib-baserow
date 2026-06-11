@@ -1422,6 +1422,11 @@ server: ${lib_baserow.server=baserow-backend.convertigo.net}
     description: workspace_id
     required: true
     value: 
+  ↓__body [variables.RequestableHttpVariable-1780490415759]: 
+    httpMethod: POST
+    required: true
+  ↓__contentType [variables.RequestableHttpVariable-1780490415761]: 
+    value: application/json
 ↓_api_applications_workspace__workspace_id__order__POST [transactions.JsonHttpTransaction]: 
   comment: Changes the order of the provided application ids to the matching position that the id has in the list. If the authorized user does not belong to the workspace it will be ignored. The order of the not provided tables will be set to `0`.
   httpInfo: true
