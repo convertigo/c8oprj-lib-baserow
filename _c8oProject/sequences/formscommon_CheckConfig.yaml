@@ -6,10 +6,23 @@ accessibility: Private
     source_id = "" + jConfig.source_id;
     owner = jConfig.source_owner;
     
-↓Call_Transaction [steps.TransactionStep-1729157830649]: 
-  sourceTransaction: lib_BaseRow.c8oforms_fs.GetDocument
-  ↓_use_docid [variables.StepVariable-1729157830651]: 
-    description: Document ID
+    var theApp = com.twinsoft.convertigo.engine.Engine.theApp;
+    var fsclient = theApp.couchDbManager.getFullSyncClient();
+    
+↓doc [steps.JsonToXmlStep-1729157830649]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: JSON.parse(fsclient.getDocument("c8oforms_fs", _use_docid).toString())
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: doc
+  output: false
 ↓formSourceConfig1 [steps.SimpleSourceStep-1736257252570]: 
   output: true
   sourceDefinition: 
@@ -20,7 +33,7 @@ accessibility: Private
           - ↑value: 1729157830649
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='sourcesMarkers' or name()='sourcesCircles' or name()='actions']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='sourcesMarkers' or name()='sourcesCircles' or name()='actions']//forms_config/str/text()
             
             
   variableName: doc_forms_config
@@ -34,7 +47,7 @@ accessibility: Private
           - ↑value: 1729157830649
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesMarkers']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sourcesMarkers']//forms_config/str/text()
             
             
   variableName: doc_forms_config_markers
@@ -48,7 +61,7 @@ accessibility: Private
           - ↑value: 1729157830649
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesCircles']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sourcesCircles']//forms_config/str/text()
             
             
   variableName: doc_forms_config_circles
@@ -62,7 +75,7 @@ accessibility: Private
           - ↑value: 1729157830649
         - java.lang.String: 
           - ↑value: |
-            .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesPolygons']//forms_config/str/text()
+            .//item[id = '{{{ source_id }}}']/*[name()='sourcesPolygons']//forms_config/str/text()
             
             
   variableName: doc_forms_config_polygons
