@@ -1,4 +1,4 @@
-↑convertigo: 8.4.0.m006
+↑convertigo: 8.0.0.m006
 ↓lib_BaseRow [core.Project]: 
   comment: |
     '{
@@ -67,15 +67,3 @@
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
   ↓CouchDb_schema [references.ImportXsdSchemaReference]: 
     urlpath: http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd
-  ↓lib_ExtendedComponents_ui_ngx_reference [references.ProjectSchemaReference]: 
-    projectName: lib_ExtendedComponents_ui_ngx=https://github.com/convertigo/c8oprj-lib-extended-components-ui-ngx.git:branch=v8.4.0.24
-  ↓project [references.ProjectSchemaReference]: 
-    projectName: mobilebuilder_tpl_8_4_0_ngx=https://github.com/convertigo/c8oprj-mobilebuilder-tpl/archive/mobilebuilder_tpl_8_4_0_ngx.zip
-  ↓Application [core.MobileApplication]: 
-    comment: Describes the mobile application global properties
-    splashRemoveMode: beforeUpdate
-    ↓Android [mobileplatforms.Android]: 
-      comment: Android platform
-    ↓iOS [mobileplatforms.IOs]: 
-      comment: iOS platform
-    ↓NgxApp [ngx.components.ApplicationComponent]: 🗏 mobileNgxApp.yaml
