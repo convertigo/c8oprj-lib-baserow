@@ -17,7 +17,7 @@ comment: |
           "displayName": "Ottenere dati",
           "comment": "Ottieni dati da una tabella di no-code database per una griglia di dati. Ogni colonna della tabella verrà visualizzata come la stessa colonna nella griglia di dati"
       },
-      "types": ["grid", "chart", "map"]
+      "types": ["grid", "chart", "map", "gallery"]
   }'
 ↓Call_Sequence1 [steps.SequenceStep-1734686735705]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
