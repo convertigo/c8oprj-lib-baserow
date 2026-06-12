@@ -714,6 +714,7 @@ comment: |
       				}
       			}
       			e["filterCompletion"] = cTargetCompletion;
+      			e["cType"] = cType;
       			e["filterHide"] = cHideFromFiltering;
       			e["sortHide"] = cHideFromFiltering || cType == "file" || cType == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select");
       			data[0][e.name] = e;

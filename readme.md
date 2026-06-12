@@ -431,6 +431,9 @@ Retrieve all possible values from a dropdown list.
 <tr>
 <td>forms_form_id</td><td>Real id of the form currently calling this source.</td>
 </tr>
+<tr>
+<td>model</td><td>If true, return a one-line model describing fields for No Code Studio filter configuration.</td>
+</tr>
 </table>
 
 ### formssource_GetSelectData

@@ -15301,6 +15301,14 @@ Filters
 Real id of the form currently calling this source.
 </td>
 </tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;model
+</td>
+<td>
+If true, return a one-line model describing fields for No Code Studio filter configuration.
+</td>
+</tr>
 </table>
 
 </p></blockquote></details>
