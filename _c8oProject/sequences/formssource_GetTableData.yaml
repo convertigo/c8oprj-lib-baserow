@@ -49,15 +49,51 @@ comment: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
     view_id = jConfig.view_id ? jConfig.view_id : null;
-    let describeStructure = true;
+    var describeStructure = true;
     var hasConfiguredColumns = jConfig.columns != null;
+    include_fields = null;
+    var trimFieldName = function(value) {
+    	if (value == null) {
+    		return "";
+    	}
+    	return ("" + value).replace(/^\s+|\s+$/g, "");
+    };
+    var escapeBaserowFieldName = function(fieldName) {
+    	fieldName = trimFieldName(fieldName);
+    	if (fieldName == "") {
+    		return "";
+    	}
+    	var escapedFieldName = fieldName.replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
+    	var mustQuote = fieldName.indexOf(",") != -1 || fieldName.indexOf("\"") != -1 || fieldName.indexOf("\\") != -1;
+    	return mustQuote ? "\"" + escapedFieldName + "\"" : escapedFieldName;
+    };
+    var includeFieldNames = [];
+    var includeFieldsMap = {};
+    var addIncludeField = function(currentField) {
+    	currentField = trimFieldName(currentField);
+    	if (currentField != "" && includeFieldsMap[currentField] !== true) {
+    		includeFieldNames.push(currentField);
+    		includeFieldsMap[currentField] = true;
+    	}
+    };
+    var buildIncludeFields = function() {
+    	var escapedFields = [];
+    	for (var iIncludeName = 0; iIncludeName < includeFieldNames.length; iIncludeName++) {
+    		var escapedField = escapeBaserowFieldName(includeFieldNames[iIncludeName]);
+    		if (escapedField != "") {
+    			escapedFields.push(escapedField);
+    		}
+    	}
+    	return escapedFields.join(",");
+    };
     
-    // For each column provider in the configuration, compute the lits of fields we wloud like to retriev
-    // With the BaseRow API.
+    // For each column provider in the configuration, compute the list of fields we would like to retrieve
+    // with the Baserow API.
     if (jConfig.columns) {
-    	include_fields = "";
-    	jConfig.columns.forEach(col => include_fields += col + ",")
-    	include_fields = include_fields.substring(0, include_fields.lastIndexOf('',''));
+    	for (var iInitialColumn = 0; iInitialColumn < jConfig.columns.length; iInitialColumn++) {
+    		addIncludeField(jConfig.columns[iInitialColumn]);
+    	}
+    	include_fields = buildIncludeFields();
     }
     
     // The Filter Expression is provided  directly in the form_fitler variable.
@@ -74,7 +110,7 @@ comment: |
     	if (currentColumn == null) {
     		return;
     	}
-    	currentColumn = ("" + currentColumn).replace(/^\s+|\s+$/g, "");
+    	currentColumn = trimFieldName(currentColumn);
     	if (currentColumn != "" && targetColumnsMap[currentColumn] !== true) {
     		targetColumns.push(currentColumn);
     		targetColumnsMap[currentColumn] = true;
@@ -94,34 +130,22 @@ comment: |
     	}
     	return columns;
     };
-    var includeFieldsMap = {};
     var ensureIncludedField = function(currentField) {
-    	if (include_fields != null && currentField != null && currentField != "") {
-    		if (include_fields == "") {
-    			include_fields = currentField;
+    	if (include_fields != null) {
+    		var previousLength = includeFieldNames.length;
+    		addIncludeField(currentField);
+    		if (includeFieldNames.length != previousLength || include_fields == "") {
+    			include_fields = buildIncludeFields();
     		}
-    		else if (includeFieldsMap[currentField] !== true) {
-    			include_fields += "," + currentField;
-    		}
-    		includeFieldsMap[currentField] = true;
     	}
     };
-    if (include_fields != null && include_fields != "") {
-    	var rawIncludeFields = include_fields.split(",");
-    	for (var iIncludeField = 0; iIncludeField < rawIncludeFields.length; iIncludeField++) {
-    		var currentIncludeField = rawIncludeFields[iIncludeField].replace(/^\s+|\s+$/g, "");
-    		if (currentIncludeField != "") {
-    			includeFieldsMap[currentIncludeField] = true;
-    		}
-    	}
-    }
     var parseColumnNames = function(rawColumns) {
     	var columns = [];
     	var columnsMap = {};
     	if (rawColumns != null) {
     		var rawColumnsArray = ("" + rawColumns).split(",");
     		for (var iColumn = 0; iColumn < rawColumnsArray.length; iColumn++) {
-    			var currentColumn = rawColumnsArray[iColumn].replace(/^\s+|\s+$/g, "");
+    			var currentColumn = trimFieldName(rawColumnsArray[iColumn]);
     			if (currentColumn != "" && columnsMap[currentColumn] !== true) {
     				columns.push(currentColumn);
     				columnsMap[currentColumn] = true;
@@ -140,13 +164,13 @@ comment: |
     	if (rawAggregations != null) {
     		var rawAggregationsArray = ("" + rawAggregations).split(",");
     		for (var iAggregation = 0; iAggregation < rawAggregationsArray.length; iAggregation++) {
-    			var currentAggregation = rawAggregationsArray[iAggregation].replace(/^\s+|\s+$/g, "");
+    			var currentAggregation = trimFieldName(rawAggregationsArray[iAggregation]);
     			if (currentAggregation == "") {
     				continue;
     			}
     			var separatorIndex = currentAggregation.indexOf(":");
-    			var aggregationType = separatorIndex == -1 ? currentAggregation.toLowerCase() : currentAggregation.substring(0, separatorIndex).replace(/^\s+|\s+$/g, "").toLowerCase();
-    			var aggregationColumn = separatorIndex == -1 ? null : currentAggregation.substring(separatorIndex + 1).replace(/^\s+|\s+$/g, "");
+    			var aggregationType = separatorIndex == -1 ? currentAggregation.toLowerCase() : trimFieldName(currentAggregation.substring(0, separatorIndex)).toLowerCase();
+    			var aggregationColumn = separatorIndex == -1 ? null : trimFieldName(currentAggregation.substring(separatorIndex + 1));
     			if (["count", "sum", "avg", "min", "max"].indexOf(aggregationType) == -1) {
     				continue;
     			}
@@ -201,7 +225,14 @@ comment: |
     	describeStructure = true;
     	distinctColumns = null;
     	if (groupByColumns == null) {
-    		include_fields = modelColumns != null ? modelColumns.join(",") : null;
+    		includeFieldNames = [];
+    		includeFieldsMap = {};
+    		if (modelColumns != null) {
+    			for (var iModelIncludeColumn = 0; iModelIncludeColumn < modelColumns.length; iModelIncludeColumn++) {
+    				addIncludeField(modelColumns[iModelIncludeColumn]);
+    			}
+    		}
+    		include_fields = modelColumns != null ? buildIncludeFields() : null;
     		aggregationSpecs = null;
     		displayColumns = modelColumns;
     	}
@@ -441,6 +472,269 @@ comment: |
     var distinctRows = {};
     var groupedRows = {};
     var groupedStates = {};
+    var structureByName = {};
+    if ("structure" in this) {
+    	if (!Array.isArray(structure)) {
+    		structure = [structure];
+    	}
+    	for (var iStructureByName = 0; iStructureByName < structure.length; iStructureByName++) {
+    		structureByName[structure[iStructureByName].name] = structure[iStructureByName];
+    	}
+    }
+    var escapeDisplayHtml = function(value) {
+    	return String(value == undefined || value == null ? "" : value)
+    		.replace(/&/g, "&amp;")
+    		.replace(/</g, "&lt;")
+    		.replace(/>/g, "&gt;")
+    		.replace(/"/g, "&quot;");
+    };
+    var isTrueValue = function(value) {
+    	return value === true || value === 1 || value == "1" || ("" + value).toLowerCase() == "true";
+    };
+    var padNumber = function(value, size) {
+    	var text = "" + value;
+    	while (text.length < size) {
+    		text = "0" + text;
+    	}
+    	return text;
+    };
+    var getFieldOption = function(field, name) {
+    	return field != null && field[name] != undefined ? "" + field[name] : "";
+    };
+    var getResolvedFieldType = function(field) {
+    	if (field == null) {
+    		return null;
+    	}
+    	try {
+    		return getBrFilterType(field).type;
+    	}
+    	catch (e) {
+    		return field.type;
+    	}
+    };
+    var getPrimitiveCellValue = function(element) {
+    	if (element != null && typeof element == "object" && !Array.isArray(element)) {
+    		if (element.value != undefined && (element.value == null || typeof element.value != "object")) {
+    			return element.value;
+    		}
+    		if (element.name != undefined && element.is_image == undefined && element.url == undefined) {
+    			return element.name;
+    		}
+    	}
+    	return element;
+    };
+    var formatDateValue = function(value, field) {
+    	if (value == null || value == "") {
+    		return "";
+    	}
+    	var rawDate = "" + value;
+    	var year;
+    	var month;
+    	var day;
+    	var hours = 0;
+    	var minutes = 0;
+    	var dateOnlyMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    	if (dateOnlyMatch != null) {
+    		year = dateOnlyMatch[1];
+    		month = dateOnlyMatch[2];
+    		day = dateOnlyMatch[3];
+    	}
+    	else {
+    		var parsedDate = new Date(rawDate);
+    		if (isNaN(parsedDate.getTime())) {
+    			return rawDate;
+    		}
+    		year = "" + parsedDate.getFullYear();
+    		month = padNumber(parsedDate.getMonth() + 1, 2);
+    		day = padNumber(parsedDate.getDate(), 2);
+    		hours = parsedDate.getHours();
+    		minutes = parsedDate.getMinutes();
+    	}
+    	var dateFormat = getFieldOption(field, "date_format").toUpperCase();
+    	var dateText;
+    	if (dateFormat == "EU" || dateFormat == "EUROPEAN") {
+    		dateText = day + "/" + month + "/" + year;
+    	}
+    	else if (dateFormat == "US") {
+    		dateText = month + "/" + day + "/" + year;
+    	}
+    	else {
+    		dateText = year + "-" + month + "-" + day;
+    	}
+    	var includeTimeOption = field != null ? field.date_include_time : null;
+    	var includeTime = isTrueValue(includeTimeOption) || (includeTimeOption == null && /[T\s]\d{2}:\d{2}/.test(rawDate));
+    	if (includeTime) {
+    		var timeFormat = getFieldOption(field, "date_time_format").toLowerCase();
+    		if (timeFormat == "12" || timeFormat.indexOf("12") != -1) {
+    			var suffix = hours >= 12 ? "PM" : "AM";
+    			var hour12 = hours % 12;
+    			if (hour12 == 0) {
+    				hour12 = 12;
+    			}
+    			dateText += " " + hour12 + ":" + padNumber(minutes, 2) + " " + suffix;
+    		}
+    		else {
+    			dateText += " " + padNumber(hours, 2) + ":" + padNumber(minutes, 2);
+    		}
+    	}
+    	return dateText;
+    };
+    var formatDurationValue = function(value, field) {
+    	if (value == null || value == "") {
+    		return "";
+    	}
+    	var durationSource = typeof value == "number" ? "" + value : ("" + value).replace(",", ".");
+    	if (!/^-?\d+(\.\d+)?$/.test(durationSource)) {
+    		return "" + value;
+    	}
+    	var secondsValue = parseFloat(durationSource);
+    	if (isNaN(secondsValue)) {
+    		return "" + value;
+    	}
+    	var sign = secondsValue < 0 ? "-" : "";
+    	var totalMilliseconds = Math.round(Math.abs(secondsValue) * 1000);
+    	var totalSeconds = Math.floor(totalMilliseconds / 1000);
+    	var milliseconds = totalMilliseconds % 1000;
+    	var days = Math.floor(totalSeconds / 86400);
+    	var hoursTotal = Math.floor(totalSeconds / 3600);
+    	var hours = Math.floor((totalSeconds % 86400) / 3600);
+    	var minutes = Math.floor((totalSeconds % 3600) / 60);
+    	var seconds = totalSeconds % 60;
+    	var durationFormat = getFieldOption(field, "duration_format");
+    	if (durationFormat == "") {
+    		durationFormat = "h:mm:ss";
+    	}
+    	if (durationFormat == "d h") {
+    		return sign + days + "d " + hours + "h";
+    	}
+    	if (durationFormat == "d h m") {
+    		return sign + days + "d " + hours + "h " + minutes + "m";
+    	}
+    	if (durationFormat == "d h m s") {
+    		return sign + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+    	}
+    	var decimals = durationFormat.indexOf(".sss") != -1 ? 3 : (durationFormat.indexOf(".ss") != -1 ? 2 : (durationFormat.indexOf(".s") != -1 ? 1 : 0));
+    	var secondsText = padNumber(seconds, 2);
+    	if (decimals > 0) {
+    		secondsText += "." + padNumber(milliseconds, 3).substring(0, decimals);
+    	}
+    	if (durationFormat.indexOf("d h:mm") == 0) {
+    		var dayClock = days + "d " + hours + ":" + padNumber(minutes, 2);
+    		if (durationFormat.indexOf(":ss") != -1) {
+    			dayClock += ":" + secondsText;
+    		}
+    		return sign + dayClock;
+    	}
+    	var clock = hoursTotal + ":" + padNumber(minutes, 2);
+    	if (durationFormat.indexOf(":ss") != -1) {
+    		clock += ":" + secondsText;
+    	}
+    	return sign + clock;
+    };
+    var formatNumberValue = function(value, field) {
+    	if (value == null || value == "") {
+    		return "";
+    	}
+    	var numberSource = typeof value == "number" ? "" + value : ("" + value).replace(",", ".");
+    	if (!/^-?\d+(\.\d+)?$/.test(numberSource)) {
+    		return "" + value;
+    	}
+    	var numberValue = parseFloat(numberSource);
+    	if (isNaN(numberValue)) {
+    		return "" + value;
+    	}
+    	var decimalPlaces = parseInt(getFieldOption(field, "number_decimal_places"), 10);
+    	if (isNaN(decimalPlaces)) {
+    		if (field != null && (field.type == "autonumber" || field.type == "count")) {
+    			decimalPlaces = 0;
+    		}
+    		else {
+    			return "" + value;
+    		}
+    	}
+    	if (decimalPlaces < 0) {
+    		decimalPlaces = 0;
+    	}
+    	if (decimalPlaces > 20) {
+    		decimalPlaces = 20;
+    	}
+    	return numberValue.toFixed(decimalPlaces);
+    };
+    var formatEmailHtml = function(value) {
+    	var email = String(value == undefined || value == null ? "" : value).replace(/^\s+|\s+$/g, "");
+    	if (email == "") {
+    		return "";
+    	}
+    	return "<a href=\"mailto:" + escapeDisplayHtml(email) + "\">" + escapeDisplayHtml(email) + "</a>";
+    };
+    var formatPhoneHtml = function(value) {
+    	var phone = String(value == undefined || value == null ? "" : value).replace(/^\s+|\s+$/g, "");
+    	if (phone == "") {
+    		return "";
+    	}
+    	var phoneHref = phone.replace(/[^\d+]/g, "");
+    	if (phoneHref == "") {
+    		return escapeDisplayHtml(phone);
+    	}
+    	return "<a href=\"tel:" + escapeDisplayHtml(phoneHref) + "\">" + escapeDisplayHtml(phone) + "</a>";
+    };
+    var formatRatingHtml = function(value) {
+    	var ratingValue = parseInt(value, 10);
+    	if (isNaN(ratingValue) || ratingValue <= 0) {
+    		return "";
+    	}
+    	var stars = "";
+    	for (var iRating = 0; iRating < ratingValue; iRating++) {
+    		stars += "&#9733;";
+    	}
+    	return "<span style=\"color:#f59e0b;letter-spacing:1px\">" + stars + "</span>";
+    };
+    var formatBooleanHtml = function(value) {
+    	if (isTrueValue(value)) {
+    		return "<span style=\"display:inline-flex;width:16px;height:16px;border:1px solid #22c55e;background:#22c55e;border-radius:3px;color:#fff;align-items:center;justify-content:center;font-size:12px;line-height:16px\">&#10003;</span>";
+    	}
+    	return "<span style=\"display:inline-flex;width:16px;height:16px;border:1px solid #cbd5e1;background:#fff;border-radius:3px\"></span>";
+    };
+    var formatBaserowCell = function(element, field, nested) {
+    	if (Array.isArray(element)) {
+    		var arrayValue = [];
+    		var arrayHtml = "";
+    		for (var iElement = 0; iElement < element.length; iElement++) {
+    			var arrayResult = formatBaserowCell(element[iElement], field, true);
+    			arrayValue.push(arrayResult.value);
+    			arrayHtml += arrayResult.innerHtml;
+    		}
+    		return { innerHtml: arrayHtml + (nested ? "" : close_html), value: arrayValue };
+    	}
+    	var resolvedType = getResolvedFieldType(field);
+    	var primitiveValue = getPrimitiveCellValue(element);
+    	var formattedText;
+    	if (resolvedType == "rating") {
+    		return { innerHtml: formatRatingHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+    	}
+    	if (resolvedType == "boolean") {
+    		return { innerHtml: formatBooleanHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+    	}
+    	if (resolvedType == "number" || resolvedType == "autonumber" || (field != null && (field.type == "number" || field.type == "autonumber" || field.type == "count"))) {
+    		formattedText = formatNumberValue(primitiveValue, field);
+    		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
+    	}
+    	if (resolvedType == "email" || (field != null && field.type == "email")) {
+    		return { innerHtml: formatEmailHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+    	}
+    	if (resolvedType == "phone_number" || (field != null && field.type == "phone_number")) {
+    		return { innerHtml: formatPhoneHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+    	}
+    	if (resolvedType == "date" || (field != null && (field.type == "date" || field.type == "created_on" || field.type == "last_modified"))) {
+    		formattedText = formatDateValue(primitiveValue, field);
+    		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
+    	}
+    	if (resolvedType == "duration" || (field != null && field.type == "duration")) {
+    		formattedText = formatDurationValue(primitiveValue, field);
+    		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
+    	}
+    	return computeAnyType(element, nested, resolvedType);
+    };
     var buildSignature = function(cells, columns) {
     	var signature = [];
     	for (var iSignature = 0; iSignature < columns.length; iSignature++) {
@@ -586,24 +880,19 @@ comment: |
     	for (var key in elem) {
     		var html = "" + base_html;
     		var current = elem[key];
-    		var currentType = null;
+    		var currentField = null;
     		var isHiddenColumn = key == "id" || key == "order" || (jConfig.hidden ? jConfig.hidden.includes(key) : false);
     		if ("structure" in this) {
     			if (!Array.isArray(structure)) {
     				structure = [structure];
     			}
     			if (shouldExposeColumn(key)) {
-    				var cTargetForType = structure.filter((x) => {
-    					return x.name == key;
-    				})[0];
-    				if (cTargetForType != undefined) {
-    					currentType = getBrFilterType(cTargetForType).type;
-    				}
+    				currentField = structureByName[key];
     			}
     		}
     		if (current != null) {
     			obj[key] = { displayName: key, type: "html", value: "" };
-    			var result = computeAnyType(current, false, currentType);
+    			var result = formatBaserowCell(current, currentField, false);
     			html += result.innerHtml;
     			obj[key].value = result.value;
     			obj[key].displayValue = html;
@@ -742,10 +1031,12 @@ comment: |
     		filterHide: true
     	};
     
-    	structure.forEach((field) => {
-    		if (!shouldExposeColumn(field.name)) {
+    	var appendedModelFields = {};
+    	var appendModelField = function(field) {
+    		if (field == null || field.name == null || appendedModelFields[field.name] === true || !shouldExposeColumn(field.name)) {
     			return;
     		}
+    		appendedModelFields[field.name] = true;
     		var result = getBrFilterType(field);
     		
     		var cType = result.type;
@@ -767,23 +1058,29 @@ comment: |
     			value = "";
     		}
     
+    		var formattedModelValue = formatBaserowCell(value, field, false);
     		row[field.name] = {
     			displayName: field.name,
     			type: "html",
-    			value: value,
-    			displayValue:
-    				"<div style=''display:flex; white-space: normal; align-items:center''>" +
-    				(typeof value === "string" ||
-    				typeof value === "number" ||
-    				typeof value === "boolean"
-    					? value
-    					: "") +
-    				"</div>",
+    			value: formattedModelValue.value,
+    			displayValue: "<div style=''display:flex; white-space: normal; align-items:center''>" + formattedModelValue.innerHtml,
     			cType: cType,
     			filterCompletion: cTargetCompletion,
     			filterHide: cHideFromFiltering
     		};
-    	});
+    	};
+    	if (displayColumns != null) {
+    		var structureByName = {};
+    		for (var iModelStructure = 0; iModelStructure < structure.length; iModelStructure++) {
+    			structureByName[structure[iModelStructure].name] = structure[iModelStructure];
+    		}
+    		for (var iDisplayColumn = 0; iDisplayColumn < displayColumns.length; iDisplayColumn++) {
+    			appendModelField(structureByName[displayColumns[iDisplayColumn]]);
+    		}
+    	}
+    	for (var iFallbackStructure = 0; iFallbackStructure < structure.length; iFallbackStructure++) {
+    		appendModelField(structure[iFallbackStructure]);
+    	}
     	if (aggregationSpecs != null) {
     		for (var iAggregationModel = 0; iAggregationModel < aggregationSpecs.length; iAggregationModel++) {
     			var aggregationModelSpec = aggregationSpecs[iAggregationModel];
