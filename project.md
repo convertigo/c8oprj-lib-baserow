@@ -15008,6 +15008,14 @@ Create a column if a field identifier does not match any column in the table
 </tr>
 <tr>
 <td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source.
+</td>
+</tr>
+<tr>
+<td>
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_id
 </td>
 <td>
@@ -15066,6 +15074,14 @@ Choose a table in the no-code database
 </td>
 <td>
 Create a column if a field identifier does not match any column in the table
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source.
 </td>
 </tr>
 <tr>
@@ -15132,6 +15148,14 @@ Choose a table in the no-code database
 </tr>
 <tr>
 <td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source.
+</td>
+</tr>
+<tr>
+<td>
 <img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_id
 </td>
 <td>
@@ -15184,6 +15208,14 @@ comment
 Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item
 </td>
 </tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source. Falls back to forms_config.form_id when omitted.
+</td>
+</tr>
 </table>
 
 </p></blockquote></details>
@@ -15212,6 +15244,14 @@ comment
 </td>
 <td>
 Choose a table in Baserow
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source.
 </td>
 </tr>
 </table>
@@ -15251,6 +15291,14 @@ Choose a table
 <td>
 Filters
 
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source.
 </td>
 </tr>
 </table>
@@ -15298,6 +15346,14 @@ Filters
 </td>
 <td>
 Define a filter to apply to a table
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source.
 </td>
 </tr>
 <tr>
@@ -15366,6 +15422,14 @@ comment
 </td>
 <td>
 Choose a table
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;forms_form_id
+</td>
+<td>
+Real id of the form currently calling this source.
 </td>
 </tr>
 <tr>

@@ -1,11 +1,15 @@
 accessibility: Private
 ↓ParseConfig [steps.SimpleStep-1729157238699]: 
   expression: |
-    jConfig = JSON.parse(forms_config);
-    _use_docid = jConfig.form_id;
+    'jConfig = JSON.parse(forms_config);
+    config_form_id = jConfig.form_id != null ? "" + jConfig.form_id : "";
+    provided_form_id = (typeof forms_form_id != "undefined" && forms_form_id != null && ("" + forms_form_id) != "") ? ("" + forms_form_id) : "";
+    _use_docid = provided_form_id != "" ? provided_form_id : config_form_id;
+    _use_docid_published = config_form_id.indexOf("published_") == 0 ? config_form_id : "published_" + config_form_id;
+    fallback_to_published_form_id = provided_form_id == "" && config_form_id != "" && config_form_id.indexOf("published_") != 0;
     source_id = "" + jConfig.source_id;
     owner = jConfig.source_owner;
-    
+    '
 ↓Call_Transaction [steps.TransactionStep-1729157830649]: 
   sourceTransaction: lib_BaseRow.c8oforms_fs.GetDocument
   ↓_use_docid [variables.StepVariable-1729157830651]: 
@@ -66,6 +70,70 @@ accessibility: Private
             
             
   variableName: doc_forms_config_polygons
+↓jIfTryPublishedFormId [steps.IfStep-1781260000016]: 
+  condition: fallback_to_published_form_id && forms_config != doc_forms_config && forms_config != doc_forms_config_markers && forms_config != doc_forms_config_circles && forms_config != doc_forms_config_polygons
+  ↓UsePublishedFormId [steps.SimpleStep-1781260000017]: 
+    expression: _use_docid = _use_docid_published;
+  ↓Call_Transaction [steps.TransactionStep-1781260000018]: 
+    sourceTransaction: lib_BaseRow.c8oforms_fs.GetDocument
+    ↓_use_docid [variables.StepVariable-1781260000019]: 
+      description: Document ID
+  ↓formSourceConfig1 [steps.SimpleSourceStep-1781260000020]: 
+    output: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1781260000018
+          - java.lang.String: 
+            - ↑value: |
+              .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sources' or name()='sourcesMarkers' or name()='sourcesCircles' or name()='actions']//forms_config/str/text()
+              
+              
+    variableName: doc_forms_config
+  ↓formSourceConfigMarkers [steps.SimpleSourceStep-1781260000021]: 
+    output: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1781260000018
+          - java.lang.String: 
+            - ↑value: |
+              .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesMarkers']//forms_config/str/text()
+              
+              
+    variableName: doc_forms_config_markers
+  ↓formSourceConfig2 [steps.SimpleSourceStep-1781260000022]: 
+    output: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1781260000018
+          - java.lang.String: 
+            - ↑value: |
+              .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesCircles']//forms_config/str/text()
+              
+              
+    variableName: doc_forms_config_circles
+  ↓formSourceConfig3 [steps.SimpleSourceStep-1781260000023]: 
+    output: true
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1781260000018
+          - java.lang.String: 
+            - ↑value: |
+              .//document/couchdb_output//item[id = '{{{ source_id }}}']/*[name()='sourcesPolygons']//forms_config/str/text()
+              
+              
+    variableName: doc_forms_config_polygons
 ↓jIf [steps.IfStep-1732208668695]: 
   condition: forms_config != doc_forms_config && forms_config != doc_forms_config_markers && forms_config != doc_forms_config_circles && forms_config != doc_forms_config_polygons
   ↓Error_structure [steps.XMLErrorStep-1732208675113]: 
@@ -146,4 +214,7 @@ accessibility: Private
     '
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
   required: true
+  value: 
+↓forms_form_id [variables.RequestableVariable-1781260000001]: 
+  comment: Real id of the form currently calling this source. Falls back to forms_config.form_id when omitted.
   value: 

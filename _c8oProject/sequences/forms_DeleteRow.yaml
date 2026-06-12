@@ -24,6 +24,7 @@ comment: |
   ↓forms_config [variables.StepVariable-1734444235531]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
+  ↓forms_form_id [variables.StepVariable-1781260000010]: 
 ↓IfError [steps.IfExistStep-1734444235534]: 
   condition: IfError
   sourceDefinition: 
@@ -120,6 +121,9 @@ comment: |
     }'
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables?noCols=true
   required: true
+  value: 
+↓forms_form_id [variables.RequestableVariable-1781260000011]: 
+  comment: Real id of the form currently calling this source.
   value: 
 ↓doc [variables.RequestableVariable-1726474061331]: 
 ↓originalDoc [variables.RequestableVariable-1726474061334]: 
