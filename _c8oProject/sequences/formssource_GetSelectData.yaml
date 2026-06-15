@@ -405,58 +405,108 @@ comment: |
     	}
     	return element;
     };
+    var getDateDisplayTimezone = function(field) {
+    	var timezone = getFieldOption(field, "date_timezone");
+    	if (timezone == "") {
+    		timezone = getFieldOption(field, "timezone");
+    	}
+    	if (timezone == "") {
+    		timezone = getFieldOption(field, "date_time_zone");
+    	}
+    	if (timezone == "") {
+    		timezone = "${lib_BaseRow.dateTimezone=Europe/Paris}";
+    	}
+    	timezone = ("" + timezone).replace(/^\s+|\s+$/g, "");
+    	if (timezone == "" || timezone.toLowerCase() == "null") {
+    		timezone = "UTC";
+    	}
+    	return timezone;
+    };
+    var getDateTimeParts = function(rawDate, field) {
+    	try {
+    		var normalizedDate = ("" + rawDate).replace(" ", "T");
+    		var zoneId = java.time.ZoneId.of(getDateDisplayTimezone(field));
+    		if (/[zZ]$|[+-]\d{2}:?\d{2}$/.test(normalizedDate)) {
+    			normalizedDate = normalizedDate.replace(/([+-]\d{2})(\d{2})$/, "$1:$2");
+    			var zonedDate = java.time.OffsetDateTime.parse(normalizedDate).toInstant().atZone(zoneId);
+    			return {
+    				year: "" + zonedDate.getYear(),
+    				month: padNumber(zonedDate.getMonthValue(), 2),
+    				day: padNumber(zonedDate.getDayOfMonth(), 2),
+    				hours: zonedDate.getHour(),
+    				minutes: zonedDate.getMinute()
+    			};
+    		}
+    		var localDate = java.time.LocalDateTime.parse(normalizedDate);
+    		return {
+    			year: "" + localDate.getYear(),
+    			month: padNumber(localDate.getMonthValue(), 2),
+    			day: padNumber(localDate.getDayOfMonth(), 2),
+    			hours: localDate.getHour(),
+    			minutes: localDate.getMinute()
+    		};
+    	}
+    	catch (e) {
+    		return null;
+    	}
+    };
     var formatDateValue = function(value, field) {
     	if (value == null || value == "") {
     		return "";
     	}
     	var rawDate = "" + value;
-    	var year;
-    	var month;
-    	var day;
-    	var hours = 0;
-    	var minutes = 0;
+    	var dateParts = null;
     	var dateOnlyMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     	if (dateOnlyMatch != null) {
-    		year = dateOnlyMatch[1];
-    		month = dateOnlyMatch[2];
-    		day = dateOnlyMatch[3];
+    		dateParts = {
+    			year: dateOnlyMatch[1],
+    			month: dateOnlyMatch[2],
+    			day: dateOnlyMatch[3],
+    			hours: 0,
+    			minutes: 0
+    		};
     	}
     	else {
+    		dateParts = getDateTimeParts(rawDate, field);
+    	}
+    	if (dateParts == null) {
     		var parsedDate = new Date(rawDate);
     		if (isNaN(parsedDate.getTime())) {
     			return rawDate;
     		}
-    		year = "" + parsedDate.getFullYear();
-    		month = padNumber(parsedDate.getMonth() + 1, 2);
-    		day = padNumber(parsedDate.getDate(), 2);
-    		hours = parsedDate.getHours();
-    		minutes = parsedDate.getMinutes();
+    		dateParts = {
+    			year: "" + parsedDate.getFullYear(),
+    			month: padNumber(parsedDate.getMonth() + 1, 2),
+    			day: padNumber(parsedDate.getDate(), 2),
+    			hours: parsedDate.getHours(),
+    			minutes: parsedDate.getMinutes()
+    		};
     	}
     	var dateFormat = getFieldOption(field, "date_format").toUpperCase();
     	var dateText;
     	if (dateFormat == "EU" || dateFormat == "EUROPEAN") {
-    		dateText = day + "/" + month + "/" + year;
+    		dateText = dateParts.day + "/" + dateParts.month + "/" + dateParts.year;
     	}
     	else if (dateFormat == "US") {
-    		dateText = month + "/" + day + "/" + year;
+    		dateText = dateParts.month + "/" + dateParts.day + "/" + dateParts.year;
     	}
     	else {
-    		dateText = year + "-" + month + "-" + day;
+    		dateText = dateParts.year + "-" + dateParts.month + "-" + dateParts.day;
     	}
     	var includeTimeOption = field != null ? field.date_include_time : null;
     	var includeTime = isTrueValue(includeTimeOption) || (includeTimeOption == null && /[T\s]\d{2}:\d{2}/.test(rawDate));
     	if (includeTime) {
     		var timeFormat = getFieldOption(field, "date_time_format").toLowerCase();
     		if (timeFormat == "12" || timeFormat.indexOf("12") != -1) {
-    			var suffix = hours >= 12 ? "PM" : "AM";
-    			var hour12 = hours % 12;
+    			var suffix = dateParts.hours >= 12 ? "PM" : "AM";
+    			var hour12 = dateParts.hours % 12;
     			if (hour12 == 0) {
     				hour12 = 12;
     			}
-    			dateText += " " + hour12 + ":" + padNumber(minutes, 2) + " " + suffix;
+    			dateText += " " + hour12 + ":" + padNumber(dateParts.minutes, 2) + " " + suffix;
     		}
     		else {
-    			dateText += " " + padNumber(hours, 2) + ":" + padNumber(minutes, 2);
+    			dateText += " " + padNumber(dateParts.hours, 2) + ":" + padNumber(dateParts.minutes, 2);
     		}
     	}
     	return dateText;
