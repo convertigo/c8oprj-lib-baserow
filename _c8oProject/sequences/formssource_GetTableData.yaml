@@ -525,7 +525,10 @@ comment: |
     	return element;
     };
     var getDateDisplayTimezone = function(field) {
-    	var timezone = getFieldOption(field, "date_timezone");
+    	var timezone = getFieldOption(field, "date_force_timezone");
+    	if (timezone == "") {
+    		timezone = getFieldOption(field, "date_timezone");
+    	}
     	if (timezone == "") {
     		timezone = getFieldOption(field, "timezone");
     	}
@@ -533,7 +536,7 @@ comment: |
     		timezone = getFieldOption(field, "date_time_zone");
     	}
     	if (timezone == "") {
-    		timezone = "${lib_BaseRow.dateTimezone=Europe/Paris}";
+    		timezone = "${lib_BaseRow.dateTimezone=UTC}";
     	}
     	timezone = ("" + timezone).replace(/^\s+|\s+$/g, "");
     	if (timezone == "" || timezone.toLowerCase() == "null") {
