@@ -14,6 +14,40 @@ const api = JavaImporter(
 const xpath = context.getXpathApi();
 
 with (api) {
+	// Per-user scope for the shared (project-scoped) table_id cache. The cache maps
+	// "application~>database~>table" name tuples to Baserow ids, but those names are
+	// not unique across users (each Baserow account has its own workspaces with the
+	// same names). Without a per-user prefix, one user's resolved id leaks to another
+	// user, who then queries a table id it cannot access (empty field list). We key on
+	// the authenticated Baserow user (the JWT whose workspaces are actually queried).
+	function getUserScope() {
+		try {
+			var token = context.httpSession.getAttribute("token");
+			if (!token) {
+				return "anon";
+			}
+			var payload = ("" + token).split(".")[1];
+			if (!payload) {
+				return "tok:" + token;
+			}
+			while (payload.length % 4) {
+				payload += "=";
+			}
+			var json = "" + new java.lang.String(java.util.Base64.getUrlDecoder().decode(payload), "UTF-8");
+			var claims = JSON.parse(json);
+			if (claims.user_id != null) {
+				return "u:" + claims.user_id;
+			}
+			if (claims.sub != null) {
+				return "s:" + claims.sub;
+			}
+			return "tok:" + token;
+		} catch (e) {
+			log.warn("getUserScope failed, falling back to anon cache scope: " + e);
+			return "anon";
+		}
+	}
+
 	function resolveTableId() {
 		if (typeof table_id == "undefined") {
 			log.debug("table_id is undefined");
@@ -31,7 +65,7 @@ with (api) {
 			return;
 		}
 		
-		const table_id_key = new String(table_id);
+		const table_id_key = getUserScope() + "~>" + new String(table_id);
 		const project_hash = System.identityHashCode(context.project.original ? context.project.original : context.project);
 		log.trace("project_hash: " + project_hash);
 		
