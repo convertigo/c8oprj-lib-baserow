@@ -140,6 +140,24 @@ comment: |
     		}
     	}
     };
+    var ensureSortFieldsIncluded = function(rawSort) {
+        if (rawSort == null || ("" + rawSort) == "") {
+            return;
+        }
+        try {
+            var parsedSort = JSON.parse("" + rawSort);
+            if (parsedSort != null && parsedSort.sorts != null && parsedSort.sorts.length != null) {
+                for (var iSort = 0; iSort < parsedSort.sorts.length; iSort++) {
+                    if (parsedSort.sorts[iSort] != null && parsedSort.sorts[iSort].name != null) {
+                        ensureIncludedField(parsedSort.sorts[iSort].name);
+                    }
+                }
+            }
+        }
+        catch (e) {
+        }
+    };
+    ensureSortFieldsIncluded(order_by);
     var parseColumnNames = function(rawColumns) {
     	var columns = [];
     	var columnsMap = {};
