@@ -52,6 +52,8 @@ comment: |
     view_id = jConfig.view_id ? jConfig.view_id : null;
     var describeStructure = true;
     var hasConfiguredColumns = jConfig.columns != null;
+    var isModelMode = model == "true" || model === true || model == "all_columns";
+    var isAllColumnsModel = model == "all_columns";
     include_fields = null;
     var trimFieldName = function(value) {
     	if (value == null) {
@@ -117,6 +119,41 @@ comment: |
     		targetColumnsMap[currentColumn] = true;
     	}
     };
+    var filterColumns = [];
+    var filterColumnsMap = {};
+    var collectFilterColumns = function(filterNode) {
+    	if (filterNode == null) {
+    		return;
+    	}
+    	if (Array.isArray(filterNode)) {
+    		for (var iFilterArray = 0; iFilterArray < filterNode.length; iFilterArray++) {
+    			collectFilterColumns(filterNode[iFilterArray]);
+    		}
+    		return;
+    	}
+    	if (filterNode.field != null) {
+    		appendUniqueColumn(filterColumns, filterColumnsMap, filterNode.field);
+    	}
+    	if (filterNode.filters != null) {
+    		collectFilterColumns(filterNode.filters);
+    	}
+    	if (filterNode.groups != null) {
+    		collectFilterColumns(filterNode.groups);
+    	}
+    };
+    if (forms_tableFilter != null && ("" + forms_tableFilter) != "") {
+    	try {
+    		collectFilterColumns(JSON.parse("" + forms_tableFilter));
+    	}
+    	catch (e) {
+    	}
+    }
+    if (include_fields != null) {
+    	for (var iInitialFilterColumn = 0; iInitialFilterColumn < filterColumns.length; iInitialFilterColumn++) {
+    		addIncludeField(filterColumns[iInitialFilterColumn]);
+    	}
+    	include_fields = buildIncludeFields();
+    }
     var buildModelColumns = function() {
     	if (hasConfiguredColumns !== true) {
     		return null;
@@ -128,6 +165,9 @@ comment: |
     	}
     	for (var iHiddenColumn = 0; iHiddenColumn < jConfig.hidden.length; iHiddenColumn++) {
     		appendUniqueColumn(columns, columnsMap, jConfig.hidden[iHiddenColumn]);
+    	}
+    	for (var iFilterModelColumn = 0; iFilterModelColumn < filterColumns.length; iFilterModelColumn++) {
+    		appendUniqueColumn(columns, columnsMap, filterColumns[iFilterModelColumn]);
     	}
     	return columns;
     };
@@ -236,8 +276,8 @@ comment: |
     page = "1";
     
     // If Forms asks us for a model, keep the grouped shape when Group by is used.
-    if (model == "true") {
-    	var modelColumns = buildModelColumns();
+    if (isModelMode) {
+    	var modelColumns = isAllColumnsModel ? null : buildModelColumns();
     	size = "1";
     	filterExpression = null;
     	order_by = null;
@@ -975,7 +1015,7 @@ comment: |
     			obj[key].hidden = true;
     		}
     
-    		if (model == "true" && "structure" in this) {
+    		if (isModelMode && "structure" in this) {
     			if (!Array.isArray(structure)) {
     				structure = [structure];
     			}
@@ -1159,7 +1199,7 @@ comment: |
     			row[aggregationModelSpec.key] = buildAggregateCell(aggregationModelSpec, aggregationModelSpec.type == "count" ? 0 : null);
     		}
     	}
-    	if(model == "true"){
+    	if(isModelMode){
     		data.push(row);
     	}
     	else{
