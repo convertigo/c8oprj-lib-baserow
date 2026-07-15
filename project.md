@@ -14683,6 +14683,14 @@ The Base row admin email
 The baserow admin password
 </td>
 </tr>
+<tr>
+<td>
+<img src="https://github.com/convertigo/convertigo/blob/develop/engine/src/com/twinsoft/convertigo/beans/variables/images/variable_color_16x16.png?raw=true "  alt="RequestableVariable" >&nbsp;use_refresh
+</td>
+<td>
+Use the refresh_token stored in the HTTP session before falling back to username/password login.
+</td>
+</tr>
 </table>
 
 </p></blockquote></details>
