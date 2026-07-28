@@ -275,7 +275,8 @@ comment: |
     displayColumns = groupByColumns != null ? groupByColumns : jConfig.columns;
     page = "1";
     
-    // If Forms asks us for a model, keep the grouped shape when Group by is used.
+    // If Forms asks us for a model, keep the grouped shape when Group by is used,
+    // except when an editor explicitly needs every source column.
     if (isModelMode) {
     	var modelColumns = isAllColumnsModel ? null : buildModelColumns();
     	size = "1";
@@ -283,7 +284,13 @@ comment: |
     	order_by = null;
     	describeStructure = true;
     	distinctColumns = null;
-    	if (groupByColumns == null) {
+    	if (isAllColumnsModel) {
+    		groupByColumns = null;
+    		aggregationSpecs = null;
+    		include_fields = null;
+    		displayColumns = null;
+    	}
+    	else if (groupByColumns == null) {
     		includeFieldNames = [];
     		includeFieldsMap = {};
     		if (modelColumns != null) {
