@@ -1018,6 +1018,11 @@ comment: |
     		} else {
     			obj[key] = { displayName: key, type: "html", value: null };
     		}
+    		
+    		if (currentField != null) {
+    			obj[key].cType = getResolvedFieldType(currentField);
+    		}
+    		
     		if (isHiddenColumn) {
     			obj[key].hidden = true;
     		}
