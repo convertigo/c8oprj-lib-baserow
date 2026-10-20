@@ -202,6 +202,35 @@ accessibility: Private
     visibility: '-1'
   ↓email [variables.StepVariable-1740150840675]: 
     comment: The Base row admin email
+↓IfTokenError [steps.IfExistStep-1898400000301]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1740150840669
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1898400000302]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1740150840669
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1898400000303]: 
+↓Bearer [steps.XMLCopyStep-1898400000304]: 
+  comment: Bearer of the Baserow account of the source, to give to the next calls as authorization
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1740150840669
+        - java.lang.String: 
+          - ↑value: ./document/Bearer
 ↓forms_config [variables.RequestableVariable-1729157210751]: 
   comment: |
     '{

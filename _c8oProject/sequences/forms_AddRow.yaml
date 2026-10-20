@@ -68,6 +68,17 @@ comment: |
     description: table_id
     required: true
     value: 
+  ↓authorization [variables.StepVariable-1898400000250]: 
+    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1734427992515
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+    visibility: '-1'
 ↓jFields [steps.JsonSourceStep-1680262487884]: 
   comment: Get lits of fields and type from BR Table
   sourceDefinition: 
@@ -345,6 +356,17 @@ comment: |
     ↓Call_Sequence [steps.SequenceStep-1680267245329]: 
       comment: Push it to BR
       sourceSequence: lib_BaseRow.TokenGetOrRefresh
+      ↓authorization [variables.StepVariable-1898400000249]: 
+        comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1734427992515
+              - java.lang.String: 
+                - ↑value: ./document/Bearer/text()
+        visibility: '-1'
     ↓Call_Transaction1 [steps.TransactionStep-1680267313862]: 
       sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
       ↓__header_Authorization [variables.StepVariable-1680267313865]: 
@@ -495,6 +517,17 @@ comment: |
         ↓Call_Sequence [steps.SequenceStep-1680611569674]: 
           comment: Push it to BR
           sourceSequence: lib_BaseRow.TokenGetOrRefresh
+          ↓authorization [variables.StepVariable-1898400000248]: 
+            comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+            sourceDefinition: 
+              - xmlizable: 
+                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: 1734427992515
+                  - java.lang.String: 
+                    - ↑value: ./document/Bearer/text()
+            visibility: '-1'
         ↓Call_Transaction1 [steps.TransactionStep-1680611569677]: 
           sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
           ↓__header_Authorization [variables.StepVariable-1680611569680]: 
@@ -558,6 +591,17 @@ comment: |
       ↓data [variables.StepVariable-1734431301678]: 
         comment: A JSON object with each field name and value
         required: true
+      ↓authorization [variables.StepVariable-1898400000247]: 
+        comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1734427992515
+              - java.lang.String: 
+                - ↑value: ./document/Bearer/text()
+        visibility: '-1'
   ↓Call_Sequence1 [steps.SequenceStep-1734431536049]: 
     sourceSequence: lib_BaseRow.FieldsList
     ↓table_id [variables.StepVariable-1734431536052]: 
@@ -565,6 +609,17 @@ comment: |
       description: table_id
       required: true
       value: 
+    ↓authorization [variables.StepVariable-1898400000246]: 
+      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1734427992515
+            - java.lang.String: 
+              - ↑value: ./document/Bearer/text()
+      visibility: '-1'
   ↓jFields [steps.JsonSourceStep-1734431536055]: 
     comment: Get lits of fields and type from BR Table
     sourceDefinition: 
@@ -839,6 +894,17 @@ comment: |
       ↓Call_Sequence [steps.SequenceStep-1748360671121]: 
         comment: Push it to BR
         sourceSequence: lib_BaseRow.TokenGetOrRefresh
+        ↓authorization [variables.StepVariable-1898400000245]: 
+          comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1734427992515
+                - java.lang.String: 
+                  - ↑value: ./document/Bearer/text()
+          visibility: '-1'
       ↓Call_Transaction1 [steps.TransactionStep-1748360671124]: 
         sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
         ↓__header_Authorization [variables.StepVariable-1748360671127]: 
@@ -995,6 +1061,17 @@ comment: |
           ↓Call_Sequence [steps.SequenceStep-1748360671181]: 
             comment: Push it to BR
             sourceSequence: lib_BaseRow.TokenGetOrRefresh
+            ↓authorization [variables.StepVariable-1898400000244]: 
+              comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+              sourceDefinition: 
+                - xmlizable: 
+                  - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+                  - com.twinsoft.convertigo.beans.common.XMLVector: 
+                    - java.lang.String: 
+                      - ↑value: 1734427992515
+                    - java.lang.String: 
+                      - ↑value: ./document/Bearer/text()
+              visibility: '-1'
           ↓Call_Transaction1 [steps.TransactionStep-1748360671184]: 
             sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
             ↓__header_Authorization [variables.StepVariable-1748360671187]: 
@@ -1060,6 +1137,17 @@ comment: |
         description: table_id
         required: true
       ↓data [variables.StepVariable-1726213898225]: 
+      ↓authorization [variables.StepVariable-1898400000243]: 
+        comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1734427992515
+              - java.lang.String: 
+                - ↑value: ./document/Bearer/text()
+        visibility: '-1'
     ↓IfExist [steps.IfExistStep-1726214087646]: 
       sourceDefinition: 
         - xmlizable: 
@@ -1096,6 +1184,17 @@ comment: |
       ↓before [variables.StepVariable-1680078591588]: 
         comment: If provided then the newly created row will be positioned before the row with the provided id.
         description: before
+      ↓authorization [variables.StepVariable-1898400000242]: 
+        comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1734427992515
+              - java.lang.String: 
+                - ↑value: ./document/Bearer/text()
+        visibility: '-1'
     ↓IfExist [steps.IfExistStep-1680078354235]: 
       sourceDefinition: 
         - xmlizable: 

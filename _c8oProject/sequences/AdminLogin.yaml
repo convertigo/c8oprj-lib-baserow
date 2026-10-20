@@ -9,9 +9,32 @@ comment: Establishes a session with Baserow. Must be called before any other API
     
     email = email ? email : "${lib_baserow.adminuser=fake}";
     password = password ? password : "${lib_baserow.password.secret=fake}";
+    
+    // keep_in_session=false (TokenGetOrRefresh): the HTTP session is left as is, the tokens are returned in
+    // <auth> and only the refresh_token given by the caller is used (the one of the session can belong to
+    // another Baserow account)
+    keepInSession = ("" + keep_in_session) != "false";
+    refreshToken = refresh_token == null || ("" + refresh_token) == "" || ("" + refresh_token) == "null" ? null : "" + refresh_token;
+    if (refreshToken == null && keepInSession && context.httpSession.getAttribute("refresh_token") != null) {
+    	refreshToken = "" + context.httpSession.getAttribute("refresh_token");
+    }
+    authTokens = function(answer, refreshed) {
+    	var text = function(value) {
+    		return value == null || typeof value == "object" ? "" : "" + value;
+    	};
+    	answer = answer != null && typeof answer == "object" ? answer : {};
+    	var token = text(answer.access_token);
+    	return {
+    		token: token != "" ? token : text(answer.token),
+    		refresh_token: text(answer.refresh_token),
+    		refreshed: refreshed,
+    		error: text(answer.error),
+    		detail: text(answer.detail)
+    	};
+    };
     '
 ↓IfUseRefreshToken [steps.IfStep-1779265166854]: 
-  condition: use_refresh == "true" && context.httpSession.getAttribute("refresh_token") != null && (context.httpSession.getAttribute("refresh_token") + "").length > 0 && getJwtTiming(context.httpSession.getAttribute("refresh_token")) != null && isTokenStillValid(context.httpSession.getAttribute("refresh_token"), null)
+  condition: use_refresh == "true" && refreshToken != null && getJwtTiming(refreshToken) != null && isTokenStillValid(refreshToken, null)
   ↓RefreshBody [steps.JsonObjectStep-1779265166861]: 
     key: 
       - xmlizable: 
@@ -33,7 +56,7 @@ comment: Establishes a session with Baserow. Must be called before any other API
           - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
           - SmartType: 
             - ↑mode: JS
-            - →→: context.httpSession.getAttribute("refresh_token") + ""
+            - →→: refreshToken
   ↓Call_Refresh [steps.TransactionStep-1779265166869]: 
     sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_token_refresh__POST
     ↓__body [variables.StepVariable-1779265166871]: 
@@ -60,39 +83,9 @@ comment: Establishes a session with Baserow. Must be called before any other API
             - ↑value: 1779265166869
           - java.lang.String: 
             - ↑value: ./document/object/token/text() | ./document/object/access_token/text()
-    ↓SetRefreshedTokenInSession [steps.SessionSetStep-1779265166875]: 
-      expression: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-          - SmartType: 
-            - ↑mode: SOURCE
-            - com.twinsoft.convertigo.beans.common.XMLVector: 
-              - java.lang.String: 
-                - ↑value: 1779265166869
-              - java.lang.String: 
-                - ↑value: (./document/object/token/text() | ./document/object/access_token/text())[1]
-      key: token
-    ↓SetRefreshedTimeStampInSession [steps.SessionSetStep-1779265166877]: 
-      expression: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-          - SmartType: 
-            - ↑mode: JS
-            - →→: new Date().getTime()
-      key: token_timestamp
-    ↓LogRefreshedToken [steps.LogStep-1779265166879]: 
-      expression: '"Token refreshed from refresh_token"'
-    ↓IfRefreshedRefreshToken [steps.IfExistStep-1779270906957]: 
-      condition: IfRefreshedRefreshToken
-      sourceDefinition: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: 1779265166869
-            - java.lang.String: 
-              - ↑value: ./document/object/refresh_token/text()
-      ↓SetRefreshedRefreshTokenInSession [steps.SessionSetStep-1779270906960]: 
+    ↓IfKeepRefreshedTokenInSession [steps.IfStep-1898400000101]: 
+      condition: keepInSession
+      ↓SetRefreshedTokenInSession [steps.SessionSetStep-1779265166875]: 
         expression: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -102,9 +95,76 @@ comment: Establishes a session with Baserow. Must be called before any other API
                 - java.lang.String: 
                   - ↑value: 1779265166869
                 - java.lang.String: 
-                  - ↑value: ./document/object/refresh_token/text()
-        key: refresh_token
+                  - ↑value: (./document/object/token/text() | ./document/object/access_token/text())[1]
+        key: token
+      ↓SetRefreshedTimeStampInSession [steps.SessionSetStep-1779265166877]: 
+        expression: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: new Date().getTime()
+        key: token_timestamp
+      ↓IfRefreshedRefreshToken [steps.IfExistStep-1779270906957]: 
+        condition: IfRefreshedRefreshToken
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1779265166869
+              - java.lang.String: 
+                - ↑value: ./document/object/refresh_token/text()
+        ↓SetRefreshedRefreshTokenInSession [steps.SessionSetStep-1779270906960]: 
+          expression: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: SOURCE
+                - com.twinsoft.convertigo.beans.common.XMLVector: 
+                  - java.lang.String: 
+                    - ↑value: 1779265166869
+                  - java.lang.String: 
+                    - ↑value: ./document/object/refresh_token/text()
+          key: refresh_token
+    ↓LogRefreshedToken [steps.LogStep-1779265166879]: 
+      expression: '"Token refreshed from refresh_token"'
+    ↓IfReturnRefreshedToken [steps.IfStep-1898400000102]: 
+      condition: keepInSession == false
+      ↓RefreshResponse [steps.JsonSourceStep-1898400000103]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1779265166869
+              - java.lang.String: 
+                - ↑value: ./document/object
+        variableName: refreshResponse
+      ↓auth [steps.JsonToXmlStep-1898400000104]: 
+        jsonObject: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: authTokens(refreshResponse, true)
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: auth
     ↓Return [steps.ReturnStep-1779265166881]: 
+↓IfRefreshOnly [steps.IfStep-1898400000105]: 
+  condition: refresh_only == "true"
+  ↓Error_structure [steps.XMLErrorStep-1898400000106]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: Baserow token expired and could not be refreshed
+  ↓Return [steps.ReturnStep-1898400000107]: 
 ↓Object [steps.JsonObjectStep-1664964135915]: 
   key: 
     - xmlizable: 
@@ -178,38 +238,65 @@ comment: Establishes a session with Baserow. Must be called before any other API
             - java.lang.String: 
               - ↑value: ./document/object/non_field_errors/value/text()
   ↓Return [steps.ReturnStep-1665210890792]: 
-↓SetTokenInSession [steps.SessionSetStep-1665210357330]: 
-  expression: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-      - SmartType: 
-        - ↑mode: SOURCE
+↓IfKeepTokenInSession [steps.IfStep-1898400000108]: 
+  condition: keepInSession
+  ↓SetTokenInSession [steps.SessionSetStep-1665210357330]: 
+    expression: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1664964284413
+            - java.lang.String: 
+              - ↑value: (./document/object/token/text() | ./document/object/access_token/text())[1]
+    key: token
+  ↓SetRefreshTokenInSession [steps.SessionSetStep-1779265184618]: 
+    expression: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: SOURCE
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1664964284413
+            - java.lang.String: 
+              - ↑value: ./document/object/refresh_token/text()
+    key: refresh_token
+  ↓SetTimeStampInSession [steps.SessionSetStep-1677077657468]: 
+    expression: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: new Date().getTime()
+    key: token_timestamp
+↓IfReturnToken [steps.IfStep-1898400000109]: 
+  condition: keepInSession == false
+  ↓AuthResponse [steps.JsonSourceStep-1898400000110]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
             - ↑value: 1664964284413
           - java.lang.String: 
-            - ↑value: (./document/object/token/text() | ./document/object/access_token/text())[1]
-  key: token
-↓SetRefreshTokenInSession [steps.SessionSetStep-1779265184618]: 
-  expression: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-      - SmartType: 
-        - ↑mode: SOURCE
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1664964284413
-          - java.lang.String: 
-            - ↑value: ./document/object/refresh_token/text()
-  key: refresh_token
-↓SetTimeStampInSession [steps.SessionSetStep-1677077657468]: 
-  expression: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-      - SmartType: 
-        - ↑mode: JS
-        - →→: new Date().getTime()
-  key: token_timestamp
+            - ↑value: ./document/object
+    variableName: authResponse
+  ↓auth [steps.JsonToXmlStep-1898400000111]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: authTokens(authResponse, false)
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: auth
 ↓password [variables.RequestableVariable-1664963925973]: 
   comment: The baserow admin password
   value: 
@@ -222,4 +309,13 @@ comment: Establishes a session with Baserow. Must be called before any other API
   value: 
 ↓use_refresh [variables.RequestableVariable-1779265184650]: 
   comment: Use the refresh_token stored in the HTTP session before falling back to username/password login.
+  value: false
+↓refresh_token [variables.RequestableVariable-1898400000112]: 
+  comment: Refresh token to use instead of the one of the HTTP session
+  visibility: '-1'
+↓keep_in_session [variables.RequestableVariable-1898400000113]: 
+  comment: false to leave the HTTP session as is and return the tokens in auth (token, refresh_token, refreshed)
+  value: true
+↓refresh_only [variables.RequestableVariable-1898400000114]: 
+  comment: true to only refresh refresh_token, never log in with a password
   value: false

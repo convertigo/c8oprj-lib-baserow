@@ -20,9 +20,9 @@ with (api) {
 	// same names). Without a per-user prefix, one user's resolved id leaks to another
 	// user, who then queries a table id it cannot access (empty field list). We key on
 	// the authenticated Baserow user (the JWT whose workspaces are actually queried).
-	function getUserScope() {
+	function getUserScope(authorization) {
 		try {
-			var token = context.httpSession.getAttribute("token");
+			var token = authorization == null ? "" : ("" + authorization).replace(/^\s*(JWT|Bearer)\s*/i, "");
 			if (!token) {
 				return "anon";
 			}
@@ -48,6 +48,43 @@ with (api) {
 		}
 	}
 
+	// The JWT Authorization header this transaction was called with (__header_Authorization of the
+	// calling step, "JWT <token>"), null otherwise (no header, or a database token of the *ApiKey
+	// sequences, which cannot list the workspaces). The sources of a page run in parallel in the same
+	// HTTP session with the tokens of different Baserow accounts: the table must be looked up with the
+	// token of this call, not with the token that happens to be in the session.
+	function getTransactionAuthorization() {
+		var node = xpath.selectSingleNode(context.inputDocument, '//transaction-headers/header[@name="Authorization"]/@value');
+		var authorization = node ? ("" + node.getNodeValue()).trim() : "";
+		return /^JWT\s+\S/i.test(authorization) ? authorization : null;
+	}
+
+	// A table that cannot be found is never sent to Baserow as its path (URL_NOT_FOUND): id 0, that no
+	// Baserow table has, makes Baserow answer ERROR_TABLE_DOES_NOT_EXIST through the usual error path
+	// of every sequence.
+	function setMissingTableId(reason) {
+		log.warn(reason);
+		context.transaction.variables.put("table_id", "0");
+		context.connector.prepareForTransaction(context);
+	}
+
+	// " (ERROR_CODE: detail)" of a Baserow error answer, "" otherwise
+	function getBaserowErrorText(response) {
+		var code = xpath.selectSingleNode(response, '/document/object/error/text()');
+		var detail = xpath.selectSingleNode(response, '/document/object/detail/text()');
+		if (!code && !detail) {
+			code = xpath.selectSingleNode(response, '/document/error/message/text()');
+		}
+		var texts = [];
+		if (code) {
+			texts.push("" + code.getNodeValue());
+		}
+		if (detail) {
+			texts.push("" + detail.getNodeValue());
+		}
+		return texts.length ? " (" + texts.join(": ") + ")" : "";
+	}
+
 	function resolveTableId() {
 		if (typeof table_id == "undefined") {
 			log.debug("table_id is undefined");
@@ -65,7 +102,13 @@ with (api) {
 			return;
 		}
 		
-		const table_id_key = getUserScope() + "~>" + new String(table_id);
+		const table_path = "" + table_id;
+		let __header_Authorization = getTransactionAuthorization();
+		if (__header_Authorization == null) {
+			// no JWT given to the transaction: token of the HTTP session
+			__header_Authorization = "JWT " + getAuthToken();
+		}
+		const table_id_key = getUserScope(__header_Authorization) + "~>" + table_path;
 		const project_hash = System.identityHashCode(context.project.original ? context.project.original : context.project);
 		log.trace("project_hash: " + project_hash);
 		
@@ -87,18 +130,17 @@ with (api) {
 		
 		if (table_id == null) {
 			log.trace("no table_id found for: " + table_id_key);
-			const __header_Authorization = "JWT " + getAuthToken();
 			let applicationsResponse = call(".._api_applications__GET", {__header_Authorization});
 			let node = xpath.selectSingleNode(applicationsResponse, '/document/array/object[name="' + database + '" and workspace/name="'+ application + '"]/id/text()');
 			if (!node) {
-				log.debug("database id not found");
+				setMissingTableId("Baserow table \"" + table_path + "\" not found: the Baserow account " + getUserScope(__header_Authorization) + " has no database \"" + database + "\" in a workspace \"" + application + "\"" + getBaserowErrorText(applicationsResponse));
 				return;
 			}
 			const database_id = node.getNodeValue();
 			let tablesResponse = call(".._api_database_tables_database__database_id___GET", {__header_Authorization, database_id});
 			node = xpath.selectSingleNode(tablesResponse, '/document/array/object[name="' + table + '"]/id/text()');
 			if (!node) {
-				log.debug("table '" + table + "' not found in database id '" + database_id + "'");
+				setMissingTableId("Baserow table \"" + table_path + "\" not found: no table \"" + table + "\" in the database \"" + database + "\" (id " + database_id + ") for the Baserow account " + getUserScope(__header_Authorization) + getBaserowErrorText(tablesResponse));
 				return;
 			}
 			table_id = node.getNodeValue();

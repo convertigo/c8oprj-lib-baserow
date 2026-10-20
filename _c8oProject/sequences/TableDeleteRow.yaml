@@ -2,6 +2,28 @@ accessibility: Private
 comment: deletes a row from a  from a given table
 ↓Call_Sequence [steps.SequenceStep-1667047744614]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+  ↓authorization [variables.StepVariable-1898400000233]: 
+    comment: Bearer of the Baserow account of the source
+    visibility: '-1'
+↓IfTokenError [steps.IfExistStep-1898400000230]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1667047744614
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1898400000231]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1667047744614
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1898400000232]: 
 ↓Call_Transaction [steps.TransactionStep-1667047744632]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___DELETE
   ↓__header_Authorization [variables.StepVariable-1667047744635]: 
@@ -42,6 +64,9 @@ comment: deletes a row from a  from a given table
   description: row_id
   required: true
   value: 
+↓authorization [variables.RequestableVariable-1898400000234]: 
+  comment: Bearer (JWT token) of the Baserow account, given by formscommon_CheckConfig. When empty, the token of the HTTP session is used
+  visibility: '-1'
 ↓TestTeamMembers [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1667047744709]: 
     description: table_id

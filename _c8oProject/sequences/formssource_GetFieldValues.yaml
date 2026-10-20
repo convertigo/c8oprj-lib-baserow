@@ -60,6 +60,17 @@ comment: |
     description: table_id
     required: true
     value: 
+  ↓authorization [variables.StepVariable-1898400000239]: 
+    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1729157637689
+          - java.lang.String: 
+            - ↑value: ./document/Bearer/text()
+    visibility: '-1'
 ↓IfExist [steps.IfExistStep-1680099603336]: 
   sourceDefinition: 
     - xmlizable: 

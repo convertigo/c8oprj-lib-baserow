@@ -1,176 +1,198 @@
 accessibility: Private
-comment: Gets a token or refresh it if the token is expired the Token will be placed in the current user session
+comment: Gets a Baserow token for an account (email/password, the Baserow admin account when they are empty), from the HTTP session while it is valid, otherwise by refreshing it or logging in. With authorization (the Bearer of a previous call), that token is returned as is.
 ↓owner [steps.SimpleStep-1729093479669]: 
   expression: |
     'email += "";
     password += "";
+    authorization = authorization == null ? "" : ("" + authorization).replace(/^\s+|\s+$/g, "");
     
     include("js/jwt.js");
     
-    var token_owner = context.httpSession.getAttribute("token_owner");
-    if (token_owner == null) {
-    	token_owner = "owner";
-    } else {
-    	token_owner += "";
-    }
-    
-    if (password || email) {
-    	owner = "" + org.apache.commons.codec.digest.DigestUtils.md5Hex("owner:" + email + ":" + password);
-    	if (token_owner != owner) {
-    		context.httpSession.setAttribute("token_for_" + token_owner, context.httpSession.getAttribute("token"));
-    		context.httpSession.setAttribute("token_timestamp_for_" + token_owner, context.httpSession.getAttribute("token_timestamp"));
-    		context.httpSession.setAttribute("refresh_token_for_" + token_owner, context.httpSession.getAttribute("refresh_token"));
-    		var exToken = context.httpSession.getAttribute("token_for_" + owner);
-    		if (exToken != null) {
-    			var exTokenTS = context.httpSession.getAttribute("token_timestamp_for_" + owner);
-    			var exRefreshToken = context.httpSession.getAttribute("refresh_token_for_" + owner);
-    			context.httpSession.setAttribute("token_owner", owner);
-    			context.httpSession.setAttribute("token", exToken);
-    			context.httpSession.setAttribute("token_timestamp", exTokenTS);
-    			if (exRefreshToken != null) {
-    				context.httpSession.setAttribute("refresh_token", exRefreshToken);
-    			} else {
-    				context.httpSession.removeAttribute("refresh_token");
-    			}
-    			token_owner = owner;
-    			log.info("swap token for this account: " + email);
-    		} else {
-    			context.httpSession.removeAttribute("token");
-    			context.httpSession.removeAttribute("token_timestamp");
-    			context.httpSession.removeAttribute("refresh_token");
-    			log.info("no previous token for this account: " + email);
-    		}
+    // The HTTP session keeps one Baserow token per account: token_for_<account>, token_timestamp_for_<account>
+    // and refresh_token_for_<account>, <account> being the md5 of the credentials ("owner": the Baserow admin
+    // account). token, token_timestamp, refresh_token and token_owner copy the token of the last account given
+    // with credentials, for the callers without credentials ("use previous token").
+    // The sources of a page run in parallel in the same session with different accounts: a token is never
+    // removed from the session while another one is fetched, and this call returns its own token (bearer),
+    // never the one that is in the session afterwards.
+    var session = context.httpSession;
+    var sessionValue = function(key) {
+    	var value = session.getAttribute(key);
+    	return value == null || ("" + value) == "" || ("" + value) == "null" ? null : "" + value;
+    };
+    storeToken = function(key, token, timestamp, refreshToken) {
+    	session.setAttribute("token_for_" + key, token);
+    	session.setAttribute("token_timestamp_for_" + key, timestamp);
+    	if (refreshToken != null) {
+    		session.setAttribute("refresh_token_for_" + key, refreshToken);
+    	}
+    };
+    setPreviousToken = function(key, token, timestamp, refreshToken) {
+    	session.setAttribute("token_owner", key);
+    	session.setAttribute("token", token);
+    	session.setAttribute("token_timestamp", timestamp);
+    	if (refreshToken != null) {
+    		session.setAttribute("refresh_token", refreshToken);
     	} else {
+    		session.removeAttribute("refresh_token");
+    	}
+    };
+    
+    bearer = null;
+    tokenError = null;
+    tokenKey = null;
+    keepAsPrevious = false;
+    // AdminLogin returns the tokens of this call instead of writing them in the session
+    keep_in_session = "false";
+    refresh_token = null;
+    refresh_only = "false";
+    var token = null;
+    var timestamp = null;
+    
+    if (/^(JWT|Bearer)\s+\S/i.test(authorization)) {
+    	// token of the account already obtained by the caller (formscommon_CheckConfig)
+    	var givenToken = authorization.replace(/^(JWT|Bearer)\s*/i, "");
+    	if (isTokenStillValid(givenToken, null)) {
+    		bearer = authorization;
+    	} else {
+    		// expires during a long call: renew the token of the same account, never use another account
+    		var userId = getJwtUserId(givenToken);
+    		var names = session.getAttributeNames();
+    		while (userId != null && tokenKey == null && names.hasMoreElements()) {
+    			var name = "" + names.nextElement();
+    			if (name.indexOf("token_for_") == 0 && getJwtUserId(sessionValue(name)) == userId) {
+    				tokenKey = name.substring("token_for_".length);
+    			}
+    		}
+    		if (tokenKey == null) {
+    			bearer = authorization;
+    		} else {
+    			token = sessionValue("token_for_" + tokenKey);
+    			timestamp = session.getAttribute("token_timestamp_for_" + tokenKey);
+    			if (token != null && isTokenStillValid(token, timestamp)) {
+    				bearer = "JWT " + token;
+    			} else {
+    				refresh_token = sessionValue("refresh_token_for_" + tokenKey);
+    				refresh_only = "true";
+    				log.info("refresh the token given by the caller");
+    			}
+    		}
+    	}
+    } else if (password || email) {
+    	tokenKey = "" + org.apache.commons.codec.digest.DigestUtils.md5Hex("owner:" + email + ":" + password);
+    	keepAsPrevious = true;
+    	token = sessionValue("token_for_" + tokenKey);
+    	timestamp = session.getAttribute("token_timestamp_for_" + tokenKey);
+    	if (token != null && isTokenStillValid(token, timestamp, true)) {
+    		bearer = "JWT " + token;
+    		setPreviousToken(tokenKey, token, timestamp, sessionValue("refresh_token_for_" + tokenKey));
     		log.info("reuse token for this account: " + email);
+    	} else {
+    		refresh_token = sessionValue("refresh_token_for_" + tokenKey);
+    		log.info("no valid token for this account: " + email);
     	}
     } else {
-    	owner = "owner";
+    	// no account given: the token of the last account given with credentials, else the Baserow admin account
+    	tokenKey = sessionValue("token_owner");
+    	tokenKey = tokenKey == null ? "owner" : tokenKey;
+    	keepAsPrevious = true;
+    	token = sessionValue("token");
+    	timestamp = session.getAttribute("token_timestamp");
+    	if (token != null && isTokenStillValid(token, timestamp, true)) {
+    		bearer = "JWT " + token;
+    	} else {
+    		refresh_token = sessionValue("refresh_token");
+    	}
     	log.info("use previous token");
-    }'
-↓jIf [steps.IfStep-1729518676568]: 
-  condition: token_owner == owner || owner == "owner"
-  ↓GetTokenFromSession [steps.SessionGetStep-1666701028415]: 
-    key: token
-    output: false
-  ↓IfExist [steps.IfExistStep-1729093759252]: 
-    condition: IfExist
+    }
+    '
+↓IfNeedToken [steps.IfStep-1898400000001]: 
+  condition: bearer == null
+  ↓Call_Sequence1 [steps.SequenceStep-1666701028433]: 
+    sourceSequence: lib_BaseRow.AdminLogin
+    ↓password [variables.StepVariable-1729092062943]: 
+      comment: The baserow admin password
+      value: 
+        - ↑ciphered: true
+        - ↑traceable: false
+        - →→: xd8e180806a1c1d83a6255212121ab827
+      visibility: '-1'
+    ↓email [variables.StepVariable-1729092062945]: 
+      comment: The Base row admin email
+    ↓use_refresh [variables.StepVariable-1779265184671]: 
+      value: true
+    ↓refresh_token [variables.StepVariable-1898400000002]: 
+    comment: The refresh token of this account
+    visibility: '-1'
+    ↓keep_in_session [variables.StepVariable-1898400000003]: 
+    ↓refresh_only [variables.StepVariable-1898400000004]: 
+  ↓IfLoginError [steps.IfExistStep-1898400000005]: 
+    condition: IfLoginError
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1666701028415
+            - ↑value: 1666701028433
           - java.lang.String: 
-            - ↑value: ./expression/text()
-    ↓Log [steps.LogStep-1666701028424]: 
-      expression: '"Token exists in session"'
-      level: WARN
-    ↓GetTimeStampFromSession [steps.SessionGetStep-1666701188304]: 
-      key: token_timestamp
-      output: false
-    ↓jSimpleSource [steps.SimpleSourceStep-1666701220195]: 
+            - ↑value: ./document/error
+    ↓Copy [steps.XMLCopyStep-1898400000006]: 
       sourceDefinition: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1666701188304
+              - ↑value: 1666701028433
             - java.lang.String: 
-              - ↑value: ./expression/text()
-      variableName: jTimeStamp
-    ↓Log1 [steps.LogStep-1667559305817]: 
-      expression: '"Token age (ms): " + (new Date().getTime() - jTimeStamp * 1)'
-      level: WARN
-    ↓jIf [steps.IfStep-1729093826484]: 
-      condition: isTokenStillValid(context.httpSession.getAttribute("token"), jTimeStamp, true)
-      ↓Concat [steps.XMLConcatStep-1666973297154]: 
-        nodeName: Bearer
-        sourcesDefinition: 
-          - xmlizable: 
-            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-            - com.twinsoft.convertigo.beans.common.XMLVector: 
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                - com.twinsoft.convertigo.beans.common.XMLVector: 
-                  - java.lang.String: 
-                    - ↑value: description
-                  - xmlizable: 
-                    - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                    - com.twinsoft.convertigo.beans.common.XMLVector: 
-                  - java.lang.String: 
-                    - ↑value: JWT
-              - xmlizable: 
-                - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                - com.twinsoft.convertigo.beans.common.XMLVector: 
-                  - java.lang.String: 
-                    - ↑value: ''
-                  - xmlizable: 
-                    - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-                    - com.twinsoft.convertigo.beans.common.XMLVector: 
-                      - java.lang.String: 
-                        - ↑value: 1666701028415
-                      - java.lang.String: 
-                        - ↑value: ./expression/text()
-                  - java.lang.String: 
-                    - ↑value: ''
-      ↓Return [steps.ReturnStep-1729093844301]: 
-↓Log [steps.LogStep-1666701028430]: 
-  expression: '"Token does not exist in session"'
-  level: WARN
-↓SetTokenOwnerInSession [steps.SessionSetStep-1729093941070]: 
-  expression: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
-      - SmartType: 
-        - ↑mode: JS
-        - →→: owner
-  key: token_owner
-↓Call_Sequence1 [steps.SequenceStep-1666701028433]: 
-  sourceSequence: lib_BaseRow.AdminLogin
-  ↓password [variables.StepVariable-1729092062943]: 
-    comment: The baserow admin password
-    value: 
-      - ↑ciphered: true
-      - ↑traceable: false
-      - →→: xd8e180806a1c1d83a6255212121ab827
-    visibility: '-1'
-  ↓email [variables.StepVariable-1729092062945]: 
-    comment: The Base row admin email
-  ↓use_refresh [variables.StepVariable-1779265184671]: 
-    value: true
-↓GetTokenFromSession [steps.SessionGetStep-1666973397656]: 
-  key: token
-  output: false
-↓Concat [steps.XMLConcatStep-1666973304575]: 
+              - ↑value: ./document/error
+    ↓Return [steps.ReturnStep-1898400000007]: 
+  ↓LoginTokens [steps.JsonSourceStep-1898400000008]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1666701028433
+          - java.lang.String: 
+            - ↑value: ./document/auth
+    variableName: loginTokens
+  ↓StoreToken [steps.SimpleStep-1898400000009]: 
+    expression: |
+      'var tokens = typeof loginTokens == "undefined" || loginTokens == null ? {} : loginTokens;
+      var tokenText = function(value) {
+      	return value == null || ("" + value) == "null" ? "" : "" + value;
+      };
+      var newToken = tokenText(tokens.token);
+      if (newToken == "") {
+      	var answerError = [tokenText(tokens.error), tokenText(tokens.detail)].filter(function(text) {
+      		return text != "";
+      	}).join(": ");
+      	tokenError = "Baserow authentication failed" + (answerError != "" ? ": " + answerError : ": no token in the answer");
+      } else {
+      	var now = new Date().getTime();
+      	var newRefreshToken = tokenText(tokens.refresh_token) != "" ? tokenText(tokens.refresh_token) : refresh_token;
+      	// without credentials, a token that was not refreshed belongs to the Baserow admin account
+      	var storeKey = refresh_only == "true" || tokenText(tokens.refreshed) == "true" || password || email ? tokenKey : "owner";
+      	storeToken(storeKey, newToken, now, newRefreshToken);
+      	if (keepAsPrevious) {
+      		setPreviousToken(storeKey, newToken, now, newRefreshToken);
+      	}
+      	bearer = "JWT " + newToken;
+      }
+      '
+↓IfNoToken [steps.IfStep-1898400000010]: 
+  condition: bearer == null
+  ↓Error_structure [steps.XMLErrorStep-1898400000011]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: tokenError != null ? tokenError : "Baserow authentication failed"
+  ↓Return [steps.ReturnStep-1898400000012]: 
+↓Bearer [steps.ElementStep-1898400000013]: 
+  expression: bearer
   nodeName: Bearer
-  sourcesDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: description
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: JWT
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: ''
-            - xmlizable: 
-              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-              - com.twinsoft.convertigo.beans.common.XMLVector: 
-                - java.lang.String: 
-                  - ↑value: 1666973397656
-                - java.lang.String: 
-                  - ↑value: ./expression/text()
-            - java.lang.String: 
-              - ↑value: ''
 ↓password [variables.RequestableVariable-1729092065618]: 
   comment: The baserow admin password
   value: 
@@ -181,3 +203,6 @@ comment: Gets a token or refresh it if the token is expired the Token will be pl
 ↓email [variables.RequestableVariable-1729092065620]: 
   comment: The Base row admin email
   value: 
+↓authorization [variables.RequestableVariable-1898400000014]: 
+  comment: The Bearer (JWT token) of the account, already obtained by the caller with formscommon_CheckConfig. When given, email and password are not used and the HTTP session is not changed.
+  visibility: '-1'

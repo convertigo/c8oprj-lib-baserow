@@ -3,6 +3,28 @@ comment: Creates a row  in a table
 ↓Input_variables [steps.InputVariablesStep-1734431144799]: 
 ↓Call_Sequence [steps.SequenceStep-1734431144802]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+  ↓authorization [variables.StepVariable-1898400000228]: 
+    comment: Bearer of the Baserow account of the source
+    visibility: '-1'
+↓IfTokenError [steps.IfExistStep-1898400000225]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734431144802
+        - java.lang.String: 
+          - ↑value: ./document/error
+  ↓Copy [steps.XMLCopyStep-1898400000226]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1734431144802
+          - java.lang.String: 
+            - ↑value: ./document/error
+  ↓Return [steps.ReturnStep-1898400000227]: 
 ↓Call_Transaction [steps.TransactionStep-1734431144805]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_fields_table__table_id___POST
   ↓__header_Authorization [variables.StepVariable-1734431144808]: 
@@ -49,6 +71,9 @@ comment: Creates a row  in a table
 ↓data [variables.RequestableVariable-1734431144832]: 
   comment: A JSON object with each field name and value
   required: true
+↓authorization [variables.RequestableVariable-1898400000229]: 
+  comment: Bearer (JWT token) of the Baserow account, given by formscommon_CheckConfig. When empty, the token of the HTTP session is used
+  visibility: '-1'
 ↓TestAddInFinanCialTable [core.TestCase]: 
   ↓table_id [variables.TestCaseVariable-1734431144836]: 
     description: table_id

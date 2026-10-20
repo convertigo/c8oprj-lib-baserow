@@ -31,6 +31,23 @@ var getJwtTiming = function(token) {
 	}
 };
 
+// Baserow user id of a JWT (user_id claim), null when it cannot be read
+var getJwtUserId = function(token) {
+	try {
+		var payload = token ? ("" + token).split(".")[1] : null;
+		if (!payload) {
+			return null;
+		}
+		while (payload.length % 4) {
+			payload += "=";
+		}
+		var claims = JSON.parse("" + new java.lang.String(java.util.Base64.getUrlDecoder().decode(payload), "UTF-8"));
+		return claims.user_id == null ? null : "" + claims.user_id;
+	} catch (e) {
+		return null;
+	}
+};
+
 var getTokenRefreshAt = function(token, issuedAt) {
 	var now = new Date().getTime();
 	var timing = getJwtTiming(token);
