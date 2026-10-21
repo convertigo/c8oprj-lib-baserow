@@ -1154,7 +1154,7 @@ comment: |
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1680078354205
+              - ↑value: 1726213836036
             - java.lang.String: 
               - ↑value: ./document/error
       ↓Error_structure [steps.XMLErrorStep-1726214087652]: 
@@ -1165,7 +1165,7 @@ comment: |
               - ↑mode: SOURCE
               - com.twinsoft.convertigo.beans.common.XMLVector: 
                 - java.lang.String: 
-                  - ↑value: 1680078354205
+                  - ↑value: 1726213836036
                 - java.lang.String: 
                   - ↑value: ./document/error/message/text()
       ↓Return [steps.ReturnStep-1726214087655]: 
