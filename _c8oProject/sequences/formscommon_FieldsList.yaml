@@ -4,6 +4,10 @@ accessibility: Hidden
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
     editor = "" + (jConfig.editor ? jConfig.editor : "");
+    // Bearer of the Baserow account of the source, given to FieldsList: set by the branch of a configured source
+    // (formscommon_CheckConfig), empty for the editor, FieldsList then uses the token of the HTTP session
+    authorization = "";
+    checkConfigBearer = null;
     '
 ↓ifEditor [steps.IfThenElseStep-1729524566880]: 
   condition: editor != ""
@@ -62,6 +66,20 @@ accessibility: Hidden
               - java.lang.String: 
                 - ↑value: ./document/error
       ↓Return [steps.ReturnStep-1729516092088]: 
+    ↓CheckConfigBearer [steps.SimpleSourceStep-1898400000401]: 
+      comment: Bearer of the Baserow account of the source, output by formscommon_CheckConfig
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1729516092076
+            - java.lang.String: 
+              - ↑value: ./document/Bearer/text()
+      variableName: checkConfigBearer
+    ↓SetAuthorization [steps.SimpleStep-1898400000402]: 
+      comment: The step formscommon_CheckConfig only runs in this branch, so the call to FieldsList reads the Bearer from the variable authorization
+      expression: authorization = checkConfigBearer == null ? "" : ("" + checkConfigBearer);
 ↓Call_Sequence [steps.SequenceStep-1729515103812]: 
   sourceSequence: lib_BaseRow.FieldsList
   ↓table_id [variables.StepVariable-1729515103814]: 
@@ -70,15 +88,7 @@ accessibility: Hidden
     required: true
     value: 
   ↓authorization [variables.StepVariable-1898400000240]: 
-    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1729516092076
-          - java.lang.String: 
-            - ↑value: ./document/Bearer/text()
+    comment: Bearer of the Baserow account of the source, from the variable authorization (formscommon_CheckConfig, empty for the editor)
     visibility: '-1'
 ↓Copy [steps.XMLCopyStep-1729515122166]: 
   sourceDefinition: 
