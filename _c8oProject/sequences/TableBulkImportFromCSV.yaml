@@ -93,7 +93,7 @@ responseTimeout: 60000000000000000
         expression: |
           '// Copy and stringify body into a new var to be send to al subsequence
           var data = "" + JSON.stringify(table);
-          log.warn("Stringifying this line " + data);
+          log.debug("Sending " + table.items.length + " rows");
           cptTotal = cptTotal + (+(""+ cpt));
           log.debug("Actual total count is: " +cptTotal);
           // // Re init vars

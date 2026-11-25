@@ -43,6 +43,7 @@ comment: Creates a row  in a table
             - ↑value: 1701249732516
           - java.lang.String: 
             - ↑value: ./text()
+    visibility: '-1'
   ↓__body [variables.StepVariable-1701249355917]: 
     required: true
     sourceDefinition: 

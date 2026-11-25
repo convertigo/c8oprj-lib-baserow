@@ -1,0 +1,274 @@
+accessibility: Private
+comment: TokenGetOrRefresh as a native sequence (no XML), AdminLoginNative logs in or refreshes. Gets a Baserow token for an account (email/password, the Baserow admin account when they are empty), from the HTTP session while it is valid, otherwise by refreshing it or logging in. With authorization (the Bearer of a previous call), that token is returned as is.
+jsonNativeOutput: true
+nativeExecution: true
+↓owner [steps.SimpleStep-1993000000001]: 
+  expression: |
+    'email += "";
+    password += "";
+    authorization = authorization == null ? "" : ("" + authorization).replace(/^\s+|\s+$/g, "");
+    
+    include("js/jwt.js");
+    include("js/token_cache.js");
+    // (lib_baserow.token_cache, on unless false) the access token of an account logged in by another HTTP session of
+    // the server is reused while half of its life is left (js/token_cache.js)
+    tokenCacheOn = "${lib_baserow.token_cache=true}" != "false";
+    
+    // The HTTP session keeps one Baserow token per account: token_for_<account>, token_timestamp_for_<account>
+    // and refresh_token_for_<account>, <account> being the md5 of the credentials ("owner": the Baserow admin
+    // account). token, token_timestamp, refresh_token and token_owner copy the token of the last account given
+    // with credentials, for the callers without credentials ("use previous token").
+    // The sources of a page run in parallel in the same session with different accounts: a token is never
+    // removed from the session while another one is fetched, and this call returns its own token (bearer),
+    // never the one that is in the session afterwards.
+    var session = context.httpSession;
+    var sessionValue = function(key) {
+    	var value = session.getAttribute(key);
+    	return value == null || ("" + value) == "" || ("" + value) == "null" ? null : "" + value;
+    };
+    storeToken = function(key, token, timestamp, refreshToken) {
+    	session.setAttribute("token_for_" + key, token);
+    	session.setAttribute("token_timestamp_for_" + key, timestamp);
+    	if (refreshToken != null) {
+    		session.setAttribute("refresh_token_for_" + key, refreshToken);
+    	}
+    };
+    setPreviousToken = function(key, token, timestamp, refreshToken) {
+    	session.setAttribute("token_owner", key);
+    	session.setAttribute("token", token);
+    	session.setAttribute("token_timestamp", timestamp);
+    	if (refreshToken != null) {
+    		session.setAttribute("refresh_token", refreshToken);
+    	} else {
+    		session.removeAttribute("refresh_token");
+    	}
+    };
+    
+    bearer = null;
+    tokenError = null;
+    tokenKey = null;
+    keepAsPrevious = false;
+    // the token of this call is kept for the server only when it was asked with the credentials of its account
+    tokenCacheAccount = false;
+    // AdminLogin returns the tokens of this call instead of writing them in the session
+    keep_in_session = "false";
+    refresh_token = null;
+    refresh_only = "false";
+    var token = null;
+    var timestamp = null;
+    
+    if (/^(JWT|Bearer)\s+\S/i.test(authorization)) {
+    	// token of the account already obtained by the caller (formscommon_CheckConfig)
+    	var givenToken = authorization.replace(/^(JWT|Bearer)\s*/i, "");
+    	if (isTokenStillValid(givenToken, null)) {
+    		bearer = authorization;
+    	} else {
+    		// expires during a long call: renew the token of the same account, never use another account
+    		var userId = getJwtUserId(givenToken);
+    		var names = session.getAttributeNames();
+    		while (userId != null && tokenKey == null && names.hasMoreElements()) {
+    			var name = "" + names.nextElement();
+    			if (name.indexOf("token_for_") == 0 && getJwtUserId(sessionValue(name)) == userId) {
+    				tokenKey = name.substring("token_for_".length);
+    			}
+    		}
+    		if (tokenKey == null) {
+    			bearer = authorization;
+    		} else {
+    			token = sessionValue("token_for_" + tokenKey);
+    			timestamp = session.getAttribute("token_timestamp_for_" + tokenKey);
+    			if (token != null && isTokenStillValid(token, timestamp)) {
+    				bearer = "JWT " + token;
+    			} else {
+    				refresh_token = sessionValue("refresh_token_for_" + tokenKey);
+    				// a token of the server cache has no refresh token in this session: its account logs in again
+    				var reloginText = refresh_token == null ? sessionValue("token_relogin_for_" + tokenKey) : null;
+    				var relogin = reloginText == null ? null : com.twinsoft.convertigo.engine.util.Crypto2.decodeFromHexString(reloginText);
+    				relogin = relogin == null ? null : JSON.parse("" + relogin);
+    				if (relogin != null && relogin.email != null && relogin.password != null) {
+    					email = "" + relogin.email;
+    					password = "" + relogin.password;
+    					tokenCacheAccount = tokenCacheOn;
+    					var reloginToken = tokenCacheAccount ? getCachedToken(email, password) : null;
+    					if (reloginToken != null) {
+    						bearer = "JWT " + reloginToken.token;
+    						storeToken(tokenKey, reloginToken.token, reloginToken.timestamp, null);
+    					}
+    					log.info("log in again the account of the token given by the caller");
+    				} else {
+    					refresh_only = "true";
+    					log.info("refresh the token given by the caller");
+    				}
+    			}
+    		}
+    	}
+    } else if (password || email) {
+    	tokenKey = "" + org.apache.commons.codec.digest.DigestUtils.md5Hex("owner:" + email + ":" + password);
+    	keepAsPrevious = true;
+    	tokenCacheAccount = tokenCacheOn;
+    	token = sessionValue("token_for_" + tokenKey);
+    	timestamp = session.getAttribute("token_timestamp_for_" + tokenKey);
+    	if (tokenCacheAccount && (token == null || !isTokenStillValid(token, timestamp))) {
+    		var cachedToken = getCachedToken(email, password);
+    		if (cachedToken != null) {
+    			// the refresh token of the session, if any, is kept
+    			token = cachedToken.token;
+    			timestamp = cachedToken.timestamp;
+    			storeToken(tokenKey, token, timestamp, null);
+    			if (sessionValue("refresh_token_for_" + tokenKey) == null) {
+    				// without refresh token, a call given this token logs its account in again when it expires (ciphered,
+    				// as the account kept in the session by formscommon_CheckConfigNative)
+    				session.setAttribute("token_relogin_for_" + tokenKey, "" + com.twinsoft.convertigo.engine.util.Crypto2.encodeToHexString(
+    					JSON.stringify({ email: "" + email, password: "" + password })));
+    			}
+    		}
+    	}
+    	if (token != null && isTokenStillValid(token, timestamp, true)) {
+    		bearer = "JWT " + token;
+    		setPreviousToken(tokenKey, token, timestamp, sessionValue("refresh_token_for_" + tokenKey));
+    		log.info("reuse token for this account: " + email);
+    	} else {
+    		refresh_token = sessionValue("refresh_token_for_" + tokenKey);
+    		log.info("no valid token for this account: " + email);
+    	}
+    } else {
+    	// no account given: the token of the last account given with credentials, else the Baserow admin account
+    	tokenKey = sessionValue("token_owner");
+    	tokenKey = tokenKey == null ? "owner" : tokenKey;
+    	keepAsPrevious = true;
+    	token = sessionValue("token");
+    	timestamp = session.getAttribute("token_timestamp");
+    	if (token != null && isTokenStillValid(token, timestamp, true)) {
+    		bearer = "JWT " + token;
+    	} else {
+    		refresh_token = sessionValue("refresh_token");
+    	}
+    	log.info("use previous token");
+    }
+    '
+↓IfNeedToken [steps.IfStep-1993000000002]: 
+  condition: bearer == null
+  ↓NoLog_Call_Sequence1 [steps.SimpleStep-1898400003010]: 
+    comment: The answer of AdminLoginNative (the access and refresh tokens) holds a Baserow token, the engine would log it in this thread
+    expression: org.apache.log4j.MDC.put("nolog", true);
+  ↓Call_Sequence1 [steps.SequenceStep-1993000000003]: 
+    sourceSequence: lib_BaseRow.AdminLoginNative
+    ↓password [variables.StepVariable-1993000000004]: 
+      comment: The baserow admin password
+      value: 
+        - ↑ciphered: true
+        - ↑traceable: false
+        - →→: xd8e180806a1c1d83a6255212121ab827
+      visibility: '-1'
+    ↓email [variables.StepVariable-1993000000005]: 
+      comment: The Base row admin email
+    ↓use_refresh [variables.StepVariable-1993000000006]: 
+      value: true
+    ↓refresh_token [variables.StepVariable-1993000000007]: 
+      comment: The refresh token of this account
+      visibility: '-1'
+    ↓keep_in_session [variables.StepVariable-1993000000008]: 
+    ↓refresh_only [variables.StepVariable-1993000000009]: 
+  ↓Log_Call_Sequence1 [steps.SimpleStep-1898400003011]: 
+    expression: org.apache.log4j.MDC.remove("nolog");
+  ↓IfLoginError_error [steps.JsonSourceStep-1993000000010]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1993000000003
+          - java.lang.String: 
+            - ↑value: $.error
+    variableName: loginError_call
+  ↓IfLoginError [steps.IfStep-1993000000011]: 
+    condition: loginError_call != null
+    ↓Copy [steps.JsonToXmlStep-1993000000012]: 
+      comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: 'loginError_call'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: error
+    ↓Return [steps.ReturnStep-1993000000013]: 
+  ↓LoginTokens [steps.JsonSourceStep-1993000000014]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1993000000003
+          - java.lang.String: 
+            - ↑value: $.auth
+    variableName: loginTokens
+  ↓StoreToken [steps.SimpleStep-1993000000015]: 
+    expression: |
+      'var tokens = typeof loginTokens == "undefined" || loginTokens == null ? {} : loginTokens;
+      var tokenText = function(value) {
+      	return value == null || ("" + value) == "null" ? "" : "" + value;
+      };
+      var newToken = tokenText(tokens.token);
+      if (newToken == "") {
+      	var answerError = [tokenText(tokens.error), tokenText(tokens.detail)].filter(function(text) {
+      		return text != "";
+      	}).join(": ");
+      	tokenError = "Baserow authentication failed" + (answerError != "" ? ": " + answerError : ": no token in the answer");
+      } else {
+      	var now = new Date().getTime();
+      	var newRefreshToken = tokenText(tokens.refresh_token) != "" ? tokenText(tokens.refresh_token) : refresh_token;
+      	// without credentials, a token that was not refreshed belongs to the Baserow admin account
+      	var storeKey = refresh_only == "true" || tokenText(tokens.refreshed) == "true" || password || email ? tokenKey : "owner";
+      	storeToken(storeKey, newToken, now, newRefreshToken);
+      	// only the token of a login is kept for the server, not a refreshed one
+      	if (tokenCacheAccount && tokenText(tokens.refreshed) != "true") {
+      		putCachedToken(email, password, newToken, now);
+      	}
+      	if (keepAsPrevious) {
+      		setPreviousToken(storeKey, newToken, now, newRefreshToken);
+      	}
+      	bearer = "JWT " + newToken;
+      }
+      '
+↓IfNoToken [steps.IfStep-1993000000016]: 
+  condition: bearer == null
+  ↓Error_structure [steps.XMLErrorStep-1993000000017]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: tokenError != null ? tokenError : "Baserow authentication failed"
+  ↓Return [steps.ReturnStep-1993000000018]: 
+↓Bearer [steps.JsonToXmlStep-1993000000019]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: 'bearer'
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: Bearer
+↓password [variables.RequestableVariable-1993000000020]: 
+  comment: The baserow admin password
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xd8e180806a1c1d83a6255212121ab827
+  visibility: '-1'
+↓email [variables.RequestableVariable-1993000000021]: 
+  comment: The Base row admin email
+  value: 
+↓authorization [variables.RequestableVariable-1993000000022]: 
+  comment: The Bearer (JWT token) of the account, already obtained by the caller with formscommon_CheckConfig. When given, email and password are not used and the HTTP session is not changed.
+  visibility: '-1'

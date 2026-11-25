@@ -43,6 +43,7 @@ comment: Gets data from a given table
             - ↑value: 1677244732615
           - java.lang.String: 
             - ↑value: ./text()
+    visibility: '-1'
   ↓row_id [variables.StepVariable-1677244860698]: 
     comment: Returns the row related the provided value.
     description: row_id

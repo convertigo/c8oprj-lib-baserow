@@ -1,9 +1,14 @@
 accessibility: Private
-comment: Lists all Groups for the current user
+comment: Lists all Groups (Baserow workspaces) for the current user
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002016]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1666705555028]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002017]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction [steps.TransactionStep-1665320057013]: 
-  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_groups__GET
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_workspaces__GET
   ↓__header_Authorization [variables.StepVariable-1665320057016]: 
     sourceDefinition: 
       - xmlizable: 
@@ -13,6 +18,7 @@ comment: Lists all Groups for the current user
             - ↑value: 1666705555028
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
 ↓Copy [steps.XMLCopyStep-1665320057022]: 
   sourceDefinition: 
     - xmlizable: 

@@ -1,8 +1,13 @@
 accessibility: Private
 comment: Updates the existing filter if the authorized user has access to the related database's group.
 ↓Input_variables [steps.InputVariablesStep-1673522493215]: 
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002030]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1673522493218]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002031]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Sequence1 [steps.SequenceStep-1673523741606]: 
   comment: We need the field list for this table to build the filter
   sourceSequence: lib_BaseRow.FieldsList
@@ -52,6 +57,7 @@ comment: Updates the existing filter if the authorized user has access to the re
             - ↑value: 1673522493218
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
   ↓__body [variables.StepVariable-1673522657706]: 
     required: true
     sourceDefinition: 

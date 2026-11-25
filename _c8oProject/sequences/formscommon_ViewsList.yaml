@@ -1,0 +1,148 @@
+accessibility: Hidden
+comment: |
+  The views of a table a source may read its rows through (forms_config view_id): the collaborative views that filter
+  rows (every type but form), as id, name and type, read with the Baserow account of the editor. For the view picker
+  of the configuration of a source: forms_config {table_id, editor}, editor the authenticated user.
+↓ParseConfig [steps.SimpleStep-2026111684001]: 
+  expression: |
+    'jConfig = JSON.parse(forms_config);
+    table_id = jConfig.table_id;
+    // the editor names the authenticated user, whose own Baserow account lists the views (never the account of another)
+    var editor = "" + (jConfig.editor ? jConfig.editor : "");
+    var authenticatedEditor = context.getAuthenticatedUser();
+    editor_ok = editor != "" && authenticatedEditor != null && editor == ("" + authenticatedEditor) &&
+    	table_id != null && ("" + table_id) != "";
+    editor_token_ok = false;
+    __header_Authorization = "";
+    '
+↓RejectBadEditor [steps.IfStep-2026111684002]: 
+  condition: '!editor_ok'
+  ↓badEditor [steps.XMLErrorStep-2026111684003]: 
+    code: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 9
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: bad editor
+  ↓Return [steps.ReturnStep-2026111684004]: 
+↓UseAuthenticatedEditorsBaserowAccount [steps.SimpleStep-2026111684005]: 
+  expression: |
+    'include("js/common2.js");
+    org.apache.log4j.MDC.put("nolog", true);
+    try {
+      var account = callSequence("C8Oforms", "BaserowAccountGet", {});
+      if (account.document.error == null && String(account.document.email) != "" && String(account.document.password) != "") {
+        var token = callSequence("lib_BaseRow", "TokenGetOrRefresh", {
+          email: String(account.document.email),
+          password: String(account.document.password)
+        });
+        if (token.document.error == null && String(token.document.Bearer) != "") {
+          __header_Authorization = String(token.document.Bearer);
+          editor_token_ok = true;
+        }
+      }
+    } catch (e) {
+      editor_token_ok = false;
+    } finally {
+      org.apache.log4j.MDC.remove("nolog");
+    }'
+↓RejectUnavailableEditorAccount [steps.IfStep-2026111684006]: 
+  condition: '!editor_token_ok'
+  ↓Error [steps.XMLErrorStep-2026111684007]: 
+    code: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 9
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: Baserow account unavailable for editor
+  ↓Return [steps.ReturnStep-2026111684008]: 
+↓NoLog_EditorViews [steps.SimpleStep-2026111684009]: 
+  comment: The answer of the views holds the names of the views of the account and its input the Bearer, the engine would log them in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
+↓EditorViews [steps.TransactionStep-2026111684010]: 
+  output: false
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_views_table__table_id___GET
+  ↓__header_Authorization [variables.StepVariable-2026111684011]: 
+    comment: set by UseAuthenticatedEditorsBaserowAccount
+    visibility: '-1'
+  ↓table_id [variables.StepVariable-2026111684012]: 
+    comment: set by ParseConfig, from forms_config (resolved to its id by the transaction)
+    description: table_id
+↓Log_EditorViews [steps.SimpleStep-2026111684013]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
+↓viewsError [steps.JsonSourceStep-2026111684014]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 2026111684010
+        - java.lang.String: 
+          - ↑value: ./document/object/error
+  variableName: viewsError
+↓RejectViewsError [steps.IfStep-2026111684015]: 
+  comment: Baserow refused the list (a table the account does not see...)
+  condition: typeof viewsError != "undefined" && viewsError != null && ("" + viewsError) != ""
+  ↓Error [steps.XMLErrorStep-2026111684016]: 
+    code: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 10
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: The views of the table cannot be read
+  ↓Return [steps.ReturnStep-2026111684017]: 
+↓viewsArray [steps.JsonSourceStep-2026111684018]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 2026111684010
+        - java.lang.String: 
+          - ↑value: ./document/array
+  variableName: viewsArray
+↓KeepRowViews [steps.SimpleStep-2026111684019]: 
+  comment: The collaborative views that filter rows, as id, name and type only (js/table_views.js)
+  expression: |
+    'include("js/table_views.js");
+    views = sourceReadableViews(typeof viewsArray == "undefined" ? null : viewsArray);
+    '
+↓views [steps.JsonToXmlStep-2026111684020]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: 'views'
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: views
+↓views_json [steps.ElementStep-2026111684022]: 
+  comment: The same views as a JSON text, read back exactly by the caller (an XML round trip turns an array of one element into an object)
+  expression: JSON.stringify(views)
+  nodeName: views_json
+↓forms_config [variables.RequestableVariable-2026111684021]: 
+  comment: '{"table_id": "<workspace>~><base>~><table>" or its id, "editor": the authenticated user}'
+  required: true
+  value: 

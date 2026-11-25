@@ -1,11 +1,16 @@
 accessibility: Private
 comment: Creates a row  in a table
 ↓Input_variables [steps.InputVariablesStep-1667054558009]: 
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002024]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1667054179674]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
   ↓authorization [variables.StepVariable-1898400000218]: 
     comment: Bearer of the Baserow account of the source
     visibility: '-1'
+↓Log_Call_Sequence [steps.SimpleStep-1898400002025]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓IfTokenError [steps.IfExistStep-1898400000215]: 
   sourceDefinition: 
     - xmlizable: 
@@ -36,6 +41,7 @@ comment: Creates a row  in a table
             - ↑value: 1667054179674
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
   ↓__body [variables.StepVariable-1667054323327]: 
     required: true
     sourceDefinition: 

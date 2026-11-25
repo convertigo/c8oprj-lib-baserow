@@ -11,6 +11,7 @@ responseTimeout: 60000000000000000
   ↓Call_Transaction [steps.TransactionStep-1708425387826]: 
     sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET
     ↓__header_Authorization [variables.StepVariable-1708425789771]: 
+      visibility: '-1'
     ↓include_fields [variables.StepVariable-1708425387832]: 
       comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
       description: include
@@ -57,6 +58,7 @@ responseTimeout: 60000000000000000
   ↓Call_Transaction1 [steps.TransactionStep-1708438000041]: 
     sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id__batch_delete__POST
     ↓__header_Authorization [variables.StepVariable-1708438110482]: 
+      visibility: '-1'
     ↓__body [variables.StepVariable-1708438000043]: 
       required: true
     ↓table_id [variables.StepVariable-1708438000049]: 

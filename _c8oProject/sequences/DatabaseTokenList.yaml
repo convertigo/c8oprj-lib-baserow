@@ -1,7 +1,12 @@
 accessibility: Private
 comment: Create a Token to acess databases within a group. This token will hold permissions to specific databases in the group
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002012]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1677078151939]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002013]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction [steps.TransactionStep-1677078151951]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tokens__GET
   ↓__header_Authorization [variables.StepVariable-1677078151954]: 
@@ -13,6 +18,7 @@ comment: Create a Token to acess databases within a group. This token will hold 
             - ↑value: 1677078151939
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
 ↓Copy [steps.XMLCopyStep-1677078151960]: 
   sourceDefinition: 
     - xmlizable: 

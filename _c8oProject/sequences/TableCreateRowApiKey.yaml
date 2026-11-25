@@ -43,6 +43,7 @@ comment: Creates a row  in a table using an apikey instead of credentials
             - ↑value: 1671631218082
           - java.lang.String: 
             - ↑value: ./text()
+    visibility: '-1'
   ↓__body [variables.StepVariable-1671630682468]: 
     required: true
     sourceDefinition: 

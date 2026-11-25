@@ -1,8 +1,13 @@
 accessibility: Private
 comment: Creates a new view for the table related
 ↓Input_variables [steps.InputVariablesStep-1673520531661]: 
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002028]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1673521276868]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002029]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction [steps.TransactionStep-1673520531667]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_views_table__table_id___POST
   ↓__body [variables.StepVariable-1673520970517]: 
@@ -15,7 +20,7 @@ comment: Creates a new view for the table related
             - ↑value: 1673520531661
           - java.lang.String: 
             - ↑value: ./data/text()
-  ↓include [variables.StepVariable-1673520970523]: 
+  ↓include_attributes [variables.StepVariable-1673520970523]: 
     comment: A comma separated list of extra attributes to include on each view in the response. The supported attributes are `filters`, `sortings` and `decorations`. For example `include=filters,sortings` will add the attributes `filters` and `sortings` to every returned view, containing a list of the views filters and sortings respectively.
     description: include
   ↓table_id [variables.StepVariable-1673520970525]: 
@@ -31,6 +36,7 @@ comment: Creates a new view for the table related
             - ↑value: 1673521276868
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
 ↓Copy [steps.XMLCopyStep-1673520531685]: 
   sourceDefinition: 
     - xmlizable: 

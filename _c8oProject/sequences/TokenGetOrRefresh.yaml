@@ -7,6 +7,10 @@ comment: Gets a Baserow token for an account (email/password, the Baserow admin 
     authorization = authorization == null ? "" : ("" + authorization).replace(/^\s+|\s+$/g, "");
     
     include("js/jwt.js");
+    include("js/token_cache.js");
+    // (lib_baserow.token_cache, on unless false) the access token of an account logged in by another HTTP session of
+    // the server is reused while half of its life is left (js/token_cache.js)
+    tokenCacheOn = "${lib_baserow.token_cache=true}" != "false";
     
     // The HTTP session keeps one Baserow token per account: token_for_<account>, token_timestamp_for_<account>
     // and refresh_token_for_<account>, <account> being the md5 of the credentials ("owner": the Baserow admin
@@ -42,6 +46,8 @@ comment: Gets a Baserow token for an account (email/password, the Baserow admin 
     tokenError = null;
     tokenKey = null;
     keepAsPrevious = false;
+    // the token of this call is kept for the server only when it was asked with the credentials of its account
+    tokenCacheAccount = false;
     // AdminLogin returns the tokens of this call instead of writing them in the session
     keep_in_session = "false";
     refresh_token = null;
@@ -73,16 +79,48 @@ comment: Gets a Baserow token for an account (email/password, the Baserow admin 
     				bearer = "JWT " + token;
     			} else {
     				refresh_token = sessionValue("refresh_token_for_" + tokenKey);
-    				refresh_only = "true";
-    				log.info("refresh the token given by the caller");
+    				// a token of the server cache has no refresh token in this session: its account logs in again
+    				var reloginText = refresh_token == null ? sessionValue("token_relogin_for_" + tokenKey) : null;
+    				var relogin = reloginText == null ? null : com.twinsoft.convertigo.engine.util.Crypto2.decodeFromHexString(reloginText);
+    				relogin = relogin == null ? null : JSON.parse("" + relogin);
+    				if (relogin != null && relogin.email != null && relogin.password != null) {
+    					email = "" + relogin.email;
+    					password = "" + relogin.password;
+    					tokenCacheAccount = tokenCacheOn;
+    					var reloginToken = tokenCacheAccount ? getCachedToken(email, password) : null;
+    					if (reloginToken != null) {
+    						bearer = "JWT " + reloginToken.token;
+    						storeToken(tokenKey, reloginToken.token, reloginToken.timestamp, null);
+    					}
+    					log.info("log in again the account of the token given by the caller");
+    				} else {
+    					refresh_only = "true";
+    					log.info("refresh the token given by the caller");
+    				}
     			}
     		}
     	}
     } else if (password || email) {
     	tokenKey = "" + org.apache.commons.codec.digest.DigestUtils.md5Hex("owner:" + email + ":" + password);
     	keepAsPrevious = true;
+    	tokenCacheAccount = tokenCacheOn;
     	token = sessionValue("token_for_" + tokenKey);
     	timestamp = session.getAttribute("token_timestamp_for_" + tokenKey);
+    	if (tokenCacheAccount && (token == null || !isTokenStillValid(token, timestamp))) {
+    		var cachedToken = getCachedToken(email, password);
+    		if (cachedToken != null) {
+    			// the refresh token of the session, if any, is kept
+    			token = cachedToken.token;
+    			timestamp = cachedToken.timestamp;
+    			storeToken(tokenKey, token, timestamp, null);
+    			if (sessionValue("refresh_token_for_" + tokenKey) == null) {
+    				// without refresh token, a call given this token logs its account in again when it expires (ciphered,
+    				// as the account kept in the session by formscommon_CheckConfigNative)
+    				session.setAttribute("token_relogin_for_" + tokenKey, "" + com.twinsoft.convertigo.engine.util.Crypto2.encodeToHexString(
+    					JSON.stringify({ email: "" + email, password: "" + password })));
+    			}
+    		}
+    	}
     	if (token != null && isTokenStillValid(token, timestamp, true)) {
     		bearer = "JWT " + token;
     		setPreviousToken(tokenKey, token, timestamp, sessionValue("refresh_token_for_" + tokenKey));
@@ -108,6 +146,9 @@ comment: Gets a Baserow token for an account (email/password, the Baserow admin 
     '
 ↓IfNeedToken [steps.IfStep-1898400000001]: 
   condition: bearer == null
+  ↓NoLog_Call_Sequence1 [steps.SimpleStep-1898400002044]: 
+    comment: The answer of AdminLogin holds the tokens of the Baserow account, the engine would log it (Generated XML) in this thread
+    expression: org.apache.log4j.MDC.put("nolog", true);
   ↓Call_Sequence1 [steps.SequenceStep-1666701028433]: 
     sourceSequence: lib_BaseRow.AdminLogin
     ↓password [variables.StepVariable-1729092062943]: 
@@ -122,10 +163,12 @@ comment: Gets a Baserow token for an account (email/password, the Baserow admin 
     ↓use_refresh [variables.StepVariable-1779265184671]: 
       value: true
     ↓refresh_token [variables.StepVariable-1898400000002]: 
-    comment: The refresh token of this account
-    visibility: '-1'
+      comment: The refresh token of this account
+      visibility: '-1'
     ↓keep_in_session [variables.StepVariable-1898400000003]: 
     ↓refresh_only [variables.StepVariable-1898400000004]: 
+  ↓Log_Call_Sequence1 [steps.SimpleStep-1898400002045]: 
+    expression: org.apache.log4j.MDC.remove("nolog");
   ↓IfLoginError [steps.IfExistStep-1898400000005]: 
     condition: IfLoginError
     sourceDefinition: 
@@ -174,6 +217,10 @@ comment: Gets a Baserow token for an account (email/password, the Baserow admin 
       	// without credentials, a token that was not refreshed belongs to the Baserow admin account
       	var storeKey = refresh_only == "true" || tokenText(tokens.refreshed) == "true" || password || email ? tokenKey : "owner";
       	storeToken(storeKey, newToken, now, newRefreshToken);
+      	// only the token of a login is kept for the server, not a refreshed one
+      	if (tokenCacheAccount && tokenText(tokens.refreshed) != "true") {
+      		putCachedToken(email, password, newToken, now);
+      	}
       	if (keepAsPrevious) {
       		setPreviousToken(storeKey, newToken, now, newRefreshToken);
       	}

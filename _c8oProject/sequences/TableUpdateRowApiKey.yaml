@@ -65,6 +65,7 @@ comment: Updates a row in a table ising apikey instead of credentials
             - ↑value: 1673475302607
           - java.lang.String: 
             - ↑value: ./text()
+    visibility: '-1'
 ↓Copy [steps.XMLCopyStep-1673475302628]: 
   sourceDefinition: 
     - xmlizable: 
@@ -80,6 +81,7 @@ comment: Updates a row in a table ising apikey instead of credentials
   required: true
 ↓apikey [variables.RequestableVariable-1673475302640]: 
   value: ${lib_baserow.apikey.secret}
+  visibility: '-1'
 ↓row_id [variables.RequestableVariable-1673475424296]: 
   comment: Insert row in this table_id
   description: table_id

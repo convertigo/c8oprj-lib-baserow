@@ -1,0 +1,91 @@
+accessibility: Private
+comment: |
+  Checks the row condition of a respondent write before it changes or deletes a row (C8Oforms js/action_access.js).
+  formscommon_CheckConfig answered row_column: the step that runs this write may only change a row whose column holds
+  what the condition of its grant allows. The row is read with the account of the source, without XML, and C8Oforms
+  decides (BaserowPublishedRowAuthorize), with the texts the write puts in the column (written, js/row_rule.js).
+  Answers an error (code 9, details row_denied) when the write is refused or the row cannot be read.
+↓CheckRow [steps.SimpleStep-2026110902011]: 
+  comment: The Bearer is only given to the raw transaction (no document, no log); the decision is made by C8Oforms from the grant of the session.
+  expression: |
+    'include("js/common.js");
+    include("js/common2.js");
+    rowConditionAllowed = false;
+    try {
+    	var rowFormsConfig = "" + forms_config;
+    	var rowConfig = JSON.parse(rowFormsConfig);
+    	var rowConfigFormId = rowConfig.form_id != null ? "" + rowConfig.form_id : "";
+    	var rowProvidedFormId = forms_form_id != null && ("" + forms_form_id) != "" ? "" + forms_form_id : "";
+    	// the row the write changes, exactly as the write names it: a Baserow row id (digits) or none for a creation
+    	var checkedRowId = row_id == null ? "" : "" + row_id;
+    	var checkedRow = null;
+    	if (checkedRowId != "" && !/^[0-9]{1,18}$/.test(checkedRowId)) {
+    		throw new Error("invalid row id");
+    	}
+    	if (checkedRowId != "") {
+    		var readRow = jsonAnswer(callNative("lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___GET_raw", {
+    			"__header_Authorization": "" + authorization,
+    			"table_id": "" + rowConfig.table_id,
+    			"row_id": checkedRowId,
+    			"user_field_names": "true"
+    		}));
+    		checkedRow = readRow != null && typeof readRow == "object" ? JSON.stringify(readRow) : null;
+    	}
+    	if (checkedRowId == "" || checkedRow != null) {
+    		var rowAnswer = callSequence("C8Oforms", "BaserowPublishedRowAuthorize", {
+    			form_id: rowProvidedFormId != "" ? rowProvidedFormId : rowConfigFormId,
+    			forms_config: rowFormsConfig,
+    			write_kind: "" + source_kind,
+    			row_id: checkedRowId,
+    			row: checkedRow,
+    			written: written == null || ("" + written) == "" ? null : "" + written
+    		});
+    		var rowAllowedValue = rowAnswer && rowAnswer.document && rowAnswer.document.allowed;
+    		rowConditionAllowed = rowAllowedValue != null && ("" + rowAllowedValue) == "true";
+    	}
+    } catch (e) {
+    	log.warn("(CheckRow) the row condition could not be checked: " + e);
+    	rowConditionAllowed = false;
+    }'
+↓IfRowRefused [steps.IfStep-2026110902012]: 
+  condition: '!rowConditionAllowed'
+  ↓RowRefused [steps.XMLErrorStep-2026110902013]: 
+    code: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 9
+    details: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: row_denied
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: The signed-in user may not change this row
+  ↓Return [steps.ReturnStep-2026110902014]: 
+↓forms_config [variables.RequestableVariable-2026110902015]: 
+  comment: The configuration of the write (table, source owner), as formscommon_CheckConfig checked it.
+  required: true
+  value: 
+↓forms_form_id [variables.RequestableVariable-2026110902016]: 
+  comment: Real id of the form currently calling this write. Falls back to forms_config.form_id when omitted.
+  value: 
+↓source_kind [variables.RequestableVariable-2026110902017]: 
+  comment: Fixed by the lib_BaseRow write sequence (forms_AddRow, forms_AddRowFromData, forms_DeleteRow).
+  value: 
+↓row_id [variables.RequestableVariable-2026110902018]: 
+  comment: The row the write changes or deletes, empty for a creation.
+  value: 
+↓written [variables.RequestableVariable-2026110902019]: 
+  comment: The texts the write puts in the column of the condition (js/row_rule.js rowRuleWritten), JSON list, empty when it does not set it.
+  value: 
+↓authorization [variables.RequestableVariable-2026110902020]: 
+  comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+  value: 
+  visibility: '-1'

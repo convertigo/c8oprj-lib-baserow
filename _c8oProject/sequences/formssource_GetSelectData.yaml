@@ -19,37 +19,79 @@ comment: |
       },
       "types": ["select", "checkbox", "radio", "checkbox_group", "radio_group"]
   }'
-↓Call_Sequence2 [steps.SequenceStep-1729157633820]: 
-  sourceSequence: lib_BaseRow.formscommon_CheckConfig
-  ↓forms_config [variables.StepVariable-1729157633823]: 
+nativeExecution: true
+↓BuildPublishedReadParameters [steps.SimpleStep-1999000000001]: 
+  expression: |
+    'var read_params = JSON.stringify({
+      forms_Filter: forms_Filter,
+      forms_tableSort: forms_tableSort,
+      forms_tableDistinct: forms_tableDistinct,
+      forms_filter: forms_filter,
+      model: model,
+      max_search_results: max_search_results
+    });'
+↓NoLog_Call_Sequence2 [steps.SimpleStep-1898400003004]: 
+  comment: The answer of formscommon_CheckConfigNative (the Bearer) holds a Baserow token, the engine would log it in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
+↓Call_Sequence2 [steps.SequenceStep-1999000000002]: 
+  output: false
+  sourceSequence: lib_BaseRow.formscommon_CheckConfigNative
+  ↓forms_config [variables.StepVariable-1999000000003]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
-  ↓forms_form_id [variables.StepVariable-1781260000004]: 
-↓IfError [steps.IfExistStep-1729157633826]: 
-  condition: IfError
+  ↓forms_form_id [variables.StepVariable-1999000000004]: 
+  ↓source_kind [variables.StepVariable-1999000000005]: 
+    value: formssource_GetSelectData
+  ↓read_params [variables.StepVariable-1999000000006]: 
+  ↓forms_anonymous_key [variables.StepVariable-1999000000007]: 
+    visibility: '-1'
+↓Log_Call_Sequence2 [steps.SimpleStep-1898400003005]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
+↓IfError_error [steps.JsonSourceStep-1999000000008]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1729157633820
+          - ↑value: 1999000000002
         - java.lang.String: 
-          - ↑value: ./document/error
-  ↓Copy [steps.XMLCopyStep-1729157633829]: 
-    sourceDefinition: 
+          - ↑value: $.error
+  variableName: callError_config
+↓IfError [steps.IfStep-1999000000009]: 
+  condition: callError_config != null
+  ↓Copy [steps.JsonToXmlStep-1999000000010]: 
+    comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+    jsonObject: 
       - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1729157633820
-          - java.lang.String: 
-            - ↑value: ./document/error
-  ↓Return [steps.ReturnStep-1729157633832]: 
-↓ParseConfig [steps.SimpleStep-1666717197201]: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: 'callError_config'
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+  ↓Return [steps.ReturnStep-1999000000011]: 
+↓published_scope_filter [steps.SimpleSourceStep-1999000000012]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1999000000002
+        - java.lang.String: 
+          - ↑value: $.published_scope_filter
+  variableName: published_scope_filter
+↓ParseConfig [steps.SimpleStep-1999000000013]: 
   expression: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
-    view_id = jConfig.view_id ? jConfig.view_id : null;
+    // (view_id) the options are read through that view of the table: its filters on top of the ones of the source and of
+    // the request, its sorts when nothing else sorts (js/table_views.js); an invalid one fails, never reads the whole table
+    include("js/table_views.js");
+    view_id = sourceViewId(jConfig);
     var describeStructure = true;
     var displayValue = jConfig.displayValue != undefined ? jConfig.displayValue: jConfig.column;
     var value = jConfig.value != undefined ? jConfig.value : jConfig.line;
@@ -118,7 +160,12 @@ comment: |
     	include_fields = includeColumns.join(",");
     }
     
-    filterExpression = forms_Filter;					// This is the Constructed Fiter API for baserow.
+    include("js/published_read_scope.js");
+    var authenticatedReader = context.getAuthenticatedUser();
+    var publishedScopeRequired = authenticatedReader == null ||
+      ("" + authenticatedReader) !== jConfig.source_owner;
+    filterExpression = bindPublishedReadScope(published_scope_filter, forms_Filter,
+      displayValue, forms_filter, publishedScopeRequired);
     
     order_by = forms_tableSort;
     distinctColumns = [];
@@ -178,100 +225,144 @@ comment: |
     if (isNaN(source_page_size) || source_page_size <= 0) {
         source_page_size = 200;
     }
+    // Baserow pages are offset by (page - 1) * size: every page of one read must use the
+    // same size, otherwise the window moves back and rows are read twice or skipped.
+    fetch_page_size = source_page_size;
     if (model != "true") {
-        size = "" + Math.min(source_page_size, max_search_results);
+        fetch_page_size = Math.min(source_page_size, max_search_results);
+        size = "" + fetch_page_size;
     }
     
-    var search = forms_filter
+    var search = published_scope_filter ? null : forms_filter
     if(search == ""){
     	search = null;
     }'
-↓Input_variables [steps.InputVariablesStep-1666100090915]: 
-↓Call_Sequence1 [steps.SequenceStep-1666717386561]: 
-  sourceSequence: lib_BaseRow.TableGetData
-  ↓exclude [variables.StepVariable-1666717386564]: 
+↓Call_Sequence1 [steps.SequenceStep-1999000000014]: 
+  output: false
+  sourceSequence: lib_BaseRow.TableGetDataNative
+  ↓exclude [variables.StepVariable-1999000000015]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
     description: exclude
-  ↓include_fields [variables.StepVariable-1666717386567]: 
+  ↓include_fields [variables.StepVariable-1999000000016]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
     description: include
-  ↓order_by [variables.StepVariable-1666717386570]: 
+  ↓order_by [variables.StepVariable-1999000000017]: 
     comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
     description: order_by
-  ↓page [variables.StepVariable-1666717386573]: 
+  ↓page [variables.StepVariable-1999000000018]: 
     comment: Defines which page of rows should be returned.
     description: page
-  ↓search [variables.StepVariable-1666717386576]: 
+  ↓search [variables.StepVariable-1999000000019]: 
     comment: If provided only rows with data that matches the search query are going to be returned.
     description: search
-  ↓size [variables.StepVariable-1666717386579]: 
+  ↓size [variables.StepVariable-1999000000020]: 
     comment: Defines how many rows should be returned per page.
     description: size
     value: ${lib_BaseRow.sourcepagesize=200}
-  ↓table_id [variables.StepVariable-1666717386582]: 
+  ↓table_id [variables.StepVariable-1999000000021]: 
     comment: Returns the rows of the table related to the provided value.
     description: table_id
     required: true
-  ↓view_id [variables.StepVariable-1666717386585]: 
+  ↓view_id [variables.StepVariable-1999000000022]: 
     comment: Includes all the filters and sorts of the provided view.
     description: view_id
-  ↓filterExpression [variables.StepVariable-1666717386588]: 
-  ↓describeStructure [variables.StepVariable-1680699118688]: 
-  ↓authorization [variables.StepVariable-1898400000238]: 
-    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+  ↓filterExpression [variables.StepVariable-1999000000023]: 
+  ↓describeStructure [variables.StepVariable-1999000000024]: 
+  ↓raw_json [variables.StepVariable-1999000000025]: 
+    value: true
+  ↓authorization [variables.StepVariable-1999000009002]: 
+    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfigNative
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1729157633820
+            - ↑value: 1999000000002
           - java.lang.String: 
-            - ↑value: ./document/Bearer/text()
+            - ↑value: $.Bearer
     visibility: '-1'
-↓IfExist [steps.IfExistStep-1666100090951]: 
+↓raw_page [steps.SimpleSourceStep-1999000000026]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1666717386561
+          - ↑value: 1999000000014
         - java.lang.String: 
-          - ↑value: ./document/error
-  ↓Error_structure [steps.XMLErrorStep-1666100090954]: 
-  ↓Return [steps.ReturnStep-1666100090957]: 
-↓myVariable1 [steps.JsonSourceStep-1680712167643]: 
+          - ↑value: $.raw
+  variableName: raw_page
+↓raw_fields [steps.SimpleSourceStep-1999000000027]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1666717386561
+          - ↑value: 1999000000014
         - java.lang.String: 
-          - ↑value: ./document/results
+          - ↑value: $.rawFields
+  variableName: raw_fields
+↓IfExist_error [steps.JsonSourceStep-1999000000028]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1999000000014
+        - java.lang.String: 
+          - ↑value: $.error
+  variableName: callError_first
+↓readResults [steps.JsonReadStep-1999000000029]: 
+  comment: the rows of the first page, read in the text of Baserow (Read JSON value), without XML
+  json: raw_page
+  path: $.results
   variableName: res
-↓next_page [steps.SimpleSourceStep-1774519269956]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1666717386561
-        - java.lang.String: 
-          - ↑value: ./document/next/text()
+↓readNext [steps.JsonReadStep-1999000000030]: 
+  json: raw_page
+  path: $.next
   variableName: next_page
-↓myVariable [steps.JsonSourceStep-1680699208395]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1666717386561
-        - java.lang.String: 
-          - ↑value: ./document/structure/object
-  variableName: structure
-↓InitPagination [steps.SimpleStep-1774519269974]: 
+↓readError [steps.JsonReadStep-1999000000031]: 
+  json: raw_page
+  path: $.error
+  variableName: raw_error
+↓ParseRawFirstPage [steps.SimpleStep-1999000000032]: 
   expression: |
-    'all_res = [];
+    '// the fields of the table as JSON text, parsed once (the structure of TableGetDataNative)
+    raw_page = null;
+    if (raw_fields != null) {
+    	try {
+    		var rawStructure = JSON.parse("" + raw_fields);
+    		if (Array.isArray(rawStructure) && rawStructure.length > 0) {
+    			structure = rawStructure;
+    		}
+    	} catch (e) {
+    		log.warn("Baserow did not return JSON fields: " + e);
+    	}
+    	raw_fields = null;
+    }
+    '
+↓IfExist [steps.IfStep-1999000000033]: 
+  condition: callError_first != null || raw_error != null
+  ↓Error_structure [steps.XMLErrorStep-1999000000034]: 
+  ↓Return [steps.ReturnStep-1999000000035]: 
+↓InitPagination [steps.SimpleStep-1999000000036]: 
+  expression: |
+    '// Baserow returns the next page as a URL (...?page=2&size=200): keep only its page number.
+    getNextPageNumber = function(rawNext) {
+    	if (rawNext == null) {
+    		return null;
+    	}
+    	var nextText = ("" + rawNext).replace(/^\s+|\s+$/g, "");
+    	if (nextText == "" || nextText == "null") {
+    		return null;
+    	}
+    	if (/^\d+$/.test(nextText)) {
+    		return nextText;
+    	}
+    	var nextMatch = nextText.match(/[?&]page=(\d+)(?:[&#]|$)/);
+    	return nextMatch != null ? nextMatch[1] : null;
+    };
+    next_page = getNextPageNumber(typeof next_page == "undefined" ? null : next_page);
+    all_res = [];
     fetched_pages = {};
     fetched_pages["" + page] = true;
     
@@ -287,96 +378,127 @@ comment: |
     
     res = all_res;
     '
-↓FetchNextPages [steps.WhileStep-1774519269994]: 
+↓FetchNextPages [steps.WhileStep-1999000000037]: 
   condition: model != "true" && all_res.length < max_search_results && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
-  ↓SetPage [steps.SimpleStep-1774519269996]: 
+  ↓SetPage [steps.SimpleStep-1999000000038]: 
     expression: |
       page = "" + next_page;
       fetched_pages[page] = true;
-      size = "" + Math.min(source_page_size, max_search_results - all_res.length);
+      size = "" + fetch_page_size;
       
-  ↓Call_SequenceLoop [steps.SequenceStep-1774519269998]: 
-    sourceSequence: lib_BaseRow.TableGetData
-    ↓exclude [variables.StepVariable-1774519270000]: 
+  ↓Call_SequenceLoop [steps.SequenceStep-1999000000039]: 
+    output: false
+    sourceSequence: lib_BaseRow.TableGetDataNative
+    ↓exclude [variables.StepVariable-1999000000040]: 
       comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
       description: exclude
-    ↓include_fields [variables.StepVariable-1774519270002]: 
+    ↓include_fields [variables.StepVariable-1999000000041]: 
       comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
       description: include
-    ↓order_by [variables.StepVariable-1774519270004]: 
+    ↓order_by [variables.StepVariable-1999000000042]: 
       comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
       description: order_by
-    ↓page [variables.StepVariable-1774519270006]: 
+    ↓page [variables.StepVariable-1999000000043]: 
       comment: Defines which page of rows should be returned.
       description: page
-    ↓search [variables.StepVariable-1774519270008]: 
+    ↓search [variables.StepVariable-1999000000044]: 
       comment: If provided only rows with data that matches the search query are going to be returned.
       description: search
-    ↓size [variables.StepVariable-1774519270010]: 
+    ↓size [variables.StepVariable-1999000000045]: 
       comment: Defines how many rows should be returned per page.
       description: size
       value: ${lib_BaseRow.sourcepagesize=200}
-    ↓table_id [variables.StepVariable-1774519270012]: 
+    ↓table_id [variables.StepVariable-1999000000046]: 
       comment: Returns the rows of the table related to the provided value.
       description: table_id
       required: true
-    ↓view_id [variables.StepVariable-1774519270014]: 
+    ↓view_id [variables.StepVariable-1999000000047]: 
       comment: Includes all the filters and sorts of the provided view.
       description: view_id
-    ↓filterExpression [variables.StepVariable-1774519270016]: 
-    ↓describeStructure [variables.StepVariable-1774519270018]: 
-    ↓authorization [variables.StepVariable-1898400000237]: 
-      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+    ↓filterExpression [variables.StepVariable-1999000000048]: 
+    ↓describeStructure [variables.StepVariable-1999000000049]: 
+    ↓raw_json [variables.StepVariable-1999000000050]: 
+      value: true
+    ↓authorization [variables.StepVariable-1999000009001]: 
+      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfigNative
       sourceDefinition: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1729157633820
+              - ↑value: 1999000000002
             - java.lang.String: 
-              - ↑value: ./document/Bearer/text()
+              - ↑value: $.Bearer
       visibility: '-1'
-  ↓IfExist1 [steps.IfExistStep-1774519270020]: 
-    condition: IfExist1
+  ↓raw_page [steps.SimpleSourceStep-1999000000051]: 
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1774519269998
+            - ↑value: 1999000000039
           - java.lang.String: 
-            - ↑value: ./document/error
-    ↓Error_structure [steps.XMLCopyStep-1774519270022]: 
-      sourceDefinition: 
-        - xmlizable: 
-          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: 1774519269998
-            - java.lang.String: 
-              - ↑value: ./document/error
-    ↓Return [steps.ReturnStep-1774519270024]: 
-  ↓page_results [steps.JsonSourceStep-1774519270026]: 
+            - ↑value: $.raw
+    variableName: raw_page
+  ↓IfExist1_error [steps.JsonSourceStep-1999000000052]: 
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1774519269998
+            - ↑value: 1999000000039
           - java.lang.String: 
-            - ↑value: ./document/results
+            - ↑value: $.error
+    variableName: callError_loop
+  ↓readResults [steps.JsonReadStep-1999000000053]: 
+    comment: the rows of the next page, read in the text of Baserow (Read JSON value), without XML
+    json: raw_page
+    path: $.results
     variableName: page_results
-  ↓next_page [steps.SimpleSourceStep-1774519270028]: 
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1774519269998
-          - java.lang.String: 
-            - ↑value: ./document/next/text()
+  ↓readNext [steps.JsonReadStep-1999000000054]: 
+    json: raw_page
+    path: $.next
     variableName: next_page
-  ↓AppendResults [steps.SimpleStep-1774519270030]: 
+  ↓readError [steps.JsonReadStep-1999000000055]: 
+    json: raw_page
+    path: $.error
+    variableName: raw_error
+  ↓ForgetRawPage [steps.SimpleStep-1999000000056]: 
+    expression: 'raw_page = null;'
+  ↓IfExist1 [steps.IfStep-1999000000057]: 
+    condition: callError_loop != null
+    ↓Error_structure [steps.JsonToXmlStep-1999000000058]: 
+      comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: 'callError_loop'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: error
+    ↓Return [steps.ReturnStep-1999000000059]: 
+  ↓IfRawError [steps.IfStep-1999000000060]: 
+    condition: raw_error != null
+    ↓error [steps.JsonToXmlStep-1999000000061]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: '"" + raw_error'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: error
+    ↓Return [steps.ReturnStep-1999000000062]: 
+  ↓AppendResults [steps.SimpleStep-1999000000063]: 
     expression: |
       'if (page_results != null) {
       	if (Array.isArray(page_results)) {
@@ -389,8 +511,9 @@ comment: |
       }
       
       res = all_res;
+      next_page = getNextPageNumber(typeof next_page == "undefined" ? null : next_page);
       '
-↓computeValue [steps.SimpleStep-1680712348539]: 
+↓computeValue [steps.SimpleStep-1999000000064]: 
   expression: |
     'include("js/utils.js");
     include("js/getFilter.js");
@@ -446,7 +569,10 @@ comment: |
     	return element;
     };
     var getDateDisplayTimezone = function(field) {
-    	var timezone = getFieldOption(field, "date_timezone");
+    	var timezone = getFieldOption(field, "date_force_timezone");
+    	if (timezone == "") {
+    		timezone = getFieldOption(field, "date_timezone");
+    	}
     	if (timezone == "") {
     		timezone = getFieldOption(field, "timezone");
     	}
@@ -454,7 +580,7 @@ comment: |
     		timezone = getFieldOption(field, "date_time_zone");
     	}
     	if (timezone == "") {
-    		timezone = "${lib_BaseRow.dateTimezone=Europe/Paris}";
+    		timezone = "${lib_BaseRow.dateTimezone=UTC}";
     	}
     	timezone = ("" + timezone).replace(/^\s+|\s+$/g, "");
     	if (timezone == "" || timezone.toLowerCase() == "null") {
@@ -756,7 +882,7 @@ comment: |
     		res = [];
     	}
     }'
-↓object [steps.JsonToXmlStep-1680712764673]: 
+↓object [steps.JsonToXmlStep-1999000000065]: 
   jsonObject: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -769,9 +895,9 @@ comment: |
       - SmartType: 
         - ↑mode: PLAIN
         - →→: value
-↓jIf [steps.IfStep-1680699398785]: 
+↓jIf [steps.IfStep-1999000000066]: 
   condition: model == "true" && "structure" in this
-  ↓Sequence_JS [steps.SimpleStep-1680699255296]: 
+  ↓Sequence_JS [steps.SimpleStep-1999000000067]: 
     expression: |
       'include("js/utils.js");
       include("js/getFilter.js");
@@ -812,7 +938,7 @@ comment: |
       }
       
       	'
-  ↓data [steps.JsonToXmlStep-1680699661741]: 
+  ↓data [steps.JsonToXmlStep-1999000000068]: 
     jsonObject: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -825,17 +951,17 @@ comment: |
         - SmartType: 
           - ↑mode: PLAIN
           - →→: data
-↓max_search_results [variables.RequestableVariable-1780076000001]: 
+↓max_search_results [variables.RequestableVariable-1999000000069]: 
   comment: Maximum number of Baserow rows scanned by this source.
   value: ${C8O_FORMS_BASEROW_MAX_SEARCH_RESULTS=1000}
-↓forms_filter [variables.RequestableVariable-1666100091071]: 
+↓forms_filter [variables.RequestableVariable-1999000000070]: 
   comment: |
     Filters
     
   description: 
   required: true
   value: 
-↓forms_config [variables.RequestableVariable-1666100091062]: 
+↓forms_config [variables.RequestableVariable-1999000000071]: 
   comment: |
     '{
     	"en": {
@@ -858,10 +984,14 @@ comment: |
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/select
   required: true
   value: 
-↓forms_form_id [variables.RequestableVariable-1781260000005]: 
+↓forms_form_id [variables.RequestableVariable-1999000000072]: 
   comment: Real id of the form currently calling this source.
   value: 
-↓forms_Filter [variables.RequestableVariable-1680171408883]: 
+↓forms_anonymous_key [variables.RequestableVariable-1999000000073]: 
+  comment: Anonymous PWA link key for published source reads.
+  value: 
+  visibility: '-1'
+↓forms_Filter [variables.RequestableVariable-1999000000074]: 
   comment: |
     '{
         "en": {
@@ -884,9 +1014,9 @@ comment: |
   description: filter
   required: true
   value: 
-↓model [variables.RequestableVariable-1680688774991]: 
+↓model [variables.RequestableVariable-1999000000075]: 
   comment: If true, just return one line of data so that No Code studio can compte the table model
-↓forms_tableSort [variables.RequestableVariable-1758530362488]: 
+↓forms_tableSort [variables.RequestableVariable-1999000000076]: 
   comment: |
     '{
         "en": {
@@ -908,7 +1038,7 @@ comment: |
     }
     '
   description: sort
-↓forms_tableDistinct [variables.RequestableVariable-1774519270032]: 
+↓forms_tableDistinct [variables.RequestableVariable-1999000000077]: 
   comment: |
     '{
         "en": {
@@ -931,7 +1061,7 @@ comment: |
     '
   description: distinct_column
 ↓TestWithFilter [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1666717673009]: 
+  ↓forms_config [variables.TestCaseVariable-1999000000078]: 
     comment: The Table ID you want to get data from
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
@@ -941,12 +1071,12 @@ comment: |
       	"columns": ["Number"]
       }
       '
-  ↓forms_tableFilter [variables.TestCaseVariable-1666717686496]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1999000000079]: 
     description: 
     required: true
     value: 100
 ↓TestWithLinkedFileds [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1680180805970]: 
+  ↓forms_config [variables.TestCaseVariable-1999000000080]: 
     comment: The Table ID you want to get data from
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
@@ -957,7 +1087,7 @@ comment: |
       }
       '
 ↓TestWithLinkedFiledsAndOneCol [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1680187153247]: 
+  ↓forms_config [variables.TestCaseVariable-1999000000081]: 
     comment: The Table ID you want to get data from
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
@@ -968,7 +1098,7 @@ comment: |
       }
       '
 ↓TestWithNoFilter [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1680173707703]: 
+  ↓forms_config [variables.TestCaseVariable-1999000000082]: 
     comment: The Table ID you want to get data from
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
@@ -979,7 +1109,7 @@ comment: |
       }
       '
 ↓TestWithNoFilterWith2Cols [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1680173777993]: 
+  ↓forms_config [variables.TestCaseVariable-1999000000083]: 
     comment: The Table ID you want to get data from
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
@@ -990,7 +1120,7 @@ comment: |
       }
       '
 ↓TestWithNoFilterWithCustomFilter [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1680174266714]: 
+  ↓forms_config [variables.TestCaseVariable-1999000000084]: 
     comment: The Table ID you want to get data from
     description: configure=lib_BaseRow/DisplayObjects/mobile/selecttable
     required: true
@@ -1000,11 +1130,11 @@ comment: |
       	"columns": ["Number", "Accommodates"]
       }
       '
-  ↓forms_tableFilter [variables.TestCaseVariable-1680174292982]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1999000000085]: 
     description: 
     required: true
     value: 
-  ↓forms_Filter [variables.TestCaseVariable-1680174292984]: 
+  ↓forms_Filter [variables.TestCaseVariable-1999000000086]: 
     description: 
     required: true
     value: |

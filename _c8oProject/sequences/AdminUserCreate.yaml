@@ -1,8 +1,13 @@
 accessibility: Private
 comment: Create a user
 ↓inputVars [steps.InputVariablesStep-1729005249299]: 
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002004]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1728982368849]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002005]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction1 [steps.TransactionStep-1728982410962]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_admin_users__POST
   ↓__header_Authorization [variables.StepVariable-1728982452180]: 
@@ -14,6 +19,7 @@ comment: Create a user
             - ↑value: 1728982368849
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
   ↓username [variables.StepVariable-1728982410964]: 
     description: username
     required: true
@@ -39,6 +45,7 @@ comment: Create a user
   ↓password [variables.StepVariable-1728982410972]: 
     description: password
     required: true
+    visibility: '-1'
 ↓Copy [steps.XMLCopyStep-1728982368879]: 
   sourceDefinition: 
     - xmlizable: 
@@ -54,4 +61,5 @@ comment: Create a user
 ↓password [variables.RequestableVariable-1728982473930]: 
   description: password
   required: true
+  visibility: '-1'
 ↓email [variables.RequestableVariable-1729004724517]: 

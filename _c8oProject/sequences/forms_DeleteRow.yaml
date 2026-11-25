@@ -1,5 +1,4 @@
 accessibility: Hidden
-authenticatedContextRequired: true
 comment: |
   '{
       "en": {
@@ -19,12 +18,19 @@ comment: |
           "comment": "Elimina una riga di dati da una tabella"
       }
   }'
+↓NoLog_Call_Sequence2 [steps.SimpleStep-1898400002066]: 
+  comment: The answer of formscommon_CheckConfig holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence2 [steps.SequenceStep-1734444235528]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
   ↓forms_config [variables.StepVariable-1734444235531]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
   ↓forms_form_id [variables.StepVariable-1781260000010]: 
+  ↓source_kind [variables.StepVariable-1895000000003]: 
+    value: forms_DeleteRow
+↓Log_Call_Sequence2 [steps.SimpleStep-1898400002067]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓IfError [steps.IfExistStep-1734444235534]: 
   condition: IfError
   sourceDefinition: 
@@ -57,6 +63,57 @@ comment: |
         row_id = forms_id
         
         
+    ↓row_check_column [steps.SimpleSourceStep-2026110903000]: 
+      comment: The column of the row condition of the step that runs this write (C8Oforms, formscommon_CheckConfig row_column), empty without one
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1734444235528
+            - java.lang.String: 
+              - ↑value: ./document/row_column/text()
+      variableName: row_check_column
+    ↓IfRowCondition [steps.IfStep-2026110903001]: 
+      comment: the row is checked before it is deleted (formscommon_CheckRow)
+      condition: row_check_column != null && ("" + row_check_column) != ""
+      ↓Call_CheckRow [steps.SequenceStep-2026110903003]: 
+        sourceSequence: lib_BaseRow.formscommon_CheckRow
+        ↓forms_config [variables.StepVariable-2026110903004]: 
+        ↓forms_form_id [variables.StepVariable-2026110903005]: 
+        ↓source_kind [variables.StepVariable-2026110903006]: 
+          value: forms_DeleteRow
+        ↓row_id [variables.StepVariable-2026110903007]: 
+        ↓authorization [variables.StepVariable-2026110903009]: 
+          comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1734444235528
+                - java.lang.String: 
+                  - ↑value: ./document/Bearer/text()
+          visibility: '-1'
+      ↓IfRowRefused [steps.IfExistStep-2026110903010]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 2026110903003
+              - java.lang.String: 
+                - ↑value: ./document/error
+        ↓Copy [steps.XMLCopyStep-2026110903011]: 
+          sourceDefinition: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 2026110903003
+                - java.lang.String: 
+                  - ↑value: ./document/error
+        ↓Return [steps.ReturnStep-2026110903012]: 
     ↓Call_Sequence [steps.SequenceStep-1726474061283]: 
       comment: Delet row from BR table
       sourceSequence: lib_BaseRow.TableDeleteRow
@@ -89,8 +146,18 @@ comment: |
             - java.lang.String: 
               - ↑value: 1726474061283
             - java.lang.String: 
-              - ↑value: ./document/transaction/document/error
+              - ↑value: ./document/error
       ↓Error_structure [steps.XMLErrorStep-1726474061298]: 
+        details: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1726474061283
+                - java.lang.String: 
+                  - ↑value: ./document/detail
         message: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -100,7 +167,7 @@ comment: |
                 - java.lang.String: 
                   - ↑value: 1726474061283
                 - java.lang.String: 
-                  - ↑value: ./document/transaction/document/error/message/text()
+                  - ↑value: ./document/error/message/text() | ./document/error[not(*)]/text()
       ↓Return [steps.ReturnStep-1726474061301]: 
   ↓jElse [steps.ElseStep-1726474061304]: 
     ↓Error_structure [steps.XMLErrorStep-1726474339162]: 

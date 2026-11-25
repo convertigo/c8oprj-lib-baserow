@@ -1,7 +1,12 @@
 accessibility: Private
 comment: Reads a row from a  from a given table
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002040]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1667622853574]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002041]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction [steps.TransactionStep-1667622853577]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___GET
   ↓__header_Authorization [variables.StepVariable-1667622853580]: 
@@ -13,6 +18,7 @@ comment: Reads a row from a  from a given table
             - ↑value: 1667622853574
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
   ↓row_id [variables.StepVariable-1667622853583]: 
     comment: Deletes the row related to the value.
     description: row_id

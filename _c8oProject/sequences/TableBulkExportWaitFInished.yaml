@@ -1,7 +1,12 @@
 accessibility: Private
 comment: Wait for an export job to be finished. Will return the URL to the exported data
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002020]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1670749238200]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002021]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Init [steps.SimpleStep-1670750018663]: 
   expression: |
     status = "in progress"
@@ -19,6 +24,7 @@ comment: Wait for an export job to be finished. Will return the URL to the expor
               - ↑value: 1670749238200
             - java.lang.String: 
               - ↑value: ./document/Bearer/text()
+      visibility: '-1'
     ↓job_id [variables.StepVariable-1670749291526]: 
       comment: The job id to lookup information about.
       description: job_id

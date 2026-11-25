@@ -14,18 +14,19 @@
   contextTimeout: ${lib_baserow.context_timout=3600}
   corsOrigin: =Origin
   httpSessionTimeout: ${lib_baserow.session_timout=3600}
-  version: 1.1.42-hotfix31
+  version: 1.2.0-beta31
   ↓Baserow_API_spec [connectors.HttpConnector]: 🗏 connectors/Baserow_API_spec.yaml
   ↓c8oforms_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_fs.yaml
   ↓c8oforms_response_fs [connectors.FullSyncConnector]: 🗏 connectors/c8oforms_response_fs.yaml
   ↓MediaConnector [connectors.HttpConnector]: 🗏 connectors/MediaConnector.yaml
-  ↓_disabled_formssource_GetSelectDataOld [sequences.GenericSequence]: 🗏 sequences/_disabled_formssource_GetSelectDataOld.yaml
-  ↓_disabled_formssource_GetTableDataOld [sequences.GenericSequence]: 🗏 sequences/_disabled_formssource_GetTableDataOld.yaml
   ↓AdminLogin [sequences.GenericSequence]: 🗏 sequences/AdminLogin.yaml
+  ↓AdminLoginNative [sequences.GenericSequence]: 🗏 sequences/AdminLoginNative.yaml
   ↓AdminUserCreate [sequences.GenericSequence]: 🗏 sequences/AdminUserCreate.yaml
   ↓AdminUserDelete [sequences.GenericSequence]: 🗏 sequences/AdminUserDelete.yaml
   ↓AssetFileUpload [sequences.GenericSequence]: 🗏 sequences/AssetFileUpload.yaml
   ↓ClearTableIdCache [sequences.GenericSequence-1703166628211]: 🗏 sequences/ClearTableIdCache.yaml
+  ↓DatabaseCreate [sequences.GenericSequence]: 🗏 sequences/DatabaseCreate.yaml
+  ↓DatabaseDeleteDefinitive [sequences.GenericSequence]: 🗏 sequences/DatabaseDeleteDefinitive.yaml
   ↓DatabaseTokenCreate [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenCreate.yaml
   ↓DatabaseTokenDelete [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenDelete.yaml
   ↓DatabaseTokenList [sequences.GenericSequence]: 🗏 sequences/DatabaseTokenList.yaml
@@ -36,17 +37,23 @@
   ↓forms_DeleteRow [sequences.GenericSequence]: 🗏 sequences/forms_DeleteRow.yaml
   ↓formscommon_ApplicationsList [sequences.GenericSequence]: 🗏 sequences/formscommon_ApplicationsList.yaml
   ↓formscommon_CheckConfig [sequences.GenericSequence-1729157158814]: 🗏 sequences/formscommon_CheckConfig.yaml
+  ↓formscommon_CheckConfigNative [sequences.GenericSequence]: 🗏 sequences/formscommon_CheckConfigNative.yaml
+  ↓formscommon_CheckRow [sequences.GenericSequence]: 🗏 sequences/formscommon_CheckRow.yaml
   ↓formscommon_FieldsList [sequences.GenericSequence-1729515070603]: 🗏 sequences/formscommon_FieldsList.yaml
+  ↓formscommon_SchemaApply [sequences.GenericSequence]: 🗏 sequences/formscommon_SchemaApply.yaml
+  ↓formscommon_ViewsList [sequences.GenericSequence]: 🗏 sequences/formscommon_ViewsList.yaml
   ↓formssource_GetFieldValues [sequences.GenericSequence]: 🗏 sequences/formssource_GetFieldValues.yaml
   ↓formssource_GetSelectData [sequences.GenericSequence]: 🗏 sequences/formssource_GetSelectData.yaml
   ↓formssource_GetTableData [sequences.GenericSequence]: 🗏 sequences/formssource_GetTableData.yaml
   ↓FSExecuteView [sequences.GenericSequence]: 🗏 sequences/FSExecuteView.yaml
   ↓FSPullAndPushTable [sequences.GenericSequence]: 🗏 sequences/FSPullAndPushTable.yaml
   ↓GroupsList [sequences.GenericSequence]: 🗏 sequences/GroupsList.yaml
+  ↓JobWait [sequences.GenericSequence]: 🗏 sequences/JobWait.yaml
   ↓TableBulkExportToCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkExportToCSV.yaml
   ↓TableBulkExportWaitFInished [sequences.GenericSequence]: 🗏 sequences/TableBulkExportWaitFInished.yaml
   ↓TableBulkImportFromCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkImportFromCSV.yaml
   ↓TableBulkUpdateFromCSV [sequences.GenericSequence]: 🗏 sequences/TableBulkUpdateFromCSV.yaml
+  ↓TableCreate [sequences.GenericSequence]: 🗏 sequences/TableCreate.yaml
   ↓TableCreateColumn [sequences.GenericSequence]: 🗏 sequences/TableCreateColumn.yaml
   ↓TableCreateRow [sequences.GenericSequence]: 🗏 sequences/TableCreateRow.yaml
   ↓TableCreateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableCreateRowApiKey.yaml
@@ -57,7 +64,7 @@
   ↓TableDeleteAllRows [sequences.GenericSequence]: 🗏 sequences/TableDeleteAllRows.yaml
   ↓TableDeleteRow [sequences.GenericSequence]: 🗏 sequences/TableDeleteRow.yaml
   ↓TableDeleteView [sequences.GenericSequence]: 🗏 sequences/TableDeleteView.yaml
-  ↓TableGetData [sequences.GenericSequence]: 🗏 sequences/TableGetData.yaml
+  ↓TableGetDataNative [sequences.GenericSequence]: 🗏 sequences/TableGetDataNative.yaml
   ↓TableGetDataApiKey [sequences.GenericSequence]: 🗏 sequences/TableGetDataApiKey.yaml
   ↓TableGetRowByIdApiKey [sequences.GenericSequence]: 🗏 sequences/TableGetRowByIdApiKey.yaml
   ↓TableGetViews [sequences.GenericSequence]: 🗏 sequences/TableGetViews.yaml
@@ -65,5 +72,6 @@
   ↓TableUpdateRow [sequences.GenericSequence]: 🗏 sequences/TableUpdateRow.yaml
   ↓TableUpdateRowApiKey [sequences.GenericSequence]: 🗏 sequences/TableUpdateRowApiKey.yaml
   ↓TokenGetOrRefresh [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefresh.yaml
+  ↓TokenGetOrRefreshNative [sequences.GenericSequence]: 🗏 sequences/TokenGetOrRefreshNative.yaml
   ↓CouchDb_schema [references.ImportXsdSchemaReference]: 
     urlpath: http://localhost:18080/convertigo/xsd/couchdb/CouchDb.xsd

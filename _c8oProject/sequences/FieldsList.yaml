@@ -1,10 +1,15 @@
 accessibility: Private
 comment: Lists all the fields in a baserow table
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002014]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1667802514338]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
   ↓authorization [variables.StepVariable-1898400000213]: 
     comment: Bearer of the Baserow account of the source
     visibility: '-1'
+↓Log_Call_Sequence [steps.SimpleStep-1898400002015]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓IfTokenError [steps.IfExistStep-1898400000210]: 
   sourceDefinition: 
     - xmlizable: 
@@ -24,6 +29,23 @@ comment: Lists all the fields in a baserow table
           - java.lang.String: 
             - ↑value: ./document/error
   ↓Return [steps.ReturnStep-1898400000212]: 
+↓fields_authorization [steps.SimpleSourceStep-2026102600010]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1667802514338
+        - java.lang.String: 
+          - ↑value: ./document/Bearer/text()
+  variableName: fields_authorization
+↓FieldsCacheScope [steps.SimpleStep-2026102600011]: 
+  comment: the key of the 60 s cache of the fields, for the token of this call (js/fields_cache.js)
+  expression: |
+    'include("js/fields_cache.js");
+    cache_scope = getFieldsCacheScope(fields_authorization);
+    fields_authorization = null;
+    '
 ↓Call_Transaction [steps.TransactionStep-1665297256060]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_fields_table__table_id___GET
   ↓__header_Authorization [variables.StepVariable-1665297256063]: 
@@ -35,10 +57,14 @@ comment: Lists all the fields in a baserow table
             - ↑value: 1667802514338
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
   ↓table_id [variables.StepVariable-1665298009120]: 
     comment: Returns only the fields of the table related to the provided value.
     description: table_id
     required: true
+  ↓cache_scope [variables.StepVariable-2026102600012]: 
+    comment: set by FieldsCacheScope just before
+    description: cache_scope
 ↓Copy [steps.XMLCopyStep-1665297256066]: 
   sourceDefinition: 
     - xmlizable: 

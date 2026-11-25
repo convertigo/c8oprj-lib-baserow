@@ -67,6 +67,10 @@ const ARRAY_VIEW_FILTERS_PATH = path.resolve(
   '../modules/database/arrayViewFilters.js'
 )
 const PLUGIN_PATH = path.resolve(__dirname, '../modules/database/plugin.js')
+const FORMULA_TYPES_PATH = path.resolve(
+  __dirname,
+  '../modules/database/formula/formulaTypes.js'
+)
 
 const FORMULA_FIELD_TYPES = new Set(['formula', 'count', 'rollup', 'lookup'])
 
@@ -310,22 +314,48 @@ function parseStringLiteral(value) {
   return match ? match[1] : null
 }
 
+let formulaTypeNames = null
+
+// Resolves `BaserowFormulaNumberType.getType()` (Baserow 1.30+) to 'number'
+function resolveFormulaTypeName(value) {
+  const literal = parseStringLiteral(value)
+  if (literal !== null) return literal
+
+  const match = value.match(/^([A-Za-z0-9_]+)\.getType\s*\(\s*\)$/)
+  if (!match) return null
+
+  if (formulaTypeNames === null) {
+    formulaTypeNames = {}
+    if (fs.existsSync(FORMULA_TYPES_PATH)) {
+      const code = stripComments(fs.readFileSync(FORMULA_TYPES_PATH, 'utf8'))
+      const classRegex =
+        /\bclass\s+([A-Za-z0-9_]+)\b(?:(?!\bclass\s)[\s\S])*?static\s+getType\s*\(\)\s*\{\s*return\s+['"]([^'"]+)['"]/g
+      let classMatch
+      while ((classMatch = classRegex.exec(code))) {
+        formulaTypeNames[classMatch[1]] = classMatch[2]
+      }
+    }
+  }
+  return formulaTypeNames[match[1]] || null
+}
+
 function parseFormulaArgs(argsSource) {
   const args = splitTopLevel(argsSource)
   const types = []
   for (const raw of args) {
     const trimmed = raw.trim()
-    const literal = parseStringLiteral(trimmed)
-    if (literal !== null) {
-      types.push(literal)
+    const name = resolveFormulaTypeName(trimmed)
+    if (name !== null) {
+      types.push(name)
       continue
     }
 
     const arrayMatch = trimmed.match(
-      /^FormulaFieldType\.arrayOf\s*\(\s*(['"])([^'"]+)\1\s*\)$/
+      /^FormulaFieldType\.arrayOf\s*\(\s*([\s\S]+?)\s*\)$/
     )
-    if (arrayMatch) {
-      types.push(`array(${arrayMatch[2]})`)
+    const arrayName = arrayMatch ? resolveFormulaTypeName(arrayMatch[1]) : null
+    if (arrayName !== null) {
+      types.push(`array(${arrayName})`)
     }
   }
   return types

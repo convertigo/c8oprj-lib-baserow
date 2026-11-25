@@ -1,0 +1,935 @@
+accessibility: Private
+comment: Gets data from a given table
+jsonNativeOutput: true
+nativeExecution: true
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400003008]: 
+  comment: The answer of TokenGetOrRefreshNative (the Bearer) holds a Baserow token, the engine would log it in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
+↓Call_Sequence [steps.SequenceStep-1994000000001]: 
+  sourceSequence: lib_BaseRow.TokenGetOrRefreshNative
+  ↓authorization [variables.StepVariable-1994000000002]: 
+    comment: Bearer of the Baserow account of the source
+    visibility: '-1'
+↓Log_Call_Sequence [steps.SimpleStep-1898400003009]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
+↓IfTokenError_error [steps.JsonSourceStep-1994000000003]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1994000000001
+        - java.lang.String: 
+          - ↑value: $.error
+  variableName: tokenError_call
+↓IfTokenError [steps.IfStep-1994000000004]: 
+  condition: tokenError_call != null
+  ↓Copy [steps.JsonToXmlStep-1994000000005]: 
+    comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: 'tokenError_call'
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+  ↓Return [steps.ReturnStep-1994000000006]: 
+↓IfJsonFields [steps.IfStep-1994000000007]: 
+  condition: 'raw_json != "true"'
+  ↓Call_Sequence1 [steps.SequenceStep-1994000000008]: 
+    comment: We need the field list for this table to build the filter
+    sourceSequence: lib_BaseRow.FieldsList
+    ↓table_id [variables.StepVariable-1994000000009]: 
+      comment: Returns only the fields of the table related to the provided value.
+      description: table_id
+      required: true
+      value: 
+    ↓authorization [variables.StepVariable-1994000000010]: 
+      comment: Bearer of the Baserow account of the source
+      visibility: '-1'
+  ↓IfFieldsError [steps.IfExistStep-1994000000011]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1994000000008
+          - java.lang.String: 
+            - ↑value: ./document/error
+    ↓Copy [steps.XMLCopyStep-1994000000012]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1994000000008
+            - java.lang.String: 
+              - ↑value: ./document/error
+    ↓Return [steps.ReturnStep-1994000000013]: 
+  ↓JsonSource [steps.JsonSourceStep-1994000000023]: 
+    comment: Our field list is now in aFields
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1994000000008
+          - java.lang.String: 
+            - ↑value: ./document/array
+    variableName: aFields
+  ↓IfJsonStructure [steps.IfStep-1994000000082]: 
+    comment: the structure of the fields, from the call above
+    condition: describeStructure == "true"
+    ↓structure [steps.XMLComplexStep-1994000000083]: 
+      nodeName: structure
+      ↓type [steps.XMLAttributeStep-1994000000084]: 
+        nodeName: type
+        nodeText: array
+      ↓Copy1 [steps.XMLCopyStep-1994000000085]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1994000000008
+              - java.lang.String: 
+                - ↑value: ./document/array/*
+↓IfRawFields [steps.IfStep-1994000000014]: 
+  comment: (lib_baserow.raw_json) the fields JSON stays text
+  condition: 'raw_json == "true"'
+  ↓fields_authorization [steps.JsonSourceStep-2026102600030]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1994000000001
+          - java.lang.String: 
+            - ↑value: $.Bearer
+    variableName: fields_authorization
+  ↓FieldsCacheScope [steps.SimpleStep-2026102600031]: 
+    comment: the key of the 60 s cache of the fields, for the token of this call (js/fields_cache.js)
+    expression: |
+      'include("js/fields_cache.js");
+      cache_scope = getFieldsCacheScope(fields_authorization);
+      fields_authorization = null;
+      '
+  ↓Call_RawFields [steps.TransactionStep-1994000000015]: 
+    output: false
+    sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_fields_table__table_id___GET_raw
+    ↓__header_Authorization [variables.StepVariable-1994000000016]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1994000000001
+            - java.lang.String: 
+              - ↑value: $.Bearer
+      visibility: '-1'
+    ↓table_id [variables.StepVariable-1994000000017]: 
+      description: table_id
+      required: true
+      value: 
+    ↓cache_scope [variables.StepVariable-2026102600032]: 
+      comment: set by FieldsCacheScope just before
+      description: cache_scope
+  ↓raw_fields [steps.SimpleSourceStep-1994000000018]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1994000000015
+          - java.lang.String: 
+            - ↑value: $
+    variableName: raw_fields
+  ↓IfRawStructure [steps.IfStep-1994000000086]: 
+    comment: the structure of the fields, from the call above
+    condition: describeStructure == "true"
+    ↓rawFields_text [steps.SimpleSourceStep-1994000000087]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1994000000015
+            - java.lang.String: 
+              - ↑value: $
+      variableName: native_rawFields
+    ↓rawFields [steps.JsonToXmlStep-1994000000088]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: 'native_rawFields'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: rawFields
+↓ParseFields [steps.SimpleStep-1796300000001]: 
+  comment: the fields of the table (FieldsList, or the raw JSON of lib_baserow.raw_json), read once for the order and the filters
+  expression: |
+    'if (raw_json == "true") {
+    	var parsedFields = null;
+    	try {
+    		parsedFields = raw_fields == null ? null : JSON.parse("" + raw_fields);
+    	} catch (e) {
+    		log.warn("Baserow did not return JSON for the fields: " + e);
+    	}
+    	aFields = Array.isArray(parsedFields) ? parsedFields : null;
+    	if (parsedFields != null && typeof parsedFields == "object" && parsedFields.error == "ERROR_INVALID_ACCESS_TOKEN") {
+    		// (lib_baserow.token_cache) a token refused by Baserow (401) is no longer handed out to the other sessions
+    		include("js/token_cache.js");
+    		forgetCachedTokenOfScope(cache_scope);
+    	}
+    }
+    // a text formula formatting a number or a date (an amount "44 000") is ordered and compared by that field
+    include("js/field_sort_source.js");
+    '
+↓jIf2 [steps.IfStep-1994000000019]: 
+  condition: order_by != null
+  ↓BuildFilters [steps.SimpleStep-1994000000020]: 
+    comment: Build the filters according to the API specs
+    expression: |
+      '// Baserow splits order_by like a CSV line (quote ", escape \): a name holding a comma,
+      // a quote or a backslash is quoted, with the descending "-" inside the quotes.
+      var toBaserowSortName = function(fieldName, descending) {
+      	var sortName = (descending ? "-" : "") + fieldName;
+      	var mustQuote = fieldName.indexOf(",") != -1 || fieldName.indexOf("\"") != -1 || fieldName.indexOf("\\") != -1;
+      	return mustQuote ? "\"" + sortName.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\"" : sortName;
+      };
+      // A sort on a field Baserow cannot order (a file...) would fail the whole read: it is dropped (js/field_sort_source.js).
+      var droppedSortNames = [];
+      var keepSort = function(fieldName) {
+      	if (canOrderBySortField(aFields, fieldName)) {
+      		return true;
+      	}
+      	droppedSortNames.push(fieldName);
+      	return false;
+      };
+      var buildBaserowOrderBy = function(rawOrder) {
+      	var orderText = ("" + rawOrder).replace(/^\s+|\s+$/g, "");
+      	if (orderText == "" || orderText == "null") {
+      		return null;
+      	}
+      	if (orderText.charAt(0) != "{") {
+      		// Already a Baserow order_by string: Name,-Age,"Field, with comma"
+      		var orderItems = splitBaserowOrderBy(orderText);
+      		var keptItems = [];
+      		for (var iItem = 0; iItem < orderItems.length; iItem++) {
+      			if (keepSort(orderItems[iItem].name)) {
+      				keptItems.push(orderItems[iItem].raw);
+      			}
+      		}
+      		return keptItems.length == orderItems.length ? orderText : (keptItems.length > 0 ? keptItems.join(",") : null);
+      	}
+      	var parsedOrder = JSON.parse(orderText);
+      	var sortNames = [];
+      	var sorts = parsedOrder != null && Array.isArray(parsedOrder.sorts) ? parsedOrder.sorts : [];
+      	for (var iSort = 0; iSort < sorts.length; iSort++) {
+      		if (sorts[iSort] != null && sorts[iSort].name != null && ("" + sorts[iSort].name) != "") {
+      			var sortSource = getFormulaSortSource(aFields, "" + sorts[iSort].name);
+      			var sortFieldName = sortSource != null ? sortSource.name : "" + sorts[iSort].name;
+      			if (keepSort(sortFieldName)) {
+      				sortNames.push(toBaserowSortName(sortFieldName, sorts[iSort].order != "asc"));
+      			}
+      		}
+      	}
+      	return sortNames.length > 0 ? sortNames.join(",") : null;
+      };
+      try {
+      	order_by = buildBaserowOrderBy(order_by);
+      }
+      catch (e) {
+      	order_by = null;
+      }
+      if (droppedSortNames.length > 0) {
+      	log.info("Sort dropped, Baserow cannot order the rows by: " + droppedSortNames.join(", "));
+      }
+      '
+↓jIf [steps.IfStep-1994000000021]: 
+  condition: 'filterExpression ? filterExpression.length != 0: false'
+  ↓BuildFilters [steps.SimpleStep-1994000000026]: 
+    comment: Build the filters according to the API specs
+    expression: |
+      '// Field definitions of the table, by name (aFields comes from FieldsList).
+      function findFieldDefinition(fieldName) {
+      	var fieldsList = Array.isArray(aFields) ? aFields : (aFields != null ? [aFields] : []);
+      	for (var iField = 0; iField < fieldsList.length; iField++) {
+      		if (fieldsList[iField] != null && fieldsList[iField].name == fieldName) {
+      			return fieldsList[iField];
+      		}
+      	}
+      	return null;
+      }
+      
+      function isEmptyFilterValue(value) {
+      	return value === null || value === undefined || ("" + value) === "";
+      }
+      
+      // Only these Baserow filters compare a single/multiple select with option ids: a label is
+      // mapped to its id for them, every other filter (contains, contains_word...) keeps
+      // comparing the option text.
+      var SINGLE_SELECT_ID_FILTERS = ["single_select_equal", "single_select_not_equal", "single_select_is_any_of", "single_select_is_none_of"];
+      var MULTIPLE_SELECT_ID_FILTERS = ["multiple_select_has", "multiple_select_has_not"];
+      
+      function mapSingleSelectFilterValue(fieldDefinition, op, value) {
+      	var usesOptionIds = fieldDefinition != null && (
+      		(fieldDefinition.type == "single_select" && SINGLE_SELECT_ID_FILTERS.indexOf(op) != -1) ||
+      		(fieldDefinition.type == "multiple_select" && MULTIPLE_SELECT_ID_FILTERS.indexOf(op) != -1));
+      	if (!usesOptionIds || isEmptyFilterValue(value)) {
+      		return value;
+      	}
+      	var options = fieldDefinition.select_options;
+      	options = Array.isArray(options) ? options : (options != null ? [options] : []);
+      	var findOptionId = function(text) {
+      		text = ("" + text).replace(/^\s+|\s+$/g, "");
+      		var labelId = null;
+      		for (var iOption = 0; iOption < options.length; iOption++) {
+      			if (options[iOption] == null) {
+      				continue;
+      			}
+      			if (("" + options[iOption].id) === text) {
+      				return text;
+      			}
+      			if (labelId == null && ("" + options[iOption].value) === text) {
+      				labelId = "" + options[iOption].id;
+      			}
+      		}
+      		return labelId;
+      	};
+      	var wholeId = findOptionId(value);
+      	if (wholeId != null) {
+      		return wholeId;
+      	}
+      	if (op == "single_select_is_any_of" || op == "single_select_is_none_of") {
+      		var parts = ("" + value).split(",");
+      		var ids = [];
+      		for (var iPart = 0; iPart < parts.length; iPart++) {
+      			var partId = findOptionId(parts[iPart]);
+      			ids.push(partId != null ? partId : ("" + parts[iPart]).replace(/^\s+|\s+$/g, ""));
+      		}
+      		return ids.join(",");
+      	}
+      	return value;
+      }
+      
+      function getFieldFilterKind(fieldDefinition) {
+      	if (fieldDefinition == null) {
+      		return null;
+      	}
+      	if (["formula", "count", "rollup", "lookup"].indexOf(fieldDefinition.type) != -1) {
+      		return fieldDefinition.formula_type == "array" ? "array" : fieldDefinition.formula_type;
+      	}
+      	return fieldDefinition.type;
+      }
+      
+      function parseBooleanFilterText(value) {
+      	var text = ("" + value).replace(/^\s+|\s+$/g, "").toLowerCase();
+      	if (text == "true" || text == "1" || text == "yes" || text == "oui") {
+      		return true;
+      	}
+      	if (text == "false" || text == "0" || text == "no" || text == "non") {
+      		return false;
+      	}
+      	return null;
+      }
+      
+      // One {field, op, value} leaf -> { leaf: {field, type, value} } or, when Baserow
+      // has no direct filter for it, { group: an equivalent advanced filter group }.
+      function adaptFilterLeaf(fieldName, op, value) {
+      	// a number or date comparison on a text formula formatting a number or a date compares that field
+      	fieldName = getFilterSortSourceField(aFields, fieldName, op, value);
+      	if (op == "equal" && isEmptyFilterValue(value)) {
+      		// Prevent empty values to return all the data in case of equals operator
+      		return { leaf: { field: fieldName, type: op, value: "__empty" } };
+      	}
+      	var fieldDefinition = findFieldDefinition(fieldName);
+      	var fieldKind = getFieldFilterKind(fieldDefinition);
+      	if (fieldDefinition != null && fieldDefinition.type == "single_select" && (op == "equal" || op == "not_equal")
+      			&& !isEmptyFilterValue(value)) {
+      		// equal and not_equal are not filters of a single select for Baserow (ERROR_VIEW_FILTER_TYPE_UNSUPPORTED_FIELD,
+      		// a literal filter of a published form saved without the type of its field): the same comparison by option.
+      		// A text matching no option compares with no option: equal keeps no row, not_equal keeps them all.
+      		op = op == "equal" ? "single_select_equal" : "single_select_not_equal";
+      		var optionId = mapSingleSelectFilterValue(fieldDefinition, op, value);
+      		var options = Array.isArray(fieldDefinition.select_options) ? fieldDefinition.select_options :
+      			(fieldDefinition.select_options != null ? [fieldDefinition.select_options] : []);
+      		var isOptionId = false;
+      		for (var iSelectOption = 0; iSelectOption < options.length; iSelectOption++) {
+      			if (options[iSelectOption] != null && ("" + options[iSelectOption].id) === ("" + optionId)) {
+      				isOptionId = true;
+      			}
+      		}
+      		return { leaf: { field: fieldName, type: op, value: isOptionId ? optionId : "-1" } };
+      	}
+      	value = mapSingleSelectFilterValue(fieldDefinition, op, value);
+      	if (fieldKind == "link_row" && (op == "contains" || op == "contains_not")) {
+      		// contains is not a link_row filter: search the linked rows primary value
+      		return { leaf: { field: fieldName, type: op == "contains" ? "link_row_contains" : "link_row_not_contains", value: value } };
+      	}
+      	if (fieldKind == "boolean" && (op == "contains" || op == "contains_not") && !isEmptyFilterValue(value)) {
+      		// contains is not a boolean filter: true/false text becomes the boolean filter,
+      		// any other text can never be contained in a checkbox.
+      		var booleanValue = parseBooleanFilterText(value);
+      		if (booleanValue != null) {
+      			return { leaf: { field: fieldName, type: "boolean", value: (op == "contains" ? booleanValue : !booleanValue) ? "1" : "0" } };
+      		}
+      		if (op == "contains") {
+      			return { group: { filter_type: "AND", filters: [
+      				{ field: fieldName, type: "boolean", value: "1" },
+      				{ field: fieldName, type: "boolean", value: "0" }
+      			] } };
+      		}
+      	}
+      	return { leaf: { field: fieldName, type: op, value: value } };
+      }
+      
+      function buildAdvancedStructureOnly(filterExpression) {
+      	// Parse si string
+      	var root = (typeof filterExpression === ''string'')
+      		? JSON.parse(filterExpression)
+      		: filterExpression;
+      
+      	// Un filtre feuille minimal: {field, op, value} -> {field, type, value}, or an equivalent group
+      	function buildSimpleFilter(f) {
+      		return adaptFilterLeaf(f.field, f.op, f.value);
+      	}
+      
+      	// Conversion récursive -> { filter_type, filters:[], (groups:[]) }
+      	var MAX_DEPTH = 50;
+      	function toAdvanced(node, depth) {
+      		if (!node) return { filter_type: ''AND'', filters: [] };
+      		if (depth > MAX_DEPTH) return { filter_type: ''AND'', filters: [] };
+      
+      		var filterType = (node.mode ? node.mode : ''AND'').toUpperCase();
+      		var out = { filter_type: filterType, filters: [] };
+      
+      		if (!node.filters || !node.filters.length) return out;
+      
+      		var i, item, child, built;
+      		for (i = 0; i < node.filters.length; i++) {
+      			item = node.filters[i];
+      
+      			// Sous-groupe si l''item possède sa propre liste "filters"
+      			if (item && item.filters && item.filters.length !== undefined) {
+      				child = toAdvanced(item, depth + 1);
+      				// On n''ajoute que s''il a du contenu
+      				var childHasFilters = child.filters && child.filters.length > 0;
+      				var childHasGroups = child.groups && child.groups.length > 0;
+      				if (childHasFilters || childHasGroups) {
+      					if (!out.groups) out.groups = [];
+      					out.groups.push(child);
+      				}
+      			} else {
+      				// Filtre feuille
+      				built = buildSimpleFilter(item);
+      				if (built.group) {
+      					if (!out.groups) out.groups = [];
+      					out.groups.push(built.group);
+      				} else {
+      					out.filters.push(built.leaf);
+      				}
+      			}
+      		}
+      		// Si aucun sous-groupe valide, pas de propriété groups
+      		return out;
+      	}
+      
+      	// Compte et détection de groupes
+      	function analyzeGroups(node) {
+      		var any = false, top = false, count = 0;
+      
+      		if (node.groups && node.groups.length) {
+      			top = true;
+      			any = true;
+      			count += node.groups.length;
+      
+      			// Descendre
+      			var i;
+      			for (i = 0; i < node.groups.length; i++) {
+      				var sub = analyzeGroups(node.groups[i]);
+      				if (sub.any) any = true;
+      				count += sub.count; // ajoute les groupes descendants
+      			}
+      		}
+      		return { any: any, top: top, count: count };
+      	}
+      
+      	var built = toAdvanced(root, 0);
+      	var analysis = analyzeGroups(built);
+      
+      	return {
+      		built: built,
+      		hasGroups: analysis.any,
+      		hasGroupsTopLevel: analysis.top,
+      		groupsCount: analysis.count
+      	};
+      }
+      
+      filters = JSON.parse(filterExpression);
+      bFieldError = false;
+      var res = buildAdvancedStructureOnly(filters);
+      
+      // JSON reconstruit (sans renommer les fields)
+      log.warn(''STRUCT = '' + JSON.stringify(res.built));
+      log.warn(''hasGroups='' + res.hasGroups + ''  topLevel='' + res.hasGroupsTopLevel + ''  groupsCount='' + res.groupsCount);
+      
+      // use new syntax, that needs to set include_fields to null and filterExpression to "" and use filters
+      if(res.hasGroups){
+        // The grouped API syntax used by published sources must never drop a
+        // required scope because its field was renamed or deleted. The flat
+        // syntax already checks for unknown fields below.
+        function knownAdvancedFields(group) {
+          if (!group || (group.filter_type !== "AND" && group.filter_type !== "OR") ||
+              !Array.isArray(group.filters)) return false;
+          for (var i = 0; i < group.filters.length; i++) {
+            var leaf = group.filters[i];
+            if (!leaf || typeof leaf.field !== "string" || !leaf.field ||
+                !aFields.some(function (field) { return field.name === leaf.field; })) return false;
+          }
+          if (group.groups) {
+            if (!Array.isArray(group.groups)) return false;
+            for (var j = 0; j < group.groups.length; j++) {
+              if (!knownAdvancedFields(group.groups[j])) return false;
+            }
+          }
+          return group.filters.length + (group.groups ? group.groups.length : 0) > 0;
+        }
+        bFieldError = !knownAdvancedFields(res.built);
+      	filters = JSON.stringify(res.built);
+      	filterExpression = "";
+      	include_fields = null
+      }
+      // otherwise use old syntax
+      else{
+      	filters = null;
+      	function getFieldId (fieldName) {
+      		fieldId = aFields.find( elt =>  elt.name == fieldName);
+      		return (fieldId ? fieldId.id:''unknown_field'');
+      	}
+      	
+      	bFieldError = false;
+      	if (filterExpression) {
+      	
+      		filterExpression = JSON.parse(filterExpression);
+      		filter_type = filterExpression.mode;
+      		built ='''';
+      		filterExpression.filters.forEach(filter => {
+      			// Same leaf rules as the grouped syntax (empty equal, single select ids, link_row/boolean contains).
+      			// A leaf needing a group switched to the grouped syntax above, so only leaves reach this point.
+      			var adapted = adaptFilterLeaf(filter.field, filter.op, filter.value).leaf;
+      			built += "filter__field_" + encodeURIComponent(getFieldId(adapted.field)) + "__" + adapted.type + "=" + encodeURIComponent(adapted.value) + "&";
+      		});
+      		
+      		filterExpression = built;
+      		if (built.indexOf("unknown_field") != -1)
+      			bFieldError = true;
+      			
+      		log.warn("Built filter expression is : " + filterExpression);
+      	}
+      }
+      
+      
+      
+      
+      
+      '
+  ↓jIf [steps.IfStep-1994000000027]: 
+    condition: bFieldError
+    ↓Error_structure [steps.XMLErrorStep-1994000000028]: 
+      code: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: 100
+      comment: A filter field was not found in the list of table columns
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: A filter field was not found in the list of table columns
+    ↓Return [steps.ReturnStep-1994000000029]: 
+↓IfJsonRows [steps.IfStep-1994000000030]: 
+  condition: 'raw_json != "true"'
+  ↓Call_Transaction [steps.TransactionStep-1994000000031]: 
+    sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET
+    ↓__header_Authorization [variables.StepVariable-1994000000032]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1994000000001
+            - java.lang.String: 
+              - ↑value: $.Bearer
+      visibility: '-1'
+    ↓exclude [variables.StepVariable-1994000000033]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+      description: exclude
+    ↓filter [variables.StepVariable-1994000000034]: 
+      comment: |
+        'The rows can optionally be filtered by the same view filters available for the views. Multiple filters can be provided if they follow the same format. The field and filter variable indicate how to filter and the value indicates where to filter on.
+        
+        For example if you provide the following GET parameter `filter__field_1__equal=test` then only rows where the value of field_1 is equal to test are going to be returned.
+        
+        The following filters are available: equal, not_equal, filename_contains, has_file_type, contains, contains_not, length_is_lower_than, higher_than, lower_than, date_equal, date_before, date_after, date_not_equal, date_equals_today, date_before_today, date_after_today, date_equals_days_ago, date_equals_months_ago, date_equals_years_ago, date_equals_week, date_equals_month, date_equals_day_of_month, date_equals_year, single_select_equal, single_select_not_equal, link_row_has, link_row_has_not, link_row_contains, link_row_not_contains, boolean, empty, not_empty, multiple_select_has, multiple_select_has_not.'
+      description: filter__{field}__{filter}
+    ↓filter_type [variables.StepVariable-1994000000035]: 
+      comment: |
+        '`AND`: Indicates that the rows must match all the provided filters.
+        `OR`: Indicates that the rows only have to match one of the filters.
+        
+        This works only if two or more filters are provided.'
+      description: filter_type
+    ↓include_fields [variables.StepVariable-1994000000036]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+      description: include
+    ↓order_by [variables.StepVariable-1994000000037]: 
+      comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+      description: order_by
+    ↓page [variables.StepVariable-1994000000038]: 
+      comment: Defines which page of rows should be returned.
+      description: page
+    ↓search [variables.StepVariable-1994000000039]: 
+      comment: If provided only rows with data that matches the search query are going to be returned.
+      description: search
+    ↓size [variables.StepVariable-1994000000040]: 
+      comment: Defines how many rows should be returned per page.
+      description: size
+    ↓table_id [variables.StepVariable-1994000000041]: 
+      comment: Returns the rows of the table related to the provided value.
+      description: table_id
+      required: true
+      value: 
+    ↓user_field_names [variables.StepVariable-1994000000042]: 
+      comment: A flag query parameter which if provided the returned json will use the user specified field names instead of internal Baserow field names (field_123 etc). 
+      description: user_field_names
+      value: true
+    ↓view_id [variables.StepVariable-1994000000043]: 
+      comment: Includes all the filters and sorts of the provided view.
+      description: view_id
+    ↓filterExpression [variables.StepVariable-1994000000044]: 
+      value: 
+    ↓filters [variables.StepVariable-1994000000045]: 
+  ↓Copy [steps.XMLCopyStep-1994000000046]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1994000000031
+          - java.lang.String: 
+            - ↑value: ./document/object/*
+↓IfRawRows [steps.IfStep-1994000000047]: 
+  comment: (lib_baserow.raw_json) the rows JSON stays text, formssource_GetTableData parses it once
+  condition: 'raw_json == "true"'
+  ↓IfRawRowsRead [steps.IfStep-1994000000048]: 
+    condition: 'aggregate_group_by == null || ("" + aggregate_group_by) == ""'
+    ↓Call_RawTransaction [steps.TransactionStep-1994000000049]: 
+      output: false
+      sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET_raw
+      ↓__header_Authorization [variables.StepVariable-1994000000050]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1994000000001
+              - java.lang.String: 
+                - ↑value: $.Bearer
+        visibility: '-1'
+      ↓exclude [variables.StepVariable-1994000000051]: 
+        comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+        description: exclude
+      ↓filter [variables.StepVariable-1994000000052]: 
+        comment: |
+          'The rows can optionally be filtered by the same view filters available for the views. Multiple filters can be provided if they follow the same format. The field and filter variable indicate how to filter and the value indicates where to filter on.
+          
+          For example if you provide the following GET parameter `filter__field_1__equal=test` then only rows where the value of field_1 is equal to test are going to be returned.
+          
+          The following filters are available: equal, not_equal, filename_contains, has_file_type, contains, contains_not, length_is_lower_than, higher_than, lower_than, date_equal, date_before, date_after, date_not_equal, date_equals_today, date_before_today, date_after_today, date_equals_days_ago, date_equals_months_ago, date_equals_years_ago, date_equals_week, date_equals_month, date_equals_day_of_month, date_equals_year, single_select_equal, single_select_not_equal, link_row_has, link_row_has_not, link_row_contains, link_row_not_contains, boolean, empty, not_empty, multiple_select_has, multiple_select_has_not.'
+        description: filter__{field}__{filter}
+      ↓filter_type [variables.StepVariable-1994000000053]: 
+        comment: |
+          '`AND`: Indicates that the rows must match all the provided filters.
+          `OR`: Indicates that the rows only have to match one of the filters.
+          
+          This works only if two or more filters are provided.'
+        description: filter_type
+      ↓include_fields [variables.StepVariable-1994000000054]: 
+        comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+        description: include
+      ↓order_by [variables.StepVariable-1994000000055]: 
+        comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+        description: order_by
+      ↓page [variables.StepVariable-1994000000056]: 
+        comment: Defines which page of rows should be returned.
+        description: page
+      ↓search [variables.StepVariable-1994000000057]: 
+        comment: If provided only rows with data that matches the search query are going to be returned.
+        description: search
+      ↓size [variables.StepVariable-1994000000058]: 
+        comment: Defines how many rows should be returned per page.
+        description: size
+      ↓table_id [variables.StepVariable-1994000000059]: 
+        comment: Returns the rows of the table related to the provided value.
+        description: table_id
+        required: true
+        value: 
+      ↓user_field_names [variables.StepVariable-1994000000060]: 
+        comment: A flag query parameter which if provided the returned json will use the user specified field names instead of internal Baserow field names (field_123 etc). 
+        description: user_field_names
+        value: true
+      ↓view_id [variables.StepVariable-1994000000061]: 
+        comment: Includes all the filters and sorts of the provided view.
+        description: view_id
+      ↓filterExpression [variables.StepVariable-1994000000062]: 
+        value: 
+      ↓filters [variables.StepVariable-1994000000063]: 
+    ↓raw_text [steps.SimpleSourceStep-1994000000064]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1994000000049
+            - java.lang.String: 
+              - ↑value: $
+      variableName: native_raw
+    ↓raw [steps.JsonToXmlStep-1994000000065]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: 'native_raw'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: raw
+  ↓IfRawAggregate [steps.IfStep-1994000000066]: 
+    comment: (lib_baserow.c8o_aggregate) the groups of the c8oforms Baserow plugin instead of the rows
+    condition: 'aggregate_group_by != null && ("" + aggregate_group_by) != ""'
+    ↓AggregateParameters [steps.SimpleStep-1994000000067]: 
+      expression: |
+        'group_by = "" + aggregate_group_by;
+        aggregations = "" + aggregate_aggregations;
+        '
+    ↓Call_RawAggregate [steps.TransactionStep-1994000000068]: 
+      output: false
+      sourceTransaction: lib_BaseRow.Baserow_API_spec._api_c8o_aggregate_table__table_id___GET_raw
+      ↓__header_Authorization [variables.StepVariable-1994000000069]: 
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1994000000001
+              - java.lang.String: 
+                - ↑value: $.Bearer
+        visibility: '-1'
+      ↓filter_type [variables.StepVariable-1994000000070]: 
+        comment: |
+          '`AND`: Indicates that the rows must match all the provided filters.
+          `OR`: Indicates that the rows only have to match one of the filters.
+          
+          This works only if two or more filters are provided.'
+        description: filter_type
+      ↓search [variables.StepVariable-1994000000071]: 
+        comment: If provided only rows with data that matches the search query are going to be returned.
+        description: search
+      ↓table_id [variables.StepVariable-1994000000072]: 
+        comment: Returns the rows of the table related to the provided value.
+        description: table_id
+        required: true
+        value: 
+      ↓user_field_names [variables.StepVariable-1994000000073]: 
+        comment: A flag query parameter which if provided the returned json will use the user specified field names instead of internal Baserow field names (field_123 etc). 
+        description: user_field_names
+        value: true
+      ↓filterExpression [variables.StepVariable-1994000000074]: 
+        value: 
+      ↓filters [variables.StepVariable-1994000000075]: 
+      ↓group_by [variables.StepVariable-1994000000076]: 
+        description: group_by
+        value: 
+      ↓aggregations [variables.StepVariable-1994000000077]: 
+        description: aggregations
+        value: 
+      ↓limit [variables.StepVariable-1994000000078]: 
+        description: limit
+        value: 5000
+      ↓unknown_group_by [variables.StepVariable-1994000000108]: 
+        comment: a group by a field the table does not have makes one group without this key, as the reading of the rows
+        description: unknown_group_by
+        value: ignore
+    ↓rawAggregate_text [steps.SimpleSourceStep-1994000000079]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1994000000068
+            - java.lang.String: 
+              - ↑value: $
+      variableName: native_rawAggregate
+    ↓rawAggregate [steps.JsonToXmlStep-1994000000080]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: 'native_rawAggregate'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: rawAggregate
+↓exclude [variables.RequestableVariable-1994000000089]: 
+  comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+  description: exclude
+↓include_fields [variables.RequestableVariable-1994000000090]: 
+  comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+  description: include
+↓order_by [variables.RequestableVariable-1994000000091]: 
+  comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+  description: order_by
+↓page [variables.RequestableVariable-1994000000092]: 
+  comment: Defines which page of rows should be returned.
+  description: page
+↓search [variables.RequestableVariable-1994000000093]: 
+  comment: If provided only rows with data that matches the search query are going to be returned.
+  description: search
+↓size [variables.RequestableVariable-1994000000094]: 
+  comment: Defines how many rows should be returned per page.
+  description: size
+↓table_id [variables.RequestableVariable-1994000000095]: 
+  comment: Returns the rows of the table related to the provided value.
+  description: table_id
+  required: true
+  value: 
+↓view_id [variables.RequestableVariable-1994000000096]: 
+  comment: Includes all the filters and sorts of the provided view.
+  description: view_id
+↓filterExpression [variables.RequestableVariable-1994000000097]: 
+  comment: |
+    'A JSON Structure representing the filters in the form :
+    
+    ```
+    {
+    	"mode": "AND",  // Can be AND or OR
+    	"filters": [
+    		{
+    			"field": "Name",  	// The name of the column to filter on
+    			"op": "contains",	// the operation, can be any of the operations described below
+    			"value": "Little"	// The value of the filter operation
+    		},
+    		{
+    			"field": "Description",
+    			"op": "contains",
+    			"value": "1954"
+    		}
+    	]
+    }
+    ```
+    
+    ### operations
+    
+    |Filter	|Example value	| Full example |
+    |-------|---------------|--------------|
+    |equal	|string	|field is ''string''|
+    |not_equal	|string	|field is not ''string''|
+    |date_equal	|2020-01-01	|field is date ''2020-01-01''|
+    |date_not_equal	|2020-01-01	|field is not date ''2020-01-01''|
+    |date_equals_today	|	|field is today|
+    |date_before_today	|	|field is before today|
+    |date_after_today	|	|field is after today|
+    |date_equals_days_ago	|Europe/Paris?1	|field is days ago ''Europe/Paris?1''|
+    |date_equals_months_ago	|Europe/Paris?1	|field is months ago ''Europe/Paris?1''|
+    |date_equals_years_ago	|Europe/Paris?1	|field is years ago ''Europe/Paris?1''|
+    |date_equals_week	|	|field in this week|
+    |date_equals_month	|	|field in this month|
+    |date_equals_year	|	|field in this year|
+    |date_equals_day_of_month|	1	|field day of month is ''1''|
+    |date_before	|2020-01-01	|field is before date ''2020-01-01''|
+    |date_after	|2020-01-01	|field is after date ''2020-01-01''|
+    |contains	|string	|field contains ''string''|
+    |filename_contains|	string|	field filename contains ''string''|
+    |has_file_type|	image / document	|field has file type ''image / document''|
+    |contains_not 	string	|field contains not ''string''|
+    |length_is_lower_than	|5	|field length is lower than ''5''|
+    |higher_than	|100|	field higher than ''100''|
+    |lower_than	|100|	field lower than ''100''|
+    |single_select_equal|	1	|field is ''1''|
+    |single_select_not_equal|	1	|field is not ''1''|
+    |boolean|	true|	field is ''true''|
+    |link_row_has|	1|	field has ''1''|
+    |link_row_has_not|	1	|field has not ''1''|
+    |link_row_contains|	string	|field contains ''string''|
+    |link_row_not_contains|	string|	field contains not ''string''|
+    |multiple_select_has|	1|	field has ''1''|
+    |multiple_select_has_not|	1|	field has not ''1''|
+    |empty|		|field is empty|
+    |not_empty|		|field is not empty|
+    '
+↓describeStructure [variables.RequestableVariable-1994000000098]: 
+↓raw_json [variables.RequestableVariable-1994000000099]: 
+  comment: (lib_baserow.raw_json) true returns the Baserow JSON as text (raw, rawFields) instead of XML
+  value: false
+↓aggregate_group_by [variables.RequestableVariable-1994000000100]: 
+  comment: (lib_baserow.c8o_aggregate, raw_json only) group_by of the c8oforms Baserow plugin; when set, the groups and aggregates of the filtered rows are returned as text (rawAggregate) instead of the rows
+  value: 
+↓aggregate_aggregations [variables.RequestableVariable-1994000000101]: 
+  comment: (lib_baserow.c8o_aggregate) aggregations of the c8oforms Baserow plugin
+  value: 
+↓authorization [variables.RequestableVariable-1994000000102]: 
+  comment: Bearer (JWT token) of the Baserow account, given by formscommon_CheckConfig. When empty, the token of the HTTP session is used
+  visibility: '-1'
+↓TestAllShows [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1994000000103]: 
+    description: table_id
+    required: true
+    value: 708
+  ↓filterExpression [variables.TestCaseVariable-1994000000104]: 
+    value: |
+      '{
+      	"mode": "AND",
+      	"filters": [
+      		{
+      			"field": "Name",
+      			"op": "contains",
+      			"value": "a"
+      		}
+      	]
+      }
+      '
+↓TestBeneficiaries [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1994000000105]: 
+    description: table_id
+    required: true
+    value: 110211
+↓TestMaries [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1994000000106]: 
+    description: table_id
+    required: true
+    value: 354
+↓TestOK [core.TestCase]: 
+  ↓table_id [variables.TestCaseVariable-1994000000107]: 
+    description: table_id
+    required: true
+    value: 191

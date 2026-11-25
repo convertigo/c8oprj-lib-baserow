@@ -1,0 +1,51 @@
+accessibility: Private
+comment: |
+  Creates a table in a database the user reaches, with the Baserow account of the user. The table holds its primary field only (primary_field, default Name) and no rows.
+  The Baserow account of the call, never the Baserow admin account: authorization (a JWT of the user's account), else email and password, else the account of the authenticated C8Oforms user (C8Oforms.BaserowAccountGet); without account the call is refused.
+jsonNativeOutput: true
+nativeExecution: true
+↓Run [steps.SimpleStep-1997100000201]: 
+  comment: The Baserow calls run with the logs off and the token of the account stays in js/baserow_schema.js (never in the answer)
+  expression: |
+    'include("js/baserow_schema.js");
+    result = BaserowSchema.engine.tableCreate({
+    	database_id: typeof database_id == "undefined" || database_id == null ? null : "" + database_id,
+    	name: typeof name == "undefined" || name == null ? null : "" + name,
+    	primary_field: typeof primary_field == "undefined" || primary_field == null ? null : "" + primary_field,
+    	authorization: typeof authorization == "undefined" || authorization == null ? null : "" + authorization,
+    	email: typeof email == "undefined" || email == null ? null : "" + email,
+    	password: typeof password == "undefined" || password == null ? null : "" + password
+    });'
+↓result [steps.JsonToXmlStep-1997100000202]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: result
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: result
+↓database_id [variables.RequestableVariable-1997100000211]: 
+  comment: Id of the database (base).
+↓name [variables.RequestableVariable-1997100000212]: 
+  comment: Name of the table.
+↓primary_field [variables.RequestableVariable-1997100000213]: 
+  comment: Name of the primary field (text). Default Name.
+↓authorization [variables.RequestableVariable-1997100000214]: 
+  comment: JWT of the Baserow account of the user (JWT ...). When given, email and password are not used.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'
+↓email [variables.RequestableVariable-1997100000215]: 
+  comment: Email of the Baserow account of the user, with password.
+↓password [variables.RequestableVariable-1997100000216]: 
+  comment: Password of the Baserow account of the user, with email.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'

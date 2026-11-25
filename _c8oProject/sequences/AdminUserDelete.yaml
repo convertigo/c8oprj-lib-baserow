@@ -1,7 +1,12 @@
 accessibility: Private
 comment: Delete a User
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002006]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1670746558679]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002007]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction [steps.TransactionStep-1670746558700]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_admin_users__user_id___DELETE
   ↓__header_Authorization [variables.StepVariable-1670746558703]: 
@@ -13,6 +18,7 @@ comment: Delete a User
             - ↑value: 1670746558679
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
   ↓user_id [variables.StepVariable-1670746792797]: 
     comment: The id of the user to delete
     description: user_id

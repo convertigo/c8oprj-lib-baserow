@@ -68,13 +68,16 @@ var toJettison = function (json) {
  * @param {Object} parametersJS - The parameters for the sequence.
  * @returns {Object} The response from the sequence call.
  */
+// Each internal call gets a context of its own: a name made of the time in milliseconds was shared by the calls of
+// the same HTTP session made in the same millisecond (the sources of a page), which the engine runs one after the
+// other on the same context, and one of them could remove the context the others still used.
 var callSequence = function (project, sequence, parametersJS) {
 	var parameters = new HashMap();
 	var __project = java.lang.reflect.Array.newInstance(java.lang.String, 1);
 	__project[0] = project;
 	parameters.put("__project", __project);
 	parameters.put("__sequence", sequence);
-	parameters.put("__context", "syncContext_" + java.lang.System.currentTimeMillis());
+	parameters.put("__context", "syncContext_" + java.util.UUID.randomUUID());
 	let keys = Object.keys(parametersJS);
 	for (var i = 0; i < keys.length; i++) {
 		if (parametersJS[keys[i]] != null) {
@@ -109,7 +112,7 @@ var callSequenceInDuplicateSession = function (project, sequence, parametersJS, 
 		__project[0] = project;
 		parameters.put("__project", __project);
 		parameters.put("__sequence", sequence);
-		parameters.put("__context", "syncContext_" + java.lang.System.currentTimeMillis());
+		parameters.put("__context", "syncContext_" + java.util.UUID.randomUUID());
 		let keys = Object.keys(parametersJS);
 		for (var i = 0; i < keys.length; i++) {
 			if (parametersJS[keys[i]] != null) {

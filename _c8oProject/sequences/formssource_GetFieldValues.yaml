@@ -19,12 +19,29 @@ comment: |
       },
       "types": ["select", "checkbox", "radio"]
   }'
+↓BuildPublishedReadParameters [steps.SimpleStep-1894097201041]: 
+  expression: |
+    'var read_params = JSON.stringify({
+      forms_filter: forms_filter,
+      model: model
+    });'
+↓NoLog_Call_Sequence2 [steps.SimpleStep-1898400002074]: 
+  comment: The answer of formscommon_CheckConfig holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence2 [steps.SequenceStep-1729157637689]: 
+  output: false
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
   ↓forms_config [variables.StepVariable-1729157637692]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
   ↓forms_form_id [variables.StepVariable-1781260000006]: 
+  ↓source_kind [variables.StepVariable-1894097201042]: 
+    value: formssource_GetFieldValues
+  ↓read_params [variables.StepVariable-1894097201043]: 
+  ↓forms_anonymous_key [variables.StepVariable-1894097201044]: 
+    visibility: '-1'
+↓Log_Call_Sequence2 [steps.SimpleStep-1898400002075]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓IfError [steps.IfExistStep-1729157637695]: 
   condition: IfError
   sourceDefinition: 
@@ -54,6 +71,7 @@ comment: |
     
 ↓Input_variables [steps.InputVariablesStep-1680099603303]: 
 ↓Call_Sequence1 [steps.SequenceStep-1680099603306]: 
+  output: false
   sourceSequence: lib_BaseRow.FieldsList
   ↓table_id [variables.StepVariable-1680099778951]: 
     comment: Returns only the fields of the table related to the provided value.
@@ -256,6 +274,10 @@ comment: |
 ↓forms_form_id [variables.RequestableVariable-1781260000007]: 
   comment: Real id of the form currently calling this source.
   value: 
+↓forms_anonymous_key [variables.RequestableVariable-1894097201045]: 
+  comment: Anonymous PWA link key for published source reads.
+  value: 
+  visibility: '-1'
 ↓forms_filter [variables.RequestableVariable-1751290326266]: 
   comment: |
     Filters

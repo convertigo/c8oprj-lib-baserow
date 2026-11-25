@@ -57,6 +57,9 @@ comment: Establishes a session with Baserow. Must be called before any other API
           - SmartType: 
             - ↑mode: JS
             - →→: refreshToken
+  ↓NoLog_Call_Refresh [steps.SimpleStep-1898400002000]: 
+    comment: The answer of Baserow holds the tokens of the account, the engine would log it (Generated XML) in this thread
+    expression: org.apache.log4j.MDC.put("nolog", true);
   ↓Call_Refresh [steps.TransactionStep-1779265166869]: 
     sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_token_refresh__POST
     ↓__body [variables.StepVariable-1779265166871]: 
@@ -73,6 +76,8 @@ comment: Establishes a session with Baserow. Must be called before any other API
         - ↑traceable: false
         - →→: xd8e180806a1c1d83a6255212121ab827
       visibility: '-1'
+  ↓Log_Call_Refresh [steps.SimpleStep-1898400002001]: 
+    expression: org.apache.log4j.MDC.remove("nolog");
   ↓IfRefreshedToken [steps.IfExistStep-1779265166873]: 
     condition: IfRefreshedToken
     sourceDefinition: 
@@ -82,7 +87,7 @@ comment: Establishes a session with Baserow. Must be called before any other API
           - java.lang.String: 
             - ↑value: 1779265166869
           - java.lang.String: 
-            - ↑value: ./document/object/token/text() | ./document/object/access_token/text()
+            - ↑value: ./document/object/access_token/text() | ./document/object[not(access_token/text())]/token/text()
     ↓IfKeepRefreshedTokenInSession [steps.IfStep-1898400000101]: 
       condition: keepInSession
       ↓SetRefreshedTokenInSession [steps.SessionSetStep-1779265166875]: 
@@ -95,7 +100,7 @@ comment: Establishes a session with Baserow. Must be called before any other API
                 - java.lang.String: 
                   - ↑value: 1779265166869
                 - java.lang.String: 
-                  - ↑value: (./document/object/token/text() | ./document/object/access_token/text())[1]
+                  - ↑value: (./document/object/access_token/text() | ./document/object[not(access_token/text())]/token/text())[1]
         key: token
       ↓SetRefreshedTimeStampInSession [steps.SessionSetStep-1779265166877]: 
         expression: 
@@ -201,6 +206,9 @@ comment: Establishes a session with Baserow. Must be called before any other API
         - SmartType: 
           - ↑mode: JS
           - →→: password
+↓NoLog_Call_Transaction [steps.SimpleStep-1898400002002]: 
+  comment: The answer of Baserow holds the tokens of the account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Transaction [steps.TransactionStep-1664964284413]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_Auth
   ↓__body [variables.StepVariable-1664964300184]: 
@@ -217,7 +225,9 @@ comment: Establishes a session with Baserow. Must be called before any other API
       - ↑traceable: false
       - →→: xd8e180806a1c1d83a6255212121ab827
     visibility: '-1'
-↓IfExist [steps.IfExistStep-1665210744299]: 
+↓Log_Call_Transaction [steps.SimpleStep-1898400002003]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
+↓AuthResponse [steps.JsonSourceStep-1894097301001]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
@@ -225,18 +235,60 @@ comment: Establishes a session with Baserow. Must be called before any other API
         - java.lang.String: 
           - ↑value: 1664964284413
         - java.lang.String: 
-          - ↑value: ./document/object/non_field_errors
+          - ↑value: ./document/object
+  variableName: authResponse
+↓CheckAuthResponse [steps.SimpleStep-1894097301002]: 
+  comment: A login answer without a token is an error (old DRF-JWT non_field_errors, current Baserow error/detail, throttling, non JSON answer), and so is a 2FA answer whose token is only a temporary verification token
+  expression: |
+    'authError = null;
+    var authAnswer = typeof authResponse == "undefined" ? null : authResponse;
+    var authText = function(value) {
+    	if (value == null) {
+    		return "";
+    	}
+    	if (Array.isArray(value)) {
+    		var texts = [];
+    		for (var iValue = 0; iValue < value.length; iValue++) {
+    			var itemText = authText(value[iValue]);
+    			if (itemText != "") {
+    				texts.push(itemText);
+    			}
+    		}
+    		return texts.join(" ");
+    	}
+    	if (typeof value == "object") {
+    		if (value.value != null && typeof value.value != "object") {
+    			return ("" + value.value).replace(/^\s+|\s+$/g, "");
+    		}
+    		return JSON.stringify(value);
+    	}
+    	return ("" + value).replace(/^\s+|\s+$/g, "");
+    };
+    var authToken = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.access_token) : "";
+    if (authToken == "" || authToken == "null") {
+    	authToken = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.token) : "";
+    }
+    var authTwoFactor = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.two_factor_auth) : "";
+    if (authTwoFactor != "") {
+    	authError = "Baserow authentication failed: the Baserow account has two-factor authentication enabled (" + authTwoFactor + "), which is not supported";
+    } else if (authToken == "" || authToken == "null") {
+    	var authCode = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.error) : "";
+    	var authDetail = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.detail != null ? authAnswer.detail : authAnswer.non_field_errors) : "";
+    	authError = authCode != "" && authDetail != "" ? authCode + ": " + authDetail : (authCode != "" ? authCode : authDetail);
+    	if (authError == "") {
+    		authError = "Baserow authentication failed: no token in the answer";
+    	}
+    }
+    '
+↓IfAuthError [steps.IfStep-1665210744299]: 
+  condition: authError != null
   ↓Error_structure [steps.XMLErrorStep-1665210833262]: 
     message: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
         - SmartType: 
-          - ↑mode: SOURCE
-          - com.twinsoft.convertigo.beans.common.XMLVector: 
-            - java.lang.String: 
-              - ↑value: 1664964284413
-            - java.lang.String: 
-              - ↑value: ./document/object/non_field_errors/value/text()
+          - ↑mode: JS
+          - →→: authError
   ↓Return [steps.ReturnStep-1665210890792]: 
 ↓IfKeepTokenInSession [steps.IfStep-1898400000108]: 
   condition: keepInSession
@@ -250,7 +302,7 @@ comment: Establishes a session with Baserow. Must be called before any other API
             - java.lang.String: 
               - ↑value: 1664964284413
             - java.lang.String: 
-              - ↑value: (./document/object/token/text() | ./document/object/access_token/text())[1]
+              - ↑value: (./document/object/access_token/text() | ./document/object[not(access_token/text())]/token/text())[1]
     key: token
   ↓SetRefreshTokenInSession [steps.SessionSetStep-1779265184618]: 
     expression: 
@@ -274,16 +326,6 @@ comment: Establishes a session with Baserow. Must be called before any other API
     key: token_timestamp
 ↓IfReturnToken [steps.IfStep-1898400000109]: 
   condition: keepInSession == false
-  ↓AuthResponse [steps.JsonSourceStep-1898400000110]: 
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1664964284413
-          - java.lang.String: 
-            - ↑value: ./document/object
-    variableName: authResponse
   ↓auth [steps.JsonToXmlStep-1898400000111]: 
     jsonObject: 
       - xmlizable: 

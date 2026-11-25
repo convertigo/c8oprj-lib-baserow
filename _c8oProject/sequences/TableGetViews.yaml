@@ -1,8 +1,13 @@
 accessibility: Private
 comment: List all views for the table related
 ↓Input_variables [steps.InputVariablesStep-1673521540291]: 
+↓NoLog_Call_Sequence [steps.SimpleStep-1898400002038]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence [steps.SequenceStep-1673521540294]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence [steps.SimpleStep-1898400002039]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction [steps.TransactionStep-1673521540297]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_views_table__table_id___GET
   ↓__header_Authorization [variables.StepVariable-1673521540309]: 
@@ -14,9 +19,18 @@ comment: List all views for the table related
             - ↑value: 1673521540294
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
-  ↓include [variables.StepVariable-1673521592998]: 
+    visibility: '-1'
+  ↓include_attributes [variables.StepVariable-1673521592998]: 
     comment: A comma separated list of extra attributes to include on each view in the response. The supported attributes are `filters`, `sortings` and `decorations`. For example `include=filters,sortings` will add the attributes `filters` and `sortings` to every returned view, containing a list of the views filters and sortings respectively.
     description: include
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1673521540291
+          - java.lang.String: 
+            - ↑value: ./include/text()
   ↓limit [variables.StepVariable-1673521593000]: 
     comment: The maximum amount of views that must be returned. This endpoint doesn't support pagination, but if you for example just need to fetch the first view, you can do that by setting a limit. There isn't a limit by default.
     description: limit

@@ -19,37 +19,84 @@ comment: |
       },
       "types": ["grid", "chart", "map", "gallery"]
   }'
-↓Call_Sequence1 [steps.SequenceStep-1734686735705]: 
-  sourceSequence: lib_BaseRow.formscommon_CheckConfig
-  ↓forms_config [variables.StepVariable-1734686735708]: 
+jsonNativeOutput: true
+nativeExecution: true
+↓BuildPublishedReadParameters [steps.SimpleStep-1996000000001]: 
+  expression: |
+    'var read_params = JSON.stringify({
+      forms_tableFilter: forms_tableFilter,
+      forms_tableSort: forms_tableSort,
+      forms_tableDistinct: forms_tableDistinct,
+      forms_tableGroupBy: forms_tableGroupBy,
+      forms_tableAggregations: forms_tableAggregations,
+      model: model,
+      max_search_results: max_search_results
+    });'
+↓NoLog_Call_Sequence1 [steps.SimpleStep-1898400003000]: 
+  comment: The answer of formscommon_CheckConfigNative (the Bearer) holds a Baserow token, the engine would log it in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
+↓Call_Sequence1 [steps.SequenceStep-1996000000002]: 
+  output: false
+  sourceSequence: lib_BaseRow.formscommon_CheckConfigNative
+  ↓forms_config [variables.StepVariable-1996000000003]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
-  ↓forms_form_id [variables.StepVariable-1781260000002]: 
-↓IfError [steps.IfExistStep-1734686735711]: 
-  condition: IfError
+  ↓forms_form_id [variables.StepVariable-1996000000004]: 
+  ↓source_kind [variables.StepVariable-1996000000005]: 
+    value: formssource_GetTableData
+  ↓read_params [variables.StepVariable-1996000000006]: 
+  ↓forms_anonymous_key [variables.StepVariable-1996000000007]: 
+    visibility: '-1'
+↓Log_Call_Sequence1 [steps.SimpleStep-1898400003001]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
+↓IfError_error [steps.JsonSourceStep-1996000000008]: 
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1734686735705
+          - ↑value: 1996000000002
         - java.lang.String: 
-          - ↑value: ./document/error
-  ↓Copy [steps.XMLCopyStep-1734686735714]: 
-    sourceDefinition: 
+          - ↑value: $.error
+  variableName: callError_1990000000008
+↓IfError [steps.IfStep-1996000000009]: 
+  condition: callError_1990000000008 != null
+  ↓Copy [steps.JsonToXmlStep-1996000000010]: 
+    comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+    jsonObject: 
       - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1734686735705
-          - java.lang.String: 
-            - ↑value: ./document/error
-  ↓Return [steps.ReturnStep-1734686735717]: 
-↓ParseConfig [steps.SimpleStep-1734686735720]: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: 'callError_1990000000008'
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+  ↓Return [steps.ReturnStep-1996000000011]: 
+↓published_scope_filter [steps.SimpleSourceStep-1996000000012]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1996000000002
+        - java.lang.String: 
+          - ↑value: $.published_scope_filter
+  variableName: published_scope_filter
+↓ParseConfig [steps.SimpleStep-1996000000013]: 
   expression: |
     'jConfig = JSON.parse(forms_config);
     table_id = jConfig.table_id;
-    view_id = jConfig.view_id ? jConfig.view_id : null;
+    // (view_id) the rows are read through that view of the table: its filters on top of the ones of the source and of the
+    // request, its sorts when nothing else sorts (js/table_views.js); an invalid one fails, never reads the whole table
+    include("js/table_views.js");
+    view_id = sourceViewId(jConfig);
+    // link_display {"<link column>": "<column of the linked table>"}: the label of its links (ResolveLinkDisplay, js/link_display.js)
+    hasLinkDisplay = jConfig.link_display != null && typeof jConfig.link_display == "object" && !Array.isArray(jConfig.link_display) &&
+    	Object.keys(jConfig.link_display).length > 0;
     var describeStructure = true;
     var hasConfiguredColumns = jConfig.columns != null;
     var isModelMode = model == "true" || model === true || model == "all_columns";
@@ -100,7 +147,13 @@ comment: |
     }
     
     // The Filter Expression is provided  directly in the form_fitler variable.
-    filterExpression = forms_tableFilter;
+    include("js/published_read_scope.js");
+    var authenticatedReader = context.getAuthenticatedUser();
+    var publishedScopeRequired = authenticatedReader == null ||
+      ("" + authenticatedReader) !== jConfig.source_owner;
+    filterExpression = bindPublishedReadScope(published_scope_filter, forms_tableFilter,
+      null, null, publishedScopeRequired);
+    search = null;
     
     order_by = forms_tableSort;
     if (jConfig.columns == null) {
@@ -218,6 +271,32 @@ comment: |
     	return columns;
     };
     var parseAggregationSpecs = function(rawAggregations) {
+    	// the aggregations of the footer of a Baserow grid (Summarize). count, sum, avg, min and max are computed by the
+    	// c8oforms Baserow plugin, or on the rows read without it; the others only by the plugin (pluginOnly), on the whole
+    	// table: plugin is the aggregation it computes, percentage a share of the rows of the group, field the kind of
+    	// column it applies to besides the ones the plugin accepts
+    	var aggregationTypes = {
+    		count: {},
+    		sum: { plugin: "sum" },
+    		avg: { plugin: "avg" },
+    		min: { plugin: "min" },
+    		max: { plugin: "max" },
+    		empty_count: { plugin: "empty_count", pluginOnly: true },
+    		not_empty_count: { plugin: "not_empty_count", pluginOnly: true },
+    		empty_percentage: { plugin: "empty_count", pluginOnly: true, percentage: true },
+    		not_empty_percentage: { plugin: "not_empty_count", pluginOnly: true, percentage: true },
+    		unique_count: { plugin: "unique_count", pluginOnly: true },
+    		checked_count: { plugin: "not_empty_count", pluginOnly: true, field: "boolean" },
+    		not_checked_count: { plugin: "empty_count", pluginOnly: true, field: "boolean" },
+    		checked_percentage: { plugin: "not_empty_count", pluginOnly: true, field: "boolean", percentage: true },
+    		not_checked_percentage: { plugin: "empty_count", pluginOnly: true, field: "boolean", percentage: true },
+    		median: { plugin: "median", pluginOnly: true },
+    		std_dev: { plugin: "std_dev", pluginOnly: true },
+    		variance: { plugin: "variance", pluginOnly: true },
+    		earliest_date: { plugin: "min", pluginOnly: true, field: "date" },
+    		latest_date: { plugin: "max", pluginOnly: true, field: "date" },
+    		distribution: { plugin: "distribution", pluginOnly: true }
+    	};
     	var aggregations = [];
     	var aggregationMap = {};
     	if (rawAggregations != null) {
@@ -227,10 +306,19 @@ comment: |
     			if (currentAggregation == "") {
     				continue;
     			}
+    			// an optional label after "=" (sum:Contract Value=Montant, count=Nombre de ventes): the key of the cell stays
+    			// <type>_<column> (count), the label goes to its label property for the legends and headers of the viewer
+    			var aggregationLabel = "";
+    			var labelIndex = currentAggregation.indexOf("=");
+    			if (labelIndex != -1) {
+    				aggregationLabel = trimFieldName(currentAggregation.substring(labelIndex + 1));
+    				currentAggregation = trimFieldName(currentAggregation.substring(0, labelIndex));
+    			}
     			var separatorIndex = currentAggregation.indexOf(":");
     			var aggregationType = separatorIndex == -1 ? currentAggregation.toLowerCase() : trimFieldName(currentAggregation.substring(0, separatorIndex)).toLowerCase();
     			var aggregationColumn = separatorIndex == -1 ? null : trimFieldName(currentAggregation.substring(separatorIndex + 1));
-    			if (["count", "sum", "avg", "min", "max"].indexOf(aggregationType) == -1) {
+    			var aggregationTypeInfo = Object.prototype.hasOwnProperty.call(aggregationTypes, aggregationType) ? aggregationTypes[aggregationType] : null;
+    			if (aggregationTypeInfo == null) {
     				continue;
     			}
     			if (aggregationType != "count" && (aggregationColumn == null || aggregationColumn == "")) {
@@ -243,11 +331,25 @@ comment: |
     			if (aggregationColumn != null) {
     				ensureIncludedField(aggregationColumn);
     			}
-    			aggregations.push({
+    			var aggregationSpec = {
     				type: aggregationType,
     				column: aggregationColumn,
-    				key: aggregationType == "count" ? "count" : aggregationType + "_" + aggregationColumn
-    			});
+    				key: aggregationType == "count" ? "count" : aggregationType + "_" + aggregationColumn,
+    				label: aggregationLabel
+    			};
+    			if (aggregationTypeInfo.plugin != null) {
+    				aggregationSpec.plugin = aggregationTypeInfo.plugin;
+    			}
+    			if (aggregationTypeInfo.pluginOnly === true) {
+    				aggregationSpec.pluginOnly = true;
+    			}
+    			if (aggregationTypeInfo.percentage === true) {
+    				aggregationSpec.percentage = true;
+    			}
+    			if (aggregationTypeInfo.field != null) {
+    				aggregationSpec.fieldKind = aggregationTypeInfo.field;
+    			}
+    			aggregations.push(aggregationSpec);
     			aggregationMap[aggregationSignature] = true;
     		}
     	}
@@ -269,10 +371,31 @@ comment: |
     		}];
     	}
     }
-    else {
-    	aggregationSpecs = null;
+    else if (aggregationSpecs != null) {
+    	// aggregations without Group by: one row for the whole table, as the footer of a Baserow grid, grouped by nothing
+    	groupByColumns = [];
+    	distinctColumns = null;
     }
     displayColumns = groupByColumns != null ? groupByColumns : jConfig.columns;
+    // a grouped source outputs its group columns and aggregates only: it reads just the columns it needs
+    // (group by, aggregations, filters, sort), unless lib_baserow.grouped_columns_only=false
+    if ("${lib_baserow.grouped_columns_only=true}" == "true" && groupByColumns != null && !isModelMode) {
+    	includeFieldNames = [];
+    	includeFieldsMap = {};
+    	for (var iGroupedInclude = 0; iGroupedInclude < groupByColumns.length; iGroupedInclude++) {
+    		addIncludeField(groupByColumns[iGroupedInclude]);
+    	}
+    	for (var iAggregatedInclude = 0; aggregationSpecs != null && iAggregatedInclude < aggregationSpecs.length; iAggregatedInclude++) {
+    		if (aggregationSpecs[iAggregatedInclude].column != null) {
+    			addIncludeField(aggregationSpecs[iAggregatedInclude].column);
+    		}
+    	}
+    	for (var iFilteredInclude = 0; iFilteredInclude < filterColumns.length; iFilteredInclude++) {
+    		addIncludeField(filterColumns[iFilteredInclude]);
+    	}
+    	include_fields = buildIncludeFields();
+    	ensureSortFieldsIncluded(order_by);
+    }
     page = "1";
     
     // If Forms asks us for a model, keep the grouped shape when Group by is used,
@@ -317,6 +440,21 @@ comment: |
     		displayColumns = groupedModelColumns;
     	}
     }
+    // (js/row_filter.js) a filter or a sort on the row id or order, which Baserow cannot do: the read asks Baserow the rest,
+    // the library keeps and orders the rows (RowFilter), and cuts the grid page from them. Equal (or any of) on the id alone
+    // reads those rows by their id: the read of the table only gives its fields then.
+    include("js/row_filter.js");
+    rowFilter = baserowRowFilter.plan(filterExpression, order_by, { model: isModelMode, viewId: view_id, gridPage: grid_page, gridPageSize: grid_page_size });
+    rowFilterIncludes = include_fields != null ? includeFieldNames.slice(0) : null;
+    rowFilterIncomplete = false;
+    rowFilterRead = 0;
+    if (rowFilter.active) {
+    	filterExpression = rowFilter.filter;
+    	if (rowFilter.direct) {
+    		max_search_results = 1;
+    	}
+    }
+    order_by = rowFilter.sort;
     var normalizeMaxSearchResults = function(value) {
         var parsed = parseInt(value, 10);
         if (isNaN(parsed) || parsed <= 0) {
@@ -329,109 +467,526 @@ comment: |
     if (isNaN(source_page_size) || source_page_size <= 0) {
         source_page_size = 200;
     }
+    // Baserow pages are offset by (page - 1) * size: every page of one read must use the
+    // same size, otherwise the window moves back and rows are read twice or skipped.
+    fetch_page_size = source_page_size;
     if (model != "true" && model !== true && model != "all_columns") {
-        size = "" + Math.min(source_page_size, max_search_results);
+        fetch_page_size = Math.min(source_page_size, max_search_results);
+        size = "" + fetch_page_size;
+    }
+    // grid_page and grid_page_size (the C8Oforms viewer, for a grid that paginates): the one page of rows asked and
+    // the count of the rows of Baserow, instead of every row. Not for a model, a grouped or a distinct source, which
+    // read every row. Baserow answers at most 200 rows a page.
+    pagedRead = false;
+    total_count = null;
+    var askedPageSize = parseInt("" + grid_page_size, 10);
+    if (!isModelMode && groupByColumns == null && distinctColumns == null && !(typeof rowFilter != "undefined" && rowFilter.active) && !isNaN(askedPageSize) && askedPageSize > 0) {
+        var askedPage = parseInt("" + grid_page, 10);
+        pagedRead = true;
+        fetch_page_size = Math.min(askedPageSize, 200);
+        size = "" + fetch_page_size;
+        page = "" + (isNaN(askedPage) || askedPage < 1 ? 1 : askedPage);
+        max_search_results = fetch_page_size;
     }
     var shouldExposeColumn = function(columnName) {
     	return displayColumns == null || displayColumns.indexOf(columnName) != -1;
     };
+    // lib_baserow.c8o_aggregate: the groups and aggregates of a grouped source are computed in SQL on the whole table by
+    // the c8oforms Baserow plugin (the reading of the rows stops at max_search_results), when its answer can be exactly
+    // the one of the reading: no sort, or a sort on grouped columns only (the groups are then put in its order, the rows
+    // of a group sharing its values, its first row stays the first in the table order), count, sum, avg, min and max
+    // only (min and max of numbers and dates). Any refusal falls back on the reading of the rows (readPluginAggregate).
+    // When the plugin is required (a summary of the whole table, an aggregation only the plugin computes), a sort on
+    // other columns no longer orders the groups: they keep the order of their first rows in the table.
+    var buildPluginAggregateRequest = function(groupColumns, specs, sortExpression, modelMode, required) {
+    	if (groupColumns == null || specs == null || modelMode) {
+    		return null;
+    	}
+    	var groupSorts = [];
+    	// sorted as TableGetDataNative reads it (buildBaserowOrderBy): an order_by text, or a {sorts} with a named sort
+    	var sortText = sortExpression == null ? "" : ("" + sortExpression).replace(/^\s+|\s+$/g, "");
+    	if (sortText != "" && sortText != "null") {
+    		if (sortText.charAt(0) != "{") {
+    			if (!required) {
+    				return null;
+    			}
+    			sortText = "{}";
+    		}
+    		var parsedSort = null;
+    		try {
+    			parsedSort = JSON.parse(sortText);
+    		} catch (e) {
+    			parsedSort = null;
+    		}
+    		var namedSorts = parsedSort != null && Array.isArray(parsedSort.sorts) ? parsedSort.sorts.filter(function(sort) {
+    			return sort != null && sort.name != null && ("" + sort.name) != "";
+    		}) : [];
+    		for (var iNamedSort = 0; iNamedSort < namedSorts.length; iNamedSort++) {
+    			// a sort on another column orders the rows inside the groups: the first row of a group is not the plugin one
+    			if (groupColumns.indexOf("" + namedSorts[iNamedSort].name) == -1) {
+    				if (required) {
+    					continue;
+    				}
+    				return null;
+    			}
+    			groupSorts.push({ name: "" + namedSorts[iNamedSort].name, desc: namedSorts[iNamedSort].order != "asc" });
+    		}
+    	}
+    	// the first row of each group in the order of the table gives its id, its order and the order of the groups; the
+    	// one row of a summary takes the smallest id and order, without the array of every id of the table
+    	var pluginAggregations = groupColumns.length == 0 ? ["c8o_first=min:id", "c8o_order=min:order"] :
+    		["c8o_first=first:id", "c8o_order=min:order"];
+    	for (var iPluginSpec = 0; iPluginSpec < specs.length; iPluginSpec++) {
+    		var pluginSpec = specs[iPluginSpec];
+    		if (pluginSpec.type == "count") {
+    			continue;
+    		}
+    		var pluginType = pluginSpec.plugin != null ? pluginSpec.plugin :
+    			(["sum", "avg", "min", "max"].indexOf(pluginSpec.type) != -1 ? pluginSpec.type : null);
+    		if (pluginType == null || pluginSpec.column == null || pluginSpec.column === "") {
+    			return null;
+    		}
+    		// aliases of our own: a column name may hold = or :
+    		pluginAggregations.push("c8o_a" + iPluginSpec + "=" + pluginType + ":" + pluginSpec.column);
+    	}
+    	return { group_by: JSON.stringify(groupColumns), aggregations: JSON.stringify(pluginAggregations), sorts: groupSorts };
+    };
+    // (lib_baserow.c8o_aggregate, on unless false) a Baserow without the plugin (URL_NOT_FOUND on /api/c8o/) is remembered
+    // for 5 minutes per address of Baserow, for the server: its sources read the rows without asking the plugin first
+    pluginBaserowUrl = ("${lib_baserow.https=true}" == "true" ? "https://" : "http://") +
+    	"${lib_baserow.server=baserow-backend.convertigo.net}" + ":" + "${lib_baserow.port=443}";
+    var pluginAbsentStore = context.project.get("c8o_aggregate_absent");
+    var pluginAbsentUntil = pluginAbsentStore == null ? null : pluginAbsentStore.get(pluginBaserowUrl);
+    // what only the plugin computes exactly: a summary of the whole table, an aggregation the reading of the rows does
+    // not compute. Without the plugin the source answers an error, never values of the first max_search_results rows.
+    var describePluginRequirement = function(groupColumns, specs, modelMode) {
+    	if (groupColumns == null || specs == null || modelMode) {
+    		return null;
+    	}
+    	var pluginOnlySpecs = specs.filter(function(spec) {
+    		return spec.pluginOnly === true;
+    	}).map(function(spec) {
+    		return spec.type + ":" + spec.column;
+    	});
+    	if (pluginOnlySpecs.length > 0) {
+    		return "The aggregations " + pluginOnlySpecs.join(", ") + " are computed by the c8oforms plugin of Baserow";
+    	}
+    	if (groupColumns.length == 0) {
+    		return "The aggregations without Group by (one row for the whole table) are computed by the c8oforms plugin of Baserow";
+    	}
+    	return null;
+    };
+    pluginRequirement = describePluginRequirement(groupByColumns, aggregationSpecs, isModelMode);
+    var pluginAllowed = "${lib_baserow.c8o_aggregate=true}" != "false" && "${lib_baserow.raw_json=true}" == "true";
+    var pluginKnownAbsent = pluginAbsentUntil != null && java.lang.System.currentTimeMillis() < Number(pluginAbsentUntil);
+    // the plugin reads neither the views of a table nor the row id or order: such a source groups and aggregates the rows read through the lib
+    var pluginReadsSource = view_id == null;
+    var rowFilterActive = typeof rowFilter != "undefined" && rowFilter.active;
+    pluginAggregate = pluginAllowed && !pluginKnownAbsent && pluginReadsSource && !rowFilterActive ?
+    	buildPluginAggregateRequest(groupByColumns, aggregationSpecs, order_by, isModelMode, pluginRequirement != null) : null;
+    pluginRequiredError = null;
+    if (pluginRequirement != null && pluginAggregate == null) {
+    	pluginRequiredError = pluginRequirement + ": " + (!pluginReadsSource ? "the plugin does not read the view of the source (view_id)" :
+    		(rowFilterActive ? "the plugin cannot filter nor sort on the row id or order" :
+    		(!pluginAllowed ? "lib_baserow.c8o_aggregate is false or lib_baserow.raw_json is not true" :
+    		(pluginKnownAbsent ? "the plugin is not installed on this Baserow" : "the plugin cannot compute them")))) + ".";
+    }
+    pluginGroups = null;
+    aggregate_group_by = pluginAggregate != null ? pluginAggregate.group_by : "";
+    aggregate_aggregations = pluginAggregate != null ? pluginAggregate.aggregations : "";
     
     '
-↓Input_variables [steps.InputVariablesStep-1734686735723]: 
-↓Call_Sequence [steps.SequenceStep-1734686735726]: 
-  output: true
-  sourceSequence: lib_BaseRow.TableGetData
-  ↓exclude [variables.StepVariable-1734686735729]: 
-    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
-    description: exclude
-  ↓include_fields [variables.StepVariable-1734686735732]: 
-    comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
-    description: include
-  ↓order_by [variables.StepVariable-1734686735735]: 
-    comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
-    description: order_by
-  ↓page [variables.StepVariable-1734686735738]: 
-    comment: Defines which page of rows should be returned.
-    description: page
-  ↓search [variables.StepVariable-1734686735741]: 
-    comment: If provided only rows with data that matches the search query are going to be returned.
-    description: search
-  ↓size [variables.StepVariable-1734686735744]: 
-    comment: Defines how many rows should be returned per page.
-    description: size
-    value: ${lib_BaseRow.sourcepagesize=200}
-  ↓table_id [variables.StepVariable-1734686735747]: 
-    comment: Returns the rows of the table related to the provided value.
-    description: table_id
-    required: true
-  ↓view_id [variables.StepVariable-1734686735750]: 
-    comment: Includes all the filters and sorts of the provided view.
-    description: view_id
-  ↓filterExpression [variables.StepVariable-1734686735753]: 
-  ↓describeStructure [variables.StepVariable-1734686735756]: 
-  ↓authorization [variables.StepVariable-1898400000236]: 
-    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
-    sourceDefinition: 
+↓IfPluginRequired [steps.IfStep-1996000000200]: 
+  comment: (lib_baserow.c8o_aggregate) a summary of the whole table or an aggregation only the c8oforms Baserow plugin computes, when the plugin cannot be asked, answers an error rather than values of part of the rows
+  condition: pluginRequiredError != null
+  ↓Error_structure [steps.XMLErrorStep-1996000000201]: 
+    code: 
       - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1734686735705
-          - java.lang.String: 
-            - ↑value: ./document/Bearer/text()
-    visibility: '-1'
-↓IfExist [steps.IfExistStep-1734686735759]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1734686735726
-        - java.lang.String: 
-          - ↑value: ./document/error
-  ↓Error_structure [steps.XMLCopyStep-1774516933834]: 
-    sourceDefinition: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 101
+    comment: Aggregations that need the c8oforms Baserow plugin
+    message: 
       - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1734686735726
-          - java.lang.String: 
-            - ↑value: ./document/error
-  ↓Return [steps.ReturnStep-1734686735765]: 
-↓myVariable [steps.JsonSourceStep-1734686735768]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1734686735726
-        - java.lang.String: 
-          - ↑value: ./document/structure/object
-  variableName: structure
-↓myVariable1 [steps.JsonSourceStep-1734686735771]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1734686735726
-        - java.lang.String: 
-          - ↑value: ./document/results
-  variableName: results
-↓next_page [steps.SimpleSourceStep-1774516723630]: 
-  sourceDefinition: 
-    - xmlizable: 
-      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-      - com.twinsoft.convertigo.beans.common.XMLVector: 
-        - java.lang.String: 
-          - ↑value: 1734686735726
-        - java.lang.String: 
-          - ↑value: ./document/next/text()
-  variableName: next_page
-↓InitPagination [steps.SimpleStep-1774516723657]: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: pluginRequiredError
+  ↓Return [steps.ReturnStep-1996000000202]: 
+↓IfRowFilterError [steps.IfStep-1996000000400]: 
+  comment: (js/row_filter.js) a filter on the row id or order beside other filters under an OR, or with an operator it has not, answers an error rather than other rows
+  condition: rowFilter.error != null
+  ↓Error_structure [steps.XMLErrorStep-1996000000401]: 
+    code: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 102
+    comment: A filter on the row id or order the library cannot do
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: rowFilter.error
+  ↓Return [steps.ReturnStep-1996000000402]: 
+↓RawJsonMode [steps.SimpleStep-1996000000014]: 
+  comment: the Baserow responses stay JSON text up to this sequence instead of being converted to XML and back, unless lib_baserow.raw_json=false
+  expression: 'raw_json = "${lib_baserow.raw_json=true}" == "true" ? "true" : "false";'
+↓StreamFirstRow [steps.SimpleStep-1996000000015]: 
+  comment: (lib_baserow.stream_rows) a grid that is not grouped nor a model reads its first page here (its request, its count, its errors, an empty table as before), then its next pages in stream after the rows of this page
   expression: |
-    'all_results = [];
+    'streamEligible = "${lib_baserow.stream_rows=true}" == "true" && raw_json == "true" && !isModelMode && pluginAggregate == null && groupByColumns == null && !pagedRead && !rowFilter.active;
+    streamPageSize = null;
+    '
+↓StartReadTable [steps.SimpleStep-1996000000016]: 
+  expression: 'readTable = true;'
+↓ReadTable [steps.WhileStep-1996000000017]: 
+  comment: (lib_baserow.c8o_aggregate) read once, or twice when the plugin cannot answer for the source
+  condition: readTable === true
+  ↓ReadOnce [steps.SimpleStep-1996000000018]: 
+    expression: 'readTable = false;'
+  ↓Call_Sequence [steps.SequenceStep-1996000000019]: 
+    output: false
+    sourceSequence: lib_BaseRow.TableGetDataNative
+    ↓exclude [variables.StepVariable-1996000000020]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
+      description: exclude
+    ↓include_fields [variables.StepVariable-1996000000021]: 
+      comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
+      description: include
+    ↓order_by [variables.StepVariable-1996000000022]: 
+      comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
+      description: order_by
+    ↓page [variables.StepVariable-1996000000023]: 
+      comment: Defines which page of rows should be returned.
+      description: page
+    ↓search [variables.StepVariable-1996000000024]: 
+      comment: If provided only rows with data that matches the search query are going to be returned.
+      description: search
+    ↓size [variables.StepVariable-1996000000025]: 
+      comment: Defines how many rows should be returned per page.
+      description: size
+      value: ${lib_BaseRow.sourcepagesize=200}
+    ↓table_id [variables.StepVariable-1996000000026]: 
+      comment: Returns the rows of the table related to the provided value.
+      description: table_id
+      required: true
+    ↓view_id [variables.StepVariable-1996000000027]: 
+      comment: Includes all the filters and sorts of the provided view.
+      description: view_id
+    ↓filterExpression [variables.StepVariable-1996000000028]: 
+    ↓describeStructure [variables.StepVariable-1996000000029]: 
+    ↓raw_json [variables.StepVariable-1996000000030]: 
+    ↓aggregate_group_by [variables.StepVariable-1996000000031]: 
+    ↓aggregate_aggregations [variables.StepVariable-1996000000032]: 
+    ↓authorization [variables.StepVariable-1996000009003]: 
+      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfigNative
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1996000000002
+            - java.lang.String: 
+              - ↑value: $.Bearer
+      visibility: '-1'
+  ↓IfExist_error [steps.JsonSourceStep-1996000000033]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000019
+          - java.lang.String: 
+            - ↑value: $.error
+    variableName: callError_1990000000032
+  ↓IfExist [steps.IfStep-1996000000034]: 
+    condition: callError_1990000000032 != null
+    ↓Error_structure [steps.JsonToXmlStep-1996000000035]: 
+      comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: 'callError_1990000000032'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: error
+    ↓Return [steps.ReturnStep-1996000000036]: 
+  ↓myVariable [steps.JsonSourceStep-1996000000037]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000019
+          - java.lang.String: 
+            - ↑value: $.structure
+    variableName: structure
+  ↓myVariable1 [steps.JsonSourceStep-1996000000038]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000019
+          - java.lang.String: 
+            - ↑value: $.results
+    variableName: results
+  ↓count [steps.JsonSourceStep-1796300000002]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000019
+          - java.lang.String: 
+            - ↑value: $.count
+    variableName: total_count
+  ↓next_page [steps.SimpleSourceStep-1996000000039]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000019
+          - java.lang.String: 
+            - ↑value: $.next
+    variableName: next_page
+  ↓IfRawFirstPage [steps.IfStep-1996000000040]: 
+    comment: (lib_baserow.raw_json) TableGetDataNative returns the Baserow JSON as text, parsed once here
+    condition: raw_json == "true"
+    ↓raw_page [steps.SimpleSourceStep-1996000000041]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1996000000019
+            - java.lang.String: 
+              - ↑value: $.raw
+      variableName: raw_page
+    ↓raw_fields [steps.SimpleSourceStep-1996000000042]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1996000000019
+            - java.lang.String: 
+              - ↑value: $.rawFields
+      variableName: raw_fields
+    ↓raw_aggregate [steps.SimpleSourceStep-1996000000043]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1996000000019
+            - java.lang.String: 
+              - ↑value: $.rawAggregate
+      variableName: raw_aggregate
+    ↓readResults [steps.JsonReadStep-1996000000044]: 
+      comment: the rows of the first page, read in stream in the text of Baserow (Read JSON value), without JSON.parse of the whole page
+      json: raw_page
+      path: $.results
+      variableName: results
+    ↓readNext [steps.JsonReadStep-1996000000045]: 
+      json: raw_page
+      path: $.next
+      variableName: next_page
+    ↓readError [steps.JsonReadStep-1996000000046]: 
+      json: raw_page
+      path: $.error
+      variableName: raw_error
+    ↓readCount [steps.JsonReadStep-1796300000003]: 
+      json: raw_page
+      path: $.count
+      variableName: total_count
+    ↓ParseRawFirstPage [steps.SimpleStep-1996000000047]: 
+      expression: |
+        '// an invalid JSON gives no rows, like the JSON transaction whose conversion error stays in HttpInfo
+        parseRawJson = function(rawText) {
+        	if (rawText == null) {
+        		return null;
+        	}
+        	try {
+        		return JSON.parse("" + rawText);
+        	} catch (e) {
+        		log.warn("Baserow did not return JSON: " + e);
+        		return null;
+        	}
+        };
+        // results, next_page and raw_error are read in raw_page by readResults, readNext and readError
+        raw_page = null;
+        raw_error = raw_error != null ? "" + raw_error : null;
+        next_page = next_page != null ? "" + next_page : null;
+        if (raw_fields != null) {
+        	var rawStructure = parseRawJson(raw_fields);
+        	structure = Array.isArray(rawStructure) && rawStructure.length > 0 ? rawStructure : null;
+        	raw_fields = null;
+        }
+        // lib_baserow.c8o_aggregate: the groups of the plugin, or the reading of the rows again when they cannot be used
+        var readPluginAggregate = function(rawText, tableStructure, specs) {
+        	if (rawText == null || ("" + rawText) == "") {
+        		return { reason: "no answer" };
+        	}
+        	var answer = null;
+        	try {
+        		answer = JSON.parse("" + rawText);
+        	} catch (e) {
+        		// only a page Not Found tells the plugin is not installed: an error page of Baserow (500 when a sum is NaN, a proxy
+        		// timeout) is an error of this source, read again without the plugin, not a reason to stop asking it for 5 minutes
+        		var notJsonText = ("" + rawText).substring(0, 2000);
+        		var notFound = /not\s*found|\b404\b/i.test(notJsonText) && !/server\s*error|\b5\d\d\b/i.test(notJsonText);
+        		return { reason: "not JSON (" + (notFound ? "plugin not installed?" : "error of Baserow") + ")", absent: notFound };
+        	}
+        	if (answer == null || typeof answer != "object" || Array.isArray(answer)) {
+        		return { reason: "unexpected answer" };
+        	}
+        	if (answer.error != null) {
+        		return { reason: "" + answer.error + (answer.detail != null ? ": " + answer.detail : ""),
+        			absent: answer.error == "URL_NOT_FOUND" };
+        	}
+        	if (!Array.isArray(answer.results)) {
+        		return { reason: "no results" };
+        	}
+        	if (answer.count != null && Number(answer.count) > answer.results.length) {
+        		return { reason: "more groups (" + answer.count + ") than the plugin returns (" + answer.results.length + ")" };
+        	}
+        	var fieldsByName = {};
+        	var structureList = tableStructure == null ? [] : (Array.isArray(tableStructure) ? tableStructure : [tableStructure]);
+        	for (var iPluginField = 0; iPluginField < structureList.length; iPluginField++) {
+        		fieldsByName[structureList[iPluginField].name] = structureList[iPluginField];
+        	}
+        	// the values of the plugin match the ones the reading computes on these column types only; the aggregations only
+        	// the plugin computes have no other value
+        	for (var iPluginCheck = 0; iPluginCheck < specs.length; iPluginCheck++) {
+        		var checkedSpec = specs[iPluginCheck];
+        		if (checkedSpec.type == "count" || checkedSpec.pluginOnly === true) {
+        			continue;
+        		}
+        		var checkedField = fieldsByName[checkedSpec.column];
+        		// a formula, count, rollup or lookup column has the type of its result, as the reading types it (getBrFilterType of
+        		// js/getFilter.js): a formula returning a number is summed like a number column, an array never matches
+        		var checkedType = checkedField == null ? null :
+        			(["formula", "count", "rollup", "lookup"].indexOf(checkedField.type) != -1 ? "" + checkedField.formula_type : checkedField.type);
+        		// the min and max of a date: the plugin gives the value of the cell, as the rows endpoint writes it
+        		var checkedDate = ["date", "created_on", "last_modified"].indexOf(checkedType) != -1 &&
+        			(checkedSpec.type == "min" || checkedSpec.type == "max");
+        		if (checkedField == null || (["number", "autonumber", "rating"].indexOf(checkedType) == -1 && !checkedDate)) {
+        			return { reason: checkedSpec.type + " on the column " + checkedSpec.column + " of type " + (checkedField == null ? "unknown" : checkedField.type + (checkedType != checkedField.type ? " (" + checkedType + ")" : "")) };
+        		}
+        	}
+        	return { groups: answer.results };
+        };
+        if (pluginAggregate != null) {
+        	var pluginAnswer = readPluginAggregate(raw_aggregate, structure, aggregationSpecs);
+        	raw_aggregate = null;
+        	if (pluginAnswer.groups != null) {
+        		pluginGroups = pluginAnswer.groups;
+        	} else {
+        		// the table is read again, without the plugin, unless only the plugin computes the aggregations: an error
+        		if (pluginAnswer.absent) {
+        			// no plugin on this Baserow: not asked again for 5 minutes
+        			var pluginAbsentKeep = context.project.get("c8o_aggregate_absent");
+        			if (pluginAbsentKeep == null) {
+        				pluginAbsentKeep = new java.util.concurrent.ConcurrentHashMap();
+        				context.project.set("c8o_aggregate_absent", pluginAbsentKeep);
+        			}
+        			pluginAbsentKeep.put(pluginBaserowUrl, java.lang.Long.valueOf(java.lang.System.currentTimeMillis() + 300000));
+        		}
+        		pluginAggregate = null;
+        		pluginGroups = null;
+        		aggregate_group_by = "";
+        		aggregate_aggregations = "";
+        		if (pluginRequirement != null) {
+        			pluginRequiredError = pluginRequirement + ": " + (pluginAnswer.absent ? "the plugin is not installed on this Baserow (" + pluginAnswer.reason + ")" :
+        				("" + pluginAnswer.reason).replace(/\.+$/, "")) + ".";
+        			log.warn("formssource_GetTableData: " + pluginRequiredError);
+        		} else {
+        			log.info("c8oforms Baserow plugin not used for this source: " + pluginAnswer.reason);
+        			readTable = true;
+        		}
+        	}
+        }
+        // (grid_page) a page past the last one, the rows having changed since the viewer counted them: the last page when
+        // Baserow answers it empty with the count, the first page when it refuses it (ERROR_INVALID_PAGE); the answer
+        // names the page read
+        if (pagedRead && page != "1") {
+        	var readCountNumber = total_count == null ? NaN : Number(total_count);
+        	if (raw_error == null && Array.isArray(results) && results.length == 0 && readCountNumber > 0) {
+        		page = "" + Math.ceil(readCountNumber / fetch_page_size);
+        		readTable = true;
+        	} else if (raw_error != null && ("" + raw_error).indexOf("ERROR_INVALID_PAGE") != -1) {
+        		raw_error = null;
+        		page = "1";
+        		readTable = true;
+        	}
+        	if (readTable === true) {
+        		log.info("formssource_GetTableData: the page asked is past the last page, page " + page + " is read");
+        	}
+        }
+        // a page of rows that was asked is read, or the source answers an error: an unreadable answer (connection error,
+        // empty or not JSON, HTTP error without a Baserow error) is not an empty table
+        if (raw_error == null && readTable !== true && pluginGroups == null && pluginRequiredError == null && !Array.isArray(results)) {
+        	raw_error = "Baserow page " + page + " could not be read";
+        	log.warn("formssource_GetTableData: " + raw_error);
+        }
+        '
+    ↓IfRawError [steps.IfStep-1996000000048]: 
+      condition: raw_error != null
+      ↓error [steps.JsonToXmlStep-1996000000049]: 
+        comment: same error element as the copy of the error of the JSON transaction
+        jsonObject: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: raw_error
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: error
+      ↓Return [steps.ReturnStep-1996000000050]: 
+↓KeepNextUrl [steps.SimpleStep-1996000000051]: 
+  comment: (lib_baserow.stream_rows) the next URL of the first page, which the stream of the rows follows
+  expression: |
+    'streamNextUrl = typeof next_page == "undefined" || next_page == null ? null : "" + next_page;
+    '
+↓InitPagination [steps.SimpleStep-1996000000052]: 
+  expression: |
+    '// Baserow returns the next page as a URL (...?page=2&size=200): keep only its page number.
+    getNextPageNumber = function(rawNext) {
+    	if (rawNext == null) {
+    		return null;
+    	}
+    	var nextText = ("" + rawNext).replace(/^\s+|\s+$/g, "");
+    	if (nextText == "" || nextText == "null") {
+    		return null;
+    	}
+    	if (/^\d+$/.test(nextText)) {
+    		return nextText;
+    	}
+    	var nextMatch = nextText.match(/[?&]page=(\d+)(?:[&#]|$)/);
+    	return nextMatch != null ? nextMatch[1] : null;
+    };
+    next_page = getNextPageNumber(typeof next_page == "undefined" ? null : next_page);
+    // (grid_page) the one page asked
+    if (pagedRead) {
+    	next_page = null;
+    }
+    total_count = total_count == null || isNaN(Number(total_count)) ? null : Number(total_count);
+    all_results = [];
     fetched_pages = {};
     fetched_pages["" + page] = true;
     
@@ -447,96 +1002,187 @@ comment: |
     
     results = all_results;
     '
-↓FetchNextPages [steps.WhileStep-1774516723692]: 
-  condition: model != "true" && model !== true && model != "all_columns" && all_results.length < max_search_results && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true
-  ↓SetPage [steps.SimpleStep-1774516723694]: 
+↓DecideStream [steps.SimpleStep-1996000000053]: 
+  comment: (lib_baserow.stream_rows) a grid that is not grouped, nor a model, nor empty, reads its next pages in stream
+  expression: |
+    '// a column named by an integer ("2024"): the native steps of the engine read a row by the name of
+    // its column and miss a key that a JavaScript object keeps as an array index, its cells came back empty. The rows
+    // of such a table are formatted by ComputeData, page after page.
+    indexNamedColumns = (function () {
+    	var isIndexKey = function (name) {
+    		return /^(0|[1-9][0-9]{0,9})$/.test("" + name) && Number(name) <= 2147483647;
+    	};
+    	var fieldsOfTable = typeof structure == "undefined" || structure == null ? [] : (Array.isArray(structure) ? structure : [structure]);
+    	for (var i = 0; i < fieldsOfTable.length; i++) {
+    		if (fieldsOfTable[i] != null && isIndexKey(fieldsOfTable[i].name)) {
+    			return true;
+    		}
+    	}
+    	try {
+    		return Array.isArray(results) && results.length > 0 && results[0] != null && Object.keys(results[0]).some(isIndexKey);
+    	} catch (e) {
+    		return false;
+    	}
+    })();
+    // (link_display) every page read here: the labels of the links are read for the rows before their cells are built
+    streamRows = streamEligible && !hasLinkDisplay && !indexNamedColumns && pluginGroups == null && Array.isArray(results) && results.length > 0;
+    streamError = null;
+    streamAuthorization = null;
+    '
+↓FetchNextPages [steps.WhileStep-1996000000054]: 
+  condition: model != "true" && model !== true && model != "all_columns" && all_results.length < max_search_results && next_page != null && next_page != "" && next_page != "null" && fetched_pages["" + next_page] != true && streamRows != true
+  ↓SetPage [steps.SimpleStep-1996000000055]: 
     expression: |
       page = "" + next_page;
       fetched_pages[page] = true;
-      size = "" + Math.min(source_page_size, max_search_results - all_results.length);
+      size = "" + fetch_page_size;
       
-  ↓Call_Sequence2 [steps.SequenceStep-1774516723696]: 
-    sourceSequence: lib_BaseRow.TableGetData
-    ↓exclude [variables.StepVariable-1774516723698]: 
+  ↓Call_Sequence2 [steps.SequenceStep-1996000000056]: 
+    output: false
+    sourceSequence: lib_BaseRow.TableGetDataNative
+    ↓exclude [variables.StepVariable-1996000000057]: 
       comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
       description: exclude
-    ↓include_fields [variables.StepVariable-1774516723700]: 
+    ↓include_fields [variables.StepVariable-1996000000058]: 
       comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the include query parameter. If you for example provide the following GET parameter `include=field_1,field_2` then only the fields withid `1` and id `2` are going to be selected and included in the response. If the `user_field_names` parameter is provided then instead include should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `include=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `include=My Field,Field with \"`.'
       description: include
-    ↓order_by [variables.StepVariable-1774516723702]: 
+    ↓order_by [variables.StepVariable-1996000000059]: 
       comment: 'Optionally the rows can be ordered by provided field ids separated by comma. By default a field is ordered in ascending (A-Z) order, but by prepending the field with a ''-'' it can be ordered descending (Z-A). If the `user_field_names` parameter is provided then instead order_by should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `order_by=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `order_by=My Field,Field with \"`.'
       description: order_by
-    ↓page [variables.StepVariable-1774516723704]: 
+    ↓page [variables.StepVariable-1996000000060]: 
       comment: Defines which page of rows should be returned.
       description: page
-    ↓search [variables.StepVariable-1774516723706]: 
+    ↓search [variables.StepVariable-1996000000061]: 
       comment: If provided only rows with data that matches the search query are going to be returned.
       description: search
-    ↓size [variables.StepVariable-1774516723708]: 
+    ↓size [variables.StepVariable-1996000000062]: 
       comment: Defines how many rows should be returned per page.
       description: size
       value: ${lib_BaseRow.sourcepagesize=200}
-    ↓table_id [variables.StepVariable-1774516723710]: 
+    ↓table_id [variables.StepVariable-1996000000063]: 
       comment: Returns the rows of the table related to the provided value.
       description: table_id
       required: true
-    ↓view_id [variables.StepVariable-1774516723712]: 
+    ↓view_id [variables.StepVariable-1996000000064]: 
       comment: Includes all the filters and sorts of the provided view.
       description: view_id
-    ↓filterExpression [variables.StepVariable-1774516723714]: 
-    ↓describeStructure [variables.StepVariable-1774516723716]: 
-    ↓authorization [variables.StepVariable-1898400000235]: 
-      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+    ↓filterExpression [variables.StepVariable-1996000000065]: 
+    ↓describeStructure [variables.StepVariable-1996000000066]: 
+    ↓raw_json [variables.StepVariable-1996000000067]: 
+    ↓authorization [variables.StepVariable-1996000009002]: 
+      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfigNative
       sourceDefinition: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1734686735705
+              - ↑value: 1996000000002
             - java.lang.String: 
-              - ↑value: ./document/Bearer/text()
+              - ↑value: $.Bearer
       visibility: '-1'
-  ↓IfExist1 [steps.IfExistStep-1774516723718]: 
-    condition: IfExist1
+  ↓IfExist1_error [steps.JsonSourceStep-1996000000068]: 
     sourceDefinition: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
         - com.twinsoft.convertigo.beans.common.XMLVector: 
           - java.lang.String: 
-            - ↑value: 1774516723696
+            - ↑value: 1996000000056
           - java.lang.String: 
-            - ↑value: ./document/error
-    ↓Error_structure [steps.XMLCopyStep-1774516933882]: 
+            - ↑value: $.error
+    variableName: callError_1990000000061
+  ↓IfExist1 [steps.IfStep-1996000000069]: 
+    condition: callError_1990000000061 != null
+    ↓Error_structure [steps.JsonToXmlStep-1996000000070]: 
+      comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: 'callError_1990000000061'
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: error
+    ↓Return [steps.ReturnStep-1996000000071]: 
+  ↓page_results [steps.JsonSourceStep-1996000000072]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000056
+          - java.lang.String: 
+            - ↑value: $.results
+    variableName: page_results
+  ↓next_page [steps.SimpleSourceStep-1996000000073]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000056
+          - java.lang.String: 
+            - ↑value: $.next
+    variableName: next_page
+  ↓IfRawNextPage [steps.IfStep-1996000000074]: 
+    condition: raw_json == "true"
+    ↓raw_page [steps.SimpleSourceStep-1996000000075]: 
       sourceDefinition: 
         - xmlizable: 
           - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
           - com.twinsoft.convertigo.beans.common.XMLVector: 
             - java.lang.String: 
-              - ↑value: 1774516723696
+              - ↑value: 1996000000056
             - java.lang.String: 
-              - ↑value: ./document/error
-    ↓Return [steps.ReturnStep-1774516723722]: 
-  ↓page_results [steps.JsonSourceStep-1774516723724]: 
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1774516723696
-          - java.lang.String: 
-            - ↑value: ./document/results
-    variableName: page_results
-  ↓next_page [steps.SimpleSourceStep-1774516723726]: 
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1774516723696
-          - java.lang.String: 
-            - ↑value: ./document/next/text()
-    variableName: next_page
-  ↓AppendResults [steps.SimpleStep-1774516723728]: 
+              - ↑value: $.raw
+      variableName: raw_page
+    ↓readResults [steps.JsonReadStep-1996000000076]: 
+      comment: the rows of the next page, read in stream in the text of Baserow (Read JSON value), without JSON.parse of the whole page
+      json: raw_page
+      path: $.results
+      variableName: page_results
+    ↓readNext [steps.JsonReadStep-1996000000077]: 
+      json: raw_page
+      path: $.next
+      variableName: next_page
+    ↓readError [steps.JsonReadStep-1996000000078]: 
+      json: raw_page
+      path: $.error
+      variableName: raw_error
+    ↓ParseRawNextPage [steps.SimpleStep-1996000000079]: 
+      expression: |
+        '// page_results, next_page and raw_error are read in raw_page by readResults, readNext and readError
+        raw_page = null;
+        raw_error = raw_error != null ? "" + raw_error : null;
+        next_page = next_page != null ? "" + next_page : null;
+        // the next page announced by Baserow is read, or the source answers an error instead of the rows read so far
+        // (a connection error, an empty or not JSON answer, an HTTP error without a Baserow error)
+        if (raw_error == null && !Array.isArray(page_results)) {
+        	raw_error = "Baserow page " + page + " could not be read";
+        	log.warn("formssource_GetTableData: " + raw_error);
+        }
+        '
+    ↓IfRawError [steps.IfStep-1996000000080]: 
+      condition: raw_error != null
+      ↓error [steps.JsonToXmlStep-1996000000081]: 
+        comment: same error element as the copy of the error of the JSON transaction
+        jsonObject: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: raw_error
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: error
+      ↓Return [steps.ReturnStep-1996000000082]: 
+  ↓AppendResults [steps.SimpleStep-1996000000083]: 
     expression: |
       'if (page_results != null) {
       	if (Array.isArray(page_results)) {
@@ -549,699 +1195,1203 @@ comment: |
       }
       
       results = all_results;
+      next_page = getNextPageNumber(typeof next_page == "undefined" ? null : next_page);
       '
-↓ComputeData [steps.SimpleStep-1734686735777]: 
+↓IfRowFilter [steps.IfStep-1996000000403]: 
+  comment: (js/row_filter.js) the rows kept by the conditions on the row id or order and ordered by a sort on them, the grid page cut from them; the exact path reads the rows by their id
+  condition: rowFilter.active
+  ↓rowFilterAuthorization [steps.SimpleSourceStep-1996000000404]: 
+    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfigNative, to read the rows by their id
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000002
+          - java.lang.String: 
+            - ↑value: $.Bearer
+    variableName: rowFilterAuthorization
+  ↓RowFilter [steps.SimpleStep-1996000000405]: 
+    comment: 'the rows Baserow answered for the rest of the filter (or the rows of the ids, read with the account of the source, their included fields only) kept by the conditions on the row id or order, ordered, counted, the grid page cut; incomplete when the read stopped at max_search_results with rows left'
+    expression: |
+      'include("js/common.js");
+      var rowFilterToken = rowFilter.direct ? "" + rowFilterAuthorization : null;
+      var rowFilterAnswer = baserowRowFilter.apply(rowFilter, results,
+      	next_page != null && ("" + next_page) != "" && ("" + next_page) != "null" && all_results.length >= max_search_results,
+      	function (rowId) {
+      		return jsonAnswer(callNative("lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___GET_raw", {
+      			"__header_Authorization": rowFilterToken, "table_id": "" + table_id, "row_id": "" + rowId, "user_field_names": "true"
+      		}));
+      	}, rowFilterIncludes);
+      rowFilterToken = null;
+      rowFilterAuthorization = null;
+      rowFilterError = rowFilterAnswer.error;
+      results = rowFilterAnswer.rows;
+      all_results = results;
+      total_count = rowFilterAnswer.count;
+      rowFilterIncomplete = rowFilterAnswer.incomplete;
+      rowFilterRead = rowFilterAnswer.read;
+      if (rowFilterAnswer.paged) {
+      	pagedRead = true;
+      	page = "" + rowFilterAnswer.page;
+      	fetch_page_size = rowFilterAnswer.size;
+      }
+      '
+  ↓IfRowFilterFailed [steps.IfStep-1996000000406]: 
+    condition: rowFilterError != null
+    ↓Error_structure [steps.XMLErrorStep-1996000000407]: 
+      code: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: 102
+      comment: A row the exact path could not read
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: rowFilterError
+    ↓Return [steps.ReturnStep-1996000000408]: 
+↓IfLinkDisplay [steps.IfStep-1996000000300]: 
+  comment: (link_display) the label of the links of a column named in forms_config.link_display, a column of the linked row (js/link_display.js)
+  condition: hasLinkDisplay && !isModelMode && Array.isArray(results) && results.length > 0
+  ↓linkDisplayAuthorization [steps.SimpleSourceStep-1996000000301]: 
+    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfigNative, to read the linked rows
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000002
+          - java.lang.String: 
+            - ↑value: $.Bearer
+    variableName: linkDisplayAuthorization
+  ↓ResolveLinkDisplay [steps.SimpleStep-1996000000302]: 
+    comment: 'each link of the columns of link_display: its value becomes the column chosen of its row, read with the account of the source on a linked table of link_row_table_id only (the tables the owner of the source signed), its id and that column only, page after page until every link is found (lib_baserow.link_display_max_rows rows at most); else the link keeps its value'
+    expression: |
+      'include("js/common.js");
+      include("js/link_display.js");
+      var linkDisplayEntries = baserowLinkDisplay.plan(jConfig.link_display, structure, jConfig.link_row_table_id);
+      if (linkDisplayEntries.length > 0) {
+      	var linkDisplayToken = "" + linkDisplayAuthorization;
+      	var linkDisplayMax = parseInt("${lib_baserow.link_display_max_rows=2000}", 10);
+      	baserowLinkDisplay.apply(results, linkDisplayEntries, function (linkedTableId, display, linkedPage, linkedSize) {
+      		return jsonAnswer(callNative("lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___GET_raw", {
+      			"__header_Authorization": linkDisplayToken, "table_id": "" + linkedTableId, "include_fields": baserowLinkDisplay.fieldList(display),
+      			"page": "" + linkedPage, "size": "" + linkedSize, "user_field_names": "true"
+      		}));
+      	}, isNaN(linkDisplayMax) ? 2000 : linkDisplayMax);
+      	linkDisplayToken = null;
+      }
+      linkDisplayAuthorization = null;
+      '
+↓NativeOrJs [steps.SimpleStep-1996000000084]: 
+  comment: the cells and groups are built by native JSON steps (lib_baserow.native_steps), except a model, the groups of the plugin, an empty table and a table with a column named by an integer, left to ComputeData
   expression: |
-    'include("js/utils.js");
-    include("js/getFilter.js");
-    var data = [];
-    var colDef = null;
-    var aggregationError = null;
-    var distinctRows = {};
-    var groupedRows = {};
-    var groupedStates = {};
-    var structureByName = {};
-    if ("structure" in this) {
-    	if (!Array.isArray(structure)) {
-    		structure = [structure];
-    	}
-    	for (var iStructureByName = 0; iStructureByName < structure.length; iStructureByName++) {
-    		structureByName[structure[iStructureByName].name] = structure[iStructureByName];
-    	}
-    }
-    var escapeDisplayHtml = function(value) {
-    	return String(value == undefined || value == null ? "" : value)
-    		.replace(/&/g, "&amp;")
-    		.replace(/</g, "&lt;")
-    		.replace(/>/g, "&gt;")
-    		.replace(/"/g, "&quot;");
-    };
-    var isTrueValue = function(value) {
-    	return value === true || value === 1 || value == "1" || ("" + value).toLowerCase() == "true";
-    };
-    var padNumber = function(value, size) {
-    	var text = "" + value;
-    	while (text.length < size) {
-    		text = "0" + text;
-    	}
-    	return text;
-    };
-    var getFieldOption = function(field, name) {
-    	return field != null && field[name] != undefined ? "" + field[name] : "";
-    };
-    var getResolvedFieldType = function(field) {
-    	if (field == null) {
-    		return null;
-    	}
-    	try {
-    		return getBrFilterType(field).type;
-    	}
-    	catch (e) {
-    		return field.type;
-    	}
-    };
-    var getPrimitiveCellValue = function(element) {
-    	if (element != null && typeof element == "object" && !Array.isArray(element)) {
-    		if (element.value != undefined && (element.value == null || typeof element.value != "object")) {
-    			return element.value;
-    		}
-    		if (element.name != undefined && element.is_image == undefined && element.url == undefined) {
-    			return element.name;
-    		}
-    	}
-    	return element;
-    };
-    var getDateDisplayTimezone = function(field) {
-    	var timezone = getFieldOption(field, "date_force_timezone");
-    	if (timezone == "") {
-    		timezone = getFieldOption(field, "date_timezone");
-    	}
-    	if (timezone == "") {
-    		timezone = getFieldOption(field, "timezone");
-    	}
-    	if (timezone == "") {
-    		timezone = getFieldOption(field, "date_time_zone");
-    	}
-    	if (timezone == "") {
-    		timezone = "${lib_BaseRow.dateTimezone=UTC}";
-    	}
-    	timezone = ("" + timezone).replace(/^\s+|\s+$/g, "");
-    	if (timezone == "" || timezone.toLowerCase() == "null") {
-    		timezone = "UTC";
-    	}
-    	return timezone;
-    };
-    var getDateTimeParts = function(rawDate, field) {
-    	try {
-    		var normalizedDate = ("" + rawDate).replace(" ", "T");
-    		var zoneId = java.time.ZoneId.of(getDateDisplayTimezone(field));
-    		if (/[zZ]$|[+-]\d{2}:?\d{2}$/.test(normalizedDate)) {
-    			normalizedDate = normalizedDate.replace(/([+-]\d{2})(\d{2})$/, "$1:$2");
-    			var zonedDate = java.time.OffsetDateTime.parse(normalizedDate).toInstant().atZone(zoneId);
-    			return {
-    				year: "" + zonedDate.getYear(),
-    				month: padNumber(zonedDate.getMonthValue(), 2),
-    				day: padNumber(zonedDate.getDayOfMonth(), 2),
-    				hours: zonedDate.getHour(),
-    				minutes: zonedDate.getMinute()
-    			};
-    		}
-    		var localDate = java.time.LocalDateTime.parse(normalizedDate);
-    		return {
-    			year: "" + localDate.getYear(),
-    			month: padNumber(localDate.getMonthValue(), 2),
-    			day: padNumber(localDate.getDayOfMonth(), 2),
-    			hours: localDate.getHour(),
-    			minutes: localDate.getMinute()
-    		};
-    	}
-    	catch (e) {
-    		return null;
-    	}
-    };
-    var formatDateValue = function(value, field) {
-    	if (value == null || value == "") {
-    		return "";
-    	}
-    	var rawDate = "" + value;
-    	var dateParts = null;
-    	var dateOnlyMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    	if (dateOnlyMatch != null) {
-    		dateParts = {
-    			year: dateOnlyMatch[1],
-    			month: dateOnlyMatch[2],
-    			day: dateOnlyMatch[3],
-    			hours: 0,
-    			minutes: 0
-    		};
-    	}
-    	else {
-    		dateParts = getDateTimeParts(rawDate, field);
-    	}
-    	if (dateParts == null) {
-    		var parsedDate = new Date(rawDate);
-    		if (isNaN(parsedDate.getTime())) {
-    			return rawDate;
-    		}
-    		dateParts = {
-    			year: "" + parsedDate.getFullYear(),
-    			month: padNumber(parsedDate.getMonth() + 1, 2),
-    			day: padNumber(parsedDate.getDate(), 2),
-    			hours: parsedDate.getHours(),
-    			minutes: parsedDate.getMinutes()
-    		};
-    	}
-    	var dateFormat = getFieldOption(field, "date_format").toUpperCase();
-    	var dateText;
-    	if (dateFormat == "EU" || dateFormat == "EUROPEAN") {
-    		dateText = dateParts.day + "/" + dateParts.month + "/" + dateParts.year;
-    	}
-    	else if (dateFormat == "US") {
-    		dateText = dateParts.month + "/" + dateParts.day + "/" + dateParts.year;
-    	}
-    	else {
-    		dateText = dateParts.year + "-" + dateParts.month + "-" + dateParts.day;
-    	}
-    	var includeTimeOption = field != null ? field.date_include_time : null;
-    	var includeTime = isTrueValue(includeTimeOption) || (includeTimeOption == null && /[T\s]\d{2}:\d{2}/.test(rawDate));
-    	if (includeTime) {
-    		var timeFormat = getFieldOption(field, "date_time_format").toLowerCase();
-    		if (timeFormat == "12" || timeFormat.indexOf("12") != -1) {
-    			var suffix = dateParts.hours >= 12 ? "PM" : "AM";
-    			var hour12 = dateParts.hours % 12;
-    			if (hour12 == 0) {
-    				hour12 = 12;
-    			}
-    			dateText += " " + hour12 + ":" + padNumber(dateParts.minutes, 2) + " " + suffix;
-    		}
-    		else {
-    			dateText += " " + padNumber(dateParts.hours, 2) + ":" + padNumber(dateParts.minutes, 2);
-    		}
-    	}
-    	return dateText;
-    };
-    var formatDurationValue = function(value, field) {
-    	if (value == null || value == "") {
-    		return "";
-    	}
-    	var durationSource = typeof value == "number" ? "" + value : ("" + value).replace(",", ".");
-    	if (!/^-?\d+(\.\d+)?$/.test(durationSource)) {
-    		return "" + value;
-    	}
-    	var secondsValue = parseFloat(durationSource);
-    	if (isNaN(secondsValue)) {
-    		return "" + value;
-    	}
-    	var sign = secondsValue < 0 ? "-" : "";
-    	var totalMilliseconds = Math.round(Math.abs(secondsValue) * 1000);
-    	var totalSeconds = Math.floor(totalMilliseconds / 1000);
-    	var milliseconds = totalMilliseconds % 1000;
-    	var days = Math.floor(totalSeconds / 86400);
-    	var hoursTotal = Math.floor(totalSeconds / 3600);
-    	var hours = Math.floor((totalSeconds % 86400) / 3600);
-    	var minutes = Math.floor((totalSeconds % 3600) / 60);
-    	var seconds = totalSeconds % 60;
-    	var durationFormat = getFieldOption(field, "duration_format");
-    	if (durationFormat == "") {
-    		durationFormat = "h:mm:ss";
-    	}
-    	if (durationFormat == "d h") {
-    		return sign + days + "d " + hours + "h";
-    	}
-    	if (durationFormat == "d h m") {
-    		return sign + days + "d " + hours + "h " + minutes + "m";
-    	}
-    	if (durationFormat == "d h m s") {
-    		return sign + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
-    	}
-    	var decimals = durationFormat.indexOf(".sss") != -1 ? 3 : (durationFormat.indexOf(".ss") != -1 ? 2 : (durationFormat.indexOf(".s") != -1 ? 1 : 0));
-    	var secondsText = padNumber(seconds, 2);
-    	if (decimals > 0) {
-    		secondsText += "." + padNumber(milliseconds, 3).substring(0, decimals);
-    	}
-    	if (durationFormat.indexOf("d h:mm") == 0) {
-    		var dayClock = days + "d " + hours + ":" + padNumber(minutes, 2);
-    		if (durationFormat.indexOf(":ss") != -1) {
-    			dayClock += ":" + secondsText;
-    		}
-    		return sign + dayClock;
-    	}
-    	var clock = hoursTotal + ":" + padNumber(minutes, 2);
-    	if (durationFormat.indexOf(":ss") != -1) {
-    		clock += ":" + secondsText;
-    	}
-    	return sign + clock;
-    };
-    var formatNumberValue = function(value, field) {
-    	if (value == null || value == "") {
-    		return "";
-    	}
-    	var numberSource = typeof value == "number" ? "" + value : ("" + value).replace(",", ".");
-    	if (!/^-?\d+(\.\d+)?$/.test(numberSource)) {
-    		return "" + value;
-    	}
-    	var numberValue = parseFloat(numberSource);
-    	if (isNaN(numberValue)) {
-    		return "" + value;
-    	}
-    	var decimalPlaces = parseInt(getFieldOption(field, "number_decimal_places"), 10);
-    	if (isNaN(decimalPlaces)) {
-    		if (field != null && (field.type == "autonumber" || field.type == "count")) {
-    			decimalPlaces = 0;
-    		}
-    		else {
-    			return "" + value;
-    		}
-    	}
-    	if (decimalPlaces < 0) {
-    		decimalPlaces = 0;
-    	}
-    	if (decimalPlaces > 20) {
-    		decimalPlaces = 20;
-    	}
-    	return numberValue.toFixed(decimalPlaces);
-    };
-    var formatEmailHtml = function(value) {
-    	var email = String(value == undefined || value == null ? "" : value).replace(/^\s+|\s+$/g, "");
-    	if (email == "") {
-    		return "";
-    	}
-    	return "<a href=\"mailto:" + escapeDisplayHtml(email) + "\">" + escapeDisplayHtml(email) + "</a>";
-    };
-    var formatPhoneHtml = function(value) {
-    	var phone = String(value == undefined || value == null ? "" : value).replace(/^\s+|\s+$/g, "");
-    	if (phone == "") {
-    		return "";
-    	}
-    	var phoneHref = phone.replace(/[^\d+]/g, "");
-    	if (phoneHref == "") {
-    		return escapeDisplayHtml(phone);
-    	}
-    	return "<a href=\"tel:" + escapeDisplayHtml(phoneHref) + "\">" + escapeDisplayHtml(phone) + "</a>";
-    };
-    var formatRatingHtml = function(value) {
-    	var ratingValue = parseInt(value, 10);
-    	if (isNaN(ratingValue) || ratingValue <= 0) {
-    		return "";
-    	}
-    	var stars = "";
-    	for (var iRating = 0; iRating < ratingValue; iRating++) {
-    		stars += "&#9733;";
-    	}
-    	return "<span style=\"color:#f59e0b;letter-spacing:1px\">" + stars + "</span>";
-    };
-    var formatBooleanHtml = function(value) {
-    	if (isTrueValue(value)) {
-    		return "<span style=\"display:inline-flex;width:16px;height:16px;border:1px solid #22c55e;background:#22c55e;border-radius:3px;color:#fff;align-items:center;justify-content:center;font-size:12px;line-height:16px\">&#10003;</span>";
-    	}
-    	return "<span style=\"display:inline-flex;width:16px;height:16px;border:1px solid #cbd5e1;background:#fff;border-radius:3px\"></span>";
-    };
-    var formatBaserowCell = function(element, field, nested) {
-    	if (Array.isArray(element)) {
-    		var arrayValue = [];
-    		var arrayHtml = "";
-    		for (var iElement = 0; iElement < element.length; iElement++) {
-    			var arrayResult = formatBaserowCell(element[iElement], field, true);
-    			arrayValue.push(arrayResult.value);
-    			arrayHtml += arrayResult.innerHtml;
-    		}
-    		return { innerHtml: arrayHtml + (nested ? "" : close_html), value: arrayValue };
-    	}
-    	var resolvedType = getResolvedFieldType(field);
-    	var primitiveValue = getPrimitiveCellValue(element);
-    	var formattedText;
-    	if (resolvedType == "rating") {
-    		return { innerHtml: formatRatingHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
-    	}
-    	if (resolvedType == "boolean") {
-    		return { innerHtml: formatBooleanHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
-    	}
-    	if (resolvedType == "number" || resolvedType == "autonumber" || (field != null && (field.type == "number" || field.type == "autonumber" || field.type == "count"))) {
-    		formattedText = formatNumberValue(primitiveValue, field);
-    		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
-    	}
-    	if (resolvedType == "email" || (field != null && field.type == "email")) {
-    		return { innerHtml: formatEmailHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
-    	}
-    	if (resolvedType == "phone_number" || (field != null && field.type == "phone_number")) {
-    		return { innerHtml: formatPhoneHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
-    	}
-    	if (resolvedType == "date" || (field != null && (field.type == "date" || field.type == "created_on" || field.type == "last_modified"))) {
-    		formattedText = formatDateValue(primitiveValue, field);
-    		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
-    	}
-    	if (resolvedType == "duration" || (field != null && field.type == "duration")) {
-    		formattedText = formatDurationValue(primitiveValue, field);
-    		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
-    	}
-    	return computeAnyType(element, nested, resolvedType);
-    };
-    var buildSignature = function(cells, columns) {
-    	var signature = [];
-    	for (var iSignature = 0; iSignature < columns.length; iSignature++) {
-    		var currentColumn = columns[iSignature];
-    		var currentCell = cells.hasOwnProperty(currentColumn) ? cells[currentColumn] : null;
-    		var currentValue = currentCell != null ? currentCell.value : null;
-    		signature.push(currentColumn + "=" + JSON.stringify(currentValue));
-    	}
-    	return signature.join("|");
-    };
-    var buildAggregateCell = function(aggregationSpec, aggregationValue) {
-    	var displayValue = aggregationValue == null ? "" : aggregationValue;
-    	return {
-    		displayName: aggregationSpec.key,
-    		type: "html",
-    		value: aggregationValue,
-    		displayValue: base_html + displayValue + close_html,
-    		cType: aggregationSpec.type == "min" || aggregationSpec.type == "max" ? "text" : "number",
-    		filterCompletion: [],
-    		filterHide: true,
-    		sortHide: false
-    	};
-    };
-    var getAggregationSourceValue = function(cell) {
-    	if (cell == null || cell.value == null) {
-    		return null;
-    	}
-    	var sourceValue = cell.value;
-    	if (Array.isArray(sourceValue)) {
-    		return null;
-    	}
-    	if (typeof sourceValue == "object") {
-    		if (sourceValue.value != null && typeof sourceValue.value != "object") {
-    			return sourceValue.value;
-    		}
-    		if (sourceValue.name != null && typeof sourceValue.name != "object") {
-    			return sourceValue.name;
-    		}
-    		return null;
-    	}
-    	return sourceValue;
-    };
-    var getNumericValue = function(sourceValue) {
-    	if (typeof sourceValue == "number") {
-    		return isFinite(sourceValue) ? sourceValue : null;
-    	}
-    	if (typeof sourceValue == "string" && sourceValue != "") {
-    		var numericValue = parseFloat(sourceValue.replace(",", "."));
-    		return isNaN(numericValue) ? null : numericValue;
-    	}
-    	return null;
-    };
-    var updateAggregationState = function(aggregationState, aggregationSpec, sourceCell) {
-    	if (aggregationSpec.type == "count") {
-    		aggregationState.value = (aggregationState.value == null ? 0 : aggregationState.value) + 1;
-    		return;
-    	}
-    	var sourceValue = getAggregationSourceValue(sourceCell);
-    	if (sourceValue == null) {
-    		return;
-    	}
-    	if (aggregationSpec.type == "sum" || aggregationSpec.type == "avg") {
-    		var numericValue = getNumericValue(sourceValue);
-    		if (numericValue == null) {
-    			return;
-    		}
-    		aggregationState.sum = (aggregationState.sum == null ? 0 : aggregationState.sum) + numericValue;
-    		aggregationState.count = (aggregationState.count == null ? 0 : aggregationState.count) + 1;
-    		aggregationState.value = aggregationSpec.type == "sum" ? aggregationState.sum : aggregationState.sum / aggregationState.count;
-    		return;
-    	}
-    	if (aggregationState.value == null) {
-    		aggregationState.value = sourceValue;
-    		aggregationState.numericValue = getNumericValue(sourceValue);
-    		return;
-    	}
-    	var currentNumericValue = getNumericValue(sourceValue);
-    	if (aggregationState.numericValue != null && currentNumericValue != null) {
-    		var shouldReplace = aggregationSpec.type == "min" ? currentNumericValue < aggregationState.numericValue : currentNumericValue > aggregationState.numericValue;
-    		if (shouldReplace) {
-    			aggregationState.value = sourceValue;
-    			aggregationState.numericValue = currentNumericValue;
-    		}
-    		return;
-    	}
-    	var currentStringValue = "" + sourceValue;
-    	var savedStringValue = "" + aggregationState.value;
-    	var shouldReplaceByString = aggregationSpec.type == "min" ? currentStringValue < savedStringValue : currentStringValue > savedStringValue;
-    	if (shouldReplaceByString) {
-    		aggregationState.value = sourceValue;
-    		aggregationState.numericValue = currentNumericValue;
-    	}
-    };
-    if (aggregationSpecs != null && "structure" in this) {
-    	if (!Array.isArray(structure)) {
-    		structure = [structure];
-    	}
-    	var aggregationColumnInfo = {};
-    	var numericAggregationTypes = {
-    		autonumber: true,
-    		duration: true,
-    		number: true,
-    		rating: true
-    	};
-    	var unsupportedAggregationTypes = {
-    		file: true,
-    		link_row: true,
-    		multiple_collaborators: true,
-    		multiple_select: true
-    	};
-    	for (var iStructureField = 0; iStructureField < structure.length; iStructureField++) {
-    		var currentStructureField = structure[iStructureField];
-    		aggregationColumnInfo[currentStructureField.name] = {
-    			field: currentStructureField,
-    			filterType: getBrFilterType(currentStructureField)
-    		};
-    	}
-    	for (var iAggregationValidation = 0; iAggregationValidation < aggregationSpecs.length; iAggregationValidation++) {
-    		var currentAggregationSpec = aggregationSpecs[iAggregationValidation];
-    		if (currentAggregationSpec.type == "count") {
-    			continue;
-    		}
-    		var currentAggregationInfo = aggregationColumnInfo[currentAggregationSpec.column];
-    		if (currentAggregationInfo == null) {
-    			aggregationError = "The aggregation column ''" + currentAggregationSpec.column + "'' was not found in the table structure.";
-    			break;
-    		}
-    		var currentAggregationType = currentAggregationInfo.filterType.type;
-    		if (currentAggregationInfo.filterType.isArray === true || unsupportedAggregationTypes[currentAggregationType] === true) {
-    			aggregationError = "The aggregation ''" + currentAggregationSpec.type + "'' is not supported on column ''" + currentAggregationSpec.column + "'' of type ''" + currentAggregationType + "''.";
-    			break;
-    		}
-    		if ((currentAggregationSpec.type == "sum" || currentAggregationSpec.type == "avg") && numericAggregationTypes[currentAggregationType] !== true) {
-    			aggregationError = "The aggregation ''" + currentAggregationSpec.type + "'' is only supported on numeric columns. Column ''" + currentAggregationSpec.column + "'' is of type ''" + currentAggregationType + "''.";
-    			break;
-    		}
-    	}
-    }
-    if (aggregationError == null) {
-    	for (var elem of results) {
-    	var obj = {};
-    	var cpt = 0;
-    	for (var key in elem) {
-    		var html = "" + base_html;
-    		var current = elem[key];
-    		var currentField = null;
-    		var isHiddenColumn = key == "id" || key == "order" || (jConfig.hidden ? jConfig.hidden.includes(key) : false);
-    		if ("structure" in this) {
-    			if (!Array.isArray(structure)) {
-    				structure = [structure];
-    			}
-    			if (shouldExposeColumn(key)) {
-    				currentField = structureByName[key];
-    			}
-    		}
-    		if (current != null) {
-    			obj[key] = { displayName: key, type: "html", value: "" };
-    			var result = formatBaserowCell(current, currentField, false);
-    			html += result.innerHtml;
-    			obj[key].value = result.value;
-    			obj[key].displayValue = html;
-    		} else {
-    			obj[key] = { displayName: key, type: "html", value: null };
-    		}
-    		if (isHiddenColumn) {
-    			obj[key].hidden = true;
-    		}
-    
-    		if (isModelMode && "structure" in this) {
-    			if (!Array.isArray(structure)) {
-    				structure = [structure];
-    			}
-    			var cTargetCompletion = [];
-    			var cHideFromFiltering = true;
-    			var cTarget = null;
-    			var result = {
-    				type: null,
-    				value: undefined
-    			};
-    			if (shouldExposeColumn(key)) {
-    				cTarget = structure.filter((x) => {
-    					return x.name == key;
-    				})[0];
-    				if (cTarget != null) {
-    					result = getBrFilterType(cTarget)
-    					obj[key]["cType"] = result.type;
-    					cTargetCompletion = result.value;
-    					cHideFromFiltering = false;
-    					if (cTargetCompletion == undefined) {
-    						cTargetCompletion = [];
-    						cHideFromFiltering = true;
-    					}
-    					if (cTarget.type == "single_select" && obj[key].value == null) {
-    						obj[key].value = {
-    							id: 0,
-    							value: "",
-    							color: ""
-    						};
-    					}
-    				}
-    			}
-    
-    			obj[key]["filterCompletion"] = cTargetCompletion;
-    			obj[key]["filterHide"] = cHideFromFiltering;
-    			obj[key]["sortHide"] = cHideFromFiltering || result.type == "file" || result.type == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select")
-    
-    		}
-    	}
-    
-    	var jReorderedRow = {};
-    	jReorderedRow["id"] = obj["id"];
-    	jReorderedRow["order"] = obj["order"];
-    	if (displayColumns == null) {
-    		if ("structure" in this) {
-    			if (!Array.isArray(structure)) {
-    				structure = [structure];
-    			}
-    			for (var iStructureField = 0; iStructureField < structure.length; iStructureField++) {
-    				var structureFieldName = structure[iStructureField].name;
-    				if (obj.hasOwnProperty(structureFieldName)) {
-    					jReorderedRow[structureFieldName] = obj[structureFieldName];
-    				}
-    			}
-    		}
-    		for (var currentRowKey in obj) {
-    			if (obj.hasOwnProperty(currentRowKey) && !jReorderedRow.hasOwnProperty(currentRowKey)) {
-    				jReorderedRow[currentRowKey] = obj[currentRowKey];
-    			}
-    		}
-    	}
-    	else {
-    		displayColumns.forEach((col) => {
-    			if (obj.hasOwnProperty(col)) {
-    				jReorderedRow[col] = obj[col];
-    			}
-    		});
-    	}
-    	if (groupByColumns != null) {
-    		var groupSignature = buildSignature(obj, groupByColumns);
-    		var groupedRow = groupedRows[groupSignature];
-    		if (groupedRow == null) {
-    			groupedRow = jReorderedRow;
-    			groupedRows[groupSignature] = groupedRow;
-    			groupedStates[groupSignature] = {};
-    			data.push(groupedRow);
-    		}
-    		for (var iAggregationSpec = 0; iAggregationSpec < aggregationSpecs.length; iAggregationSpec++) {
-    			var aggregationSpec = aggregationSpecs[iAggregationSpec];
-    			var aggregationState = groupedStates[groupSignature][aggregationSpec.key];
-    			if (aggregationState == null) {
-    				aggregationState = {};
-    				groupedStates[groupSignature][aggregationSpec.key] = aggregationState;
-    			}
-    			var aggregationSourceCell = aggregationSpec.column != null && obj.hasOwnProperty(aggregationSpec.column) ? obj[aggregationSpec.column] : null;
-    			updateAggregationState(aggregationState, aggregationSpec, aggregationSourceCell);
-    			groupedRow[aggregationSpec.key] = buildAggregateCell(aggregationSpec, aggregationState.value);
-    		}
-    		continue;
-    	}
-    	else if (distinctColumns != null) {
-    		var distinctSignature = buildSignature(obj, distinctColumns);
-    		if (distinctRows[distinctSignature] === true) {
-    			continue;
-    		}
-    		distinctRows[distinctSignature] = true;
-    	}
-    	data.push(jReorderedRow);
-    	}
-    	
-    	if ("structure" in this && data.length === 0) {
-    	if (!Array.isArray(structure)) {
-    		structure = [structure];
-    	}
-    
-    	var row = {};
-    
-    	row["id"] = {
-    		displayName: "id",
-    		type: "html",
-    		value: "",
-    		hidden: true,
-    		displayValue: "<div style=''display:flex; white-space: normal; align-items:center''></div>",
-    		filterCompletion: [],
-    		filterHide: true
-    	};
-    
-    	row["order"] = {
-    		displayName: "order",
-    		type: "html",
-    		value: "",
-    		hidden: true,
-    		displayValue: "<div style=''display:flex; white-space: normal; align-items:center''></div>",
-    		filterCompletion: [],
-    		filterHide: true
-    	};
-    
-    	var appendedModelFields = {};
-    	var appendModelField = function(field) {
-    		if (field == null || field.name == null || appendedModelFields[field.name] === true || !shouldExposeColumn(field.name)) {
-    			return;
-    		}
-    		appendedModelFields[field.name] = true;
-    		var result = getBrFilterType(field);
-    		
-    		var cType = result.type;
-    		var cTargetCompletion = result.value;
-    		var cHideFromFiltering = false;
-    		if (cTargetCompletion == undefined) {
-    			cTargetCompletion = [];
-    			cHideFromFiltering = true;
-    		}
-    
-    		var value = "";
-    		if (result.type === "single_select") {
-    			value = { id: 0, value: "", color: "" };
-    		} else if (result.type === "boolean") {
-    			value = false;
-    		} else if (result.isArray) {
-    			value = [];
-    		} else {
-    			value = "";
-    		}
-    
-    		var formattedModelValue = formatBaserowCell(value, field, false);
-    		row[field.name] = {
-    			displayName: field.name,
-    			type: "html",
-    			value: formattedModelValue.value,
-    			displayValue: "<div style=''display:flex; white-space: normal; align-items:center''>" + formattedModelValue.innerHtml,
-    			cType: cType,
-    			filterCompletion: cTargetCompletion,
-    			filterHide: cHideFromFiltering
-    		};
-    	};
-    	if (displayColumns != null) {
-    		var structureByName = {};
-    		for (var iModelStructure = 0; iModelStructure < structure.length; iModelStructure++) {
-    			structureByName[structure[iModelStructure].name] = structure[iModelStructure];
-    		}
-    		for (var iDisplayColumn = 0; iDisplayColumn < displayColumns.length; iDisplayColumn++) {
-    			appendModelField(structureByName[displayColumns[iDisplayColumn]]);
-    		}
-    	}
-    	for (var iFallbackStructure = 0; iFallbackStructure < structure.length; iFallbackStructure++) {
-    		appendModelField(structure[iFallbackStructure]);
-    	}
-    	if (aggregationSpecs != null) {
-    		for (var iAggregationModel = 0; iAggregationModel < aggregationSpecs.length; iAggregationModel++) {
-    			var aggregationModelSpec = aggregationSpecs[iAggregationModel];
-    			row[aggregationModelSpec.key] = buildAggregateCell(aggregationModelSpec, aggregationModelSpec.type == "count" ? 0 : null);
-    		}
-    	}
-    	if(isModelMode){
-    		data.push(row);
-    	}
-    	else{
-    		colDef = [];
-    		colDef.push(row);
-    	}
-    	
-    	}
-    }
+    'nativeSteps = "${lib_baserow.native_steps=true}" == "true" && !indexNamedColumns && !isModelMode && pluginGroups == null && pluginRequiredError == null && Array.isArray(results) && results.length > 0 && !streamRows;
     '
-↓IfAggregationError [steps.IfStep-1774525107793]: 
+↓IfJsCells [steps.IfStep-1996000000085]: 
+  condition: '!nativeSteps && !streamRows'
+  ↓ComputeData [steps.SimpleStep-1996000000086]: 
+    expression: |
+      'include("js/utils.js");
+      include("js/getFilter.js");
+      var data = [];
+      var colDef = null;
+      // the error of an aggregation only the c8oforms Baserow plugin computes, when the plugin could not answer
+      var aggregationError = typeof pluginRequiredError != "undefined" ? pluginRequiredError : null;
+      var distinctRows = {};
+      var groupedRows = {};
+      var groupedStates = {};
+      var structureByName = {};
+      if ("structure" in this) {
+      	if (!Array.isArray(structure)) {
+      		structure = [structure];
+      	}
+      	for (var iStructureByName = 0; iStructureByName < structure.length; iStructureByName++) {
+      		structureByName[structure[iStructureByName].name] = structure[iStructureByName];
+      	}
+      }
+      var escapeDisplayHtml = function(value) {
+      	return String(value == undefined || value == null ? "" : value)
+      		.replace(/&/g, "&amp;")
+      		.replace(/</g, "&lt;")
+      		.replace(/>/g, "&gt;")
+      		.replace(/"/g, "&quot;");
+      };
+      var isTrueValue = function(value) {
+      	return value === true || value === 1 || value == "1" || ("" + value).toLowerCase() == "true";
+      };
+      var padNumber = function(value, size) {
+      	var text = "" + value;
+      	while (text.length < size) {
+      		text = "0" + text;
+      	}
+      	return text;
+      };
+      var getFieldOption = function(field, name) {
+      	return field != null && field[name] != undefined ? "" + field[name] : "";
+      };
+      var getResolvedFieldType = function(field) {
+      	if (field == null) {
+      		return null;
+      	}
+      	try {
+      		return getBrFilterType(field).type;
+      	}
+      	catch (e) {
+      		return field.type;
+      	}
+      };
+      var getPrimitiveCellValue = function(element) {
+      	if (element != null && typeof element == "object" && !Array.isArray(element)) {
+      		if (element.value != undefined && (element.value == null || typeof element.value != "object")) {
+      			return element.value;
+      		}
+      		if (element.name != undefined && element.is_image == undefined && element.url == undefined) {
+      			return element.name;
+      		}
+      	}
+      	return element;
+      };
+      var getDateDisplayTimezone = function(field) {
+      	var timezone = getFieldOption(field, "date_force_timezone");
+      	if (timezone == "") {
+      		timezone = getFieldOption(field, "date_timezone");
+      	}
+      	if (timezone == "") {
+      		timezone = getFieldOption(field, "timezone");
+      	}
+      	if (timezone == "") {
+      		timezone = getFieldOption(field, "date_time_zone");
+      	}
+      	if (timezone == "") {
+      		timezone = "${lib_BaseRow.dateTimezone=UTC}";
+      	}
+      	timezone = ("" + timezone).replace(/^\s+|\s+$/g, "");
+      	if (timezone == "" || timezone.toLowerCase() == "null") {
+      		timezone = "UTC";
+      	}
+      	return timezone;
+      };
+      var getDateTimeParts = function(rawDate, field) {
+      	try {
+      		var normalizedDate = ("" + rawDate).replace(" ", "T");
+      		var zoneId = java.time.ZoneId.of(getDateDisplayTimezone(field));
+      		if (/[zZ]$|[+-]\d{2}:?\d{2}$/.test(normalizedDate)) {
+      			normalizedDate = normalizedDate.replace(/([+-]\d{2})(\d{2})$/, "$1:$2");
+      			var zonedDate = java.time.OffsetDateTime.parse(normalizedDate).toInstant().atZone(zoneId);
+      			return {
+      				year: "" + zonedDate.getYear(),
+      				month: padNumber(zonedDate.getMonthValue(), 2),
+      				day: padNumber(zonedDate.getDayOfMonth(), 2),
+      				hours: zonedDate.getHour(),
+      				minutes: zonedDate.getMinute()
+      			};
+      		}
+      		var localDate = java.time.LocalDateTime.parse(normalizedDate);
+      		return {
+      			year: "" + localDate.getYear(),
+      			month: padNumber(localDate.getMonthValue(), 2),
+      			day: padNumber(localDate.getDayOfMonth(), 2),
+      			hours: localDate.getHour(),
+      			minutes: localDate.getMinute()
+      		};
+      	}
+      	catch (e) {
+      		return null;
+      	}
+      };
+      var formatDateValue = function(value, field) {
+      	if (value == null || value == "") {
+      		return "";
+      	}
+      	var rawDate = "" + value;
+      	var dateParts = null;
+      	var dateOnlyMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      	if (dateOnlyMatch != null) {
+      		dateParts = {
+      			year: dateOnlyMatch[1],
+      			month: dateOnlyMatch[2],
+      			day: dateOnlyMatch[3],
+      			hours: 0,
+      			minutes: 0
+      		};
+      	}
+      	else {
+      		dateParts = getDateTimeParts(rawDate, field);
+      	}
+      	if (dateParts == null) {
+      		var parsedDate = new Date(rawDate);
+      		if (isNaN(parsedDate.getTime())) {
+      			return rawDate;
+      		}
+      		dateParts = {
+      			year: "" + parsedDate.getFullYear(),
+      			month: padNumber(parsedDate.getMonth() + 1, 2),
+      			day: padNumber(parsedDate.getDate(), 2),
+      			hours: parsedDate.getHours(),
+      			minutes: parsedDate.getMinutes()
+      		};
+      	}
+      	var dateFormat = getFieldOption(field, "date_format").toUpperCase();
+      	var dateText;
+      	if (dateFormat == "EU" || dateFormat == "EUROPEAN") {
+      		dateText = dateParts.day + "/" + dateParts.month + "/" + dateParts.year;
+      	}
+      	else if (dateFormat == "US") {
+      		dateText = dateParts.month + "/" + dateParts.day + "/" + dateParts.year;
+      	}
+      	else {
+      		dateText = dateParts.year + "-" + dateParts.month + "-" + dateParts.day;
+      	}
+      	var includeTimeOption = field != null ? field.date_include_time : null;
+      	var includeTime = isTrueValue(includeTimeOption) || (includeTimeOption == null && /[T\s]\d{2}:\d{2}/.test(rawDate));
+      	if (includeTime) {
+      		var timeFormat = getFieldOption(field, "date_time_format").toLowerCase();
+      		if (timeFormat == "12" || timeFormat.indexOf("12") != -1) {
+      			var suffix = dateParts.hours >= 12 ? "PM" : "AM";
+      			var hour12 = dateParts.hours % 12;
+      			if (hour12 == 0) {
+      				hour12 = 12;
+      			}
+      			dateText += " " + hour12 + ":" + padNumber(dateParts.minutes, 2) + " " + suffix;
+      		}
+      		else {
+      			dateText += " " + padNumber(dateParts.hours, 2) + ":" + padNumber(dateParts.minutes, 2);
+      		}
+      	}
+      	return dateText;
+      };
+      var formatDurationValue = function(value, field) {
+      	if (value == null || value == "") {
+      		return "";
+      	}
+      	var durationSource = typeof value == "number" ? "" + value : ("" + value).replace(",", ".");
+      	if (!/^-?\d+(\.\d+)?$/.test(durationSource)) {
+      		return "" + value;
+      	}
+      	var secondsValue = parseFloat(durationSource);
+      	if (isNaN(secondsValue)) {
+      		return "" + value;
+      	}
+      	var sign = secondsValue < 0 ? "-" : "";
+      	var totalMilliseconds = Math.round(Math.abs(secondsValue) * 1000);
+      	var totalSeconds = Math.floor(totalMilliseconds / 1000);
+      	var milliseconds = totalMilliseconds % 1000;
+      	var days = Math.floor(totalSeconds / 86400);
+      	var hoursTotal = Math.floor(totalSeconds / 3600);
+      	var hours = Math.floor((totalSeconds % 86400) / 3600);
+      	var minutes = Math.floor((totalSeconds % 3600) / 60);
+      	var seconds = totalSeconds % 60;
+      	var durationFormat = getFieldOption(field, "duration_format");
+      	if (durationFormat == "") {
+      		durationFormat = "h:mm:ss";
+      	}
+      	if (durationFormat == "d h") {
+      		return sign + days + "d " + hours + "h";
+      	}
+      	if (durationFormat == "d h m") {
+      		return sign + days + "d " + hours + "h " + minutes + "m";
+      	}
+      	if (durationFormat == "d h m s") {
+      		return sign + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+      	}
+      	var decimals = durationFormat.indexOf(".sss") != -1 ? 3 : (durationFormat.indexOf(".ss") != -1 ? 2 : (durationFormat.indexOf(".s") != -1 ? 1 : 0));
+      	var secondsText = padNumber(seconds, 2);
+      	if (decimals > 0) {
+      		secondsText += "." + padNumber(milliseconds, 3).substring(0, decimals);
+      	}
+      	if (durationFormat.indexOf("d h:mm") == 0) {
+      		var dayClock = days + "d " + hours + ":" + padNumber(minutes, 2);
+      		if (durationFormat.indexOf(":ss") != -1) {
+      			dayClock += ":" + secondsText;
+      		}
+      		return sign + dayClock;
+      	}
+      	var clock = hoursTotal + ":" + padNumber(minutes, 2);
+      	if (durationFormat.indexOf(":ss") != -1) {
+      		clock += ":" + secondsText;
+      	}
+      	return sign + clock;
+      };
+      var formatNumberValue = function(value, field) {
+      	if (value == null || value == "") {
+      		return "";
+      	}
+      	var numberSource = typeof value == "number" ? "" + value : ("" + value).replace(",", ".");
+      	if (!/^-?\d+(\.\d+)?$/.test(numberSource)) {
+      		return "" + value;
+      	}
+      	var numberValue = parseFloat(numberSource);
+      	if (isNaN(numberValue)) {
+      		return "" + value;
+      	}
+      	var decimalPlaces = parseInt(getFieldOption(field, "number_decimal_places"), 10);
+      	if (isNaN(decimalPlaces)) {
+      		if (field != null && (field.type == "autonumber" || field.type == "count")) {
+      			decimalPlaces = 0;
+      		}
+      		else {
+      			return "" + value;
+      		}
+      	}
+      	if (decimalPlaces < 0) {
+      		decimalPlaces = 0;
+      	}
+      	if (decimalPlaces > 20) {
+      		decimalPlaces = 20;
+      	}
+      	return numberValue.toFixed(decimalPlaces);
+      };
+      var formatEmailHtml = function(value) {
+      	var email = String(value == undefined || value == null ? "" : value).replace(/^\s+|\s+$/g, "");
+      	if (email == "") {
+      		return "";
+      	}
+      	return "<a href=\"mailto:" + escapeDisplayHtml(email) + "\">" + escapeDisplayHtml(email) + "</a>";
+      };
+      var formatPhoneHtml = function(value) {
+      	var phone = String(value == undefined || value == null ? "" : value).replace(/^\s+|\s+$/g, "");
+      	if (phone == "") {
+      		return "";
+      	}
+      	var phoneHref = phone.replace(/[^\d+]/g, "");
+      	if (phoneHref == "") {
+      		return escapeDisplayHtml(phone);
+      	}
+      	return "<a href=\"tel:" + escapeDisplayHtml(phoneHref) + "\">" + escapeDisplayHtml(phone) + "</a>";
+      };
+      var formatRatingHtml = function(value) {
+      	var ratingValue = parseInt(value, 10);
+      	if (isNaN(ratingValue) || ratingValue <= 0) {
+      		return "";
+      	}
+      	var stars = "";
+      	for (var iRating = 0; iRating < ratingValue; iRating++) {
+      		stars += "&#9733;";
+      	}
+      	return "<span style=\"color:#f59e0b;letter-spacing:1px\">" + stars + "</span>";
+      };
+      var formatBooleanHtml = function(value) {
+      	if (isTrueValue(value)) {
+      		return "<span style=\"display:inline-flex;width:16px;height:16px;border:1px solid #22c55e;background:#22c55e;border-radius:3px;color:#fff;align-items:center;justify-content:center;font-size:12px;line-height:16px\">&#10003;</span>";
+      	}
+      	return "<span style=\"display:inline-flex;width:16px;height:16px;border:1px solid #cbd5e1;background:#fff;border-radius:3px\"></span>";
+      };
+      var formatBaserowCell = function(element, field, nested) {
+      	if (Array.isArray(element)) {
+      		var arrayValue = [];
+      		var arrayHtml = "";
+      		for (var iElement = 0; iElement < element.length; iElement++) {
+      			var arrayResult = formatBaserowCell(element[iElement], field, true);
+      			arrayValue.push(arrayResult.value);
+      			arrayHtml += arrayResult.innerHtml;
+      		}
+      		return { innerHtml: arrayHtml + (nested ? "" : close_html), value: arrayValue };
+      	}
+      	var resolvedType = getResolvedFieldType(field);
+      	var primitiveValue = getPrimitiveCellValue(element);
+      	var formattedText;
+      	if (resolvedType == "rating") {
+      		return { innerHtml: formatRatingHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+      	}
+      	if (resolvedType == "boolean") {
+      		return { innerHtml: formatBooleanHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+      	}
+      	if (resolvedType == "number" || resolvedType == "autonumber" || (field != null && (field.type == "number" || field.type == "autonumber" || field.type == "count"))) {
+      		formattedText = formatNumberValue(primitiveValue, field);
+      		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
+      	}
+      	if (resolvedType == "email" || (field != null && field.type == "email")) {
+      		return { innerHtml: formatEmailHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+      	}
+      	if (resolvedType == "phone_number" || (field != null && field.type == "phone_number")) {
+      		return { innerHtml: formatPhoneHtml(primitiveValue) + (nested ? "" : close_html), value: primitiveValue };
+      	}
+      	if (resolvedType == "date" || (field != null && (field.type == "date" || field.type == "created_on" || field.type == "last_modified"))) {
+      		formattedText = formatDateValue(primitiveValue, field);
+      		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
+      	}
+      	if (resolvedType == "duration" || (field != null && field.type == "duration")) {
+      		formattedText = formatDurationValue(primitiveValue, field);
+      		return { innerHtml: (nested ? get_base_array_html(escapeDisplayHtml(formattedText), "light-gray") : escapeDisplayHtml(formattedText)) + (nested ? "" : close_html), value: primitiveValue };
+      	}
+      	return computeAnyType(element, nested, resolvedType);
+      };
+      // lean_cells (asked by the Forms viewer): a cell keeps its value but not its displayValue HTML, which the viewer
+      // builds from that value and the options of its column, sent once in fields
+      var leanCells = typeof lean_cells != "undefined" && ("" + lean_cells) == "true" && !isModelMode;
+      var leanFields = {};
+      var leanTypedColumns = {};
+      var isLeanTypedField = function(field) {
+      	var resolvedType = getResolvedFieldType(field);
+      	var fieldType = field != null ? field.type : null;
+      	return resolvedType == "rating" || resolvedType == "boolean" || resolvedType == "number" || resolvedType == "autonumber" ||
+      		resolvedType == "email" || resolvedType == "phone_number" || resolvedType == "date" || resolvedType == "duration" ||
+      		fieldType == "number" || fieldType == "autonumber" || fieldType == "count" || fieldType == "email" || fieldType == "phone_number" ||
+      		fieldType == "date" || fieldType == "created_on" || fieldType == "last_modified" || fieldType == "duration";
+      };
+      // the value computeAnyType returns, without its HTML
+      var leanAnyValue = function(element) {
+      	if (Array.isArray(element)) {
+      		var arrayValue = [];
+      		for (var iLeanAny = 0; iLeanAny < element.length; iLeanAny++) {
+      			arrayValue.push(leanAnyValue(element[iLeanAny]));
+      		}
+      		return arrayValue;
+      	}
+      	if (element != null && typeof element == "object") {
+      		if (element.value != undefined && typeof element.value == "object") {
+      			return leanAnyValue(element.value);
+      		}
+      		if (element.value != undefined || (element.name != undefined && element.is_image == undefined && element.url == undefined) ||
+      			(element.url != undefined && element.label != undefined && element.is_image == undefined) || element.is_image != undefined) {
+      			return element;
+      		}
+      		log.warn("type not handled");
+      		return undefined;
+      	}
+      	return element;
+      };
+      // the value formatBaserowCell returns, without its HTML
+      var leanCellValue = function(element, typed) {
+      	if (Array.isArray(element)) {
+      		var arrayValue = [];
+      		for (var iLeanCell = 0; iLeanCell < element.length; iLeanCell++) {
+      			arrayValue.push(leanCellValue(element[iLeanCell], typed));
+      		}
+      		return arrayValue;
+      	}
+      	return typed ? getPrimitiveCellValue(element) : leanAnyValue(element);
+      };
+      // the options of a column that formatBaserowCell reads, as text, with the timezone it would show a date in
+      var leanFieldOptions = function(field) {
+      	var options = { type: "" + field.type };
+      	var resolvedType = getResolvedFieldType(field);
+      	if (resolvedType != null) {
+      		options.resolvedType = "" + resolvedType;
+      	}
+      	var optionNames = ["date_format", "date_time_format", "duration_format", "number_decimal_places", "date_include_time"];
+      	for (var iOption = 0; iOption < optionNames.length; iOption++) {
+      		if (field[optionNames[iOption]] != undefined) {
+      			options[optionNames[iOption]] = "" + field[optionNames[iOption]];
+      		}
+      	}
+      	if (resolvedType == "date" || field.type == "date" || field.type == "created_on" || field.type == "last_modified") {
+      		options.timezone = getDateDisplayTimezone(field);
+      	}
+      	return options;
+      };
+      var buildSignature = function(cells, columns) {
+      	var signature = [];
+      	for (var iSignature = 0; iSignature < columns.length; iSignature++) {
+      		var currentColumn = columns[iSignature];
+      		var currentCell = cells.hasOwnProperty(currentColumn) ? cells[currentColumn] : null;
+      		var currentValue = currentCell != null ? currentCell.value : null;
+      		signature.push(currentColumn + "=" + JSON.stringify(currentValue));
+      	}
+      	return signature.join("|");
+      };
+      var getAggregationDecimalPlaces = function(aggregationSpec) {
+      	// A sum keeps the decimal places of its column, like its cells (2 when the column has none); an average keeps
+      	// at least 2 so that the average of a whole-number column is not rounded to a whole number.
+      	var decimalPlaces = parseInt(getFieldOption(aggregationSpec.field, "number_decimal_places"), 10);
+      	if (isNaN(decimalPlaces)) {
+      		var aggregationFieldType = aggregationSpec.field != null ? aggregationSpec.field.type : null;
+      		decimalPlaces = aggregationFieldType == "autonumber" || aggregationFieldType == "count" || aggregationFieldType == "rating" ? 0 : 2;
+      	}
+      	if (["avg", "median", "std_dev", "variance"].indexOf(aggregationSpec.type) != -1 && decimalPlaces < 2) {
+      		decimalPlaces = 2;
+      	}
+      	return Math.min(Math.max(decimalPlaces, 0), 10);
+      };
+      var roundAggregateValue = function(value, decimalPlaces) {
+      	// Rounds half away from zero through the decimal exponent, so 1.005 gives 1.01 and not the binary 1.00.
+      	var roundedValue = Number(Math.round(Number(Math.abs(value) + "e" + decimalPlaces)) + "e-" + decimalPlaces);
+      	if (!isFinite(roundedValue)) {
+      		// A value already written with an exponent (1e-7, 1e+21) cannot take a second one.
+      		roundedValue = Number(Math.abs(value).toFixed(decimalPlaces));
+      	}
+      	return value < 0 ? -roundedValue : roundedValue;
+      };
+      // a value of a distribution as a cell of its column shows it, a dash for the empty value
+      var formatDistributionLabel = function(value, field) {
+      	if (value == null || value === "") {
+      		return "\u2014";
+      	}
+      	if (typeof value == "boolean") {
+      		return formatBooleanHtml(value);
+      	}
+      	var labelType = field == null ? null : getResolvedFieldType(field) || field.type;
+      	if (field != null && (labelType == "date" || field.type == "date" || field.type == "created_on" || field.type == "last_modified")) {
+      		return escapeDisplayHtml(formatDateValue(value, field));
+      	}
+      	if (field != null && (labelType == "number" || field.type == "number")) {
+      		return escapeDisplayHtml(formatNumberValue(value, field));
+      	}
+      	if (field != null && (labelType == "duration" || field.type == "duration")) {
+      		return escapeDisplayHtml(formatDurationValue(value, field));
+      	}
+      	return escapeDisplayHtml(value);
+      };
+      // the HTML of a distribution, as the footer of a Baserow grid shows it: each value with its count and its share of
+      // the rows, then the rows of the other values (an ellipsis)
+      var formatDistributionHtml = function(distribution, field) {
+      	var lines = [];
+      	for (var iDistribution = 0; iDistribution < distribution.length; iDistribution++) {
+      		var entry = distribution[iDistribution];
+      		var label = entry.others === true ? "\u2026" : formatDistributionLabel(entry.value, field);
+      		lines.push("<div>" + label + " <span style=\"opacity:.7\">(" + entry.count + ") " + Math.round(entry.percentage) + "%</span></div>");
+      	}
+      	return lines.join("");
+      };
+      var buildAggregateCell = function(aggregationSpec, aggregationValue) {
+      	var displayValue = aggregationValue == null ? "" : aggregationValue;
+      	var aggregationCellType = aggregationSpec.type == "min" || aggregationSpec.type == "max" ? "text" : "number";
+      	if ((["sum", "avg", "median", "std_dev", "variance"].indexOf(aggregationSpec.type) != -1) && typeof aggregationValue == "number" && isFinite(aggregationValue)) {
+      		var aggregationDecimalPlaces = getAggregationDecimalPlaces(aggregationSpec);
+      		aggregationValue = roundAggregateValue(aggregationValue, aggregationDecimalPlaces);
+      		displayValue = aggregationValue.toFixed(aggregationDecimalPlaces);
+      	} else if (aggregationSpec.percentage === true && typeof aggregationValue == "number" && isFinite(aggregationValue)) {
+      		// a share of the rows in percent, shown rounded as Baserow shows it (33%)
+      		aggregationValue = roundAggregateValue(aggregationValue, 2);
+      		displayValue = Math.round(aggregationValue) + "%";
+      	} else if (aggregationSpec.fieldKind == "date") {
+      		aggregationCellType = "text";
+      		displayValue = aggregationValue == null ? "" : escapeDisplayHtml(formatDateValue(aggregationValue, aggregationSpec.field));
+      	} else if (aggregationSpec.type == "distribution") {
+      		aggregationCellType = "text";
+      		displayValue = Array.isArray(aggregationValue) ? formatDistributionHtml(aggregationValue, aggregationSpec.field) : "";
+      	}
+      	var cell = {
+      		displayName: aggregationSpec.key,
+      		type: "html",
+      		value: aggregationValue,
+      		displayValue: base_html + displayValue + close_html,
+      		cType: aggregationCellType,
+      		filterCompletion: [],
+      		filterHide: true,
+      		sortHide: false,
+      		// what the viewer needs to name the value ("Somme · Contract Value") in a chart legend or a grid header, in the
+      		// language of the user; displayName stays the key, which the viewer uses as the name of the column
+      		aggregationType: aggregationSpec.type,
+      		aggregationColumn: aggregationSpec.column
+      	};
+      	if (aggregationSpec.label != null && aggregationSpec.label != "") {
+      		cell.label = aggregationSpec.label;
+      	}
+      	return cell;
+      };
+      var getAggregationSourceValue = function(cell) {
+      	if (cell == null || cell.value == null) {
+      		return null;
+      	}
+      	var sourceValue = cell.value;
+      	if (Array.isArray(sourceValue)) {
+      		return null;
+      	}
+      	if (typeof sourceValue == "object") {
+      		if (sourceValue.value != null && typeof sourceValue.value != "object") {
+      			return sourceValue.value;
+      		}
+      		if (sourceValue.name != null && typeof sourceValue.name != "object") {
+      			return sourceValue.name;
+      		}
+      		return null;
+      	}
+      	return sourceValue;
+      };
+      var getNumericValue = function(sourceValue) {
+      	if (typeof sourceValue == "number") {
+      		return isFinite(sourceValue) ? sourceValue : null;
+      	}
+      	if (typeof sourceValue == "string" && sourceValue != "") {
+      		var numericValue = parseFloat(sourceValue.replace(",", "."));
+      		return isNaN(numericValue) ? null : numericValue;
+      	}
+      	return null;
+      };
+      // a date of Baserow ("2024-03-05", "2024-03-05T08:07:00.123456Z") as a text that sorts in time order: the seconds and
+      // their fraction completed, the time in UTC; null for any other value
+      var getDateSortKey = function(value) {
+      	var text = "" + value;
+      	if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+      		return text;
+      	}
+      	var dateMatch = text.match(/^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2})(?::(\d{2}))?(?:\.(\d{1,9}))?(Z|[+-]\d{2}:?\d{2})?$/);
+      	if (dateMatch == null) {
+      		return null;
+      	}
+      	if (dateMatch[5] != null && dateMatch[5] != "Z" && !/^[+-]00:?00$/.test(dateMatch[5])) {
+      		var utcDate = new Date(text);
+      		return isNaN(utcDate.getTime()) ? null : getDateSortKey(utcDate.toISOString());
+      	}
+      	return dateMatch[1] + "T" + dateMatch[2] + ":" + (dateMatch[3] || "00") + "." + ((dateMatch[4] || "") + "000000000").substring(0, 9) + "Z";
+      };
+      var updateAggregationState = function(aggregationState, aggregationSpec, sourceCell) {
+      	if (aggregationSpec.pluginOnly === true) {
+      		// computed by the c8oforms Baserow plugin only: no value from the rows read (the model of the viewer)
+      		return;
+      	}
+      	if (aggregationSpec.type == "count") {
+      		aggregationState.value = (aggregationState.value == null ? 0 : aggregationState.value) + 1;
+      		return;
+      	}
+      	var sourceValue = getAggregationSourceValue(sourceCell);
+      	if (sourceValue == null) {
+      		return;
+      	}
+      	if (aggregationSpec.type == "sum" || aggregationSpec.type == "avg") {
+      		var numericValue = getNumericValue(sourceValue);
+      		if (numericValue == null) {
+      			return;
+      		}
+      		aggregationState.sum = (aggregationState.sum == null ? 0 : aggregationState.sum) + numericValue;
+      		aggregationState.count = (aggregationState.count == null ? 0 : aggregationState.count) + 1;
+      		aggregationState.value = aggregationSpec.type == "sum" ? aggregationState.sum : aggregationState.sum / aggregationState.count;
+      		return;
+      	}
+      	// a date in time order (as a number it was its year only: parseFloat("2024-03-05") is 2024)
+      	if (aggregationSpec.field != null && getAggregationFieldKind(aggregationSpec.field) == "date") {
+      		var dateKey = getDateSortKey(sourceValue);
+      		if (dateKey != null) {
+      			if (aggregationState.dateKey == null ||
+      				(aggregationSpec.type == "min" ? dateKey < aggregationState.dateKey : dateKey > aggregationState.dateKey)) {
+      				aggregationState.value = sourceValue;
+      				aggregationState.dateKey = dateKey;
+      			}
+      			return;
+      		}
+      	}
+      	if (aggregationState.value == null) {
+      		aggregationState.value = sourceValue;
+      		aggregationState.numericValue = getNumericValue(sourceValue);
+      		return;
+      	}
+      	var currentNumericValue = getNumericValue(sourceValue);
+      	if (aggregationState.numericValue != null && currentNumericValue != null) {
+      		var shouldReplace = aggregationSpec.type == "min" ? currentNumericValue < aggregationState.numericValue : currentNumericValue > aggregationState.numericValue;
+      		if (shouldReplace) {
+      			aggregationState.value = sourceValue;
+      			aggregationState.numericValue = currentNumericValue;
+      		}
+      		return;
+      	}
+      	var currentStringValue = "" + sourceValue;
+      	var savedStringValue = "" + aggregationState.value;
+      	var shouldReplaceByString = aggregationSpec.type == "min" ? currentStringValue < savedStringValue : currentStringValue > savedStringValue;
+      	if (shouldReplaceByString) {
+      		aggregationState.value = sourceValue;
+      		aggregationState.numericValue = currentNumericValue;
+      	}
+      };
+      // the kind of column an aggregation of the plugin applies to besides the ones the plugin accepts: checked counts on
+      // booleans, earliest and latest dates on dates
+      var getAggregationFieldKind = function(field) {
+      	var kindType = field.type == "formula" || field.type == "lookup" ? field.formula_type : field.type;
+      	if (kindType == "boolean") {
+      		return "boolean";
+      	}
+      	if (kindType == "date" || kindType == "created_on" || kindType == "last_modified") {
+      		return "date";
+      	}
+      	return null;
+      };
+      if (aggregationError == null && aggregationSpecs != null && "structure" in this) {
+      	if (!Array.isArray(structure)) {
+      		structure = [structure];
+      	}
+      	var aggregationColumnInfo = {};
+      	var numericAggregationTypes = {
+      		autonumber: true,
+      		duration: true,
+      		number: true,
+      		rating: true
+      	};
+      	var unsupportedAggregationTypes = {
+      		file: true,
+      		link_row: true,
+      		multiple_collaborators: true,
+      		multiple_select: true
+      	};
+      	for (var iStructureField = 0; iStructureField < structure.length; iStructureField++) {
+      		var currentStructureField = structure[iStructureField];
+      		aggregationColumnInfo[currentStructureField.name] = {
+      			field: currentStructureField,
+      			filterType: getBrFilterType(currentStructureField)
+      		};
+      	}
+      	for (var iAggregationValidation = 0; iAggregationValidation < aggregationSpecs.length; iAggregationValidation++) {
+      		var currentAggregationSpec = aggregationSpecs[iAggregationValidation];
+      		if (currentAggregationSpec.type == "count") {
+      			continue;
+      		}
+      		var currentAggregationInfo = aggregationColumnInfo[currentAggregationSpec.column];
+      		if (currentAggregationInfo == null) {
+      			aggregationError = "The aggregation column ''" + currentAggregationSpec.column + "'' was not found in the table structure.";
+      			break;
+      		}
+      		var currentAggregationType = currentAggregationInfo.filterType.type;
+      		currentAggregationSpec.field = currentAggregationInfo.field;
+      		if (currentAggregationSpec.pluginOnly === true) {
+      			// the plugin refuses a column its aggregation does not apply to (Baserow field_is_compatible)
+      			if (currentAggregationSpec.fieldKind != null && getAggregationFieldKind(currentAggregationInfo.field) != currentAggregationSpec.fieldKind) {
+      				aggregationError = "The aggregation ''" + currentAggregationSpec.type + "'' only applies to " + currentAggregationSpec.fieldKind + " columns. Column ''" + currentAggregationSpec.column + "'' is of type ''" + currentAggregationInfo.field.type + "''.";
+      				break;
+      			}
+      			continue;
+      		}
+      		if (currentAggregationInfo.filterType.isArray === true || unsupportedAggregationTypes[currentAggregationType] === true) {
+      			aggregationError = "The aggregation ''" + currentAggregationSpec.type + "'' is not supported on column ''" + currentAggregationSpec.column + "'' of type ''" + currentAggregationType + "''.";
+      			break;
+      		}
+      		if ((currentAggregationSpec.type == "sum" || currentAggregationSpec.type == "avg") && numericAggregationTypes[currentAggregationType] !== true) {
+      			aggregationError = "The aggregation ''" + currentAggregationSpec.type + "'' is only supported on numeric columns. Column ''" + currentAggregationSpec.column + "'' is of type ''" + currentAggregationType + "''.";
+      			break;
+      		}
+      	}
+      }
+      // lib_baserow.c8o_aggregate: one row per group of the plugin, as the reading of the rows builds it from the first row
+      // of the group in the table order (its id and order), the groups in the order of these first rows, after the sort of
+      // the source on grouped columns, as Baserow sorts: a select by its option, a number by its value, the empty first in
+      // ascending order and last in descending order
+      var pluginGroupRows = function(groups, groupColumns, sorts, fieldsByName) {
+      	var numericTypes = { number: true, rating: true, autonumber: true, count: true, rollup: true, duration: true };
+      	var sortValue = function(value, field) {
+      		if (value != null && typeof value == "object" && !Array.isArray(value)) {
+      			value = value.value;
+      		}
+      		if (value == null || value === "" || Array.isArray(value)) {
+      			return null;
+      		}
+      		if (typeof value == "boolean") {
+      			return value ? 1 : 0;
+      		}
+      		if (typeof value == "number" || (field != null && numericTypes[field.type] === true && !isNaN(Number(value)))) {
+      			return Number(value);
+      		}
+      		return "" + value;
+      	};
+      	var compareSorted = function(a, b) {
+      		for (var iSort = 0; sorts != null && iSort < sorts.length; iSort++) {
+      			var field = fieldsByName != null ? fieldsByName[sorts[iSort].name] : null;
+      			var va = sortValue(a[sorts[iSort].name], field);
+      			var vb = sortValue(b[sorts[iSort].name], field);
+      			var bySort = 0;
+      			if (va == null || vb == null) {
+      				bySort = va == null && vb == null ? 0 : (va == null ? -1 : 1);
+      			} else if (typeof va == "number" && typeof vb == "number") {
+      				bySort = va - vb;
+      			} else {
+      				bySort = ("" + va).localeCompare("" + vb, "en");
+      			}
+      			if (bySort != 0) {
+      				return sorts[iSort].desc ? -bySort : bySort;
+      			}
+      		}
+      		return 0;
+      	};
+      	var orderedGroups = groups.slice().sort(function(a, b) {
+      		var bySorts = compareSorted(a, b);
+      		if (bySorts != 0) {
+      			return bySorts;
+      		}
+      		var byOrder = Number(a.c8o_order) - Number(b.c8o_order);
+      		return byOrder != 0 ? byOrder : Number(a.c8o_first) - Number(b.c8o_first);
+      	});
+      	return orderedGroups.map(function(group) {
+      		var groupRow = { id: group.c8o_first, order: group.c8o_order };
+      		for (var iGroupColumn = 0; iGroupColumn < groupColumns.length; iGroupColumn++) {
+      			// a column the table does not have: no key, as the rows read without it (unknown_group_by=ignore)
+      			if (Object.prototype.hasOwnProperty.call(group, groupColumns[iGroupColumn])) {
+      				groupRow[groupColumns[iGroupColumn]] = group[groupColumns[iGroupColumn]];
+      			}
+      		}
+      		Object.defineProperty(groupRow, "__c8oAggregates", { value: group, enumerable: false });
+      		return groupRow;
+      	});
+      };
+      // the value updateAggregationState would reach on all the rows of the group: numbers for count, sum and avg, the
+      // Baserow text of a number field (its decimal places) for min and max
+      // The aggregations only the plugin computes: a count, a share of the rows of the group in percent (none without
+      // rows, as Baserow), a date as Baserow gives it, a distribution as [{ value, count, percentage }] then the rows of
+      // the other values ({ others: true, count, percentage }).
+      var pluginAggregateValue = function(group, spec, specIndex) {
+      	if (spec.type == "count") {
+      		return Number(group.count);
+      	}
+      	var pluginValue = group["c8o_a" + specIndex];
+      	if (spec.type == "distribution") {
+      		var rowCount = Number(group.count);
+      		var distribution = [];
+      		var listedCount = 0;
+      		var entries = Array.isArray(pluginValue) ? pluginValue : [];
+      		for (var iEntry = 0; iEntry < entries.length; iEntry++) {
+      			var entryCount = Number(entries[iEntry].count);
+      			listedCount += entryCount;
+      			distribution.push({ value: entries[iEntry].value, count: entryCount, percentage: rowCount > 0 ? Math.round(entryCount / rowCount * 10000) / 100 : 0 });
+      		}
+      		if (rowCount > listedCount) {
+      			distribution.push({ others: true, count: rowCount - listedCount, percentage: Math.round((rowCount - listedCount) / rowCount * 10000) / 100 });
+      		}
+      		return distribution;
+      	}
+      	if (pluginValue == null || pluginValue === "") {
+      		return null;
+      	}
+      	if (spec.percentage === true) {
+      		var percentageCount = Number(group.count);
+      		return percentageCount > 0 ? Number(pluginValue) / percentageCount * 100 : null;
+      	}
+      	// a date as the rows endpoint writes it, the value of its cell: min and max of a date column too
+      	if (spec.fieldKind == "date" || ((spec.type == "min" || spec.type == "max") && spec.field != null && getAggregationFieldKind(spec.field) == "date")) {
+      		return "" + pluginValue;
+      	}
+      	// a number column, or a formula returning a number, written with the decimal places of its cells
+      	if ((spec.type == "min" || spec.type == "max") && spec.field != null && (spec.field.type == "number" ||
+      		(["formula", "count", "rollup", "lookup"].indexOf(spec.field.type) != -1 && spec.field.formula_type == "number"))) {
+      		var decimalPlaces = Number(spec.field.number_decimal_places);
+      		return Number(pluginValue).toFixed(isNaN(decimalPlaces) ? 0 : decimalPlaces);
+      	}
+      	return Number(pluginValue);
+      };
+      if (aggregationError == null && pluginAggregate != null && pluginGroups != null && groupByColumns != null) {
+      	var pluginFieldsByName = {};
+      	var pluginStructure = "structure" in this && structure != null ? (Array.isArray(structure) ? structure : [structure]) : [];
+      	for (var iPluginStructure = 0; iPluginStructure < pluginStructure.length; iPluginStructure++) {
+      		pluginFieldsByName[pluginStructure[iPluginStructure].name] = pluginStructure[iPluginStructure];
+      	}
+      	results = pluginGroupRows(pluginGroups, groupByColumns, pluginAggregate.sorts, pluginFieldsByName);
+      }
+      if (aggregationError == null) {
+      	for (var elem of results) {
+      	var obj = {};
+      	var cpt = 0;
+      	for (var key in elem) {
+      		var html = "" + base_html;
+      		var current = elem[key];
+      		var currentField = null;
+      		var isHiddenColumn = key == "id" || key == "order" || (jConfig.hidden ? jConfig.hidden.includes(key) : false);
+      		if ("structure" in this) {
+      			if (!Array.isArray(structure)) {
+      				structure = [structure];
+      			}
+      			if (shouldExposeColumn(key)) {
+      				currentField = structureByName[key];
+      			}
+      		}
+      		if (current != null && leanCells) {
+      			if (leanTypedColumns[key] === undefined) {
+      				leanTypedColumns[key] = isLeanTypedField(currentField);
+      				if (currentField != null) {
+      					leanFields[key] = leanFieldOptions(currentField);
+      				}
+      			}
+      			obj[key] = { displayName: key, type: "html", value: leanCellValue(current, leanTypedColumns[key]) };
+      		} else if (current != null) {
+      			obj[key] = { displayName: key, type: "html", value: "" };
+      			var result = formatBaserowCell(current, currentField, false);
+      			html += result.innerHtml;
+      			obj[key].value = result.value;
+      			obj[key].displayValue = html;
+      		} else {
+      			obj[key] = { displayName: key, type: "html", value: null };
+      		}
+      		if (isHiddenColumn) {
+      			obj[key].hidden = true;
+      		}
+      
+      		if (isModelMode && "structure" in this) {
+      			if (!Array.isArray(structure)) {
+      				structure = [structure];
+      			}
+      			var cTargetCompletion = [];
+      			var cHideFromFiltering = true;
+      			var cTarget = null;
+      			var result = {
+      				type: null,
+      				value: undefined
+      			};
+      			if (shouldExposeColumn(key)) {
+      				cTarget = structure.filter((x) => {
+      					return x.name == key;
+      				})[0];
+      				if (cTarget != null) {
+      					result = getBrFilterType(cTarget)
+      					obj[key]["cType"] = result.type;
+      					cTargetCompletion = result.value;
+      					cHideFromFiltering = false;
+      					if (cTargetCompletion == undefined) {
+      						cTargetCompletion = [];
+      						cHideFromFiltering = true;
+      					}
+      					if (cTarget.type == "single_select" && obj[key].value == null) {
+      						obj[key].value = {
+      							id: 0,
+      							value: "",
+      							color: ""
+      						};
+      					}
+      				}
+      			}
+      
+      			obj[key]["filterCompletion"] = cTargetCompletion;
+      			obj[key]["filterHide"] = cHideFromFiltering;
+      			obj[key]["sortHide"] = cHideFromFiltering || result.type == "file" || result.type == "link_row" || (cTarget != undefined && cTarget.array_formula_type == "multiple_select")
+      
+      		}
+      	}
+      
+      	var jReorderedRow = {};
+      	jReorderedRow["id"] = obj["id"];
+      	jReorderedRow["order"] = obj["order"];
+      	if (displayColumns == null) {
+      		if ("structure" in this) {
+      			if (!Array.isArray(structure)) {
+      				structure = [structure];
+      			}
+      			for (var iStructureField = 0; iStructureField < structure.length; iStructureField++) {
+      				var structureFieldName = structure[iStructureField].name;
+      				if (obj.hasOwnProperty(structureFieldName)) {
+      					jReorderedRow[structureFieldName] = obj[structureFieldName];
+      				}
+      			}
+      		}
+      		for (var currentRowKey in obj) {
+      			if (obj.hasOwnProperty(currentRowKey) && !jReorderedRow.hasOwnProperty(currentRowKey)) {
+      				jReorderedRow[currentRowKey] = obj[currentRowKey];
+      			}
+      		}
+      	}
+      	else {
+      		displayColumns.forEach((col) => {
+      			if (obj.hasOwnProperty(col)) {
+      				jReorderedRow[col] = obj[col];
+      			}
+      		});
+      	}
+      	if (groupByColumns != null) {
+      		var groupSignature = buildSignature(obj, groupByColumns);
+      		var groupedRow = groupedRows[groupSignature];
+      		if (groupedRow == null) {
+      			groupedRow = jReorderedRow;
+      			groupedRows[groupSignature] = groupedRow;
+      			groupedStates[groupSignature] = {};
+      			data.push(groupedRow);
+      		}
+      		for (var iAggregationSpec = 0; iAggregationSpec < aggregationSpecs.length; iAggregationSpec++) {
+      			var aggregationSpec = aggregationSpecs[iAggregationSpec];
+      			var aggregationState = groupedStates[groupSignature][aggregationSpec.key];
+      			if (aggregationState == null) {
+      				aggregationState = {};
+      				groupedStates[groupSignature][aggregationSpec.key] = aggregationState;
+      			}
+      			var aggregationSourceCell = aggregationSpec.column != null && obj.hasOwnProperty(aggregationSpec.column) ? obj[aggregationSpec.column] : null;
+      			if (elem.__c8oAggregates != null) {
+      				aggregationState.value = pluginAggregateValue(elem.__c8oAggregates, aggregationSpec, iAggregationSpec);
+      			} else {
+      				updateAggregationState(aggregationState, aggregationSpec, aggregationSourceCell);
+      			}
+      			groupedRow[aggregationSpec.key] = buildAggregateCell(aggregationSpec, aggregationState.value);
+      		}
+      		continue;
+      	}
+      	else if (distinctColumns != null) {
+      		var distinctSignature = buildSignature(obj, distinctColumns);
+      		if (distinctRows[distinctSignature] === true) {
+      			continue;
+      		}
+      		distinctRows[distinctSignature] = true;
+      	}
+      	data.push(jReorderedRow);
+      	}
+      	
+      	if ("structure" in this && data.length === 0) {
+      	if (!Array.isArray(structure)) {
+      		structure = [structure];
+      	}
+      
+      	var row = {};
+      
+      	row["id"] = {
+      		displayName: "id",
+      		type: "html",
+      		value: "",
+      		hidden: true,
+      		displayValue: "<div style=''display:flex; white-space: normal; align-items:center''></div>",
+      		filterCompletion: [],
+      		filterHide: true
+      	};
+      
+      	row["order"] = {
+      		displayName: "order",
+      		type: "html",
+      		value: "",
+      		hidden: true,
+      		displayValue: "<div style=''display:flex; white-space: normal; align-items:center''></div>",
+      		filterCompletion: [],
+      		filterHide: true
+      	};
+      
+      	var appendedModelFields = {};
+      	var appendModelField = function(field) {
+      		if (field == null || field.name == null || appendedModelFields[field.name] === true || !shouldExposeColumn(field.name)) {
+      			return;
+      		}
+      		appendedModelFields[field.name] = true;
+      		var result = getBrFilterType(field);
+      		
+      		var cType = result.type;
+      		var cTargetCompletion = result.value;
+      		var cHideFromFiltering = false;
+      		if (cTargetCompletion == undefined) {
+      			cTargetCompletion = [];
+      			cHideFromFiltering = true;
+      		}
+      
+      		var value = "";
+      		if (result.type === "single_select") {
+      			value = { id: 0, value: "", color: "" };
+      		} else if (result.type === "boolean") {
+      			value = false;
+      		} else if (result.isArray) {
+      			value = [];
+      		} else {
+      			value = "";
+      		}
+      
+      		var formattedModelValue = formatBaserowCell(value, field, false);
+      		row[field.name] = {
+      			displayName: field.name,
+      			type: "html",
+      			value: formattedModelValue.value,
+      			displayValue: "<div style=''display:flex; white-space: normal; align-items:center''>" + formattedModelValue.innerHtml,
+      			cType: cType,
+      			filterCompletion: cTargetCompletion,
+      			filterHide: cHideFromFiltering
+      		};
+      	};
+      	if (displayColumns != null) {
+      		var structureByName = {};
+      		for (var iModelStructure = 0; iModelStructure < structure.length; iModelStructure++) {
+      			structureByName[structure[iModelStructure].name] = structure[iModelStructure];
+      		}
+      		for (var iDisplayColumn = 0; iDisplayColumn < displayColumns.length; iDisplayColumn++) {
+      			appendModelField(structureByName[displayColumns[iDisplayColumn]]);
+      		}
+      	}
+      	for (var iFallbackStructure = 0; iFallbackStructure < structure.length; iFallbackStructure++) {
+      		appendModelField(structure[iFallbackStructure]);
+      	}
+      	if (aggregationSpecs != null) {
+      		for (var iAggregationModel = 0; iAggregationModel < aggregationSpecs.length; iAggregationModel++) {
+      			var aggregationModelSpec = aggregationSpecs[iAggregationModel];
+      			row[aggregationModelSpec.key] = buildAggregateCell(aggregationModelSpec, aggregationModelSpec.type == "count" ? 0 : null);
+      		}
+      	}
+      	if(isModelMode){
+      		data.push(row);
+      	}
+      	else{
+      		colDef = [];
+      		colDef.push(row);
+      	}
+      	
+      	}
+      }
+      '
+↓IfStreamPrepare [steps.IfStep-1996000000087]: 
+  condition: streamRows
+  ↓PrepareStream [steps.SimpleStep-1996000000088]: 
+    expression: |
+      'data = [];
+      colDef = null;
+      aggregationError = null;
+      leanCells = typeof lean_cells != "undefined" && ("" + lean_cells) == "true";
+      leanFields = {};
+      nativeStructure = typeof structure == "undefined" || structure == null ? null : (Array.isArray(structure) ? structure : [structure]);
+      nativeHidden = ["id", "order"].concat(jConfig.hidden ? (Array.isArray(jConfig.hidden) ? jConfig.hidden : [jConfig.hidden]) : []);
+      nativeColumns = groupByColumns != null ? groupByColumns.concat(aggregationSpecs.map(function(spec) { return spec.key; })) : displayColumns;
+      nativeOrder = nativeStructure == null ? null : nativeStructure.map(function(field) { return field.name; });
+      '
+↓IfStreamToken [steps.IfStep-1996000000089]: 
+  comment: the token of the requests of the next pages, only when there is one
+  condition: streamRows && next_page != null
+  ↓NoLog_Call_Token [steps.SimpleStep-1898400003002]: 
+    comment: The answer of TokenGetOrRefreshNative (the Bearer) holds a Baserow token, the engine would log it in this thread
+    expression: org.apache.log4j.MDC.put("nolog", true);
+  ↓Call_Token [steps.SequenceStep-1996000000090]: 
+    output: false
+    sourceSequence: lib_BaseRow.TokenGetOrRefreshNative
+    ↓authorization [variables.StepVariable-1996000009001]: 
+      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfigNative
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1996000000002
+            - java.lang.String: 
+              - ↑value: $.Bearer
+      visibility: '-1'
+  ↓Log_Call_Token [steps.SimpleStep-1898400003003]: 
+    expression: org.apache.log4j.MDC.remove("nolog");
+  ↓streamAuthorization [steps.SimpleSourceStep-1996000000091]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1996000000090
+          - java.lang.String: 
+            - ↑value: $.Bearer
+    variableName: streamAuthorization
+↓IfNativeCells [steps.IfStep-1996000000092]: 
+  condition: nativeSteps
+  ↓PrepareNative [steps.SimpleStep-1996000000093]: 
+    expression: |
+      'data = [];
+      colDef = null;
+      aggregationError = null;
+      leanCells = typeof lean_cells != "undefined" && ("" + lean_cells) == "true";
+      leanFields = {};
+      nativeStructure = typeof structure == "undefined" || structure == null ? null : (Array.isArray(structure) ? structure : [structure]);
+      nativeHidden = ["id", "order"].concat(jConfig.hidden ? (Array.isArray(jConfig.hidden) ? jConfig.hidden : [jConfig.hidden]) : []);
+      nativeColumns = groupByColumns != null ? groupByColumns.concat(aggregationSpecs.map(function(spec) { return spec.key; })) : displayColumns;
+      nativeOrder = nativeStructure == null ? null : nativeStructure.map(function(field) { return field.name; });
+      '
+  ↓cells [steps.JsonFormatCellsStep-1996000000094]: 
+    rows: results
+    schema: nativeStructure
+    columns: displayColumns
+    hiddenColumns: nativeHidden
+    valuesOnly: leanCells
+    defaultTimezone: '"${lib_BaseRow.dateTimezone=UTC}"'
+    variableName: cells
+    fieldsVariableName: leanFields
+  ↓distinct [steps.JsonDistinctStep-1996000000095]: 
+    rows: cells
+    columns: distinctColumns
+    variableName: cells
+  ↓groups [steps.JsonGroupStep-1996000000096]: 
+    rows: cells
+    groupColumns: groupByColumns
+    aggregations: aggregationSpecs
+    schema: nativeStructure
+    errorVariableName: aggregationError
+    variableName: cells
+  ↓columns [steps.JsonSelectColumnsStep-1996000000097]: 
+    rows: cells
+    firstColumns: '["id", "order"]'
+    columns: nativeColumns
+    columnsOrder: nativeOrder
+    variableName: data
+↓IfAggregationError [steps.IfStep-1996000000098]: 
   condition: aggregationError != null
-  ↓Error_structure [steps.XMLErrorStep-1774525107795]: 
+  ↓Error_structure [steps.XMLErrorStep-1996000000099]: 
     code: 
       - xmlizable: 
         - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -1255,8 +2405,9 @@ comment: |
         - SmartType: 
           - ↑mode: JS
           - →→: aggregationError
-  ↓Return [steps.ReturnStep-1774525107797]: 
-↓object [steps.JsonToXmlStep-1734686735780]: 
+  ↓Return [steps.ReturnStep-1996000000100]: 
+↓object [steps.JsonStreamRowsStep-1996000000101]: 
+  comment: the rows (data), in stream for a grid that is not grouped (lib_baserow.stream_rows), else the data built above
   jsonObject: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -1269,7 +2420,44 @@ comment: |
       - SmartType: 
         - ↑mode: PLAIN
         - →→: data
-↓object1 [steps.JsonToXmlStep-1764688665809]: 
+  streamMode: streamRows
+  rows: results
+  firstPage: page
+  nextUrl: streamNextUrl
+  baseUrl: '("${lib_baserow.https=true}" == "true" ? "https://" : "http://") + "${lib_baserow.server=baserow-backend.convertigo.net}" + ":" + "${lib_baserow.port=443}"'
+  authorization: streamAuthorization
+  maxRows: max_search_results
+  schema: nativeStructure
+  columns: displayColumns
+  hiddenColumns: nativeHidden
+  valuesOnly: leanCells
+  defaultTimezone: '"${lib_BaseRow.dateTimezone=UTC}"'
+  distinctColumns: distinctColumns
+  firstColumns: '["id", "order"]'
+  outputColumns: nativeColumns
+  columnsOrder: nativeOrder
+  failPage: '"${lib_baserow.stream_fail_page=}"'
+  restartPageSize: streamPageSize
+  fieldsVariableName: leanFields
+  errorVariableName: streamError
+↓IfStreamError [steps.IfStep-1996000000102]: 
+  comment: an error of Baserow while the rows were read during the sequence (values only): the error alone, as before
+  condition: streamError != null
+  ↓error [steps.JsonToXmlStep-1996000000103]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: streamError
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+  ↓Return [steps.ReturnStep-1996000000104]: 
+↓object1 [steps.JsonToXmlStep-1996000000105]: 
   jsonObject: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -1282,10 +2470,237 @@ comment: |
       - SmartType: 
         - ↑mode: PLAIN
         - →→: colDef
-↓max_search_results [variables.RequestableVariable-1780076000000]: 
+↓IfCount [steps.IfStep-1796300000004]: 
+  comment: the number of rows of Baserow for the filters of a source that reads rows (not grouped, distinct nor a model), and for a grid that paginates (grid_page_size) the page read
+  condition: total_count != null && !isModelMode && pluginGroups == null && groupByColumns == null && distinctColumns == null
+  ↓count [steps.JsonToXmlStep-1796300000005]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: total_count
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: count
+  ↓IfPaged [steps.IfStep-1796300000006]: 
+    condition: pagedRead
+    ↓page [steps.JsonToXmlStep-1796300000007]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: Number(page)
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: page
+    ↓size [steps.JsonToXmlStep-1796300000008]: 
+      jsonObject: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: JS
+            - →→: fetch_page_size
+      key: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: size
+↓IfRowFilterIncomplete [steps.IfStep-1996000000409]: 
+  comment: (js/row_filter.js) the rows kept by a filter or a sort on the row id or order come from the first max_search_results rows of Baserow only, rows were left: the answer says so (incomplete), with the number of rows read
+  condition: rowFilter.active && rowFilterIncomplete === true
+  ↓incomplete [steps.JsonToXmlStep-1996000000410]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: 'true'
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: incomplete
+  ↓rows_read [steps.JsonToXmlStep-1996000000411]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: rowFilterRead
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: rows_read
+↓SortSources [steps.SimpleStep-1796300000009]: 
+  comment: 'the options of a text formula that formats one number or date field (an amount "44 000") name that field: sortSource and sortType (number or date), as the source orders and filters it by that field (js/field_sort_source.js)'
+  expression: |
+    'if (leanCells && leanFields != null && typeof structure != "undefined" && structure != null) {
+    	include("js/field_sort_source.js");
+    	var sortStructure = Array.isArray(structure) ? structure : [structure];
+    	// the native steps leave a java.util.Map (Rhino does not tell it by instanceof), ComputeData an object
+    	var leanIsMap = typeof leanFields.entrySet == "function";
+    	var leanNames = leanIsMap ? leanFields.keySet().toArray() : Object.keys(leanFields);
+    	for (var iLean = 0; iLean < leanNames.length; iLean++) {
+    		var leanName = "" + leanNames[iLean];
+    		var sortSource = getFormulaSortSource(sortStructure, leanName);
+    		var leanOptions = leanIsMap ? leanFields.get(leanName) : leanFields[leanName];
+    		if (sortSource == null || leanOptions == null) {
+    			continue;
+    		}
+    		if (typeof leanOptions.put == "function") {
+    			leanOptions.put("sortSource", sortSource.name);
+    			leanOptions.put("sortType", sortSource.kind);
+    		} else {
+    			leanOptions.sortSource = sortSource.name;
+    			leanOptions.sortType = sortSource.kind;
+    		}
+    	}
+    }
+    '
+↓IfLeanFields [steps.IfStep-1996000000106]: 
+  comment: lean_cells answer the options of the columns, from which the viewer builds the displayValue of the cells
+  condition: leanCells
+  ↓FieldDisplayOptions [steps.SimpleStep-1996000000203]: 
+    comment: the options of the columns the viewer formats a cell with as Baserow shows it (separators of a number, rating, timezone, aggregates of a grouped answer)
+    expression: |
+      '// the options of a column, as the JavaScript, native or stream reading of the rows left them (a Java map for the native
+      // steps, which the 8.4.7 engine does not give as instanceof java.util.Map: known by its entrySet), as an object of texts.
+      // leanFields itself is the raw Java object the native steps put in the scope: its members can be read here, but it is
+      // never passed to a function (Invalid JavaScript value of type java.util.LinkedHashMap); its entries come wrapped.
+      var isJavaMap = function(value) {
+      	return value != null && typeof value != "string" && typeof value.entrySet == "function";
+      };
+      var leanFieldsObject = {};
+      if (leanFields != null && typeof leanFields.entrySet == "function") {
+      	var leanFieldsIterator = leanFields.entrySet().iterator();
+      	while (leanFieldsIterator.hasNext()) {
+      		var leanFieldsEntry = leanFieldsIterator.next();
+      		var leanFieldOptionsCopy = {};
+      		var leanFieldOptionsValue = leanFieldsEntry.getValue();
+      		if (isJavaMap(leanFieldOptionsValue)) {
+      			var leanFieldOptionsIterator = leanFieldOptionsValue.entrySet().iterator();
+      			while (leanFieldOptionsIterator.hasNext()) {
+      				var leanFieldOption = leanFieldOptionsIterator.next();
+      				leanFieldOptionsCopy["" + leanFieldOption.getKey()] = leanFieldOption.getValue() == null ? null : "" + leanFieldOption.getValue();
+      			}
+      		}
+      		leanFieldsObject["" + leanFieldsEntry.getKey()] = leanFieldOptionsCopy;
+      	}
+      } else if (leanFields != null) {
+      	for (var leanFieldsKey in leanFields) {
+      		leanFieldsObject[leanFieldsKey] = leanFields[leanFieldsKey];
+      	}
+      }
+      leanFields = leanFieldsObject;
+      // what the viewer needs besides to show a cell as Baserow does: the separators, prefix and suffix of a number, the
+      // maximum, color and icon of a rating, the timezone a date is shown in (the forced one, else the one of the server) and whether it
+      // is shown, the type of the items of an array
+      var displayStructure = typeof structure == "undefined" || structure == null ? [] : (Array.isArray(structure) ? structure : [structure]);
+      var displayFieldsByName = {};
+      for (var iDisplayField = 0; iDisplayField < displayStructure.length; iDisplayField++) {
+      	displayFieldsByName[displayStructure[iDisplayField].name] = displayStructure[iDisplayField];
+      }
+      var displayOptionNames = ["number_separator", "number_prefix", "number_suffix", "max_value", "color", "style", "date_show_tzinfo", "array_formula_type"];
+      var displayKind = function(field) {
+      	var kind = ["formula", "count", "rollup", "lookup"].indexOf(field.type) != -1 && field.formula_type != null ? "" + field.formula_type : "" + field.type;
+      	return kind == "array" && field.array_formula_type != null ? "" + field.array_formula_type : kind;
+      };
+      var addDisplayOptions = function(options, field) {
+      	for (var iDisplayOption = 0; iDisplayOption < displayOptionNames.length; iDisplayOption++) {
+      		var displayOptionValue = field[displayOptionNames[iDisplayOption]];
+      		if (displayOptionValue != undefined && displayOptionValue != null && displayOptionValue !== "") {
+      			options[displayOptionNames[iDisplayOption]] = "" + displayOptionValue;
+      		}
+      	}
+      	var kind = displayKind(field);
+      	if (kind == "date" || kind == "created_on" || kind == "last_modified") {
+      		// (#1424) the timezone the cell is shown in: the forced one of the column, else the one of the server
+      		// (lib_BaseRow.dateTimezone, UTC), as the cells formatted here; never "", the viewer would take the one of
+      		// the browser and shift 12:45 UTC to 13:45 in Paris
+      		var forcedTimezone = field.date_force_timezone != null ? ("" + field.date_force_timezone).trim() : "";
+      		options.date_force_timezone = forcedTimezone != "" && forcedTimezone.toLowerCase() != "null" ? forcedTimezone : ("" + "${lib_BaseRow.dateTimezone=UTC}").trim() || "UTC";
+      	}
+      	return options;
+      };
+      for (var displayKey in leanFields) {
+      	if (displayFieldsByName[displayKey] != null && leanFields[displayKey] != null) {
+      		addDisplayOptions(leanFields[displayKey], displayFieldsByName[displayKey]);
+      	}
+      }
+      // a grouped answer: an aggregate giving a number is shown in the format of its column (a sum or an average with the
+      // decimal places of buildAggregateCell), a count as a whole number; a percentage, a distribution or a date keeps its HTML
+      if (groupByColumns != null && aggregationSpecs != null) {
+      	var countAggregations = ["count", "empty_count", "not_empty_count", "unique_count", "checked_count", "not_checked_count"];
+      	var numberKinds = ["number", "autonumber", "count", "rating", "duration"];
+      	for (var iDisplayAggregation = 0; iDisplayAggregation < aggregationSpecs.length; iDisplayAggregation++) {
+      		var displaySpec = aggregationSpecs[iDisplayAggregation];
+      		if (displaySpec.percentage === true || displaySpec.fieldKind != null) {
+      			continue;
+      		}
+      		if (countAggregations.indexOf(displaySpec.type) != -1) {
+      			leanFields[displaySpec.key] = { type: "number", resolvedType: "number", number_decimal_places: "0", aggregate: "" + displaySpec.type };
+      			continue;
+      		}
+      		var displaySpecField = displaySpec.column != null ? displayFieldsByName[displaySpec.column] : null;
+      		if (displaySpecField == null || ["sum", "avg", "median", "std_dev", "variance", "min", "max"].indexOf(displaySpec.type) == -1 ||
+      			numberKinds.indexOf(displayKind(displaySpecField)) == -1) {
+      			continue;
+      		}
+      		var displaySpecKind = displayKind(displaySpecField);
+      		var aggregateOptions = { type: displaySpecKind == "duration" ? "duration" : "number", resolvedType: displaySpecKind == "duration" ? "duration" : "number", aggregate: "" + displaySpec.type };
+      		if (displaySpecField.duration_format != null) {
+      			aggregateOptions.duration_format = "" + displaySpecField.duration_format;
+      		}
+      		var aggregateDecimals = parseInt(displaySpecField.number_decimal_places, 10);
+      		if (displaySpec.type != "min" && displaySpec.type != "max") {
+      			// getAggregationDecimalPlaces: the decimal places of the column (2 without, 0 for a whole-number column), at least 2 for an average
+      			if (isNaN(aggregateDecimals)) {
+      				aggregateDecimals = ["autonumber", "count", "rating"].indexOf(displaySpecField.type) != -1 ? 0 : 2;
+      			}
+      			if (["avg", "median", "std_dev", "variance"].indexOf(displaySpec.type) != -1 && aggregateDecimals < 2) {
+      				aggregateDecimals = 2;
+      			}
+      			aggregateDecimals = Math.min(Math.max(aggregateDecimals, 0), 10);
+      		}
+      		if (!isNaN(aggregateDecimals)) {
+      			aggregateOptions.number_decimal_places = "" + aggregateDecimals;
+      		}
+      		if (displaySpecKind != "rating") {
+      			addDisplayOptions(aggregateOptions, displaySpecField);
+      		}
+      		delete aggregateOptions.array_formula_type;
+      		leanFields[displaySpec.key] = aggregateOptions;
+      	}
+      }'
+  ↓fields [steps.JsonToXmlStep-1996000000107]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: leanFields
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: fields
+↓max_search_results [variables.RequestableVariable-1996000000108]: 
   comment: Maximum number of Baserow rows scanned by this source.
   value: ${C8O_FORMS_BASEROW_MAX_SEARCH_RESULTS=1000}
-↓forms_config [variables.RequestableVariable-1734686735912]: 
+↓forms_config [variables.RequestableVariable-1996000000109]: 
   comment: |
     '{
     	"en": {
@@ -1308,10 +2723,14 @@ comment: |
   description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables/table
   required: true
   value: 
-↓forms_form_id [variables.RequestableVariable-1781260000003]: 
+↓forms_form_id [variables.RequestableVariable-1996000000110]: 
   comment: Real id of the form currently calling this source.
   value: 
-↓forms_tableFilter [variables.RequestableVariable-1734686735915]: 
+↓forms_anonymous_key [variables.RequestableVariable-1996000000111]: 
+  comment: Anonymous PWA link key for published source reads.
+  value: 
+  visibility: '-1'
+↓forms_tableFilter [variables.RequestableVariable-1996000000112]: 
   comment: |
     '{
         "en": {
@@ -1332,7 +2751,7 @@ comment: |
         }
     }'
   description: filter
-↓forms_tableSort [variables.RequestableVariable-1758271352839]: 
+↓forms_tableSort [variables.RequestableVariable-1996000000113]: 
   comment: |
     '{
         "en": {
@@ -1354,7 +2773,7 @@ comment: |
     }
     '
   description: sort
-↓forms_tableDistinct [variables.RequestableVariable-1774517457754]: 
+↓forms_tableDistinct [variables.RequestableVariable-1996000000114]: 
   comment: |
     '{
         "en": {
@@ -1376,7 +2795,7 @@ comment: |
     }
     '
   description: distinct_column
-↓forms_tableGroupBy [variables.RequestableVariable-1774521531521]: 
+↓forms_tableGroupBy [variables.RequestableVariable-1996000000115]: 
   comment: |
     '{
         "en": {
@@ -1398,32 +2817,38 @@ comment: |
     }
     '
   description: group_by_columns
-↓forms_tableAggregations [variables.RequestableVariable-1774522992483]: 
+↓forms_tableAggregations [variables.RequestableVariable-1996000000116]: 
   comment: |
     '{
         "en": {
-            "comment": "<b>Optional.</b><br/>Use this field only with <b>Group by</b>.<br/>Enter one or more aggregations separated by commas.<br/><b>Examples:</b> <code>count</code>, <code>sum:Amount</code>, <code>avg:Amount</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Recommended use:</b><ul><li><code>count</code> for any grouped data</li><li><code>sum</code> and <code>avg</code> only for numeric columns</li><li><code>min</code> and <code>max</code> for simple single-value columns</li></ul><b>Not supported:</b> files, linked rows, multiple selections, or other multi-value columns.<br/><b>If this field is empty, <code>count</code> is used by default.</b>",
+            "comment": "<b>Optional.</b><br/>The aggregations of the footer of a Baserow grid (Summarize), separated by commas: <code>count</code> or <code>type:Column</code>.<br/><b>With Group by:</b> one value per group. <b>Without Group by:</b> one row for the whole table.<br/><b>Types:</b><ul><li><code>count</code> (rows), <code>empty_count</code>, <code>not_empty_count</code>, <code>empty_percentage</code>, <code>not_empty_percentage</code>, <code>unique_count</code></li><li><code>checked_count</code>, <code>not_checked_count</code>, <code>checked_percentage</code>, <code>not_checked_percentage</code> for boolean columns</li><li><code>sum</code>, <code>avg</code>, <code>median</code>, <code>std_dev</code>, <code>variance</code> for numeric columns</li><li><code>min</code>, <code>max</code> for numeric or date columns, <code>earliest_date</code>, <code>latest_date</code> for date columns</li><li><code>distribution</code>: the 10 most frequent values with their count and share</li></ul><b>Examples:</b> <code>count</code>, <code>sum:Amount</code>, <code>empty_percentage:Email</code>, <code>latest_date:Created</code><br/><b>Label:</b> add <code>=Label</code> to name the value in chart legends and grid headers, for example <code>sum:Amount=Revenue</code> or <code>count=Deals</code>. Without a label, it reads <i>Sum · Amount</i> in the language of the user.<br/><b>Whole table:</b> the c8oforms plugin of Baserow computes them on all the rows. Without it, only <code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code> and <code>max</code> with Group by are computed, on the rows read; the others answer an error.<br/><b>If this field is empty, <code>count</code> is used by default with Group by.</b>",
             "displayName": "Aggregations"
         },
         "fr": {
-            "comment": "<b>Optionnel.</b><br/>Utilisez ce champ uniquement avec <b>Regrouper par</b>.<br/>Saisissez une ou plusieurs agrégations séparées par des virgules.<br/><b>Exemples :</b> <code>count</code>, <code>sum:Montant</code>, <code>avg:Montant</code>, <code>min:Date</code>, <code>max:Score</code><br/><b>Usage recommandé :</b><ul><li><code>count</code> pour n''importe quel regroupement</li><li><code>sum</code> et <code>avg</code> uniquement pour les colonnes numériques</li><li><code>min</code> et <code>max</code> pour les colonnes simples à valeur unique</li></ul><b>Non supporté :</b> fichiers, lignes liées, sélections multiples et autres colonnes multi-valuées.<br/><b>Si ce champ est vide, <code>count</code> est utilisé par défaut.</b>",
+            "comment": "<b>Optionnel.</b><br/>Les agrégations du pied d''une grille Baserow (Résumer), séparées par des virgules : <code>count</code> ou <code>type:Colonne</code>.<br/><b>Avec Regrouper par :</b> une valeur par groupe. <b>Sans Regrouper par :</b> une ligne pour toute la table.<br/><b>Types :</b><ul><li><code>count</code> (lignes), <code>empty_count</code>, <code>not_empty_count</code>, <code>empty_percentage</code>, <code>not_empty_percentage</code>, <code>unique_count</code></li><li><code>checked_count</code>, <code>not_checked_count</code>, <code>checked_percentage</code>, <code>not_checked_percentage</code> pour les colonnes booléennes</li><li><code>sum</code>, <code>avg</code>, <code>median</code>, <code>std_dev</code>, <code>variance</code> pour les colonnes numériques</li><li><code>min</code>, <code>max</code> pour les colonnes numériques ou de date, <code>earliest_date</code>, <code>latest_date</code> pour les colonnes de date</li><li><code>distribution</code> : les 10 valeurs les plus fréquentes avec leur nombre et leur part</li></ul><b>Exemples :</b> <code>count</code>, <code>sum:Montant</code>, <code>empty_percentage:Email</code>, <code>latest_date:Créé le</code><br/><b>Libellé :</b> ajoutez <code>=Libellé</code> pour nommer la valeur dans les légendes des graphiques et les en-têtes des grilles, par exemple <code>sum:Montant=Chiffre d''affaires</code> ou <code>count=Affaires</code>. Sans libellé, elle s''affiche <i>Somme · Montant</i> dans la langue de l''utilisateur.<br/><b>Toute la table :</b> le plugin c8oforms de Baserow les calcule sur toutes les lignes. Sans lui, seuls <code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code> et <code>max</code> avec Regrouper par sont calculés, sur les lignes lues ; les autres répondent une erreur.<br/><b>Si ce champ est vide, <code>count</code> est utilisé par défaut avec Regrouper par.</b>",
             "displayName": "Agrégations"
         },
         "es": {
-            "comment": "<b>Opcional.</b><br/>Use este campo solo con <b>Agrupar por</b>.<br/>Introduzca una o varias agregaciones separadas por comas.<br/><b>Ejemplos:</b> <code>count</code>, <code>sum:Importe</code>, <code>avg:Importe</code>, <code>min:Fecha</code>, <code>max:Puntuación</code><br/><b>Uso recomendado:</b><ul><li><code>count</code> para cualquier agrupación</li><li><code>sum</code> y <code>avg</code> solo para columnas numéricas</li><li><code>min</code> y <code>max</code> para columnas simples de valor único</li></ul><b>No soportado:</b> archivos, filas enlazadas, selecciones múltiples u otras columnas multivalor.<br/><b>Si este campo está vacío, se utiliza <code>count</code> por defecto.</b>",
+            "comment": "<b>Opcional.</b><br/>Las agregaciones del pie de una cuadrícula de Baserow (Resumir), separadas por comas: <code>count</code> o <code>tipo:Columna</code>.<br/><b>Con Agrupar por:</b> un valor por grupo. <b>Sin Agrupar por:</b> una fila para toda la tabla.<br/><b>Tipos:</b><ul><li><code>count</code> (filas), <code>empty_count</code>, <code>not_empty_count</code>, <code>empty_percentage</code>, <code>not_empty_percentage</code>, <code>unique_count</code></li><li><code>checked_count</code>, <code>not_checked_count</code>, <code>checked_percentage</code>, <code>not_checked_percentage</code> para las columnas booleanas</li><li><code>sum</code>, <code>avg</code>, <code>median</code>, <code>std_dev</code>, <code>variance</code> para las columnas numéricas</li><li><code>min</code>, <code>max</code> para las columnas numéricas o de fecha, <code>earliest_date</code>, <code>latest_date</code> para las columnas de fecha</li><li><code>distribution</code>: los 10 valores más frecuentes con su número y su parte</li></ul><b>Ejemplos:</b> <code>count</code>, <code>sum:Importe</code>, <code>empty_percentage:Email</code>, <code>latest_date:Creado</code><br/><b>Etiqueta:</b> añada <code>=Etiqueta</code> para nombrar el valor en las leyendas de los gráficos y los encabezados de las tablas, por ejemplo <code>sum:Importe=Ingresos</code> o <code>count=Negocios</code>. Sin etiqueta, se muestra <i>Suma · Importe</i> en el idioma del usuario.<br/><b>Toda la tabla:</b> el plugin c8oforms de Baserow las calcula sobre todas las filas. Sin él, solo <code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code> y <code>max</code> con Agrupar por se calculan, sobre las filas leídas; las demás responden un error.<br/><b>Si este campo está vacío, se utiliza <code>count</code> por defecto con Agrupar por.</b>",
             "displayName": "Agregaciones"
         },
         "it": {
-            "comment": "<b>Opzionale.</b><br/>Usa questo campo solo con <b>Raggruppa per</b>.<br/>Inserisci una o più aggregazioni separate da virgole.<br/><b>Esempi:</b> <code>count</code>, <code>sum:Importo</code>, <code>avg:Importo</code>, <code>min:Data</code>, <code>max:Punteggio</code><br/><b>Uso consigliato:</b><ul><li><code>count</code> per qualsiasi raggruppamento</li><li><code>sum</code> e <code>avg</code> solo per colonne numeriche</li><li><code>min</code> e <code>max</code> per colonne semplici a valore singolo</li></ul><b>Non supportato:</b> file, righe collegate, selezioni multiple o altre colonne multi-valore.<br/><b>Se il campo è vuoto, viene usato <code>count</code> per impostazione predefinita.</b>",
+            "comment": "<b>Opzionale.</b><br/>Le aggregazioni del piè di una griglia Baserow (Riepiloga), separate da virgole: <code>count</code> o <code>tipo:Colonna</code>.<br/><b>Con Raggruppa per:</b> un valore per gruppo. <b>Senza Raggruppa per:</b> una riga per tutta la tabella.<br/><b>Tipi:</b><ul><li><code>count</code> (righe), <code>empty_count</code>, <code>not_empty_count</code>, <code>empty_percentage</code>, <code>not_empty_percentage</code>, <code>unique_count</code></li><li><code>checked_count</code>, <code>not_checked_count</code>, <code>checked_percentage</code>, <code>not_checked_percentage</code> per le colonne booleane</li><li><code>sum</code>, <code>avg</code>, <code>median</code>, <code>std_dev</code>, <code>variance</code> per le colonne numeriche</li><li><code>min</code>, <code>max</code> per le colonne numeriche o di data, <code>earliest_date</code>, <code>latest_date</code> per le colonne di data</li><li><code>distribution</code>: i 10 valori più frequenti con il loro numero e la loro quota</li></ul><b>Esempi:</b> <code>count</code>, <code>sum:Importo</code>, <code>empty_percentage:Email</code>, <code>latest_date:Creato</code><br/><b>Etichetta:</b> aggiungi <code>=Etichetta</code> per dare un nome al valore nelle legende dei grafici e nelle intestazioni delle griglie, ad esempio <code>sum:Importo=Ricavi</code> o <code>count=Affari</code>. Senza etichetta, appare <i>Somma · Importo</i> nella lingua dell''utente.<br/><b>Tutta la tabella:</b> il plugin c8oforms di Baserow le calcola su tutte le righe. Senza di esso, solo <code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code> e <code>max</code> con Raggruppa per sono calcolate, sulle righe lette; le altre rispondono un errore.<br/><b>Se il campo è vuoto, viene usato <code>count</code> per impostazione predefinita con Raggruppa per.</b>",
             "displayName": "Aggregazioni"
         }
     }
     '
   description: group_by_aggregations
-↓model [variables.RequestableVariable-1734686735918]: 
+↓grid_page [variables.RequestableVariable-1796300000011]: 
+  comment: With grid_page_size, the page of rows to read, from 1 (the C8Oforms viewer, for a grid that paginates). A page past the last one reads the last page (the first one when Baserow refuses it), which the answer names (page).
+↓grid_page_size [variables.RequestableVariable-1796300000012]: 
+  comment: 'Rows of a page (1 to 200, the limit of Baserow), set by the C8Oforms viewer for a grid that paginates: the source reads only the page grid_page and answers count, the number of rows of Baserow for its filters, page and size. Ignored by a model, a grouped or a distinct source, which read every row.'
+↓model [variables.RequestableVariable-1996000000117]: 
   comment: If true, just return one line of data so that No Code studio can compte the table model
+↓lean_cells [variables.RequestableVariable-1996000000118]: 
+  comment: If true, the cells keep their value but not their displayValue HTML, and the answer adds fields, the options of each column, so that the Forms viewer builds that HTML itself
 ↓TestWithFilters [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735922]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000119]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -1431,7 +2856,7 @@ comment: |
       	"table_id": "384"
       }
       '
-  ↓forms_tableFilter [variables.TestCaseVariable-1734686735925]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1996000000120]: 
     description: 
     required: true
     value: |
@@ -1447,16 +2872,16 @@ comment: |
       }
       '
 ↓TestWithFilters1 [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735929]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000121]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: '{"table_id":"110211", "columns":["Last name", "First name", "Photo", "Department"]}'
-  ↓forms_tableFilter [variables.TestCaseVariable-1734686735932]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1996000000122]: 
     description: 
     required: true
     value: '{ "mode": "AND", "filters": [ { "field": "Last name", "op": "contains", "value":"" }, { "field": "Department", "op": "contains", "value":"" }]}'
 ↓TestWithFilters2 [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735936]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000123]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -1464,7 +2889,7 @@ comment: |
       	"table_id": "118056"
       }
       '
-  ↓forms_tableFilter [variables.TestCaseVariable-1734686735939]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1996000000124]: 
     description: 
     required: true
     value: |
@@ -1472,7 +2897,7 @@ comment: |
       
       '
 ↓TestWithFiltersAndModel [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735943]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000125]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -1480,10 +2905,10 @@ comment: |
       	"table_id": "715"
       }
       '
-  ↓model [variables.TestCaseVariable-1734686735946]: 
+  ↓model [variables.TestCaseVariable-1996000000126]: 
     value: true
 ↓TestWithInlcude [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735950]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000127]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
@@ -1494,23 +2919,23 @@ comment: |
       }
       '
 ↓TestWithLinks [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735954]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000128]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: '{"table_id":"109861", "columns":["Last name", "First name", "Photo", "Department"]}'
 ↓TestWithModel [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735958]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000129]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |
       '
       {"table_id":416,"columns":["No de Code à barre","Notes","Actif","Transporteur","No Récépissé","No de colis","Date/Heure Saisie","Utilisateur","Dépot","Activité"],"hidden":["Notes","Actif","Utilisateur","Dépot","Activité"]}'
-  ↓forms_tableFilter [variables.TestCaseVariable-1734686735961]: 
+  ↓forms_tableFilter [variables.TestCaseVariable-1996000000130]: 
     description: 
-  ↓model [variables.TestCaseVariable-1734686735964]: 
+  ↓model [variables.TestCaseVariable-1996000000131]: 
     value: true
 ↓TestWithView [core.TestCase]: 
-  ↓forms_config [variables.TestCaseVariable-1734686735968]: 
+  ↓forms_config [variables.TestCaseVariable-1996000000132]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
     value: |

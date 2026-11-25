@@ -69,9 +69,21 @@ comment: Gets data from a given table
       	filter_type = filterExpression.mode;
       	built ='''';
       	filterExpression.filters.forEach(filter => {
-      		if (filter.op == "equal" && filter.value.length == 0)
+      		if (filter.op == "equal" && (filter.value == null || ("" + filter.value).length == 0))
       			filter.value = "__empty" // Prevent empty values to return all the data in case of equals operator
       			
+      		// equal and not_equal are not filters of a single select for Baserow (ERROR_VIEW_FILTER_TYPE_UNSUPPORTED_FIELD):
+      		// the same comparison by option, as TableGetDataNative. A text of no option compares with no option.
+      		var selectField = aFields.find(elt => elt.name == filter.field);
+      		if (selectField && selectField.type == "single_select" && (filter.op == "equal" || filter.op == "not_equal")
+      				&& !(filter.value == null || ("" + filter.value).length == 0 || filter.value === "__empty")) {
+      			var selectText = ("" + filter.value).replace(/^\s+|\s+$/g, "");
+      			var selectOptions = Array.isArray(selectField.select_options) ? selectField.select_options : [];
+      			var selectOption = selectOptions.find(option => option != null && ("" + option.id) === selectText)
+      				|| selectOptions.find(option => option != null && ("" + option.value) === selectText);
+      			filter.op = filter.op == "equal" ? "single_select_equal" : "single_select_not_equal";
+      			filter.value = selectOption ? "" + selectOption.id : "-1";
+      		}
       		built += "filter__field_" + encodeURIComponent(getFieldId(filter.field)) + "__" + filter.op + "=" + encodeURIComponent(filter.value) + "&";
       	});
       	
@@ -111,6 +123,7 @@ comment: Gets data from a given table
             - ↑value: 1672089041336
           - java.lang.String: 
             - ↑value: ./text()
+    visibility: '-1'
   ↓exclude [variables.StepVariable-1672088989238]: 
     comment: 'All the fields are included in the response by default. You can select a subset of fields by providing the exclude query parameter. If you for example provide the following GET parameter `exclude=field_1,field_2` then the fields with id `1` and id `2` are going to be excluded from the selection and response. If the `user_field_names` parameter is provided then instead exclude should be a comma separated list of the actual field names. For field names with commas you should surround the name with quotes like so: `exclude=My Field,"Field With , "`. A backslash can be used to escape field names which contain double quotes like so: `exclude=My Field,Field with \"`.'
     description: exclude

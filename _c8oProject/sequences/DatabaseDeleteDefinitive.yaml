@@ -1,0 +1,48 @@
+accessibility: Private
+comment: |
+  Deletes a database for good, with the Baserow account of the user: the base must belong to workspace_id (read again first), then it goes to the trash and the trash of this base is emptied.
+  The Baserow account of the call, never the Baserow admin account: authorization (a JWT of the user's account), else email and password, else the account of the authenticated C8Oforms user (C8Oforms.BaserowAccountGet); without account the call is refused.
+jsonNativeOutput: true
+nativeExecution: true
+↓Run [steps.SimpleStep-1997100000301]: 
+  comment: The Baserow calls run with the logs off and the token of the account stays in js/baserow_schema.js (never in the answer)
+  expression: |
+    'include("js/baserow_schema.js");
+    result = BaserowSchema.engine.databaseDelete({
+    	database_id: typeof database_id == "undefined" || database_id == null ? null : "" + database_id,
+    	workspace_id: typeof workspace_id == "undefined" || workspace_id == null ? null : "" + workspace_id,
+    	authorization: typeof authorization == "undefined" || authorization == null ? null : "" + authorization,
+    	email: typeof email == "undefined" || email == null ? null : "" + email,
+    	password: typeof password == "undefined" || password == null ? null : "" + password
+    });'
+↓result [steps.JsonToXmlStep-1997100000302]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: result
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: result
+↓database_id [variables.RequestableVariable-1997100000311]: 
+  comment: Id of the database (base) to delete.
+↓workspace_id [variables.RequestableVariable-1997100000312]: 
+  comment: Id of the workspace the base must belong to.
+↓authorization [variables.RequestableVariable-1997100000313]: 
+  comment: JWT of the Baserow account of the user (JWT ...). When given, email and password are not used.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'
+↓email [variables.RequestableVariable-1997100000314]: 
+  comment: Email of the Baserow account of the user, with password.
+↓password [variables.RequestableVariable-1997100000315]: 
+  comment: Password of the Baserow account of the user, with email.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'

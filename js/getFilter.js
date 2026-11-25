@@ -1,4 +1,4 @@
-// 1.29.3 baserow filters (see internal_documentation.md to re-generate filters)
+// 1.34.5 baserow filters (see internal_documentation.md to re-generate filters)
 var _c8oBRtypes = {
   "field_types": {
     "autonumber": [
@@ -269,6 +269,7 @@ var _c8oBRtypes = {
       "not_empty"
     ],
     "array(char)": [
+      "empty",
       "has_empty_value",
       "has_not_empty_value",
       "has_not_value_contains",
@@ -277,7 +278,66 @@ var _c8oBRtypes = {
       "has_value_contains",
       "has_value_contains_word",
       "has_value_equal",
-      "has_value_length_is_lower_than"
+      "has_value_length_is_lower_than",
+      "not_empty"
+    ],
+    "array(date)": [
+      "empty",
+      "has_date_after",
+      "has_date_before",
+      "has_date_equal",
+      "has_date_on_or_after",
+      "has_date_on_or_before",
+      "has_date_within",
+      "has_empty_value",
+      "has_not_date_after",
+      "has_not_date_before",
+      "has_not_date_equal",
+      "has_not_date_on_or_after",
+      "has_not_date_on_or_before",
+      "has_not_date_within",
+      "has_not_empty_value",
+      "has_not_value_contains",
+      "has_value_contains",
+      "not_empty"
+    ],
+    "array(duration)": [
+      "empty",
+      "not_empty"
+    ],
+    "array(multiple_collaborators)": [
+      "empty",
+      "not_empty"
+    ],
+    "array(multiple_select)": [
+      "empty",
+      "has_empty_value",
+      "has_not_empty_value",
+      "has_not_value_contains",
+      "has_not_value_contains_word",
+      "has_not_value_equal",
+      "has_value_contains",
+      "has_value_contains_word",
+      "has_value_equal",
+      "not_empty"
+    ],
+    "array(number)": [
+      "empty",
+      "has_empty_value",
+      "has_not_empty_value",
+      "has_not_value_contains",
+      "has_not_value_equal",
+      "has_not_value_higher",
+      "has_not_value_higher_or_equal",
+      "has_not_value_lower",
+      "has_not_value_lower_or_equal",
+      "has_value_contains",
+      "has_value_equal",
+      "has_value_higher",
+      "has_value_higher_or_equal",
+      "has_value_lower",
+      "has_value_lower_or_equal",
+      "not_empty"
     ],
     "array(single_file)": [
       "empty",
@@ -286,6 +346,7 @@ var _c8oBRtypes = {
       "not_empty"
     ],
     "array(single_select)": [
+      "empty",
       "has_any_select_option_equal",
       "has_empty_value",
       "has_none_select_option_equal",
@@ -295,9 +356,11 @@ var _c8oBRtypes = {
       "has_not_value_equal",
       "has_value_contains",
       "has_value_contains_word",
-      "has_value_equal"
+      "has_value_equal",
+      "not_empty"
     ],
     "array(text)": [
+      "empty",
       "has_empty_value",
       "has_not_empty_value",
       "has_not_value_contains",
@@ -306,9 +369,11 @@ var _c8oBRtypes = {
       "has_value_contains",
       "has_value_contains_word",
       "has_value_equal",
-      "has_value_length_is_lower_than"
+      "has_value_length_is_lower_than",
+      "not_empty"
     ],
     "array(url)": [
+      "empty",
       "has_empty_value",
       "has_not_empty_value",
       "has_not_value_contains",
@@ -317,7 +382,8 @@ var _c8oBRtypes = {
       "has_value_contains",
       "has_value_contains_word",
       "has_value_equal",
-      "has_value_length_is_lower_than"
+      "has_value_length_is_lower_than",
+      "not_empty"
     ],
     "boolean": [
       "boolean",
@@ -364,6 +430,32 @@ var _c8oBRtypes = {
       "date_within_months",
       "date_within_weeks",
       "empty",
+      "not_empty"
+    ],
+    "duration": [
+      "empty",
+      "equal",
+      "higher_than",
+      "higher_than_or_equal",
+      "lower_than",
+      "lower_than_or_equal",
+      "not_empty",
+      "not_equal"
+    ],
+    "multiple_collaborators": [
+      "empty",
+      "multiple_collaborators_has",
+      "multiple_collaborators_has_not",
+      "not_empty"
+    ],
+    "multiple_select": [
+      "contains",
+      "contains_not",
+      "contains_word",
+      "doesnt_contain_word",
+      "empty",
+      "multiple_select_has",
+      "multiple_select_has_not",
       "not_empty"
     ],
     "number": [

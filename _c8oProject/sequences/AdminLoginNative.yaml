@@ -1,0 +1,256 @@
+accessibility: Private
+comment: AdminLogin as a native sequence (no XML); the token-auth and token-refresh answers are read as JSON text
+jsonNativeOutput: true
+nativeExecution: true
+↓Init [steps.SimpleStep-1998000000001]: 
+  expression: |
+    'email += "";
+    password += "";
+    
+    include("js/jwt.js");
+    
+    email = email ? email : "${lib_baserow.adminuser=fake}";
+    password = password ? password : "${lib_baserow.password.secret=fake}";
+    
+    // keep_in_session=false (TokenGetOrRefresh): the HTTP session is left as is, the tokens are returned in
+    // <auth> and only the refresh_token given by the caller is used (the one of the session can belong to
+    // another Baserow account)
+    keepInSession = ("" + keep_in_session) != "false";
+    refreshToken = refresh_token == null || ("" + refresh_token) == "" || ("" + refresh_token) == "null" ? null : "" + refresh_token;
+    if (refreshToken == null && keepInSession && context.httpSession.getAttribute("refresh_token") != null) {
+    	refreshToken = "" + context.httpSession.getAttribute("refresh_token");
+    }
+    authTokens = function(answer, refreshed) {
+    	var text = function(value) {
+    		return value == null || typeof value == "object" ? "" : "" + value;
+    	};
+    	answer = answer != null && typeof answer == "object" ? answer : {};
+    	var token = text(answer.access_token);
+    	return {
+    		token: token != "" ? token : text(answer.token),
+    		refresh_token: text(answer.refresh_token),
+    		refreshed: refreshed,
+    		error: text(answer.error),
+    		detail: text(answer.detail)
+    	};
+    };
+    '
+↓IfUseRefreshToken [steps.IfStep-1998000000002]: 
+  condition: use_refresh == "true" && refreshToken != null && getJwtTiming(refreshToken) != null && isTokenStillValid(refreshToken, null)
+  ↓RefreshBody [steps.SimpleStep-1998000000003]: 
+    expression: '__body = JSON.stringify({refresh_token: refreshToken});'
+  ↓NoLog_Call_Refresh [steps.SimpleStep-1898400003012]: 
+    comment: The answer of _api_user_token_refresh__POST_raw (the access token) holds a Baserow token, the engine would log it in this thread
+    expression: org.apache.log4j.MDC.put("nolog", true);
+  ↓Call_Refresh [steps.TransactionStep-1998000000004]: 
+    output: false
+    sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_token_refresh__POST_raw
+    ↓__body [variables.StepVariable-1998000000005]: 
+      value: 
+        - ↑ciphered: true
+        - ↑traceable: false
+        - →→: xd8e180806a1c1d83a6255212121ab827
+      visibility: '-1'
+  ↓Log_Call_Refresh [steps.SimpleStep-1898400003013]: 
+    expression: org.apache.log4j.MDC.remove("nolog");
+  ↓refresh_text [steps.SimpleSourceStep-1998000000006]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1998000000004
+          - java.lang.String: 
+            - ↑value: $
+    variableName: refresh_text
+  ↓ReadRefresh [steps.SimpleStep-1998000000007]: 
+    expression: |
+      '// the answer of token-refresh as JSON text: its token (access_token, or token for the old DRF-JWT) and its refresh_token
+      refreshed = false;
+      refreshResponse = null;
+      try {
+      	refreshResponse = refresh_text == null ? null : JSON.parse("" + refresh_text);
+      } catch (e) {
+      	refreshResponse = null;
+      }
+      refresh_text = null;
+      __body = null;
+      if (refreshResponse != null && typeof refreshResponse == "object" && !Array.isArray(refreshResponse)) {
+      	var refreshedToken = refreshResponse.access_token != null && ("" + refreshResponse.access_token) != "" ? refreshResponse.access_token : refreshResponse.token;
+      	if (refreshedToken != null && ("" + refreshedToken) != "") {
+      		if (keepInSession) {
+      			context.httpSession.setAttribute("token", "" + refreshedToken);
+      			context.httpSession.setAttribute("token_timestamp", new Date().getTime());
+      			if (refreshResponse.refresh_token != null && ("" + refreshResponse.refresh_token) != "") {
+      				context.httpSession.setAttribute("refresh_token", "" + refreshResponse.refresh_token);
+      			}
+      		}
+      		log.info("Token refreshed from refresh_token");
+      		refreshed = true;
+      	}
+      }
+      '
+  ↓IfRefreshed [steps.IfStep-1998000000008]: 
+    condition: refreshed
+    ↓IfReturnRefreshedToken [steps.IfStep-1998000000026]: 
+      condition: keepInSession == false
+      ↓auth [steps.JsonToXmlStep-1998000000027]: 
+        jsonObject: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: JS
+              - →→: 'authTokens(refreshResponse, true)'
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: auth
+    ↓Return [steps.ReturnStep-1998000000009]: 
+↓IfRefreshOnly [steps.IfStep-1998000000028]: 
+  condition: refresh_only == "true"
+  ↓Error_structure [steps.XMLErrorStep-1998000000029]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: Baserow token expired and could not be refreshed
+  ↓Return [steps.ReturnStep-1998000000030]: 
+↓LoginBody [steps.SimpleStep-1998000000010]: 
+  expression: '__body = JSON.stringify({username: email, password: password});'
+↓NoLog_Call_Transaction [steps.SimpleStep-1898400003014]: 
+  comment: The answer of _api_Auth_raw (the access and refresh tokens) holds a Baserow token, the engine would log it in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
+↓Call_Transaction [steps.TransactionStep-1998000000011]: 
+  output: false
+  sourceTransaction: lib_BaseRow.Baserow_API_spec._api_Auth_raw
+  ↓__body [variables.StepVariable-1998000000016]: 
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xd8e180806a1c1d83a6255212121ab827
+    visibility: '-1'
+↓Log_Call_Transaction [steps.SimpleStep-1898400003015]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
+↓auth_text [steps.SimpleSourceStep-1998000000017]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1998000000011
+        - java.lang.String: 
+          - ↑value: $
+  variableName: auth_text
+↓CheckAuthResponse [steps.SimpleStep-1998000000012]: 
+  comment: A login answer without a token is an error (old DRF-JWT non_field_errors, current Baserow error/detail, throttling, non JSON answer), and so is a 2FA answer whose token is only a temporary verification token
+  expression: |
+    'authError = null;
+    // the answer of token-auth as JSON text, parsed here (a non JSON answer has no token)
+    authResponse = null;
+    try {
+    	authResponse = auth_text == null ? null : JSON.parse("" + auth_text);
+    } catch (e) {
+    	authResponse = null;
+    }
+    auth_text = null;
+    var authAnswer = authResponse;
+    var authText = function(value) {
+    	if (value == null) {
+    		return "";
+    	}
+    	if (Array.isArray(value)) {
+    		var texts = [];
+    		for (var iValue = 0; iValue < value.length; iValue++) {
+    			var itemText = authText(value[iValue]);
+    			if (itemText != "") {
+    				texts.push(itemText);
+    			}
+    		}
+    		return texts.join(" ");
+    	}
+    	if (typeof value == "object") {
+    		if (value.value != null && typeof value.value != "object") {
+    			return ("" + value.value).replace(/^\s+|\s+$/g, "");
+    		}
+    		return JSON.stringify(value);
+    	}
+    	return ("" + value).replace(/^\s+|\s+$/g, "");
+    };
+    var authToken = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.access_token) : "";
+    if (authToken == "" || authToken == "null") {
+    	authToken = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.token) : "";
+    }
+    var authTwoFactor = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.two_factor_auth) : "";
+    if (authTwoFactor != "") {
+    	authError = "Baserow authentication failed: the Baserow account has two-factor authentication enabled (" + authTwoFactor + "), which is not supported";
+    } else if (authToken == "" || authToken == "null") {
+    	var authCode = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.error) : "";
+    	var authDetail = authAnswer != null && typeof authAnswer == "object" ? authText(authAnswer.detail != null ? authAnswer.detail : authAnswer.non_field_errors) : "";
+    	authError = authCode != "" && authDetail != "" ? authCode + ": " + authDetail : (authCode != "" ? authCode : authDetail);
+    	if (authError == "") {
+    		authError = "Baserow authentication failed: no token in the answer";
+    	}
+    }
+    '
+↓IfAuthError [steps.IfStep-1998000000013]: 
+  condition: authError != null
+  ↓Error_structure [steps.XMLErrorStep-1998000000014]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: authError
+  ↓Return [steps.ReturnStep-1998000000015]: 
+↓IfKeepTokenInSession [steps.IfStep-1998000000031]: 
+  condition: keepInSession
+  ↓SetTokenInSession [steps.SimpleStep-1998000000018]: 
+    expression: |
+      '// the token (access_token, or token for the old DRF-JWT), the refresh_token and the time of the login in the session
+      var loginToken = authResponse.access_token != null && ("" + authResponse.access_token) != "" ? authResponse.access_token : authResponse.token;
+      context.httpSession.setAttribute("token", "" + loginToken);
+      context.httpSession.setAttribute("refresh_token", authResponse.refresh_token != null ? "" + authResponse.refresh_token : "");
+      context.httpSession.setAttribute("token_timestamp", new Date().getTime());
+      '
+↓IfReturnToken [steps.IfStep-1998000000032]: 
+  condition: keepInSession == false
+  ↓auth [steps.JsonToXmlStep-1998000000033]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: 'authTokens(authResponse, false)'
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: auth
+↓ForgetBody [steps.SimpleStep-1998000000034]: 
+  expression: '__body = null;'
+↓password [variables.RequestableVariable-1998000000020]: 
+  comment: The baserow admin password
+  value: 
+    - ↑ciphered: true
+    - ↑traceable: false
+    - →→: xd8e180806a1c1d83a6255212121ab827
+  visibility: '-1'
+↓email [variables.RequestableVariable-1998000000021]: 
+  comment: The Base row admin email
+  value: 
+↓use_refresh [variables.RequestableVariable-1998000000022]: 
+  comment: Use the refresh_token stored in the HTTP session before falling back to username/password login.
+  value: false
+↓refresh_token [variables.RequestableVariable-1998000000023]: 
+  comment: Refresh token to use instead of the one of the HTTP session
+  visibility: '-1'
+↓keep_in_session [variables.RequestableVariable-1998000000024]: 
+  comment: false to leave the HTTP session as is and return the tokens in auth (token, refresh_token, refreshed)
+  value: true
+↓refresh_only [variables.RequestableVariable-1998000000025]: 
+  comment: true to only refresh refresh_token, never log in with a password
+  value: false

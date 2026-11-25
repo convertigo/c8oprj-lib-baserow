@@ -1,0 +1,660 @@
+accessibility: Private
+jsonNativeOutput: true
+nativeExecution: true
+↓ParseConfig [steps.SimpleStep-1995000000001]: 
+  expression: |
+    'jConfig = JSON.parse(forms_config);
+    config_form_id = jConfig.form_id != null ? "" + jConfig.form_id : "";
+    provided_form_id = (typeof forms_form_id != "undefined" && forms_form_id != null && ("" + forms_form_id) != "") ? ("" + forms_form_id) : "";
+    _use_docid = provided_form_id != "" ? provided_form_id : config_form_id;
+    _use_docid_published = config_form_id.indexOf("published_") == 0 ? config_form_id : "published_" + config_form_id;
+    fallback_to_published_form_id = provided_form_id == "" && config_form_id != "" && config_form_id.indexOf("published_") != 0;
+    source_id = "" + jConfig.source_id;
+    owner = jConfig.source_owner;
+    form_rev = null;
+    configCheckKey = null;
+    configCached = false;
+    revCached = false;
+    '
+↓AuthorizeSourceOwner [steps.SimpleStep-1995000000002]: 
+  expression: |
+    'include("js/common2.js");
+    // a native call: the outputs of a native sequence as an object, without document (an XML answer, an error, as callSequence)
+    var callSequenceNative = function (project, sequence, parametersJS) {
+    	var parameters = new java.util.HashMap();
+    	var __project = java.lang.reflect.Array.newInstance(java.lang.String, 1);
+    	__project[0] = project;
+    	parameters.put("__project", __project);
+    	parameters.put("__sequence", sequence);
+    	parameters.put("__context", "syncContext_" + java.util.UUID.randomUUID());
+    	parameters.put("__nativeCall", "true");
+    	for (var key in parametersJS) {
+    		if (parametersJS[key] != null) {
+    			parameters.put(key, parametersJS[key]);
+    		}
+    	}
+    	var requester = new com.twinsoft.convertigo.engine.requesters.InternalRequester(parameters, context.httpServletRequest);
+    	var response = requester.processRequest();
+    	org.apache.log4j.MDC.put("ContextualParameters", context.logParameters);
+    	theApp.contextManager.remove(requester.getContext());
+    	if (response instanceof java.util.Map) {
+    		var nativeDocument = {};
+    		var entries = response.entrySet().iterator();
+    		while (entries.hasNext()) {
+    			var entry = entries.next();
+    			var entryValue = entry.getValue();
+    			nativeDocument["" + entry.getKey()] = entryValue instanceof java.lang.CharSequence ? "" + entryValue : entryValue;
+    		}
+    		return { document: nativeDocument };
+    	}
+    	return toJSON(XmlToJson(response.getDocumentElement(), true, true, enums.JsonOutput.JsonRoot.docNode));
+    };
+    var authenticatedSourceUser = context.getAuthenticatedUser();
+    var sourceOwnerAuthorized = typeof owner == "string" && owner != "" &&
+      authenticatedSourceUser != null && owner == ("" + authenticatedSourceUser);
+    var publishedSourceAuthorized = false;
+    var publishedReadScope = "";
+    // Step variables can arrive as java.lang.String in Rhino. Normalize before
+    // checking the kind so respondent reads reach the Forms authorization.
+    var publishedSourceKind = source_kind == null ? "" : "" + source_kind;
+    var publishedWriteKinds = ["forms_AddRow", "forms_AddRowFromData", "forms_DeleteRow"];
+    var publishedWrite = publishedWriteKinds.indexOf(publishedSourceKind) != -1;
+    if (!sourceOwnerAuthorized && publishedWrite) {
+      // Respondent write: C8Oforms checks the action it has just authorized against the stored form.
+      try {
+        var publishedWriteResult = callSequence("C8Oforms", "BaserowPublishedWriteAuthorize", {
+          form_id: _use_docid,
+          forms_config: forms_config,
+          write_kind: publishedSourceKind
+        });
+        var publishedWriteAllowed = publishedWriteResult && publishedWriteResult.document && publishedWriteResult.document.allowed;
+        publishedSourceAuthorized = publishedWriteAllowed != null && ("" + publishedWriteAllowed) == "true";
+      } catch (e) {
+        publishedSourceAuthorized = false;
+      }
+    }
+    if (!sourceOwnerAuthorized && publishedSourceKind != "" && !publishedWrite) {
+      try {
+        var publishedRead = callSequenceNative("C8Oforms", "BaserowPublishedSourceAuthorize", {
+          form_id: _use_docid,
+          forms_config: forms_config,
+          source_kind: publishedSourceKind,
+          read_params: read_params,
+          anonymous_key: forms_anonymous_key
+        });
+        var publishedAllowed = publishedRead && publishedRead.document && publishedRead.document.allowed;
+        var suppliedScope = publishedRead && publishedRead.document && publishedRead.document.scope_filter;
+        publishedSourceAuthorized = publishedAllowed != null && ("" + publishedAllowed) == "true" &&
+          (publishedSourceKind == "formssource_GetFieldValues" ||
+            (suppliedScope != null && ("" + suppliedScope) != ""));
+        if (publishedSourceAuthorized) { publishedReadScope = "" + suppliedScope; }
+      } catch (e) {
+        publishedSourceAuthorized = false;
+      }
+    }
+    sourceOwnerAuthorized = sourceOwnerAuthorized || publishedSourceAuthorized;'
+↓published_scope_filter [steps.JsonToXmlStep-1995000000003]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: 'publishedReadScope'
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: published_scope_filter
+↓RejectForeignSourceOwner [steps.IfStep-1995000000004]: 
+  condition: '!sourceOwnerAuthorized'
+  ↓UnauthorizedSourceOwner [steps.XMLErrorStep-1995000000005]: 
+    code: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 9
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: Baserow source owner is not authorized for this form
+  ↓Return [steps.ReturnStep-1995000000006]: 
+↓IfOwnerConfigCacheLookup [steps.IfStep-1995000000007]: 
+  condition: '!publishedSourceAuthorized'
+  ↓FormRevKey [steps.SimpleStep-1995000000048]: 
+    comment: the key of _all_docs, the id of the form as a JSON string
+    expression: '_use_key = JSON.stringify("" + _use_docid);'
+  ↓HeadForm [steps.TransactionStep-1995000000008]: 
+    comment: the revision of the form from _all_docs?key="<id>", without reading the document as a HEAD does
+    output: false
+    sourceTransaction: lib_BaseRow.c8oforms_fs.RevDocument
+    ↓_use_key [variables.StepVariable-1995000000009]: 
+      description: Document ID as a JSON string
+  ↓FormRevRow [steps.JsonSourceStep-1995000000010]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1995000000008
+          - java.lang.String: 
+            - ↑value: $.rows[0].value
+    variableName: formRevRow
+  ↓FormRev [steps.SimpleStep-1995000000049]: 
+    comment: no revision for a missing or deleted form, as the HEAD that answered 404
+    expression: 'form_rev = formRevRow != null && formRevRow.rev != null && formRevRow.deleted != true ? "" + formRevRow.rev : null;'
+  ↓ConfigCacheLookup [steps.SimpleStep-1995000000011]: 
+    expression: |
+      '// The check below reads the whole form (several MB) to compare the forms_config of the call with the stored
+      // one. Its success is kept in the session of the user for this revision of the form and this exact forms_config:
+      // any save of the form changes the revision, so the next call checks again.
+      if (form_rev != null && ("" + form_rev) != "" && context.httpSession != null) {
+      	var configDigest = java.security.MessageDigest.getInstance("SHA-256").digest(new java.lang.String("" + forms_config).getBytes("UTF-8"));
+      	configCheckKey = "c8oforms.checkconfig|" + _use_docid + "|" + form_rev + "|" + source_id + "|" +
+      		java.util.Base64.getEncoder().encodeToString(configDigest);
+      	configCached = context.httpSession.getAttribute(configCheckKey) != null;
+      }
+      '
+  ↓FormRevCacheLookup [steps.SimpleStep-1995000000040]: 
+    comment: (lib_baserow.form_rev_cache, on unless false) the configurations of every element of a form revision, read once for the server (a lock per form and revision), each source checked against them
+    expression: |
+      'if (!configCached && "${lib_baserow.form_rev_cache=true}" != "false" && form_rev != null && ("" + form_rev) != "") {
+      	// the configurations of every element of the form, as FormSourceConfigs finds them for one source: in the same
+      	// order, the first one found (sources and actions / markers / circles / polygons). Each configuration is kept once
+      	// (configs), the elements give its index (sources): the elements around a configuration all find it, it is not
+      	// repeated for each of them.
+      	var formRevLight = function(root) {
+      		var sets = [["sources", "sourcesMarkers", "sourcesCircles", "actions"], ["sourcesMarkers"], ["sourcesCircles"], ["sourcesPolygons"]];
+      		var light = { configs: [], sources: {} };
+      		var configIndex = function(formsConfig) {
+      			if (formsConfig.formRevIndex == null) {
+      				Object.defineProperty(formsConfig, "formRevIndex", { value: light.configs.length, enumerable: false });
+      				light.configs.push("" + formsConfig.str);
+      			}
+      			return formsConfig.formRevIndex;
+      		};
+      		var inSection = function(value) {
+      			if (Array.isArray(value)) {
+      				for (var i = 0; i < value.length; i++) {
+      					var found = inSection(value[i]);
+      					if (found !== null) {
+      						return found;
+      					}
+      				}
+      			} else if (value != null && typeof value == "object") {
+      				for (var key in value) {
+      					var child = value[key];
+      					if (key == "forms_config" && child != null && typeof child == "object" && !Array.isArray(child) && child.str != null) {
+      						return configIndex(child);
+      					}
+      					var found = inSection(child);
+      					if (found !== null) {
+      						return found;
+      					}
+      				}
+      			}
+      			return null;
+      		};
+      		var walk = function(value) {
+      			if (Array.isArray(value)) {
+      				for (var i = 0; i < value.length; i++) {
+      					var item = value[i];
+      					if (item != null && typeof item == "object" && !Array.isArray(item) && item.id != null) {
+      						var entry = light.sources["" + item.id];
+      						for (var iSet = 0; iSet < sets.length; iSet++) {
+      							if (entry != null && entry[iSet] !== null) {
+      								continue;
+      							}
+      							for (var key in item) {
+      								if (sets[iSet].indexOf(key) != -1) {
+      									var found = inSection(item[key]);
+      									if (found !== null) {
+      										if (entry == null) {
+      											entry = light.sources["" + item.id] = [null, null, null, null];
+      										}
+      										entry[iSet] = found;
+      										break;
+      									}
+      								}
+      							}
+      						}
+      					}
+      					walk(item);
+      				}
+      			} else if (value != null && typeof value == "object") {
+      				for (var key in value) {
+      					walk(value[key]);
+      				}
+      			}
+      		};
+      		walk(root);
+      		return light;
+      	};
+      	var formRevKey = _use_docid + "|" + form_rev;
+      	// form_rev_configs: the copies of this format (form_rev_light held the copies of 1.2.0-beta12)
+      	var formRevStore = context.project.get("form_rev_configs");
+      	if (formRevStore == null || formRevStore.size() > 200) {
+      		formRevStore = new java.util.concurrent.ConcurrentHashMap();
+      		context.project.set("form_rev_configs", formRevStore);
+      	}
+      	var formRevLightText = formRevStore.get(formRevKey);
+      	if (formRevLightText == null) {
+      		// one read of the form per revision: the sources of a page arriving together wait for the first one
+      		var formRevLocks = context.project.get("form_rev_locks");
+      		if (formRevLocks == null) {
+      			formRevLocks = new java.util.concurrent.ConcurrentHashMap();
+      			context.project.set("form_rev_locks", formRevLocks);
+      		}
+      		var formRevLock = new java.util.concurrent.locks.ReentrantLock();
+      		var formRevPrevious = formRevLocks.putIfAbsent(formRevKey, formRevLock);
+      		if (formRevPrevious != null) {
+      			formRevLock = formRevPrevious;
+      		}
+      		if (formRevLock.tryLock(60, java.util.concurrent.TimeUnit.SECONDS)) {
+      			try {
+      				formRevLightText = formRevStore.get(formRevKey);
+      				if (formRevLightText == null) {
+      					var formRevDocument = JSON.parse("" + theApp.couchDbManager.getFullSyncClient().getDocument("c8oforms_fs", "" + _use_docid, new java.util.HashMap()));
+      					// the read gives the latest revision: kept under its own revision, used only when it is the one checked
+      					if (formRevDocument != null && formRevDocument._rev != null && formRevDocument.error == null) {
+      						var formRevRead = JSON.stringify(formRevLight(formRevDocument));
+      						// a copy above 256 KB is not kept, the next calls read the form again: a form holding many long
+      						// configurations cannot fill the memory of the server (200 copies at most)
+      						if (formRevRead.length <= 262144) {
+      							formRevStore.put(_use_docid + "|" + formRevDocument._rev, formRevRead);
+      						}
+      						if (("" + formRevDocument._rev) == ("" + form_rev)) {
+      							formRevLightText = formRevRead;
+      						}
+      					}
+      					formRevDocument = null;
+      				}
+      			} catch (e) {
+      				log.warn("(CheckConfig) the form " + _use_docid + " is checked without its kept copy: " + e);
+      				formRevLightText = null;
+      			} finally {
+      				formRevLock.unlock();
+      				formRevLocks.remove(formRevKey, formRevLock);
+      			}
+      		}
+      	}
+      	if (formRevLightText != null) {
+      		var formRevLightRead = JSON.parse("" + formRevLightText);
+      		var formRevConfigs = (formRevLightRead.sources["" + source_id] || [null, null, null, null]).map(function(index) {
+      			return index == null ? null : formRevLightRead.configs[index];
+      		});
+      		// only when the configuration matches: a missing source or a changed one takes the whole check (published
+      		// form fallback, error), as before
+      		if (forms_config == formRevConfigs[0] || forms_config == formRevConfigs[1] || forms_config == formRevConfigs[2] || forms_config == formRevConfigs[3]) {
+      			doc_forms_config = formRevConfigs[0];
+      			doc_forms_config_markers = formRevConfigs[1];
+      			doc_forms_config_circles = formRevConfigs[2];
+      			doc_forms_config_polygons = formRevConfigs[3];
+      			revCached = true;
+      		}
+      	}
+      }'
+↓IfOwnerConfigCheck [steps.IfStep-1995000000012]: 
+  condition: '!publishedSourceAuthorized && !configCached && !revCached'
+  ↓Call_Transaction [steps.TransactionStep-1995000000013]: 
+    sourceTransaction: lib_BaseRow.c8oforms_fs.GetDocument
+    ↓_use_docid [variables.StepVariable-1995000000014]: 
+      description: Document ID
+  ↓formDocument [steps.SimpleSourceStep-1995000000015]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1995000000013
+          - java.lang.String: 
+            - ↑value: $
+    variableName: formDocumentText
+  ↓FormSourceConfigs [steps.SimpleStep-1995000000016]: 
+    expression: |
+      '// the XPath .//document/couchdb_output//item[id = source_id]/*[name()=...]//forms_config/str/text() on the JSON of the form
+      var findFormsConfig = function(root, sourceId, names) {
+      	var inSection = function(value) {
+      		if (Array.isArray(value)) {
+      			for (var i = 0; i < value.length; i++) {
+      				var found = inSection(value[i]);
+      				if (found !== null) {
+      					return found;
+      				}
+      			}
+      		} else if (value != null && typeof value == "object") {
+      			for (var key in value) {
+      				var child = value[key];
+      				if (key == "forms_config" && child != null && typeof child == "object" && !Array.isArray(child) && child.str != null) {
+      					return "" + child.str;
+      				}
+      				var found = inSection(child);
+      				if (found !== null) {
+      					return found;
+      				}
+      			}
+      		}
+      		return null;
+      	};
+      	var search = function(value) {
+      		if (Array.isArray(value)) {
+      			for (var i = 0; i < value.length; i++) {
+      				var item = value[i];
+      				if (item != null && typeof item == "object" && !Array.isArray(item) && item.id != null && ("" + item.id) == sourceId) {
+      					for (var key in item) {
+      						if (names.indexOf(key) != -1) {
+      							var found = inSection(item[key]);
+      							if (found !== null) {
+      								return found;
+      							}
+      						}
+      					}
+      				}
+      				var found = search(item);
+      				if (found !== null) {
+      					return found;
+      				}
+      			}
+      		} else if (value != null && typeof value == "object") {
+      			for (var key in value) {
+      				var found = search(value[key]);
+      				if (found !== null) {
+      					return found;
+      				}
+      			}
+      		}
+      		return null;
+      	};
+      	return search(root);
+      };
+      var formDocument = formDocumentText == null ? null : JSON.parse("" + formDocumentText);
+      doc_forms_config = findFormsConfig(formDocument, "" + source_id, ["sources", "sourcesMarkers", "sourcesCircles", "actions"]);
+      doc_forms_config_markers = findFormsConfig(formDocument, "" + source_id, ["sourcesMarkers"]);
+      doc_forms_config_circles = findFormsConfig(formDocument, "" + source_id, ["sourcesCircles"]);
+      doc_forms_config_polygons = findFormsConfig(formDocument, "" + source_id, ["sourcesPolygons"]);
+      formDocument = null;
+      formDocumentText = null;
+      '
+  ↓jIfTryPublishedFormId [steps.IfStep-1995000000017]: 
+    condition: fallback_to_published_form_id && forms_config != doc_forms_config && forms_config != doc_forms_config_markers && forms_config != doc_forms_config_circles && forms_config != doc_forms_config_polygons
+    ↓UsePublishedFormId [steps.SimpleStep-1995000000018]: 
+      expression: _use_docid = _use_docid_published;
+    ↓Call_Transaction [steps.TransactionStep-1995000000019]: 
+      sourceTransaction: lib_BaseRow.c8oforms_fs.GetDocument
+      ↓_use_docid [variables.StepVariable-1995000000020]: 
+        description: Document ID
+    ↓formDocument [steps.SimpleSourceStep-1995000000021]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1995000000019
+            - java.lang.String: 
+              - ↑value: $
+      variableName: formDocumentText
+    ↓FormSourceConfigs [steps.SimpleStep-1995000000022]: 
+      expression: |
+        '// the XPath .//document/couchdb_output//item[id = source_id]/*[name()=...]//forms_config/str/text() on the JSON of the form
+        var findFormsConfig = function(root, sourceId, names) {
+        	var inSection = function(value) {
+        		if (Array.isArray(value)) {
+        			for (var i = 0; i < value.length; i++) {
+        				var found = inSection(value[i]);
+        				if (found !== null) {
+        					return found;
+        				}
+        			}
+        		} else if (value != null && typeof value == "object") {
+        			for (var key in value) {
+        				var child = value[key];
+        				if (key == "forms_config" && child != null && typeof child == "object" && !Array.isArray(child) && child.str != null) {
+        					return "" + child.str;
+        				}
+        				var found = inSection(child);
+        				if (found !== null) {
+        					return found;
+        				}
+        			}
+        		}
+        		return null;
+        	};
+        	var search = function(value) {
+        		if (Array.isArray(value)) {
+        			for (var i = 0; i < value.length; i++) {
+        				var item = value[i];
+        				if (item != null && typeof item == "object" && !Array.isArray(item) && item.id != null && ("" + item.id) == sourceId) {
+        					for (var key in item) {
+        						if (names.indexOf(key) != -1) {
+        							var found = inSection(item[key]);
+        							if (found !== null) {
+        								return found;
+        							}
+        						}
+        					}
+        				}
+        				var found = search(item);
+        				if (found !== null) {
+        					return found;
+        				}
+        			}
+        		} else if (value != null && typeof value == "object") {
+        			for (var key in value) {
+        				var found = search(value[key]);
+        				if (found !== null) {
+        					return found;
+        				}
+        			}
+        		}
+        		return null;
+        	};
+        	return search(root);
+        };
+        var formDocument = formDocumentText == null ? null : JSON.parse("" + formDocumentText);
+        doc_forms_config = findFormsConfig(formDocument, "" + source_id, ["sources", "sourcesMarkers", "sourcesCircles", "actions"]);
+        doc_forms_config_markers = findFormsConfig(formDocument, "" + source_id, ["sourcesMarkers"]);
+        doc_forms_config_circles = findFormsConfig(formDocument, "" + source_id, ["sourcesCircles"]);
+        doc_forms_config_polygons = findFormsConfig(formDocument, "" + source_id, ["sourcesPolygons"]);
+        formDocument = null;
+        formDocumentText = null;
+        '
+  ↓jIf [steps.IfStep-1995000000023]: 
+    condition: forms_config != doc_forms_config && forms_config != doc_forms_config_markers && forms_config != doc_forms_config_circles && forms_config != doc_forms_config_polygons
+    ↓Error_structure [steps.XMLErrorStep-1995000000024]: 
+      code: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: 7
+      message: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+          - SmartType: 
+            - ↑mode: PLAIN
+            - →→: forms_config mismatch
+    ↓Return [steps.ReturnStep-1995000000025]: 
+↓ConfigCacheStore [steps.SimpleStep-1995000000026]: 
+  expression: |
+    'if (!publishedSourceAuthorized && !configCached && configCheckKey != null && context.httpSession != null &&
+    	_use_docid == (provided_form_id != "" ? provided_form_id : config_form_id)) {
+    	context.httpSession.setAttribute(configCheckKey, "checked");
+    }
+    '
+↓CallSequenceFormsWithoutReferences [steps.SimpleStep-1995000000027]: 
+  expression: |
+    'log.warn("disable logs, calling C8Oforms.BaserowAccountGet");
+    org.apache.log4j.MDC.put("nolog", true);
+    log.debug("logs disabled");
+    
+    // (lib_baserow.account_cache, on unless false) the Baserow account of the owner kept in the session, for the
+    // revisions of the form, of the user document and of the account document: one _all_docs request gives the three
+    // revisions, any change
+    // of one of them reads the account again. The revisions are read before the account, so a change made meanwhile
+    // only reads it once more; the first call of a session reads it without revisions to keep. The password is kept
+    // ciphered, as in its account document.
+    var accountCacheOn = "${lib_baserow.account_cache=true}" != "false" && context.httpSession != null &&
+    	typeof owner == "string" && owner != "";
+    var accountCacheKey = "lib_baserow.account|" + owner + "|" + _use_docid;
+    var accountKept = accountCacheOn ? context.httpSession.getAttribute(accountCacheKey) : null;
+    var accountRevs = null;
+    var callSequenceForms = null;
+    if (accountKept != null) {
+    	accountKept = JSON.parse("" + accountKept);
+    	try {
+    		var accountRevKeys = [_use_docid, accountKept.user_id, accountKept.user_id + "_baserow"];
+    		var accountRevQuery = new java.util.HashMap();
+    		accountRevQuery.put("keys", JSON.stringify(accountRevKeys));
+    		var accountRevRows = JSON.parse("" + theApp.couchDbManager.getFullSyncClient().getAllDocs("c8oforms_fs", accountRevQuery));
+    		accountRevs = accountRevKeys.map(function (key, index) {
+    			var row = accountRevRows.rows != null ? accountRevRows.rows[index] : null;
+    			return row != null && row.key == key && row.value != null && row.value.rev != null && row.value.deleted != true ?
+    				"" + row.value.rev : null;
+    		});
+    		if (accountRevs.some(function (rev) { return rev == null; })) {
+    			accountRevs = null;
+    		}
+    	} catch (e) {
+    		accountRevs = null;
+    	}
+    	if (accountRevs != null && JSON.stringify(accountRevs) == JSON.stringify(accountKept.revs)) {
+    		callSequenceForms = { document: { email: accountKept.email,
+    			password: "" + com.twinsoft.convertigo.engine.util.Crypto2.decodeFromHexString(accountKept.password) } };
+    	}
+    }
+    if (callSequenceForms == null) {
+    	callSequenceForms = (callSequenceNative("C8Oforms", "BaserowAccountGetNative", { owner: owner}))//;.document.res;
+    	var accountDocument = callSequenceForms.document;
+    	if (accountCacheOn) {
+    		if (accountDocument.error == null && accountDocument.email != null && accountDocument.password != null &&
+    			accountDocument.user_id != null) {
+    			context.httpSession.setAttribute(accountCacheKey, JSON.stringify({
+    				user_id: "" + accountDocument.user_id,
+    				revs: accountKept != null && accountKept.user_id == ("" + accountDocument.user_id) ? accountRevs : null,
+    				email: "" + accountDocument.email,
+    				password: "" + com.twinsoft.convertigo.engine.util.Crypto2.encodeToHexString("" + accountDocument.password)
+    			}));
+    		} else {
+    			context.httpSession.removeAttribute(accountCacheKey);
+    		}
+    	}
+    }
+    var password = callSequenceForms.document.password;
+    var email = callSequenceForms.document.email;
+    
+    org.apache.log4j.MDC.remove("nolog");
+    log.warn("re-enable logs, after C8Oforms.BaserowAccountGet");
+    '
+↓jIf1 [steps.IfStep-1995000000028]: 
+  condition: callSequenceForms.document.error != null
+  ↓object [steps.JsonToXmlStep-1995000000029]: 
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: callSequenceForms.document.error
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+  ↓Return [steps.ReturnStep-1995000000031]: 
+↓NoLog_Call_Sequence3 [steps.SimpleStep-1898400003006]: 
+  comment: The answer of TokenGetOrRefreshNative (the Bearer) holds a Baserow token, the engine would log it in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
+↓Call_Sequence3 [steps.SequenceStep-1995000000032]: 
+  output: false
+  sourceSequence: lib_BaseRow.TokenGetOrRefreshNative
+  ↓password [variables.StepVariable-1995000000033]: 
+    comment: The baserow admin password
+    value: 
+      - ↑ciphered: true
+      - ↑traceable: false
+      - →→: xd8e180806a1c1d83a6255212121ab827
+    visibility: '-1'
+  ↓email [variables.StepVariable-1995000000034]: 
+    comment: The Base row admin email
+↓Log_Call_Sequence3 [steps.SimpleStep-1898400003007]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
+↓IfTokenError_error [steps.JsonSourceStep-1995000000042]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1995000000032
+        - java.lang.String: 
+          - ↑value: $.error
+  variableName: tokenError_call
+↓IfTokenError [steps.IfStep-1995000000043]: 
+  condition: tokenError_call != null
+  ↓Copy [steps.JsonToXmlStep-1995000000044]: 
+    comment: the error of the call as it answered it, a native call answering JSON (an XML copy found nothing and the answer was empty)
+    jsonObject: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: 'tokenError_call'
+    key: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: error
+  ↓Return [steps.ReturnStep-1995000000045]: 
+↓Bearer_text [steps.SimpleSourceStep-1995000000046]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1995000000032
+        - java.lang.String: 
+          - ↑value: $.Bearer
+  variableName: account_bearer
+↓Bearer [steps.JsonToXmlStep-1995000000047]: 
+  comment: Bearer of the Baserow account of the source, to give to the next calls as authorization
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: 'account_bearer'
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: Bearer
+↓forms_config [variables.RequestableVariable-1995000000035]: 
+  comment: |
+    '{
+    	"en": {
+    		"comment":"Fills the select component from data with a given configuration. The first column will be the displayed item in the select, the second column will be the value of this item",
+    		"displayName":"Configuration"
+    	}
+    }
+    
+    '
+  description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
+  required: true
+  value: 
+↓forms_form_id [variables.RequestableVariable-1995000000036]: 
+  comment: Real id of the form currently calling this source. Falls back to forms_config.form_id when omitted.
+  value: 
+↓source_kind [variables.RequestableVariable-1995000000037]: 
+  comment: Fixed by the lib_BaseRow read or write sequence that calls this one, never taken from the client request.
+  value: 
+↓read_params [variables.RequestableVariable-1995000000038]: 
+  comment: Complete read parameter map for published respondent authorization.
+  value: 
+↓forms_anonymous_key [variables.RequestableVariable-1995000000039]: 
+  comment: Public PWA link key; checked against the published anonymous sibling.
+  value: 
+  visibility: '-1'

@@ -1,0 +1,90 @@
+{
+  "format": "c8oforms.baserow-template",
+  "formatVersion": 1,
+  "key": "mini-crm",
+  "version": "1.0.0",
+  "lang": "fr",
+  "base": { "defaultName": "Mini CRM" },
+  "limits": { "maxRowsPerTable": 200 },
+  "tables": [
+    {
+      "key": "companies",
+      "name": "Sociétés",
+      "primaryField": { "key": "name", "name": "Nom", "type": "text" },
+      "fields": [
+        { "key": "industry", "name": "Secteur", "type": "single_select",
+          "values": [ { "key": "tech", "value": "Technologie", "color": "blue" },
+                      { "key": "retail", "value": "Commerce", "color": "green" } ] },
+        { "key": "website", "name": "Site web", "type": "url" },
+        { "key": "main_contact", "name": "Contact principal", "type": "link_row", "targetTable": "contacts",
+          "createRelatedField": false, "multiple": false },
+        { "key": "deals_value", "name": "Montant des opportunités", "type": "rollup",
+          "through": "deals", "targetField": "amount", "rollupFunction": "sum" },
+        { "key": "deal_count", "name": "Nombre d'opportunités", "type": "count", "through": "deals" },
+        { "key": "summary", "name": "Résumé", "type": "formula",
+          "formula": "concat(field('name'), ' - ', totext(field('deal_count')))" },
+        { "key": "created", "name": "Créé le", "type": "created_on" },
+        { "key": "modified", "name": "Modifié le", "type": "last_modified" }
+      ],
+      "views": [
+        { "key": "by_industry", "name": "Technologie", "type": "grid",
+          "filters": [ { "field": "industry", "type": "single_select_equal", "option": "tech" } ],
+          "sorts": [ { "field": "name", "order": "asc" } ] }
+      ],
+      "sampleRows": {
+        "upsertKey": "name",
+        "rows": [
+          { "name": "Acme", "industry": "tech", "website": "https://acme.example.com", "main_contact": ["Alice Martin"] },
+          { "name": "Bazar", "industry": "retail", "website": "https://bazar.example.com" }
+        ]
+      }
+    },
+    {
+      "key": "contacts",
+      "name": "Contacts",
+      "primaryField": { "key": "full_name", "name": "Nom complet", "type": "text" },
+      "fields": [
+        { "key": "email", "name": "E-mail", "type": "email" },
+        { "key": "company", "name": "Société", "type": "link_row", "targetTable": "companies",
+          "createRelatedField": true, "relatedFieldKey": "contacts", "relatedFieldName": "Contacts" },
+        { "key": "company_industry", "name": "Secteur de la société", "type": "lookup",
+          "through": "company", "targetField": "industry" }
+      ],
+      "sampleRows": {
+        "upsertKey": "full_name",
+        "rows": [
+          { "full_name": "Alice Martin", "email": "alice@example.com", "company": ["Acme"] },
+          { "full_name": "Bruno Petit", "email": "bruno@example.com", "company": ["Bazar"] }
+        ]
+      }
+    },
+    {
+      "key": "deals",
+      "name": "Opportunités",
+      "primaryField": { "key": "title", "name": "Titre", "type": "text" },
+      "fields": [
+        { "key": "amount", "name": "Montant", "type": "number", "baserowOptions": { "number_decimal_places": 2 } },
+        { "key": "stage", "name": "Étape", "type": "single_select",
+          "values": [ { "key": "qualification", "value": "Qualification" },
+                      { "key": "won", "value": "Gagnée" },
+                      { "key": "lost", "value": "Perdue" } ] },
+        { "key": "company", "name": "Société", "type": "link_row", "targetTable": "companies",
+          "relatedFieldKey": "deals", "relatedFieldName": "Opportunités" },
+        { "key": "closing", "name": "Clôture", "type": "date" },
+        { "key": "tags", "name": "Étiquettes", "type": "multiple_select", "values": [ "Urgent", "Partenaire" ] }
+      ],
+      "views": [
+        { "key": "pipeline", "name": "Pipeline", "type": "kanban", "singleSelectField": "stage" },
+        { "key": "agenda", "name": "Agenda", "type": "calendar", "dateField": "closing",
+          "sorts": [ { "field": "amount", "order": "desc" } ] }
+      ],
+      "sampleRows": {
+        "upsertKey": "title",
+        "rows": [
+          { "title": "Licence Acme", "amount": 1200, "stage": "won", "company": ["Acme"], "closing": "2026-01-15", "tags": ["Urgent"] },
+          { "title": "Bazar 2026", "amount": 300.5, "stage": "qualification", "company": ["Bazar"], "tags": ["Partenaire", "Urgent"] }
+        ]
+      }
+    }
+  ]
+}

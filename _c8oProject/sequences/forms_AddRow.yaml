@@ -1,5 +1,4 @@
 accessibility: Hidden
-authenticatedContextRequired: true
 comment: |
   '{
       "en": {
@@ -19,12 +18,19 @@ comment: |
           "comment": "Aggiungi o aggiorna una riga in una tabella. Se una colonna della tabella ha lo stesso nome dell''ID tecnico di un campo del modulo, i dati verranno inseriti in quella colonna. Se l''opzione ''Creazione di colonne'' è abilitata, verrà creata una colonna quando l''ID tecnico di un campo del modulo non corrisponde a nessuna colonna del modulo. I campi del modulo possono essere di qualsiasi tipo, ma generalmente le liste di selezione sono mappate su colonne collegate."
       }
   }'
+↓NoLog_Call_Sequence2 [steps.SimpleStep-1898400002046]: 
+  comment: The answer of formscommon_CheckConfig holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence2 [steps.SequenceStep-1734427992515]: 
   sourceSequence: lib_BaseRow.formscommon_CheckConfig
   ↓forms_config [variables.StepVariable-1734427992518]: 
     description: configure=lib_BaseRow/DisplayObjects/mobile/BrowseTables
     required: true
   ↓forms_form_id [variables.StepVariable-1781260000012]: 
+  ↓source_kind [variables.StepVariable-1895000000001]: 
+    value: forms_AddRow
+↓Log_Call_Sequence2 [steps.SimpleStep-1898400002047]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓IfError [steps.IfExistStep-1734427992521]: 
   condition: IfError
   sourceDefinition: 
@@ -61,35 +67,23 @@ comment: |
     
     '
 ↓Input_variables [steps.InputVariablesStep-1680078354202]: 
-↓Call_Sequence1 [steps.SequenceStep-1680262420398]: 
-  sourceSequence: lib_BaseRow.FieldsList
-  ↓table_id [variables.StepVariable-1680262420400]: 
-    comment: Returns only the fields of the table related to the provided value.
-    description: table_id
-    required: true
-    value: 
-  ↓authorization [variables.StepVariable-1898400000250]: 
-    comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
-    sourceDefinition: 
-      - xmlizable: 
-        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
-        - com.twinsoft.convertigo.beans.common.XMLVector: 
-          - java.lang.String: 
-            - ↑value: 1734427992515
-          - java.lang.String: 
-            - ↑value: ./document/Bearer/text()
-    visibility: '-1'
-↓jFields [steps.JsonSourceStep-1680262487884]: 
-  comment: Get lits of fields and type from BR Table
+↓fields_authorization [steps.SimpleSourceStep-2026110300001]: 
+  comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
   sourceDefinition: 
     - xmlizable: 
       - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
       - com.twinsoft.convertigo.beans.common.XMLVector: 
         - java.lang.String: 
-          - ↑value: 1680262420398
+          - ↑value: 1734427992515
         - java.lang.String: 
-          - ↑value: ./document/array
-  variableName: jFields
+          - ↑value: ./document/Bearer/text()
+  variableName: fields_authorization
+↓ReadFields [steps.SimpleStep-2026110300002]: 
+  comment: Get lits of fields and type from BR Table, as JSON without XML (js/common.js readTableFields), kept 60 s for the token of the source
+  expression: |
+    'include("js/common.js");
+    jFields = readTableFields(table_id, fields_authorization);
+    fields_authorization = null;'
 ↓PrepareData [steps.SimpleStep-1680084166698]: 
   comment: Prepare data to submit according to BR field type
   expression: |
@@ -98,88 +92,190 @@ comment: |
     
     var columnToBeCreated = [];
     data = {}
-    debugger;
-    function normalizeMultipleSelectValue(rawValue, fieldDef) {
-    	var values = [];
-    	function pushRaw(value) {
-    		if (value == null) {
-    			return;
-    		}
-    		if (typeof value == "string") {
-    			var trimmed = value.trim();
-    			if (trimmed == "") {
-    				return;
-    			}
-    			if (trimmed.charAt(0) == "[") {
-    				try {
-    					var parsed = JSON.parse(trimmed);
-    					if (Array.isArray(parsed)) {
-    						for (var i = 0; i < parsed.length; i++) {
-    							pushRaw(parsed[i]);
-    						}
-    						return;
-    					}
-    				}
-    				catch (e) {
-    					log.warn("Unable to parse multiple_select JSON value for " + trimmed);
-    				}
-    			}
-    			if (trimmed.indexOf(",") != -1) {
-    				var parts = trimmed.split(",");
-    				for (var p = 0; p < parts.length; p++) {
-    					pushRaw(parts[p]);
-    				}
-    				return;
-    			}
-    			values.push(trimmed);
-    			return;
-    		}
-    		if (typeof value == "object") {
-    			if (value.id != null) {
-    				values.push(value.id);
-    				return;
-    			}
-    			if (value.value != null) {
-    				pushRaw(value.value);
-    				return;
-    			}
-    		}
-    		values.push(value);
+    var fieldErrors = [];
+    // The text of an answer, trimmed: "" when the field is unanswered.
+    function answerText(value) {
+    	return value == null ? "" : ("" + value).trim();
+    }
+    // An answer matching no option of a select column is reported as an error (it used to empty the cell or lose the row).
+    function selectOptionError(key, value) {
+    	var shown = value != null && typeof value == "object" ? JSON.stringify(value) : answerText(value);
+    	fieldErrors.push("The answer \"" + shown + "\" of the field \"" + key + "\" is not an option of its select column");
+    }
+    // The id of the select option matching one answer, or null when no option matches. The label is tried first (exact,
+    // then ignoring case), then a number is an option id only if that id exists: options labelled "1".."5" are found by label.
+    function selectOptionId(fieldDef, value) {
+    	var byId = false;
+    	if (value != null && typeof value == "object" && !Array.isArray(value)) {
+    		// an option object: {id} or {value}
+    		byId = value.id != null;
+    		value = byId ? value.id : value.value;
     	}
+    	var text = answerText(value);
+    	if (text == "") {
+    		return null;
+    	}
+    	var options = fieldDef != null && Array.isArray(fieldDef.select_options) ? fieldDef.select_options : null;
+    	if (options == null) {
+    		// options unknown: a number is still an option id, a label is left to Baserow
+    		return isNaN(+text) ? (byId ? null : text) : +text;
+    	}
+    	var i;
+    	if (!byId) {
+    		for (i = 0; i < options.length; i++) {
+    			if (options[i] != null && options[i].id != null && answerText(options[i].value) == text) {
+    				return +options[i].id;
+    			}
+    		}
+    		for (i = 0; i < options.length; i++) {
+    			if (options[i] != null && options[i].id != null && answerText(options[i].value).toLowerCase() == text.toLowerCase()) {
+    				return +options[i].id;
+    			}
+    		}
+    	}
+    	if (!isNaN(+text)) {
+    		for (i = 0; i < options.length; i++) {
+    			if (options[i] != null && options[i].id != null && +options[i].id == +text) {
+    				return +options[i].id;
+    			}
+    		}
+    	}
+    	return null;
+    }
+    // The option ids of a multiple select answer: an array (one option per item), a JSON array text, or a text that is
+    // one option label or labels/ids separated by commas (the whole text is tried as a label before it is split).
+    function normalizeMultipleSelectValue(rawValue, fieldDef, key) {
+    	var resolved = [];
+    	var seen = {};
+    	function addOption(value) {
+    		if (value == null || (typeof value != "object" && answerText(value) == "")) {
+    			return;
+    		}
+    		var id = selectOptionId(fieldDef, value);
+    		if (id == null) {
+    			selectOptionError(key, value);
+    		}
+    		else if (!seen["" + id]) {
+    			seen["" + id] = true;
+    			resolved.push(id);
+    		}
+    	}
+    	var values = null;
     	if (Array.isArray(rawValue)) {
-    		for (var a = 0; a < rawValue.length; a++) {
-    			pushRaw(rawValue[a]);
+    		values = rawValue;
+    	}
+    	else if (typeof rawValue == "string") {
+    		var trimmed = rawValue.trim();
+    		if (trimmed.charAt(0) == "[") {
+    			try {
+    				var parsed = JSON.parse(trimmed);
+    				if (Array.isArray(parsed)) {
+    					values = parsed;
+    				}
+    			}
+    			catch (e) {
+    				log.warn("Unable to parse a multiple_select JSON value");
+    			}
+    		}
+    		if (values == null) {
+    			var optionsKnown = fieldDef != null && Array.isArray(fieldDef.select_options);
+    			values = trimmed.indexOf(",") == -1 || (optionsKnown && selectOptionId(fieldDef, trimmed) != null) ? [trimmed] : trimmed.split(",");
     		}
     	}
     	else {
-    		pushRaw(rawValue);
+    		values = [rawValue];
     	}
-    	var resolved = [];
-    	var seen = {};
     	for (var v = 0; v < values.length; v++) {
-    		var current = values[v];
-    		var mapped = current;
-    		var currentKey = "" + current;
-    		if (fieldDef != null && Array.isArray(fieldDef.select_options) && isNaN(+current)) {
-    			var option = fieldDef.select_options.find(function(x) {
-    				return x != null && (("" + x.value) == currentKey || ("" + x.id) == currentKey);
-    			});
-    			if (option != null && option.id != null) {
-    				mapped = option.id;
-    			}
-    		}
-    		else if (!isNaN(+current)) {
-    			mapped = +current;
-    		}
-    		var mappedKey = "" + mapped;
-    		if (mappedKey != "" && !seen[mappedKey]) {
-    			seen[mappedKey] = true;
-    			resolved.push(mapped);
-    		}
+    		addOption(values[v]);
     	}
     	return resolved;
     }
+    // The links of a link row answer: an array, a {id}/{value} object, a JSON array text, or a text of row ids or
+    // primary-field texts separated by commas. A number is a row id (the primary values of the linked table are unknown here).
+    function normalizeLinkRowValue(rawValue) {
+    	var links = [];
+    	function addLink(value) {
+    		if (value == null) {
+    			return;
+    		}
+    		if (typeof value == "object") {
+    			if (Array.isArray(value)) {
+    				for (var l = 0; l < value.length; l++) {
+    					addLink(value[l]);
+    				}
+    			}
+    			else if (value.id != null) {
+    				addLink(value.id);
+    			}
+    			else if (value.value != null) {
+    				addLink(value.value);
+    			}
+    			return;
+    		}
+    		var text = answerText(value);
+    		if (text != "") {
+    			var num = Number(text);
+    			links.push(isNaN(num) ? text : num);
+    		}
+    	}
+    	if (rawValue != null && typeof rawValue == "object") {
+    		addLink(rawValue);
+    		return links;
+    	}
+    	var linkText = answerText(rawValue);
+    	if (linkText.charAt(0) == "[") {
+    		try {
+    			var parsedLinks = JSON.parse(linkText);
+    			if (Array.isArray(parsedLinks)) {
+    				addLink(parsedLinks);
+    				return links;
+    			}
+    		}
+    		catch (e) {
+    			log.warn("Unable to parse a link_row JSON value");
+    		}
+    	}
+    	var parts = linkText.split(",");
+    	for (var p = 0; p < parts.length; p++) {
+    		addLink(parts[p]);
+    	}
+    	return links;
+    }
+    // A number answer: "" is an empty cell (Baserow refuses ""), a decimal comma is a decimal point ("3,5" is 3.5).
+    function numberAnswer(value) {
+    	var text = answerText(value);
+    	if (text == "") {
+    		return null;
+    	}
+    	if (typeof value == "number") {
+    		return value;
+    	}
+    	if (typeof value == "object") {
+    		return JSON.stringify(value);
+    	}
+    	return /^[+-]?\d*,\d+$/.test(text) ? text.replace(",", ".") : text;
+    }
+    // A date answer: "" is an empty cell (Baserow refuses ""). A date column without time keeps the YYYY-MM-DD part of the
+    // answer as written: the viewer sends the local date, a conversion to UTC could shift the day.
+    function dateAnswer(fieldDef, value) {
+    	var text = answerText(value);
+    	if (text == "") {
+    		return null;
+    	}
+    	if (typeof value == "object") {
+    		return JSON.stringify(value);
+    	}
+    	var withTime = fieldDef != null && (fieldDef.date_include_time === true || ("" + fieldDef.date_include_time) == "true");
+    	if (!withTime && /^\d{4}-\d{2}-\d{2}([T ]|$)/.test(text)) {
+    		return text.substring(0, 10);
+    	}
+    	return typeof value == "string" ? text : value;
+    }
     for (var key in jDoc.variable.resp) {
+    	// a response entry that is not an object (null, text) is read as the value of an answer
+    	if (jDoc.variable.resp[key] == null || typeof jDoc.variable.resp[key] != "object") {
+    		jDoc.variable.resp[key] = {value: jDoc.variable.resp[key]};
+    	}
     	if(typeof jDoc.variable.resp[key].value != "string" && jDoc.variable.resp[key].value == null && jDoc.variable.resp[key].type != null){
     		switch(jDoc.variable.resp[key].type){
     			case "checkbox":
@@ -197,57 +293,68 @@ comment: |
     				break;
     		}
     	}
-    	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
     	
     	var obj  = jFields.find((object) => object.name === key )
     	var type = obj ? obj.type : null
     	
-    	log.warn("** type is : " + type)
+    	log.debug("** column [" + key + "], type " + type);
     	switch (type) {
     		case ''text'':
     		case ''long_text'':
-    		case ''number'':
-    		case ''date'':
-    		case ''boolean'':
     		case ''email'':
     		case ''phone_number'':
-    		case ''rating'':
-    		case ''duration'':
     		case ''password'':
     		case ''url'':
-    			data[key] = typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value);
+    			// an unanswered text is an empty cell: null was sent as the text "null"
+    			data[key] = jDoc.variable.resp[key].value == null ? null : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+    			break;
+    		case ''boolean'':
+    			// an unanswered boolean is false: Baserow refuses "" and null (a boolean is never empty)
+    			data[key] = answerText(jDoc.variable.resp[key].value) == "" ? false : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+    			break;
+    		case ''rating'':
+    			// an unanswered rating is 0: Baserow refuses "" and null (a rating is never empty)
+    			data[key] = answerText(jDoc.variable.resp[key].value) == "" ? 0 : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+    			break;
+    		case ''duration'':
+    			// an unanswered duration leaves the cell empty: Baserow refuses ""
+    			data[key] = answerText(jDoc.variable.resp[key].value) == "" ? null : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+    			break;
+    		case ''number'':
+    			// an unanswered number leaves the cell empty: Baserow refuses "" (0 is a real answer)
+    			data[key] = numberAnswer(jDoc.variable.resp[key].value);
+    			break;
+    		case ''date'':
+    			// an unanswered date leaves the cell empty: Baserow refuses ""
+    			data[key] = dateAnswer(obj, jDoc.variable.resp[key].value);
     			break;
     		case ''single_select'':
-    			if(isNaN(+jDoc.variable.resp[key].value)){
-    				var search_id = obj.select_options.find((x)=>{
-    					return x.value == jDoc.variable.resp[key].value;
-    				})
-    				if(search_id != null && search_id.id != null){
-    					data[key] = search_id.id;
-    				}
-    				else{
-    					data[key] = +jDoc.variable.resp[key].value;
-    				}
+    			if (answerText(jDoc.variable.resp[key].value) == "") {
+    				// an unanswered choice leaves the cell empty: +"" is the option 0, which Baserow refuses
+    				data[key] = null;
     			}
-    			else{
-    				data[key] = +jDoc.variable.resp[key].value;
+    			else {
+    				var optionId = selectOptionId(obj, jDoc.variable.resp[key].value);
+    				if (optionId == null) {
+    					selectOptionError(key, jDoc.variable.resp[key].value);
+    				}
+    				else {
+    					data[key] = optionId;
+    				}
     			}
     			break;
     		case ''multiple_select'':
-    			data[key] = normalizeMultipleSelectValue(jDoc.variable.resp[key].value, obj);
+    			data[key] = normalizeMultipleSelectValue(jDoc.variable.resp[key].value, obj, key);
     			break;
     		case ''link_row'':
-    			data[key] = (""+jDoc.variable.resp[key].value).split('','').map(function(v) {
-    				const trimmed = v.trim();
-    				const num = Number(trimmed);
-    				return isNaN(num) ? trimmed : num;
-    			});
+    			// an unanswered link leaves the cell empty and empty items are dropped ("12,"): Number("") is the row 0, which Baserow refuses
+    			data[key] = normalizeLinkRowValue(jDoc.variable.resp[key].value);
     			break;
-    
+    	
     		case ''file'':
     			data[key] = [];  // will be filled further on  by the attachment loop.
     			break;
-    				
+    	
     		case null:
     			if(forms_createColumn == "true"){
     				if(jDoc.variable.resp[key].type == "img" || jDoc.variable.resp[key].type == "file" || jDoc.variable.resp[key].type == "signature"){
@@ -265,23 +372,38 @@ comment: |
     				}
     			}
     			else{
-    				log.warn("** key: " + key + " doesn''t exists in target table")
+    				log.debug("** column [" + key + "] does not exist in the target table: it is skipped");
     			}
     			break;
-    		default: 
+    		default:
     			log.warn("** type: " + type + " is not yet handled")
     	}
     }
+    // an answer matching no option of a select column is returned as an error by the next step: no row is written
+    var fieldErrorMessage = fieldErrors.join("; ");
+    // with columns to create, the attachments are uploaded once, after the columns are created (a first upload was lost)
+    var attachmentKeys = forms_createColumn == "true" && columnToBeCreated.length > 0 ? [] : Object.keys(jDoc.variable.resp);
     
     var sjDoc = JSON.stringify(jDoc);
     
     '
+↓IfFieldErrors [steps.IfStep-1897352000001]: 
+  comment: An answer matching no option of a select column is returned as an error instead of emptying the cell
+  condition: fieldErrorMessage != ""
+  ↓Error_structure [steps.XMLErrorStep-1897352000002]: 
+    message: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: fieldErrorMessage
+  ↓Return [steps.ReturnStep-1897352000003]: 
 ↓jIterator [steps.SimpleIteratorStep-1680167384790]: 
   comment: Handle Attachements
-  expression: Object.keys(jDoc.variable.resp)
+  expression: attachmentKeys
   ↓jIf [steps.IfStep-1680167384793]: 
     comment: If From field type is an attachment (Photo)
-    condition: jDoc.variable.resp[item].att_type === true
+    condition: jDoc.variable.resp[item].att_type === true && Array.isArray(data[item])
     ↓getAttachmentName [steps.SimpleStep-1680167384796]: 
       comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
       expression: |
@@ -302,6 +424,13 @@ comment: |
         	var directory = new File(parentDir, directoryName);
         	directory.mkdir()
         }
+        // A key of the response document names the attachment file: only a file name is kept, never a path,
+        // so that the temporary file stays inside attachments/<dirName>/.
+        function safeName(name){
+        	var value = ("" + (name == null ? "" : name)).replace(/[\u0000-\u001f\u007f]/g, "");
+        	value = value.substring(Math.max(value.lastIndexOf("/"), value.lastIndexOf("\\")) + 1);
+        	return value == "" || value == "." || value == ".." ? "file" : value;
+        }
         
         var filesToDelete = [];
         var _use_attname = item;
@@ -311,7 +440,7 @@ comment: |
         var dirName = new Date().getTime() + "_" + makeid(20);
         var dir = context.getProjectDirectory()+"/attachments/";
         mkdir(dir, dirName);
-        var _use_attpath = dir + dirName + "/"+ _use_attname;
+        var _use_attpath = dir + dirName + "/" + safeName(_use_attname);
         filesToDelete.push(_use_attpath)
         
         
@@ -344,7 +473,9 @@ comment: |
         
         var oldFilePath = "" + _use_attpath;
         
-        _use_attpath = _use_attpath + "." + contentType.split("/")[1];
+        // the stored content type comes with the response: its subtype is reduced to a plain extension
+        var contentExt = (("" + contentType).split("/")[1] || "bin").replace(/[^A-Za-z0-9+._-]/g, "");
+        _use_attpath = _use_attpath + "." + (contentExt == "" ? "bin" : contentExt);
         
         var oldFile = new File(oldFilePath);
         var newFile = new File(_use_attpath);
@@ -353,6 +484,9 @@ comment: |
     ↓element [steps.ElementStep-1680267486261]: 
       expression: _use_attpath
       nodeName: AttachmentPath
+    ↓NoLog_Call_Sequence [steps.SimpleStep-1898400002048]: 
+      comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+      expression: org.apache.log4j.MDC.put("nolog", true);
     ↓Call_Sequence [steps.SequenceStep-1680267245329]: 
       comment: Push it to BR
       sourceSequence: lib_BaseRow.TokenGetOrRefresh
@@ -367,6 +501,8 @@ comment: |
               - java.lang.String: 
                 - ↑value: ./document/Bearer/text()
         visibility: '-1'
+    ↓Log_Call_Sequence [steps.SimpleStep-1898400002049]: 
+      expression: org.apache.log4j.MDC.remove("nolog");
     ↓Call_Transaction1 [steps.TransactionStep-1680267313862]: 
       sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
       ↓__header_Authorization [variables.StepVariable-1680267313865]: 
@@ -378,6 +514,7 @@ comment: |
                 - ↑value: 1680267245329
               - java.lang.String: 
                 - ↑value: ./document/Bearer/text()
+        visibility: '-1'
       ↓file [variables.StepVariable-1680267313868]: 
         sourceDefinition: 
           - xmlizable: 
@@ -409,16 +546,16 @@ comment: |
                         deleteDirectory(file);
                     } else {
                         if (!file.delete()) {
-                            log.warn("Échec de la suppression du fichier : " + file.getAbsolutePath());
+                            log.warn("Unable to delete a temporary attachment file");
                         }
                     }
                 }
             }
         
             if (!directory.delete()) {
-                log.warn("Échec de la suppression du dossier : " + directory.getAbsolutePath());
+                log.warn("Unable to delete a temporary attachment folder");
             } else {
-                log.warn("Dossier supprimé avec succès : " + directory.getAbsolutePath());
+                log.debug("Temporary attachment folder deleted");
             }
         }
         
@@ -438,13 +575,25 @@ comment: |
     ↓AddAttachementToBRField [steps.SimpleStep-1680517961917]: 
       comment: Add this id to the data
       expression: |
-        'data[_use_attname].push({
-        	name: jAttachmentName
-        });
+        '// only a file column takes files, and a file Baserow did not store (unreadable attachment, refused upload) is skipped:
+        // the rest of the row is still saved
+        if (!Array.isArray(data[_use_attname])) {
+        	log.warn("** a file is skipped: its column is not a file column of the target table");
+        	log.debug("** column [" + _use_attname + "] is not a file column of the target table");
+        }
+        else if (jAttachmentName == null || ("" + jAttachmentName).trim() == "") {
+        	log.warn("** a file could not be uploaded to Baserow, it is skipped");
+        	log.debug("** column [" + _use_attname + "]: a file could not be uploaded to Baserow");
+        }
+        else {
+        	data[_use_attname].push({
+        		name: jAttachmentName
+        	});
+        }
         '
   ↓jIf1 [steps.IfStep-1680611569650]: 
     comment: If From field type is an uploaded file, can be an array of files
-    condition: jDoc.variable.resp[item].type === 'file'
+    condition: jDoc.variable.resp[item].type === 'file' && Array.isArray(data[item])
     ↓SaveItemToRespItem [steps.SimpleStep-1680612360876]: 
       expression: |
         let respItem = item;
@@ -475,6 +624,13 @@ comment: |
             	var directory = new File(parentDir, directoryName);
             	directory.mkdir()
             }
+            // A key of the response document names the attachment file: only a file name is kept, never a path,
+            // so that the temporary file stays inside attachments/<dirName>/.
+            function safeName(name){
+            	var value = ("" + (name == null ? "" : name)).replace(/[\u0000-\u001f\u007f]/g, "");
+            	value = value.substring(Math.max(value.lastIndexOf("/"), value.lastIndexOf("\\")) + 1);
+            	return value == "" || value == "." || value == ".." ? "file" : value;
+            }
             
             var filesToDelete = [];
             var _use_attname = item;
@@ -484,7 +640,7 @@ comment: |
             var dirName = new Date().getTime() + "_" + makeid(20);
             var dir = context.getProjectDirectory()+"/attachments/";
             mkdir(dir, dirName);
-            var _use_attpath = dir + dirName + "/" + _use_attname.split("_C80C80_")[1];
+            var _use_attpath = dir + dirName + "/" + safeName(_use_attname.split("_C80C80_")[1]);
             filesToDelete.push(_use_attpath)
             
             
@@ -514,6 +670,9 @@ comment: |
         ↓element [steps.ElementStep-1680611569671]: 
           expression: _use_attpath
           nodeName: AttachmentPath
+        ↓NoLog_Call_Sequence [steps.SimpleStep-1898400002050]: 
+          comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+          expression: org.apache.log4j.MDC.put("nolog", true);
         ↓Call_Sequence [steps.SequenceStep-1680611569674]: 
           comment: Push it to BR
           sourceSequence: lib_BaseRow.TokenGetOrRefresh
@@ -528,6 +687,8 @@ comment: |
                   - java.lang.String: 
                     - ↑value: ./document/Bearer/text()
             visibility: '-1'
+        ↓Log_Call_Sequence [steps.SimpleStep-1898400002051]: 
+          expression: org.apache.log4j.MDC.remove("nolog");
         ↓Call_Transaction1 [steps.TransactionStep-1680611569677]: 
           sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
           ↓__header_Authorization [variables.StepVariable-1680611569680]: 
@@ -539,6 +700,7 @@ comment: |
                     - ↑value: 1680611569674
                   - java.lang.String: 
                     - ↑value: ./document/Bearer/text()
+            visibility: '-1'
           ↓file [variables.StepVariable-1680611569683]: 
             sourceDefinition: 
               - xmlizable: 
@@ -551,6 +713,16 @@ comment: |
         ↓Delete_file [steps.DeleteStep-1680611569686]: 
           comment: Delete attachment from workspace as it has been uploaded
           sourcePath: filesToDelete[0]
+        ↓delete_empty_dir [steps.SimpleStep-1897352000005]: 
+          comment: Delete the temporary folder of the uploaded file
+          expression: |
+            var File = java.io.File;
+            // the uploaded file is deleted above: its temporary folder in attachments/ is deleted too when it is empty
+            var tempDirectory = new File(dir + dirName);
+            var tempFiles = tempDirectory.list();
+            if (tempFiles != null && tempFiles.length == 0 && !tempDirectory.delete()) {
+            	log.warn("Unable to delete a temporary attachment folder");
+            }
         ↓jAttachmentName [steps.SimpleSourceStep-1680611569689]: 
           comment: Get the BR Attachment ID
           sourceDefinition: 
@@ -565,9 +737,21 @@ comment: |
         ↓AddAttachementToBRField [steps.SimpleStep-1680611569692]: 
           comment: Add this id to the data
           expression: |
-            'data[jDoc.variable.resp[respItem].name].push({
-            	name: jAttachmentName
-            });
+            '// only a file column takes files, and a file Baserow did not store (unreadable attachment, refused upload) is skipped:
+            // the rest of the row is still saved
+            if (!Array.isArray(data[respItem])) {
+            	log.warn("** a file is skipped: its column is not a file column of the target table");
+            	log.debug("** column [" + respItem + "] is not a file column of the target table");
+            }
+            else if (jAttachmentName == null || ("" + jAttachmentName).trim() == "") {
+            	log.warn("** a file could not be uploaded to Baserow, it is skipped");
+            	log.debug("** column [" + respItem + "]: a file could not be uploaded to Baserow");
+            }
+            else {
+            	data[respItem].push({
+            		name: jAttachmentName
+            	});
+            }
             '
 ↓StringifyData [steps.SimpleStep-1680526198273]: 
   expression: |
@@ -638,87 +822,190 @@ comment: |
       var jDoc = JSON.parse('''' + com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson(doc, true, true));
       var columnToBeCreated = [];
       data = {}
-      function normalizeMultipleSelectValue(rawValue, fieldDef) {
-      	var values = [];
-      	function pushRaw(value) {
-      		if (value == null) {
-      			return;
-      		}
-      		if (typeof value == "string") {
-      			var trimmed = value.trim();
-      			if (trimmed == "") {
-      				return;
-      			}
-      			if (trimmed.charAt(0) == "[") {
-      				try {
-      					var parsed = JSON.parse(trimmed);
-      					if (Array.isArray(parsed)) {
-      						for (var i = 0; i < parsed.length; i++) {
-      							pushRaw(parsed[i]);
-      						}
-      						return;
-      					}
-      				}
-      				catch (e) {
-      					log.warn("Unable to parse multiple_select JSON value for " + trimmed);
-      				}
-      			}
-      			if (trimmed.indexOf(",") != -1) {
-      				var parts = trimmed.split(",");
-      				for (var p = 0; p < parts.length; p++) {
-      					pushRaw(parts[p]);
-      				}
-      				return;
-      			}
-      			values.push(trimmed);
-      			return;
-      		}
-      		if (typeof value == "object") {
-      			if (value.id != null) {
-      				values.push(value.id);
-      				return;
-      			}
-      			if (value.value != null) {
-      				pushRaw(value.value);
-      				return;
-      			}
-      		}
-      		values.push(value);
+      var fieldErrors = [];
+      // The text of an answer, trimmed: "" when the field is unanswered.
+      function answerText(value) {
+      	return value == null ? "" : ("" + value).trim();
+      }
+      // An answer matching no option of a select column is reported as an error (it used to empty the cell or lose the row).
+      function selectOptionError(key, value) {
+      	var shown = value != null && typeof value == "object" ? JSON.stringify(value) : answerText(value);
+      	fieldErrors.push("The answer \"" + shown + "\" of the field \"" + key + "\" is not an option of its select column");
+      }
+      // The id of the select option matching one answer, or null when no option matches. The label is tried first (exact,
+      // then ignoring case), then a number is an option id only if that id exists: options labelled "1".."5" are found by label.
+      function selectOptionId(fieldDef, value) {
+      	var byId = false;
+      	if (value != null && typeof value == "object" && !Array.isArray(value)) {
+      		// an option object: {id} or {value}
+      		byId = value.id != null;
+      		value = byId ? value.id : value.value;
       	}
+      	var text = answerText(value);
+      	if (text == "") {
+      		return null;
+      	}
+      	var options = fieldDef != null && Array.isArray(fieldDef.select_options) ? fieldDef.select_options : null;
+      	if (options == null) {
+      		// options unknown: a number is still an option id, a label is left to Baserow
+      		return isNaN(+text) ? (byId ? null : text) : +text;
+      	}
+      	var i;
+      	if (!byId) {
+      		for (i = 0; i < options.length; i++) {
+      			if (options[i] != null && options[i].id != null && answerText(options[i].value) == text) {
+      				return +options[i].id;
+      			}
+      		}
+      		for (i = 0; i < options.length; i++) {
+      			if (options[i] != null && options[i].id != null && answerText(options[i].value).toLowerCase() == text.toLowerCase()) {
+      				return +options[i].id;
+      			}
+      		}
+      	}
+      	if (!isNaN(+text)) {
+      		for (i = 0; i < options.length; i++) {
+      			if (options[i] != null && options[i].id != null && +options[i].id == +text) {
+      				return +options[i].id;
+      			}
+      		}
+      	}
+      	return null;
+      }
+      // The option ids of a multiple select answer: an array (one option per item), a JSON array text, or a text that is
+      // one option label or labels/ids separated by commas (the whole text is tried as a label before it is split).
+      function normalizeMultipleSelectValue(rawValue, fieldDef, key) {
+      	var resolved = [];
+      	var seen = {};
+      	function addOption(value) {
+      		if (value == null || (typeof value != "object" && answerText(value) == "")) {
+      			return;
+      		}
+      		var id = selectOptionId(fieldDef, value);
+      		if (id == null) {
+      			selectOptionError(key, value);
+      		}
+      		else if (!seen["" + id]) {
+      			seen["" + id] = true;
+      			resolved.push(id);
+      		}
+      	}
+      	var values = null;
       	if (Array.isArray(rawValue)) {
-      		for (var a = 0; a < rawValue.length; a++) {
-      			pushRaw(rawValue[a]);
+      		values = rawValue;
+      	}
+      	else if (typeof rawValue == "string") {
+      		var trimmed = rawValue.trim();
+      		if (trimmed.charAt(0) == "[") {
+      			try {
+      				var parsed = JSON.parse(trimmed);
+      				if (Array.isArray(parsed)) {
+      					values = parsed;
+      				}
+      			}
+      			catch (e) {
+      				log.warn("Unable to parse a multiple_select JSON value");
+      			}
+      		}
+      		if (values == null) {
+      			var optionsKnown = fieldDef != null && Array.isArray(fieldDef.select_options);
+      			values = trimmed.indexOf(",") == -1 || (optionsKnown && selectOptionId(fieldDef, trimmed) != null) ? [trimmed] : trimmed.split(",");
       		}
       	}
       	else {
-      		pushRaw(rawValue);
+      		values = [rawValue];
       	}
-      	var resolved = [];
-      	var seen = {};
       	for (var v = 0; v < values.length; v++) {
-      		var current = values[v];
-      		var mapped = current;
-      		var currentKey = "" + current;
-      		if (fieldDef != null && Array.isArray(fieldDef.select_options) && isNaN(+current)) {
-      			var option = fieldDef.select_options.find(function(x) {
-      				return x != null && (("" + x.value) == currentKey || ("" + x.id) == currentKey);
-      			});
-      			if (option != null && option.id != null) {
-      				mapped = option.id;
-      			}
-      		}
-      		else if (!isNaN(+current)) {
-      			mapped = +current;
-      		}
-      		var mappedKey = "" + mapped;
-      		if (mappedKey != "" && !seen[mappedKey]) {
-      			seen[mappedKey] = true;
-      			resolved.push(mapped);
-      		}
+      		addOption(values[v]);
       	}
       	return resolved;
       }
+      // The links of a link row answer: an array, a {id}/{value} object, a JSON array text, or a text of row ids or
+      // primary-field texts separated by commas. A number is a row id (the primary values of the linked table are unknown here).
+      function normalizeLinkRowValue(rawValue) {
+      	var links = [];
+      	function addLink(value) {
+      		if (value == null) {
+      			return;
+      		}
+      		if (typeof value == "object") {
+      			if (Array.isArray(value)) {
+      				for (var l = 0; l < value.length; l++) {
+      					addLink(value[l]);
+      				}
+      			}
+      			else if (value.id != null) {
+      				addLink(value.id);
+      			}
+      			else if (value.value != null) {
+      				addLink(value.value);
+      			}
+      			return;
+      		}
+      		var text = answerText(value);
+      		if (text != "") {
+      			var num = Number(text);
+      			links.push(isNaN(num) ? text : num);
+      		}
+      	}
+      	if (rawValue != null && typeof rawValue == "object") {
+      		addLink(rawValue);
+      		return links;
+      	}
+      	var linkText = answerText(rawValue);
+      	if (linkText.charAt(0) == "[") {
+      		try {
+      			var parsedLinks = JSON.parse(linkText);
+      			if (Array.isArray(parsedLinks)) {
+      				addLink(parsedLinks);
+      				return links;
+      			}
+      		}
+      		catch (e) {
+      			log.warn("Unable to parse a link_row JSON value");
+      		}
+      	}
+      	var parts = linkText.split(",");
+      	for (var p = 0; p < parts.length; p++) {
+      		addLink(parts[p]);
+      	}
+      	return links;
+      }
+      // A number answer: "" is an empty cell (Baserow refuses ""), a decimal comma is a decimal point ("3,5" is 3.5).
+      function numberAnswer(value) {
+      	var text = answerText(value);
+      	if (text == "") {
+      		return null;
+      	}
+      	if (typeof value == "number") {
+      		return value;
+      	}
+      	if (typeof value == "object") {
+      		return JSON.stringify(value);
+      	}
+      	return /^[+-]?\d*,\d+$/.test(text) ? text.replace(",", ".") : text;
+      }
+      // A date answer: "" is an empty cell (Baserow refuses ""). A date column without time keeps the YYYY-MM-DD part of the
+      // answer as written: the viewer sends the local date, a conversion to UTC could shift the day.
+      function dateAnswer(fieldDef, value) {
+      	var text = answerText(value);
+      	if (text == "") {
+      		return null;
+      	}
+      	if (typeof value == "object") {
+      		return JSON.stringify(value);
+      	}
+      	var withTime = fieldDef != null && (fieldDef.date_include_time === true || ("" + fieldDef.date_include_time) == "true");
+      	if (!withTime && /^\d{4}-\d{2}-\d{2}([T ]|$)/.test(text)) {
+      		return text.substring(0, 10);
+      	}
+      	return typeof value == "string" ? text : value;
+      }
       for (var key in jDoc.variable.resp) {
+      	// a response entry that is not an object (null, text) is read as the value of an answer
+      	if (jDoc.variable.resp[key] == null || typeof jDoc.variable.resp[key] != "object") {
+      		jDoc.variable.resp[key] = {value: jDoc.variable.resp[key]};
+      	}
       	if(typeof jDoc.variable.resp[key].value != "string" && jDoc.variable.resp[key].value == null && jDoc.variable.resp[key].type != null){
       		switch(jDoc.variable.resp[key].type){
       			case "checkbox":
@@ -736,58 +1023,68 @@ comment: |
       				break;
       		}
       	}
-      	log.warn("** Key is : [" + key + "] value is : " + jDoc.variable.resp[key].value)
       	
       	let obj  = jFields.find((object) => object.name === key )
       	let type = obj ? obj.type : null
       	
-      	log.warn("** type is : " + type)
+      	log.debug("** column [" + key + "], type " + type);
       	switch (type) {
       		case ''text'':
       		case ''long_text'':
-      		case ''number'':
-      		case ''date'':
-      		case ''boolean'':
       		case ''email'':
       		case ''phone_number'':
-      		case ''rating'':
-      		case ''duration'':
       		case ''password'':
       		case ''url'':
-      			data[key] = typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value);
+      			// an unanswered text is an empty cell: null was sent as the text "null"
+      			data[key] = jDoc.variable.resp[key].value == null ? null : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+      			break;
+      		case ''boolean'':
+      			// an unanswered boolean is false: Baserow refuses "" and null (a boolean is never empty)
+      			data[key] = answerText(jDoc.variable.resp[key].value) == "" ? false : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+      			break;
+      		case ''rating'':
+      			// an unanswered rating is 0: Baserow refuses "" and null (a rating is never empty)
+      			data[key] = answerText(jDoc.variable.resp[key].value) == "" ? 0 : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+      			break;
+      		case ''duration'':
+      			// an unanswered duration leaves the cell empty: Baserow refuses ""
+      			data[key] = answerText(jDoc.variable.resp[key].value) == "" ? null : (typeof jDoc.variable.resp[key].value != "object" ? jDoc.variable.resp[key].value : JSON.stringify(jDoc.variable.resp[key].value));
+      			break;
+      		case ''number'':
+      			// an unanswered number leaves the cell empty: Baserow refuses "" (0 is a real answer)
+      			data[key] = numberAnswer(jDoc.variable.resp[key].value);
+      			break;
+      		case ''date'':
+      			// an unanswered date leaves the cell empty: Baserow refuses ""
+      			data[key] = dateAnswer(obj, jDoc.variable.resp[key].value);
       			break;
       		case ''single_select'':
-      			if(isNaN(+jDoc.variable.resp[key].value)){
-      				var search_id = obj.select_options.find((x)=>{
-      					return x.value == jDoc.variable.resp[key].value;
-      				})
-      				if(search_id != null && search_id.id != null){
-      					data[key] = search_id.id;
-      				}
-      				else{
-      					data[key] = +jDoc.variable.resp[key].value;
-      				}
+      			if (answerText(jDoc.variable.resp[key].value) == "") {
+      				// an unanswered choice leaves the cell empty: +"" is the option 0, which Baserow refuses
+      				data[key] = null;
       			}
-      			else{
-      				data[key] = +jDoc.variable.resp[key].value;
+      			else {
+      				var optionId = selectOptionId(obj, jDoc.variable.resp[key].value);
+      				if (optionId == null) {
+      					selectOptionError(key, jDoc.variable.resp[key].value);
+      				}
+      				else {
+      					data[key] = optionId;
+      				}
       			}
       			break;
       		case ''multiple_select'':
-      			data[key] = normalizeMultipleSelectValue(jDoc.variable.resp[key].value, obj);
+      			data[key] = normalizeMultipleSelectValue(jDoc.variable.resp[key].value, obj, key);
       			break;
-      
       		case ''link_row'':
-      			data[key] = (""+jDoc.variable.resp[key].value).split('','').map(function(v) {
-      				const trimmed = v.trim();
-      				const num = Number(trimmed);
-      				return isNaN(num) ? trimmed : num;
-      			});
+      			// an unanswered link leaves the cell empty and empty items are dropped ("12,"): Number("") is the row 0, which Baserow refuses
+      			data[key] = normalizeLinkRowValue(jDoc.variable.resp[key].value);
       			break;
-      
+      	
       		case ''file'':
       			data[key] = [];  // will be filled further on  by the attachment loop.
       			break;
-      				
+      	
       		case null:
       			if(forms_createColumn == "true"){
       				if(jDoc.variable.resp[key].type == "img" || jDoc.variable.resp[key].type == "file" || jDoc.variable.resp[key].type == "signature"){
@@ -805,10 +1102,10 @@ comment: |
       				}
       			}
       			else{
-      				log.warn("** key: " + key + " doesn''t exists in target table")
+      				log.debug("** column [" + key + "] does not exist in the target table: it is skipped");
       			}
       			break;
-      		default: 
+      		default:
       			log.warn("** type: " + type + " is not yet handled")
       	}
       }
@@ -819,7 +1116,7 @@ comment: |
     expression: Object.keys(jDoc.variable.resp)
     ↓jIf [steps.IfStep-1748360671094]: 
       comment: If From field type is an attachment (Photo)
-      condition: jDoc.variable.resp[item].att_type === true
+      condition: jDoc.variable.resp[item].att_type === true && Array.isArray(data[item])
       ↓getAttachmentName [steps.SimpleStep-1748360671097]: 
         comment: Get the Attachement name and build a local file path to read the attachment from CouchDB
         expression: |
@@ -840,6 +1137,13 @@ comment: |
           	var directory = new File(parentDir, directoryName);
           	directory.mkdir()
           }
+          // A key of the response document names the attachment file: only a file name is kept, never a path,
+          // so that the temporary file stays inside attachments/<dirName>/.
+          function safeName(name){
+          	var value = ("" + (name == null ? "" : name)).replace(/[\u0000-\u001f\u007f]/g, "");
+          	value = value.substring(Math.max(value.lastIndexOf("/"), value.lastIndexOf("\\")) + 1);
+          	return value == "" || value == "." || value == ".." ? "file" : value;
+          }
           
           var filesToDelete = [];
           var _use_attname = item;
@@ -849,7 +1153,7 @@ comment: |
           var dirName = new Date().getTime() + "_" + makeid(20);
           var dir = context.getProjectDirectory()+"/attachments/";
           mkdir(dir, dirName);
-          var _use_attpath = dir + dirName + "/"+ _use_attname;
+          var _use_attpath = dir + dirName + "/" + safeName(_use_attname);
           filesToDelete.push(_use_attpath)
           
           
@@ -882,7 +1186,9 @@ comment: |
           
           var oldFilePath = "" + _use_attpath;
           
-          _use_attpath = _use_attpath + "." + contentType.split("/")[1];
+          // the stored content type comes with the response: its subtype is reduced to a plain extension
+          var contentExt = (("" + contentType).split("/")[1] || "bin").replace(/[^A-Za-z0-9+._-]/g, "");
+          _use_attpath = _use_attpath + "." + (contentExt == "" ? "bin" : contentExt);
           
           var oldFile = new File(oldFilePath);
           var newFile = new File(_use_attpath);
@@ -891,6 +1197,9 @@ comment: |
       ↓element [steps.ElementStep-1748360671118]: 
         expression: _use_attpath
         nodeName: AttachmentPath
+      ↓NoLog_Call_Sequence [steps.SimpleStep-1898400002052]: 
+        comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+        expression: org.apache.log4j.MDC.put("nolog", true);
       ↓Call_Sequence [steps.SequenceStep-1748360671121]: 
         comment: Push it to BR
         sourceSequence: lib_BaseRow.TokenGetOrRefresh
@@ -905,6 +1214,8 @@ comment: |
                 - java.lang.String: 
                   - ↑value: ./document/Bearer/text()
           visibility: '-1'
+      ↓Log_Call_Sequence [steps.SimpleStep-1898400002053]: 
+        expression: org.apache.log4j.MDC.remove("nolog");
       ↓Call_Transaction1 [steps.TransactionStep-1748360671124]: 
         sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
         ↓__header_Authorization [variables.StepVariable-1748360671127]: 
@@ -916,6 +1227,7 @@ comment: |
                   - ↑value: 1748360671121
                 - java.lang.String: 
                   - ↑value: ./document/Bearer/text()
+          visibility: '-1'
         ↓file [variables.StepVariable-1748360671130]: 
           sourceDefinition: 
             - xmlizable: 
@@ -947,16 +1259,16 @@ comment: |
                           deleteDirectory(file);
                       } else {
                           if (!file.delete()) {
-                              log.warn("Échec de la suppression du fichier : " + file.getAbsolutePath());
+                              log.warn("Unable to delete a temporary attachment file");
                           }
                       }
                   }
               }
           
               if (!directory.delete()) {
-                  log.warn("Échec de la suppression du dossier : " + directory.getAbsolutePath());
+                  log.warn("Unable to delete a temporary attachment folder");
               } else {
-                  log.warn("Dossier supprimé avec succès : " + directory.getAbsolutePath());
+                  log.debug("Temporary attachment folder deleted");
               }
           }
           
@@ -980,13 +1292,25 @@ comment: |
       ↓AddAttachementToBRField [steps.SimpleStep-1748360671142]: 
         comment: Add this id to the data
         expression: |
-          'data[_use_attname].push({
-          	name: jAttachmentName
-          });
+          '// only a file column takes files, and a file Baserow did not store (unreadable attachment, refused upload) is skipped:
+          // the rest of the row is still saved
+          if (!Array.isArray(data[_use_attname])) {
+          	log.warn("** a file is skipped: its column is not a file column of the target table");
+          	log.debug("** column [" + _use_attname + "] is not a file column of the target table");
+          }
+          else if (jAttachmentName == null || ("" + jAttachmentName).trim() == "") {
+          	log.warn("** a file could not be uploaded to Baserow, it is skipped");
+          	log.debug("** column [" + _use_attname + "]: a file could not be uploaded to Baserow");
+          }
+          else {
+          	data[_use_attname].push({
+          		name: jAttachmentName
+          	});
+          }
           '
     ↓jIf1 [steps.IfStep-1748360671145]: 
       comment: If From field type is an uploaded file, can be an array of files
-      condition: jDoc.variable.resp[item].type === 'file'
+      condition: jDoc.variable.resp[item].type === 'file' && Array.isArray(data[item])
       ↓SaveItemToRespItem [steps.SimpleStep-1748360671148]: 
         expression: |
           let respItem = item;
@@ -1019,6 +1343,13 @@ comment: |
               	var directory = new File(parentDir, directoryName);
               	directory.mkdir()
               }
+              // A key of the response document names the attachment file: only a file name is kept, never a path,
+              // so that the temporary file stays inside attachments/<dirName>/.
+              function safeName(name){
+              	var value = ("" + (name == null ? "" : name)).replace(/[\u0000-\u001f\u007f]/g, "");
+              	value = value.substring(Math.max(value.lastIndexOf("/"), value.lastIndexOf("\\")) + 1);
+              	return value == "" || value == "." || value == ".." ? "file" : value;
+              }
               
               var filesToDelete = [];
               var _use_attname = item;
@@ -1028,7 +1359,7 @@ comment: |
               var dirName = new Date().getTime() + "_" + makeid(20);
               var dir = context.getProjectDirectory()+"/attachments/";
               mkdir(dir, dirName);
-              var _use_attpath = dir + dirName + "/" + _use_attname.split("_C80C80_")[1];
+              var _use_attpath = dir + dirName + "/" + safeName(_use_attname.split("_C80C80_")[1]);
               filesToDelete.push(_use_attpath)
               
               
@@ -1058,6 +1389,9 @@ comment: |
           ↓element [steps.ElementStep-1748360671178]: 
             expression: _use_attpath
             nodeName: AttachmentPath
+          ↓NoLog_Call_Sequence [steps.SimpleStep-1898400002054]: 
+            comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+            expression: org.apache.log4j.MDC.put("nolog", true);
           ↓Call_Sequence [steps.SequenceStep-1748360671181]: 
             comment: Push it to BR
             sourceSequence: lib_BaseRow.TokenGetOrRefresh
@@ -1072,6 +1406,8 @@ comment: |
                     - java.lang.String: 
                       - ↑value: ./document/Bearer/text()
               visibility: '-1'
+          ↓Log_Call_Sequence [steps.SimpleStep-1898400002055]: 
+            expression: org.apache.log4j.MDC.remove("nolog");
           ↓Call_Transaction1 [steps.TransactionStep-1748360671184]: 
             sourceTransaction: lib_BaseRow.Baserow_API_spec._api_user_files_upload_file__POST
             ↓__header_Authorization [variables.StepVariable-1748360671187]: 
@@ -1083,6 +1419,7 @@ comment: |
                       - ↑value: 1748360671181
                     - java.lang.String: 
                       - ↑value: ./document/Bearer/text()
+              visibility: '-1'
             ↓file [variables.StepVariable-1748360671190]: 
               sourceDefinition: 
                 - xmlizable: 
@@ -1095,6 +1432,16 @@ comment: |
           ↓Delete_file [steps.DeleteStep-1748360671193]: 
             comment: Delete attachment from workspace as it has been uploaded
             sourcePath: filesToDelete[0]
+          ↓delete_empty_dir [steps.SimpleStep-1897352000004]: 
+            comment: Delete the temporary folder of the uploaded file
+            expression: |
+              var File = java.io.File;
+              // the uploaded file is deleted above: its temporary folder in attachments/ is deleted too when it is empty
+              var tempDirectory = new File(dir + dirName);
+              var tempFiles = tempDirectory.list();
+              if (tempFiles != null && tempFiles.length == 0 && !tempDirectory.delete()) {
+              	log.warn("Unable to delete a temporary attachment folder");
+              }
           ↓jAttachmentName [steps.SimpleSourceStep-1748360671196]: 
             comment: Get the BR Attachment ID
             sourceDefinition: 
@@ -1109,14 +1456,84 @@ comment: |
           ↓AddAttachementToBRField [steps.SimpleStep-1748360671199]: 
             comment: Add this id to the data
             expression: |
-              'data[jDoc.variable.resp[respItem].name].push({
-              	name: jAttachmentName
-              });
+              '// only a file column takes files, and a file Baserow did not store (unreadable attachment, refused upload) is skipped:
+              // the rest of the row is still saved
+              if (!Array.isArray(data[respItem])) {
+              	log.warn("** a file is skipped: its column is not a file column of the target table");
+              	log.debug("** column [" + respItem + "] is not a file column of the target table");
+              }
+              else if (jAttachmentName == null || ("" + jAttachmentName).trim() == "") {
+              	log.warn("** a file could not be uploaded to Baserow, it is skipped");
+              	log.debug("** column [" + respItem + "]: a file could not be uploaded to Baserow");
+              }
+              else {
+              	data[respItem].push({
+              		name: jAttachmentName
+              	});
+              }
               '
   ↓StringifyData [steps.SimpleStep-1734431536160]: 
     expression: |
       data = JSON.stringify(data);
       
+↓row_check_column [steps.SimpleSourceStep-2026110904000]: 
+  comment: The column of the row condition of the step that runs this write (C8Oforms, formscommon_CheckConfig row_column), empty without one
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1734427992515
+        - java.lang.String: 
+          - ↑value: ./document/row_column/text()
+  variableName: row_check_column
+↓IfRowCondition [steps.IfStep-2026110904001]: 
+  comment: the row is checked before it is changed (formscommon_CheckRow), and the value written in its column
+  condition: row_check_column != null && ("" + row_check_column) != ""
+  ↓RowWritten [steps.SimpleStep-2026110904002]: 
+    comment: the row the write changes (forms_id, none for a creation) and the texts it puts in the column of the condition
+    expression: |
+      'include("js/row_rule.js");
+      row_id = forms_id != null && forms_id != undefined ? "" + forms_id : "";
+      written = rowRuleWritten(data, "" + row_check_column, jFields);'
+  ↓Call_CheckRow [steps.SequenceStep-2026110904003]: 
+    sourceSequence: lib_BaseRow.formscommon_CheckRow
+    ↓forms_config [variables.StepVariable-2026110904004]: 
+    ↓forms_form_id [variables.StepVariable-2026110904005]: 
+    ↓source_kind [variables.StepVariable-2026110904006]: 
+      value: forms_AddRow
+    ↓row_id [variables.StepVariable-2026110904007]: 
+    ↓written [variables.StepVariable-2026110904008]: 
+    ↓authorization [variables.StepVariable-2026110904009]: 
+      comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 1734427992515
+            - java.lang.String: 
+              - ↑value: ./document/Bearer/text()
+      visibility: '-1'
+  ↓IfRowRefused [steps.IfExistStep-2026110904010]: 
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 2026110904003
+          - java.lang.String: 
+            - ↑value: ./document/error
+    ↓Copy [steps.XMLCopyStep-2026110904011]: 
+      sourceDefinition: 
+        - xmlizable: 
+          - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+          - com.twinsoft.convertigo.beans.common.XMLVector: 
+            - java.lang.String: 
+              - ↑value: 2026110904003
+            - java.lang.String: 
+              - ↑value: ./document/error
+    ↓Return [steps.ReturnStep-2026110904012]: 
 ↓jIfThenElse [steps.IfThenElseStep-1726213751006]: 
   condition: forms_id != '' && forms_id != null && forms_id != undefined
   ↓jThen [steps.ThenStep-1726213751008]: 
@@ -1125,6 +1542,70 @@ comment: |
         row_id = forms_id
         
         
+    ↓IfAppendFiles [steps.IfStep-2026111601001]: 
+      comment: (forms_appendFiles) the files sent to a file column are added to the files of the row instead of replacing them (js/file_append.js), once formscommon_CheckConfig and formscommon_CheckRow allowed the write
+      condition: forms_appendFiles != null && ("" + forms_appendFiles).trim().toLowerCase() == "true"
+      ↓appendFilesAuthorization [steps.SimpleSourceStep-2026111601002]: 
+        comment: Bearer of the Baserow account of the source, from formscommon_CheckConfig, to read the row again just before it is written
+        sourceDefinition: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+            - com.twinsoft.convertigo.beans.common.XMLVector: 
+              - java.lang.String: 
+                - ↑value: 1734427992515
+              - java.lang.String: 
+                - ↑value: ./document/Bearer/text()
+        variableName: appendFilesAuthorization
+      ↓AppendFiles [steps.SimpleStep-2026111601003]: 
+        comment: 'the row is locked on this server (other appends to it wait), read again with the account of the source, and each file column of the write gets the files of the row followed by the new ones, each file once (its Baserow name); a file column without a new file is left out of the write. A row that cannot be read stops the write: the new files alone would remove the files of the row'
+        expression: |
+          'include("js/common.js");
+          include("js/file_append.js");
+          var appendFilesToken = "" + appendFilesAuthorization;
+          appendFilesAuthorization = null;
+          var appendFilesLocks = context.project.get("lib_baserow.file_append_locks");
+          if (appendFilesLocks == null) {
+          	appendFilesLocks = new java.util.concurrent.ConcurrentHashMap();
+          	context.project.set("lib_baserow.file_append_locks", appendFilesLocks);
+          }
+          appendFiles = baserowFileAppend.prepare({
+          	dataText: data, fields: jFields, tableId: table_id, rowId: row_id,
+          	read: function (appendFilesRowId) {
+          		var appendFilesRow = jsonAnswer(callNative("lib_BaseRow.Baserow_API_spec._api_database_rows_table__table_id___row_id___GET_raw", {
+          			"__header_Authorization": appendFilesToken, "table_id": "" + table_id, "row_id": "" + appendFilesRowId, "user_field_names": "true"
+          		}));
+          		if (isRefusedToken(appendFilesRow)) {
+          			// a token refused by Baserow (401) is no longer handed out to the other sessions (js/token_cache.js)
+          			forgetCachedToken(appendFilesToken);
+          		}
+          		return appendFilesRow;
+          	},
+          	store: appendFilesLocks,
+          	owner: "" + java.util.UUID.randomUUID(),
+          	clock: function () {
+          		return java.lang.System.currentTimeMillis();
+          	},
+          	sleep: function (ms) {
+          		java.lang.Thread.sleep(ms);
+          	}
+          });
+          appendFilesToken = null;
+          data = appendFiles.data;
+          appendFilesError = appendFiles.error;
+          if (appendFilesError == "" && appendFiles.lockKey != null && appendFiles.owner == null) {
+          	log.warn("(forms_appendFiles) the row " + appendFiles.lockKey + " stayed locked by another write: it is written without the lock");
+          }'
+      ↓IfAppendFilesError [steps.IfStep-2026111601004]: 
+        comment: the files of the row could not be read, or the row id is not one: nothing is written
+        condition: appendFilesError != ""
+        ↓Error_structure [steps.XMLErrorStep-2026111601005]: 
+          message: 
+            - xmlizable: 
+              - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+              - SmartType: 
+                - ↑mode: JS
+                - →→: appendFilesError
+        ↓Return [steps.ReturnStep-2026111601006]: 
     ↓Call_Sequence [steps.SequenceStep-1726213836036]: 
       comment: Push the row to BR
       sourceSequence: lib_BaseRow.TableUpdateRow
@@ -1148,6 +1629,12 @@ comment: |
               - java.lang.String: 
                 - ↑value: ./document/Bearer/text()
         visibility: '-1'
+    ↓ReleaseAppendFiles [steps.SimpleStep-2026111601007]: 
+      comment: (forms_appendFiles) the row locked by AppendFiles is released once written
+      expression: |
+        'if (typeof appendFiles != "undefined" && appendFiles != null && appendFiles.owner != null) {
+        	baserowFileAppend.release(context.project.get("lib_baserow.file_append_locks"), appendFiles.lockKey, appendFiles.owner);
+        }'
     ↓IfExist [steps.IfExistStep-1726214087646]: 
       sourceDefinition: 
         - xmlizable: 
@@ -1158,6 +1645,16 @@ comment: |
             - java.lang.String: 
               - ↑value: ./document/error
       ↓Error_structure [steps.XMLErrorStep-1726214087652]: 
+        details: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1726213836036
+                - java.lang.String: 
+                  - ↑value: ./document/detail
         message: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -1167,7 +1664,7 @@ comment: |
                 - java.lang.String: 
                   - ↑value: 1726213836036
                 - java.lang.String: 
-                  - ↑value: ./document/error/message/text()
+                  - ↑value: ./document/error/message/text() | ./document/error[not(*)]/text()
       ↓Return [steps.ReturnStep-1726214087655]: 
   ↓jElse [steps.ElseStep-1726213751010]: 
     ↓Call_Sequence [steps.SequenceStep-1680078354205]: 
@@ -1205,6 +1702,16 @@ comment: |
             - java.lang.String: 
               - ↑value: ./document/error
       ↓Error_structure [steps.XMLErrorStep-1680078354238]: 
+        details: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1680078354205
+                - java.lang.String: 
+                  - ↑value: ./document/detail
         message: 
           - xmlizable: 
             - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
@@ -1214,7 +1721,7 @@ comment: |
                 - java.lang.String: 
                   - ↑value: 1680078354205
                 - java.lang.String: 
-                  - ↑value: ./document/error/message/text()
+                  - ↑value: ./document/error/message/text() | ./document/error[not(*)]/text()
       ↓Return [steps.ReturnStep-1680078354241]: 
 ↓forms_config [variables.RequestableVariable-1680078354355]: 
   comment: |
@@ -1285,3 +1792,25 @@ comment: |
         }
     }'
   description: boolean
+↓forms_appendFiles [variables.RequestableVariable-2026111601010]: 
+  comment: |
+    '{
+        "en": {
+            "comment": "When the row is updated (Identifier set), the files sent to a file column are added to the files the row already has, each file once, instead of replacing them. A file column sent without a new file keeps its files",
+            "displayName": "Add the files to the existing ones"
+        },
+        "fr": {
+            "comment": "Quand la ligne est mise à jour (Identifiant renseigné), les fichiers envoyés dans une colonne fichier s''ajoutent à ceux que la ligne a déjà, chaque fichier une seule fois, au lieu de les remplacer. Une colonne fichier envoyée sans nouveau fichier garde ses fichiers",
+            "displayName": "Ajouter les fichiers aux fichiers existants"
+        },
+        "es": {
+            "comment": "Cuando se actualiza la fila (Identificador definido), los archivos enviados a una columna de archivos se añaden a los que ya tiene la fila, cada archivo una sola vez, en lugar de reemplazarlos. Una columna de archivos enviada sin archivo nuevo conserva sus archivos",
+            "displayName": "Añadir los archivos a los existentes"
+        },
+        "it": {
+            "comment": "Quando la riga viene aggiornata (Identificatore impostato), i file inviati a una colonna di file si aggiungono a quelli che la riga ha già, ogni file una sola volta, invece di sostituirli. Una colonna di file inviata senza nuovo file mantiene i suoi file",
+            "displayName": "Aggiungi i file a quelli esistenti"
+        }
+    }'
+  description: boolean=false
+  value: 

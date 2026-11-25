@@ -1,0 +1,54 @@
+accessibility: Private
+comment: |
+  Waits for a Baserow job with the Baserow account of the user, bounded: answers the finished job, an error when the job failed or is unknown, or job_timeout (retryable) after timeout_ms (default 60000, 300000 at most).
+  The Baserow account of the call, never the Baserow admin account: authorization (a JWT of the user's account), else email and password, else the account of the authenticated C8Oforms user (C8Oforms.BaserowAccountGet); without account the call is refused.
+jsonNativeOutput: true
+nativeExecution: true
+responseTimeout: 320
+↓Run [steps.SimpleStep-1997100000401]: 
+  comment: The Baserow calls run with the logs off and the token of the account stays in js/baserow_schema.js (never in the answer)
+  expression: |
+    'include("js/baserow_schema.js");
+    result = BaserowSchema.engine.jobWait({
+    	job_id: typeof job_id == "undefined" || job_id == null ? null : "" + job_id,
+    	timeout_ms: typeof timeout_ms == "undefined" || timeout_ms == null ? null : "" + timeout_ms,
+    	interval_ms: typeof interval_ms == "undefined" || interval_ms == null ? null : "" + interval_ms,
+    	authorization: typeof authorization == "undefined" || authorization == null ? null : "" + authorization,
+    	email: typeof email == "undefined" || email == null ? null : "" + email,
+    	password: typeof password == "undefined" || password == null ? null : "" + password
+    });'
+↓result [steps.JsonToXmlStep-1997100000402]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: result
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: result
+↓job_id [variables.RequestableVariable-1997100000411]: 
+  comment: Id of the Baserow job.
+↓timeout_ms [variables.RequestableVariable-1997100000412]: 
+  comment: Longest wait in milliseconds. Default 60000, 300000 at most.
+  value: 60000
+↓interval_ms [variables.RequestableVariable-1997100000413]: 
+  comment: Delay between two reads of the job in milliseconds. Default 1000, 200 at least.
+  value: 1000
+↓authorization [variables.RequestableVariable-1997100000414]: 
+  comment: JWT of the Baserow account of the user (JWT ...). When given, email and password are not used.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'
+↓email [variables.RequestableVariable-1997100000415]: 
+  comment: Email of the Baserow account of the user, with password.
+↓password [variables.RequestableVariable-1997100000416]: 
+  comment: Password of the Baserow account of the user, with email.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'

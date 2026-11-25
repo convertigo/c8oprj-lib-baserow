@@ -1,7 +1,7 @@
 accessibility: Private
 clientCachable: true
 comment: Lists all the fields in a baserow table
-responseExpiryDate: absolute,60000000
+responseExpiryDate: absolute,60000
 ↓Input_variables [steps.InputVariablesStep-1672092062343]: 
 ↓Concat [steps.XMLConcatStep-1672092079922]: 
   nodeName: tokenValue
@@ -34,6 +34,23 @@ responseExpiryDate: absolute,60000000
                   - ↑value: ./apikey/text()
             - java.lang.String: 
               - ↑value: ''
+↓fields_authorization [steps.SimpleSourceStep-2026102600020]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1672092079922
+        - java.lang.String: 
+          - ↑value: ./text()
+  variableName: fields_authorization
+↓FieldsCacheScope [steps.SimpleStep-2026102600021]: 
+  comment: the key of the 60 s cache of the fields, for the token of this call (js/fields_cache.js)
+  expression: |
+    'include("js/fields_cache.js");
+    cache_scope = getFieldsCacheScope(fields_authorization);
+    fields_authorization = null;
+    '
 ↓Call_Transaction [steps.TransactionStep-1672092006726]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_fields_table__table_id___GET
   ↓__header_Authorization [variables.StepVariable-1672092006729]: 
@@ -45,11 +62,15 @@ responseExpiryDate: absolute,60000000
             - ↑value: 1672092079922
           - java.lang.String: 
             - ↑value: ./text()
+    visibility: '-1'
   ↓table_id [variables.StepVariable-1672092006732]: 
     comment: Returns only the fields of the table related to the provided value.
     description: table_id
     required: true
     value: 
+  ↓cache_scope [variables.StepVariable-2026102600022]: 
+    comment: set by FieldsCacheScope just before
+    description: cache_scope
 ↓Copy [steps.XMLCopyStep-1672092006735]: 
   sourceDefinition: 
     - xmlizable: 

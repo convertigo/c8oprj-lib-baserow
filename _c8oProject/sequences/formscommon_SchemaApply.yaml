@@ -1,0 +1,70 @@
+accessibility: Private
+comment: |
+  Applies a no-code database schema (js/baserow_schema.js) with the Baserow account of the user.
+  mode plan: what apply would do, without any write (offline, or reading the user's base with options.online).
+  mode step: one bounded step (options.maxCalls, options.maxMillis) from state, which it returns enriched; call it again with that state until status done. options.files {key: {path} or {name, visible_name}}: the files of the schema (schema.files) the file cells of keyed rows and the images of the form views name, uploaded before the views (phase files) from <java.io.tmpdir>/c8o-file-transfer, 10 MB each and 30 MB in all at most (file_missing, file_invalid, file_too_large, files_too_large). options.exactViews: the views Baserow makes with a new table that the schema does not name are deleted. With options.baseId the state records what the run makes in that base (state.undo), for mode rollback. What the no-code database refuses as a paid feature of the account (402: colors of rows, a view type, a survey, the options or conditions of a form) is left out and listed in omittedViews {table, view, what, reason: feature_not_available}; the run goes on.
+  mode apply: all the steps in one call (the nocode-baserow-schema-apply tool).
+  mode describe: the schemas of tables of the account (options {tables: [{id, path}], linked, rows, views, attachments, maxRowsPerTable, maxTableBytes, maxBytes, maxFileBytes, maxFilesBytes}), one per base, with the tables they link (unless linked is false: a link to a table not asked is then left out and listed) and their rows on demand, read with the account's own token (the inverse of apply, C8Oforms #1836). Keys are the Baserow names; never an id, a workspace, a password field nor a computed value in a schema; the answer lists the tables left out (skipped), the fields left out (omitted) and the file fields whose files are not carried (files), and gives the ids of the tables, select options and views read. views: the collaborative views (filters and their groups, sorts, group bys, hidden columns and their order, colors of the rows, the dates and time scale of a timeline, the texts of a form and with attachments its cover and logo, the conditions that show the fields of a form, their components and the select options they offer), never public; omittedViews lists what is left out. attachments: the files of the rows (with rows) and the images of the forms (with views), by key in the schema (schema.files, cells {file, visible_name}), never their Baserow name, downloaded with the account into a folder of <java.io.tmpdir>/c8o-file-transfer, <n>/<name shown> (attachments [{key, path, size, visible_name, mime_type, is_image}], transferDir: the caller deletes it). Above a limit (2000 rows, 1 MB of rows per table, 4 MB in all, 100 tables, 10 MB a file, 30 MB of files) it refuses with refused, error.code, error.table, error.file and error.max.
+  mode rows: one write of a migration into a table the account reaches, options {tableId, create, update, keyField} (200 rows at most each): rows whose keyField value is already in the table are not created again.
+  mode upload: one file of a migration uploaded to the user files of the account, options {path}: a file of <java.io.tmpdir>/c8o-file-transfer only (lib_Microsoft_Sharepoint.DownloadFile); the answer file {name, visible_name} is the value of a file field of a row (mode rows). The caller deletes the file.
+  mode rollback: deletes for good the base the state created (createdBase, status deleted); in a base that existed, deletes only what the run made there (state.undo: rows, filters, sorts, group bys, views, added select options, fields, tables), bounded like a step (status running with the state to give again, then undone with removed and errors), never the base nor the trash. The files the run uploaded stay (Baserow cannot delete them): the final answer lists them (uploadedFiles).
+  mode workspaces: the workspaces of the user's account (id, name), with or without a base.
+  Without baseId a new base is always created, in options.workspaceId or the workspace of the schema, which must be one of the user's workspaces.
+  The answer (result, and the same as the JSON text json) holds status, state, map (key -> id of tables, fields, select options and views), progress, actions, warnings, error and retryable.
+  schema, state and options are JSON strings. The Baserow account of the call, never the Baserow admin account: authorization (a JWT of the user's account), else email and password, else the account of the authenticated C8Oforms user (C8Oforms.BaserowAccountGet); without account the call is refused.
+jsonNativeOutput: true
+nativeExecution: true
+responseTimeout: 300
+↓Run [steps.SimpleStep-1997100000001]: 
+  comment: The Baserow calls run with the logs off and the token of the account stays in js/baserow_schema.js (never in the answer)
+  expression: |
+    'include("js/baserow_schema.js");
+    result = BaserowSchema.engine.run({
+    	mode: typeof mode == "undefined" || mode == null ? null : "" + mode,
+    	schema: typeof schema == "undefined" || schema == null ? null : "" + schema,
+    	state: typeof state == "undefined" || state == null ? null : "" + state,
+    	options: typeof options == "undefined" || options == null ? null : "" + options,
+    	authorization: typeof authorization == "undefined" || authorization == null ? null : "" + authorization,
+    	email: typeof email == "undefined" || email == null ? null : "" + email,
+    	password: typeof password == "undefined" || password == null ? null : "" + password
+    });'
+↓result [steps.JsonToXmlStep-1997100000002]: 
+  jsonObject: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: JS
+        - →→: result
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: result
+↓json [steps.ElementStep-1997100000003]: 
+  comment: The same answer as a JSON text, for an internal caller that reads it back exactly (an XML round trip turns an array of one element into an object)
+  expression: JSON.stringify(result)
+  nodeName: json
+↓mode [variables.RequestableVariable-1997100000011]: 
+  comment: plan, step, apply, describe, rows, upload, rollback or workspaces. Default plan.
+  value: plan
+↓schema [variables.RequestableVariable-1997100000012]: 
+  comment: The schema (JSON): format c8oforms.baserow-template, or the format of the nocode-baserow-schema-apply tool.
+↓state [variables.RequestableVariable-1997100000013]: 
+  comment: The state returned by the previous step (JSON), empty for the first step.
+↓options [variables.RequestableVariable-1997100000014]: 
+  comment: 'JSON options: workspaceId, baseName, baseId, sampleData (default true), maxCalls (default 40), maxMillis (default 15000), online (plan), create.workspace, files, exactViews, maxFileBytes, maxFilesBytes; for mode describe: tables, linked, rows, views, attachments, maxRowsPerTable, maxTableBytes, maxBytes, maxFileBytes, maxFilesBytes; for mode rows: tableId, create, update, keyField; for mode upload: path; for mode rollback: maxCalls, maxMillis.'
+↓authorization [variables.RequestableVariable-1997100000015]: 
+  comment: JWT of the Baserow account of the user (JWT ...). When given, email and password are not used.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'
+↓email [variables.RequestableVariable-1997100000016]: 
+  comment: Email of the Baserow account of the user, with password.
+↓password [variables.RequestableVariable-1997100000017]: 
+  comment: Password of the Baserow account of the user, with email.
+  value: 
+    - ↑traceable: false
+    - →→: 
+  visibility: '-1'

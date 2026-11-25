@@ -1,6 +1,8 @@
 databaseName: c8oforms_fs
+replicationAccess: pullOnly
 ↓GetDocument [transactions.couchdb.GetDocumentTransaction]: 
   ↑default: true
+  accessibility: Private
   ↓Test_Case [core.TestCase]: 
     ↓_use_docid [variables.TestCaseVariable-1740150138524]: 
       description: Document ID
@@ -8,3 +10,13 @@ databaseName: c8oforms_fs
   ↓_use_docid [variables.RequestableVariable-1740150138527]: 
     description: Document ID
     value: 
+↓HeadDocument [transactions.couchdb.HeadDocumentTransaction]: 
+  accessibility: Private
+  comment: The revision of a form document, without its content (cache of formscommon_CheckConfig).
+  ↓_use_docid [variables.RequestableVariable-1797500000010]: 
+    description: Document ID
+↓RevDocument [transactions.couchdb.AllDocsTransaction]: 
+  accessibility: Private
+  comment: The revision of a form document by _all_docs?key="<id>", without reading the document (cache of formscommon_CheckConfigNative).
+  ↓_use_key [variables.RequestableVariable-1797500000011]: 
+    description: Document ID as a JSON string

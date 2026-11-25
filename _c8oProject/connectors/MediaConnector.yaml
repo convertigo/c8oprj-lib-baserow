@@ -1,3 +1,4 @@
 ↓Download_HTTP_transaction [transactions.DownloadHttpTransaction]: 
+  accessibility: Private
   ↑default: true
   ↓__uri [variables.RequestableHttpVariable-1670751352648]: 

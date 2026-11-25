@@ -5,6 +5,24 @@
 
 This is the Baserow connector for Convertigo. Use this connector to exchange data with Baserow databases.
 
+## Requirements
+
+This version needs a Convertigo engine with native sequences: **Convertigo 8.4.7 or later**. Its sources
+(formssource_GetTableData, formssource_GetSelectData) and their sub-sequences are native sequences, with steps that
+earlier engines (Convertigo 8.4.6 and before) do not have: these engines refuse the whole project. On them, use the
+1.1.42-hotfix line of this library (XML sources, branch `8.4.x`).
+
+The grouped sources use the c8oforms Baserow plugin when it is installed on the Baserow server (one request per
+source, exact over the whole table); without it they read the rows, and the absence of the plugin is remembered for
+5 minutes per Baserow server.
+
+A source may read the rows of its table through one of the views of that table: `view_id` in its `forms_config` (the
+id of a collaborative view that filters rows, as `formscommon_ViewsList` lists them). Baserow then applies the filters
+of the view on top of the filters of the source and of the request, and orders the rows by the sorts of the view when
+neither sorts them. The fields stay the `columns` of the source (the hidden fields of the view do not change them). A
+grouped source with a view does not ask the c8oforms plugin (it does not read views): it groups the rows read through
+the view, and the aggregations only the plugin computes answer an error. An invalid `view_id` fails the read.
+
 ## Symbols
 This library uses the following symbols
 
@@ -38,6 +56,7 @@ For more technical informations : [documentation](./project.md)
     - [formscommon_ApplicationsList](#formscommon_applicationslist)
     - [formscommon_CheckConfig](#formscommon_checkconfig)
     - [formscommon_FieldsList](#formscommon_fieldslist)
+    - [formscommon_ViewsList](#formscommon_viewslist)
     - [formssource_GetFieldValues](#formssource_getfieldvalues)
     - [formssource_GetSelectData](#formssource_getselectdata)
     - [formssource_GetTableData](#formssource_gettabledata)
@@ -77,13 +96,13 @@ For more technical informations : [documentation](./project.md)
      <tr><td>To contribute</td><td>
 
      ```
-     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow.git:branch=8.4.x
+     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow.git:branch=8.4.7.x
      ```
      </td></tr>
      <tr><td>To simply use</td><td>
 
      ```
-     lib_BaseRow=git@github.com:convertigo/c8oprj-lib-baserow/archive/8.4.x.zip
+     lib_BaseRow=https://github.com/convertigo/c8oprj-lib-baserow/archive/8.4.7.x.zip
      ```
      </td></tr>
     </table>
@@ -299,6 +318,9 @@ Add or update a row in a table. If a column in the table has the same name as th
 <td>doc</td><td></td>
 </tr>
 <tr>
+<td>forms_appendFiles</td><td>When the row is updated (Identifier set), the files sent to a file column are added to the files the row already has, each file once, instead of replacing them. A file column sent without a new file keeps its files</td>
+</tr>
+<tr>
 <td>forms_config</td><td>Choose a table in the no-code database</td>
 </tr>
 <tr>
@@ -327,6 +349,9 @@ Add or update a row in a table. Add columns to fill by pressing the + button, an
 </tr>
 <tr>
 <td>doc</td><td></td>
+</tr>
+<tr>
+<td>forms_appendFiles</td><td>When the row is updated (Identifier set), the files sent to a file column are added to the files the row already has, each file once, instead of replacing them. A file column sent without a new file keeps its files</td>
 </tr>
 <tr>
 <td>forms_config</td><td>Choose a table in the no-code database</td>
@@ -408,6 +433,23 @@ Lists all applications (databases) in baserow
 </tr>
 <tr>
 <td>forms_form_id</td><td>Real id of the form currently calling this source.</td>
+</tr>
+</table>
+
+### formscommon_ViewsList
+
+The views of a table a source may read its rows through (forms_config view_id): the collaborative views that filter
+rows (every type but form), as id, name and type, read with the Baserow account of the editor. For the view picker
+of the configuration of a source: forms_config {table_id, editor}, editor the authenticated user.
+
+**variables**
+
+<table>
+<tr>
+<th>name</th><th>comment</th>
+</tr>
+<tr>
+<td>forms_config</td><td>{"table_id": "&lt;workspace&gt;~&gt;&lt;base&gt;~&gt;&lt;table&gt;" or its id, "editor": the authenticated user}</td>
 </tr>
 </table>
 

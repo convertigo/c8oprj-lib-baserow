@@ -1,8 +1,13 @@
 accessibility: Private
 comment: Creates a row  in a table
 ↓Input_variables [steps.InputVariablesStep-1677070764851]: 
+↓NoLog_Call_Sequence1 [steps.SimpleStep-1898400002026]: 
+  comment: The answer of TokenGetOrRefresh holds the Bearer of the Baserow account, the engine would log it (Generated XML) in this thread
+  expression: org.apache.log4j.MDC.put("nolog", true);
 ↓Call_Sequence1 [steps.SequenceStep-1677070810578]: 
   sourceSequence: lib_BaseRow.TokenGetOrRefresh
+↓Log_Call_Sequence1 [steps.SimpleStep-1898400002027]: 
+  expression: org.apache.log4j.MDC.remove("nolog");
 ↓Call_Transaction1 [steps.TransactionStep-1677070810584]: 
   sourceTransaction: lib_BaseRow.Baserow_API_spec._api_database_tables__table_id__import_async__POST
   ↓__header_Authorization [variables.StepVariable-1677070810587]: 
@@ -14,6 +19,7 @@ comment: Creates a row  in a table
             - ↑value: 1677070810578
           - java.lang.String: 
             - ↑value: ./document/Bearer/text()
+    visibility: '-1'
   ↓__body [variables.StepVariable-1677070810590]: 
     required: true
     sourceDefinition: 
@@ -57,13 +63,17 @@ comment: Creates a row  in a table
         - java.lang.String: 
           - ↑value: ./document/object/state/text()
   variableName: state
+↓PollDelay [steps.SimpleStep-2026110300005]: 
+  comment: the job is read again after 100 ms, then after twice the previous wait up to 1 second (a small import ends well before 1 second)
+  expression: pollDelay = 100;
 ↓jWhile [steps.WhileStep-1677070810602]: 
   condition: state != "finished" && state != "null" && state != null
   ↓Sleep15Sec [steps.SimpleStep-1677070810605]: 
     expression: |
-      log.warn('sleeping for 1 second ' + 'state is ' + state);
-      java.lang.Thread.sleep(1000);
-      log.warn('finished sleeping for 1 second');
+      log.warn('sleeping for ' + pollDelay + ' ms ' + 'state is ' + state);
+      java.lang.Thread.sleep(pollDelay);
+      log.warn('finished sleeping for ' + pollDelay + ' ms');
+      pollDelay = Math.min(1000, pollDelay * 2);
   ↓Call_Transaction [steps.TransactionStep-1677070810608]: 
     sourceTransaction: lib_BaseRow.Baserow_API_spec._api_jobs__job_id___GET
     ↓job_id [variables.StepVariable-1677070810611]: 
@@ -87,6 +97,7 @@ comment: Creates a row  in a table
               - ↑value: 1677070810578
             - java.lang.String: 
               - ↑value: ./document/Bearer/text()
+      visibility: '-1'
   ↓jSimpleSource [steps.SimpleSourceStep-1677070810617]: 
     output: true
     sourceDefinition: 

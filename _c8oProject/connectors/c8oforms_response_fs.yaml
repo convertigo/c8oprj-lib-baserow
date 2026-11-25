@@ -1,6 +1,7 @@
 databaseName: c8oforms_response_fs
 ↓GetDocumentAttachment [transactions.couchdb.GetDocumentAttachmentTransaction]: 
   ↑default: true
+  accessibility: Private
   ↓_use_attname [variables.RequestableVariable-1740149879519]: 
     description: Attachment name
   ↓_use_docid [variables.RequestableVariable-1740149879522]: 
