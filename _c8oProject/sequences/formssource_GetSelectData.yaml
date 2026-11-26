@@ -95,6 +95,22 @@ nativeExecution: true
     var describeStructure = true;
     var displayValue = jConfig.displayValue != undefined ? jConfig.displayValue: jConfig.column;
     var value = jConfig.value != undefined ? jConfig.value : jConfig.line;
+    // displayColumns (optional, convertigo/C8oForms M15): the label of an option made of several columns, in their order,
+    // joined by displaySeparator (a space by default, 10 characters at most); a list of fewer than 2 columns is ignored
+    // (the label is displayValue)
+    var readDisplayColumns = function(config) {
+    	var list = config != null && Object.prototype.toString.call(config.displayColumns) == "[object Array]" ? config.displayColumns : [];
+    	var columns = [];
+    	for (var iDisplay = 0; iDisplay < list.length && columns.length < 10; iDisplay++) {
+    		var column = list[iDisplay] == null || typeof list[iDisplay] == "object" ? "" : ("" + list[iDisplay]).replace(/^\s+|\s+$/g, "");
+    		if (column != "" && columns.indexOf(column) == -1) {
+    			columns.push(column);
+    		}
+    	}
+    	return columns.length > 1 ? columns : [];
+    };
+    var displayColumns = readDisplayColumns(jConfig);
+    var displaySeparator = typeof jConfig.displaySeparator == "string" && jConfig.displaySeparator.length <= 10 ? jConfig.displaySeparator : " ";
     
     var appendUniqueColumn = function(targetColumns, targetColumnsMap, currentColumn) {
     	if (currentColumn == null) {
@@ -110,6 +126,9 @@ nativeExecution: true
     var includeColumnsMap = {};
     appendUniqueColumn(includeColumns, includeColumnsMap, displayValue);
     appendUniqueColumn(includeColumns, includeColumnsMap, value);
+    for (var iDisplayColumn = 0; iDisplayColumn < displayColumns.length; iDisplayColumn++) {
+    	appendUniqueColumn(includeColumns, includeColumnsMap, displayColumns[iDisplayColumn]);
+    }
     
     var filterColumns = [];
     var filterColumnsMap = {};
@@ -857,13 +876,29 @@ nativeExecution: true
     		}
     		res = distinctRes;
     	}
+    	// displayColumns: the cells of the label, each one as its column shows it, the empty ones left out, joined by the separator
+    	var joinDisplayHtml = function(parts, separator) {
+    		var kept = [];
+    		for (var iPart = 0; iPart < parts.length; iPart++) {
+    			var part = parts[iPart] == null ? "" : "" + parts[iPart];
+    			if (part.length >= close_html.length && part.substring(part.length - close_html.length) == close_html) {
+    				part = part.substring(0, part.length - close_html.length);
+    			}
+    			if (part.replace(/<[^>]*>/g, "").replace(/&nbsp;|\s/g, "") != "" || /<img\b/i.test(part)) {
+    				kept.push(part);
+    			}
+    		}
+    		var html = ("" + separator).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/ /g, "&nbsp;");
+    		return base_html + kept.join("<span>" + html + "</span>") + close_html;
+    	};
     	if (jConfig.displayValue) {
     		res = res
     				.map((x) => {
     					var displayResult = formatBaserowCell(x[displayValue] != null ? x[displayValue] : "", structureByName[displayValue], false);
     					var valueResult = formatBaserowCell(x[value] != null ? x[value] : "", structureByName[value], false);
+    					var label = displayColumns.length > 1 ? joinDisplayHtml(displayColumns.map((column) => formatBaserowCell(x[column] != null ? x[column] : "", structureByName[column], false).innerHtml), displaySeparator) : base_html + displayResult.innerHtml;
     					return {
-    						displayValue: base_html + displayResult.innerHtml,
+    						displayValue: label,
     						value: valueResult.value,
     						type: "html"
     				}
