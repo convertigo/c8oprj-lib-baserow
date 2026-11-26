@@ -96,6 +96,8 @@ const structure = [
   { name: 'Prices', type: 'lookup', formula_type: 'array', array_formula_type: 'number', number_decimal_places: 1, number_separator: 'COMMA_PERIOD' },
   { name: 'Units', type: 'count', formula_type: 'number', number_decimal_places: 0 },
   { name: 'Label', type: 'formula', formula_type: 'text', number_separator: '' },
+  { name: 'Notes', type: 'long_text', long_text_enable_rich_text: true },
+  { name: 'Memo', type: 'long_text', long_text_enable_rich_text: false },
 ];
 
 test('fields get the display options of their column, from a Java map of the native steps too (not instanceof java.util.Map)', () => {
@@ -112,6 +114,11 @@ test('fields get the display options of their column, from a Java map of the nat
   assert.deepEqual(fields.Day, { type: 'date', resolvedType: 'date', date_format: 'EU', timezone: 'UTC', date_show_tzinfo: 'true', date_force_timezone: 'UTC' });
   assert.deepEqual(fields.Prices, { type: 'lookup', resolvedType: 'number', number_decimal_places: '1', number_separator: 'COMMA_PERIOD', array_formula_type: 'number' });
   assert.deepEqual(fields.Label, { type: 'formula', resolvedType: 'text' });
+  // a rich long text: its value is Markdown, which the viewer shows formatted; a plain long text stays text
+  const longTexts = displayOptions(java, new JavaMap({ Notes: new JavaMap({ type: 'long_text', resolvedType: 'long_text' }),
+    Memo: new JavaMap({ type: 'long_text', resolvedType: 'long_text' }) }), structure, null, null);
+  assert.deepEqual(longTexts.Notes, { type: 'long_text', resolvedType: 'long_text', long_text_enable_rich_text: 'true' });
+  assert.deepEqual(longTexts.Memo, { type: 'long_text', resolvedType: 'long_text', long_text_enable_rich_text: 'false' });
   // #1424: a date without forced timezone is shown in the one of the server (UTC), never in the one of the browser
   const paris = displayOptions(java, { Day: { type: 'date' } }, [{ ...structure[2], date_force_timezone: 'Europe/Paris' }], null, null);
   assert.equal(paris.Day.date_force_timezone, 'Europe/Paris');

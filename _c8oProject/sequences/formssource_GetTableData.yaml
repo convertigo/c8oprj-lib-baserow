@@ -2573,7 +2573,7 @@ nativeExecution: true
   comment: lean_cells answer the options of the columns, from which the viewer builds the displayValue of the cells
   condition: leanCells
   ↓FieldDisplayOptions [steps.SimpleStep-1996000000203]: 
-    comment: the options of the columns the viewer formats a cell with as Baserow shows it (separators of a number, rating, timezone, aggregates of a grouped answer)
+    comment: the options of the columns the viewer formats a cell with as Baserow shows it (separators of a number, rating, timezone, rich text, aggregates of a grouped answer)
     expression: |
       '// the options of a column, as the JavaScript, native or stream reading of the rows left them (a Java map for the native
       // steps, which the 8.4.7 engine does not give as instanceof java.util.Map: known by its entrySet), as an object of texts.
@@ -2606,13 +2606,14 @@ nativeExecution: true
       leanFields = leanFieldsObject;
       // what the viewer needs besides to show a cell as Baserow does: the separators, prefix and suffix of a number, the
       // maximum, color and icon of a rating, the timezone a date is shown in (the forced one, else the one of the server) and whether it
-      // is shown, the type of the items of an array
+      // is shown, the type of the items of an array, whether a long text is a rich text (its value is then Markdown)
       var displayStructure = typeof structure == "undefined" || structure == null ? [] : (Array.isArray(structure) ? structure : [structure]);
       var displayFieldsByName = {};
       for (var iDisplayField = 0; iDisplayField < displayStructure.length; iDisplayField++) {
       	displayFieldsByName[displayStructure[iDisplayField].name] = displayStructure[iDisplayField];
       }
-      var displayOptionNames = ["number_separator", "number_prefix", "number_suffix", "max_value", "color", "style", "date_show_tzinfo", "array_formula_type"];
+      var displayOptionNames = ["number_separator", "number_prefix", "number_suffix", "max_value", "color", "style", "date_show_tzinfo", "array_formula_type",
+      	"long_text_enable_rich_text"];
       var displayKind = function(field) {
       	var kind = ["formula", "count", "rollup", "lookup"].indexOf(field.type) != -1 && field.formula_type != null ? "" + field.formula_type : "" + field.type;
       	return kind == "array" && field.array_formula_type != null ? "" + field.array_formula_type : kind;
