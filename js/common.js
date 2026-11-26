@@ -2,7 +2,9 @@ include("js/jwt.js");
 include("js/fields_cache.js");
 include("js/token_cache.js");
 
-const api = JavaImporter(
+// var, not const: forms_AddRow and forms_AddRowFromData include this file in two steps of one sequence (ReadFields,
+// then AppendFiles), and a const declared again stopped the second step ("forms_appendFiles" made every update fail)
+var api = JavaImporter(
 	java.util.Collections,
 	java.util.HashMap,
 	java.lang.String,
@@ -13,7 +15,7 @@ const api = JavaImporter(
 	com.twinsoft.convertigo.engine.requesters.InternalHttpServletRequest,
 	com.twinsoft.convertigo.engine.requesters.InternalRequester
 )
-const xpath = context.getXpathApi();
+var xpath = context.getXpathApi();
 
 with (api) {
 	// Per-user scope for the shared (project-scoped) table_id cache. The cache maps

@@ -347,3 +347,44 @@ test('a null answer of a text-like column leaves the cell empty', () => {
     }
   }
 });
+
+// A file column of forms_AddRowFromData takes the answer of a File, Photo or Signature field ({type, value}), whose files the
+// attachment loop uploads. Another value (the name of the file a reference to the field gave, a text) wrote an empty list
+// of files: the column was emptied while the flow showed its success. It is now reported and nothing is written. No value
+// still empties the column, and a File field in a text column writes the names of its files.
+test('forms_AddRowFromData reports a value that is not a file of the form for a file column', () => {
+  const fields = [{ name: 'Name', type: 'text' }, { name: 'Document', type: 'file' }];
+  const fileAnswer = { name: 'doc_file', type: 'file', value: [{}, '16_C80C80_report.pdf_C80C80_1795700000000'] };
+  const photo = { name: 'photo', type: 'img', value: 'photo', att_type: true };
+  for (const [value, error] of [
+    [fileAnswer, false],
+    [photo, false],
+    [{ name: 'sign', type: 'signature', value: '' }, false],
+    [null, false],
+    ['', false],
+    [[], false],
+    ['report.pdf', true],
+    [['report.pdf'], true],
+    [{ name: 'Name', type: 'text', value: 'x' }, true],
+  ]) {
+    const result = prepareData('forms_AddRowFromData', 0, { Name: 'row', Document: value }, fields);
+    assert.deepEqual(result.data.Document, [], `${JSON.stringify(value)}: the files are added by the attachment loop`);
+    if (error) {
+      assert.match(result.fieldErrorMessage, /The value of the column "Document" is not a file of the form/, JSON.stringify(value));
+    }
+    else {
+      assert.equal(result.fieldErrorMessage, '', JSON.stringify(value));
+    }
+  }
+  // a column that is not a file column is not checked
+  assert.equal(prepareData('forms_AddRowFromData', 0, { Name: 'report.pdf' }, fields).fieldErrorMessage, '');
+});
+
+test('a File field written in a text column writes the names of its files', () => {
+  const fields = [{ name: 'Name', type: 'text' }, { name: 'Files', type: 'long_text' }];
+  const files = { name: 'doc_file', type: 'file', value: [{}, '16_C80C80_a.pdf_C80C80_1', '16_C80C80_b c.png_C80C80_2'] };
+  assert.equal(prepareData('forms_AddRowFromData', 0, { Name: 'row', Files: files }, fields).data.Files, 'a.pdf, b c.png');
+  assert.equal(prepareData('forms_AddRowFromData', 0, { Name: 'row', Files: { type: 'signature', value: 'data:image/png;base64,AA' } }, fields).data.Files, '');
+  // forms_AddRow reads the value of the answer: unchanged
+  assert.equal(prepareData('forms_AddRow', 0, { Name: { value: 'row' }, Files: { value: 'text' } }, fields).data.Files, 'text');
+});

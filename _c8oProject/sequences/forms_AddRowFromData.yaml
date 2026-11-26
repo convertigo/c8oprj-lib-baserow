@@ -99,6 +99,30 @@ comment: |
     function answerText(value) {
     	return value == null ? "" : ("" + value).trim();
     }
+    // A File, Photo or Signature field of the form as forms_AddRowFromData receives it: its answer ({type, value}), whose files
+    // the attachment loop uploads, or a photo ({att_type}).
+    function isFileAnswer(value) {
+    	return value != null && typeof value == "object" && !Array.isArray(value) && (value.att_type === true || ["file", "img", "signature"].indexOf("" + value.type) != -1);
+    }
+    // No value: null, an empty text or an empty list.
+    function isEmptyAnswer(value) {
+    	return value == null || (Array.isArray(value) ? value.length == 0 : (typeof value != "object" && answerText(value) == ""));
+    }
+    // The names of the files of a File field, for a text column: what the viewer sent there before it sent the answer.
+    function fileAnswerNames(value) {
+    	var names = [];
+    	(Array.isArray(value.value) ? value.value : [value.value]).forEach(function (file) {
+    		var name = typeof file == "string" ? file : "";
+    		// an attachment of the response: <field id>_C80C80_<file name>_C80C80_<time>
+    		if (name.indexOf("_C80C80_") != -1) {
+    			name = name.split("_C80C80_")[1];
+    		}
+    		if (name != "" && name.indexOf("data:") != 0) {
+    			names.push(name);
+    		}
+    	});
+    	return names.join(", ");
+    }
     // An answer matching no option of a select column is reported as an error (it used to empty the cell or lose the row).
     function selectOptionError(key, value) {
     	var shown = value != null && typeof value == "object" ? JSON.stringify(value) : answerText(value);
@@ -285,8 +309,8 @@ comment: |
     		case ''phone_number'':
     		case ''password'':
     		case ''url'':
-    			// an unanswered text is an empty cell: null was sent as the text "null"
-    			data[key] = jDoc[key] == null ? null : (typeof jDoc[key] != "object" ? jDoc[key] : JSON.stringify(jDoc[key]));
+    			// an unanswered text is an empty cell: null was sent as the text "null"; a File field, the names of its files
+    			data[key] = jDoc[key] == null ? null : (isFileAnswer(jDoc[key]) ? fileAnswerNames(jDoc[key]) : (typeof jDoc[key] != "object" ? jDoc[key] : JSON.stringify(jDoc[key])));
     			break;
     		case ''boolean'':
     			// an unanswered boolean is false: Baserow refuses "" and null (a boolean is never empty)
@@ -359,6 +383,15 @@ comment: |
     			break;
     		default:
     			log.warn("** type: " + type + " is not yet handled")
+    	}
+    }
+    // a file column takes the files of a File, Photo or Signature field of the form; no value (null, "", []) gives no file.
+    // Any other value (the name of a file, a text) is the file of no field: it is reported, the column was emptied without
+    // a word while the write looked successful
+    for (var fileKey in data) {
+    	var fileField = jFields.find((object) => object.name === fileKey);
+    	if (fileField != null && fileField.type == "file" && !isFileAnswer(jDoc[fileKey]) && !isEmptyAnswer(jDoc[fileKey])) {
+    		fieldErrors.push("The value of the column \"" + fileKey + "\" is not a file of the form: a file column takes a File, Photo or Signature field");
     	}
     }
     // an answer matching no option of a select column is returned as an error by the next step: no row is written
@@ -810,6 +843,30 @@ comment: |
       function answerText(value) {
       	return value == null ? "" : ("" + value).trim();
       }
+      // A File, Photo or Signature field of the form as forms_AddRowFromData receives it: its answer ({type, value}), whose files
+      // the attachment loop uploads, or a photo ({att_type}).
+      function isFileAnswer(value) {
+      	return value != null && typeof value == "object" && !Array.isArray(value) && (value.att_type === true || ["file", "img", "signature"].indexOf("" + value.type) != -1);
+      }
+      // No value: null, an empty text or an empty list.
+      function isEmptyAnswer(value) {
+      	return value == null || (Array.isArray(value) ? value.length == 0 : (typeof value != "object" && answerText(value) == ""));
+      }
+      // The names of the files of a File field, for a text column: what the viewer sent there before it sent the answer.
+      function fileAnswerNames(value) {
+      	var names = [];
+      	(Array.isArray(value.value) ? value.value : [value.value]).forEach(function (file) {
+      		var name = typeof file == "string" ? file : "";
+      		// an attachment of the response: <field id>_C80C80_<file name>_C80C80_<time>
+      		if (name.indexOf("_C80C80_") != -1) {
+      			name = name.split("_C80C80_")[1];
+      		}
+      		if (name != "" && name.indexOf("data:") != 0) {
+      			names.push(name);
+      		}
+      	});
+      	return names.join(", ");
+      }
       // An answer matching no option of a select column is reported as an error (it used to empty the cell or lose the row).
       function selectOptionError(key, value) {
       	var shown = value != null && typeof value == "object" ? JSON.stringify(value) : answerText(value);
@@ -997,8 +1054,8 @@ comment: |
       		case ''phone_number'':
       		case ''password'':
       		case ''url'':
-      			// an unanswered text is an empty cell: null was sent as the text "null"
-      			data[key] = jDoc[key] == null ? null : (typeof jDoc[key] != "object" ? jDoc[key] : JSON.stringify(jDoc[key]));
+      			// an unanswered text is an empty cell: null was sent as the text "null"; a File field, the names of its files
+      			data[key] = jDoc[key] == null ? null : (isFileAnswer(jDoc[key]) ? fileAnswerNames(jDoc[key]) : (typeof jDoc[key] != "object" ? jDoc[key] : JSON.stringify(jDoc[key])));
       			break;
       		case ''boolean'':
       			// an unanswered boolean is false: Baserow refuses "" and null (a boolean is never empty)
